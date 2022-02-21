@@ -1,0 +1,18 @@
+type User
+  @model(mutations: { create: null, delete: null })
+  @auth(rules: [
+    { allow: groups, groups: ["Admin"] },
+    { allow: owner, ownerField: "username", operations: [read] }
+  ]) {
+  id: ID!
+  username: String!
+  email: String!
+}
+
+type Post @model @auth(rules: [{ allow: owner, operations: [create, delete, update, read] }])
+{
+  id: ID!
+  title: String! @index(name: "findTitle", sortKeyFields: ["id"])
+}
+
+
