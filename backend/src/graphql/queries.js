@@ -59,3 +59,36 @@ export const listPosts = /* GraphQL */ `
     }
   }
 `;
+export const getPersonalInfo = /* GraphQL */ `
+  query GetPersonalInfo($id: ID!) {
+    getPersonalInfo(id: $id) {
+      id
+      name
+      email
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listPersonalInfos = /* GraphQL */ `
+  query ListPersonalInfos(
+    $filter: ModelPersonalInfoFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPersonalInfos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        email
+        image
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;

@@ -9,10 +9,23 @@ type User
   email: String!
 }
 
-type Post @model @auth(rules: [{ allow: owner, operations: [create, delete, update, read] }])
+type Post
+  @model
+  @auth(rules: [{ allow: owner, operations: [create, delete, update, read] }])
 {
   id: ID!
   title: String! @index(name: "findTitle", sortKeyFields: ["id"])
+}
+
+type PersonalInfo
+@model @auth(rules: [{ allow: owner, operations: [create, delete, update] },
+{allow: owner, ownerField: "email", operations: [update, read, delete, create]}])
+{
+    id: ID!
+    name: String
+    email: String
+    owner: String
+    image: String
 }
 
 

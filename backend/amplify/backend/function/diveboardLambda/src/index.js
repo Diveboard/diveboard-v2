@@ -1,5 +1,4 @@
 
-
 var aws = require('aws-sdk')
 var ddb = new aws.DynamoDB()
 

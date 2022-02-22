@@ -43,3 +43,51 @@ export const deletePost = /* GraphQL */ `
     }
   }
 `;
+export const createPersonalInfo = /* GraphQL */ `
+  mutation CreatePersonalInfo(
+    $input: CreatePersonalInfoInput!
+    $condition: ModelPersonalInfoConditionInput
+  ) {
+    createPersonalInfo(input: $input, condition: $condition) {
+      id
+      name
+      email
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updatePersonalInfo = /* GraphQL */ `
+  mutation UpdatePersonalInfo(
+    $input: UpdatePersonalInfoInput!
+    $condition: ModelPersonalInfoConditionInput
+  ) {
+    updatePersonalInfo(input: $input, condition: $condition) {
+      id
+      name
+      email
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deletePersonalInfo = /* GraphQL */ `
+  mutation DeletePersonalInfo(
+    $input: DeletePersonalInfoInput!
+    $condition: ModelPersonalInfoConditionInput
+  ) {
+    deletePersonalInfo(input: $input, condition: $condition) {
+      id
+      name
+      email
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;

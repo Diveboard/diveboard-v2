@@ -9,5 +9,5 @@
     "READ",
     "DELETE"
   ],
-  "triggerFunction": "NONE"
+  "triggerFunction": "S3Trigger25faf356"
 }

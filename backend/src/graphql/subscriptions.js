@@ -34,3 +34,42 @@ export const onDeletePost = /* GraphQL */ `
     }
   }
 `;
+export const onCreatePersonalInfo = /* GraphQL */ `
+  subscription OnCreatePersonalInfo($email: String) {
+    onCreatePersonalInfo(email: $email) {
+      id
+      name
+      email
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdatePersonalInfo = /* GraphQL */ `
+  subscription OnUpdatePersonalInfo($email: String) {
+    onUpdatePersonalInfo(email: $email) {
+      id
+      name
+      email
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeletePersonalInfo = /* GraphQL */ `
+  subscription OnDeletePersonalInfo($email: String) {
+    onDeletePersonalInfo(email: $email) {
+      id
+      name
+      email
+      image
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;

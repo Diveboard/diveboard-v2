@@ -19,11 +19,15 @@
       "function": {
         "diveboardLambda": {
           "deploymentBucketName": "amplify-diveboard-dev-173750-deployment",
-          "s3Key": "amplify-builds/diveboardLambda-49644352416f43704370-build.zip"
+          "s3Key": "amplify-builds/diveboardLambda-4e325278696e6b7a317a-build.zip"
         },
         "testLambda": {
           "deploymentBucketName": "amplify-diveboard-dev-173750-deployment",
           "s3Key": "amplify-builds/testLambda-7233666533423078702b-build.zip"
+        },
+        "S3Trigger25faf356": {
+          "deploymentBucketName": "amplify-diveboard-dev-173750-deployment",
+          "s3Key": "amplify-builds/S3Trigger25faf356-59437047766476616a68-build.zip"
         }
       }
     }
