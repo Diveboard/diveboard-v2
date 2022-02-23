@@ -64,11 +64,11 @@ export const getPersonalInfo = /* GraphQL */ `
     getPersonalInfo(id: $id) {
       id
       name
-      email
+      owner
       image
       createdAt
       updatedAt
-      owner
+      email
     }
   }
 `;
@@ -82,8 +82,84 @@ export const listPersonalInfos = /* GraphQL */ `
       items {
         id
         name
-        email
+        owner
         image
+        createdAt
+        updatedAt
+        email
+      }
+      nextToken
+    }
+  }
+`;
+export const getNotification = /* GraphQL */ `
+  query GetNotification($id: ID!) {
+    getNotification(id: $id) {
+      id
+      instantNotification
+      biWeeklyNotification
+      biWeeklyDigest
+      newsLetter
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listNotifications = /* GraphQL */ `
+  query ListNotifications(
+    $filter: ModelNotificationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listNotifications(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        instantNotification
+        biWeeklyNotification
+        biWeeklyDigest
+        newsLetter
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const getPreference = /* GraphQL */ `
+  query GetPreference($id: ID!) {
+    getPreference(id: $id) {
+      id
+      publicDevice
+      shareDiveNotes
+      shareMyData
+      scientificDiveNotes
+      language
+      unitSystemMetricC
+      unitSystemMetricF
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listPreferences = /* GraphQL */ `
+  query ListPreferences(
+    $filter: ModelPreferenceFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPreferences(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        publicDevice
+        shareDiveNotes
+        shareMyData
+        scientificDiveNotes
+        language
+        unitSystemMetricC
+        unitSystemMetricF
         createdAt
         updatedAt
         owner

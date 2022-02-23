@@ -51,11 +51,11 @@ export const createPersonalInfo = /* GraphQL */ `
     createPersonalInfo(input: $input, condition: $condition) {
       id
       name
-      email
+      owner
       image
       createdAt
       updatedAt
-      owner
+      email
     }
   }
 `;
@@ -67,11 +67,11 @@ export const updatePersonalInfo = /* GraphQL */ `
     updatePersonalInfo(input: $input, condition: $condition) {
       id
       name
-      email
+      owner
       image
       createdAt
       updatedAt
-      owner
+      email
     }
   }
 `;
@@ -83,8 +83,119 @@ export const deletePersonalInfo = /* GraphQL */ `
     deletePersonalInfo(input: $input, condition: $condition) {
       id
       name
-      email
+      owner
       image
+      createdAt
+      updatedAt
+      email
+    }
+  }
+`;
+export const createNotification = /* GraphQL */ `
+  mutation CreateNotification(
+    $input: CreateNotificationInput!
+    $condition: ModelNotificationConditionInput
+  ) {
+    createNotification(input: $input, condition: $condition) {
+      id
+      instantNotification
+      biWeeklyNotification
+      biWeeklyDigest
+      newsLetter
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateNotification = /* GraphQL */ `
+  mutation UpdateNotification(
+    $input: UpdateNotificationInput!
+    $condition: ModelNotificationConditionInput
+  ) {
+    updateNotification(input: $input, condition: $condition) {
+      id
+      instantNotification
+      biWeeklyNotification
+      biWeeklyDigest
+      newsLetter
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteNotification = /* GraphQL */ `
+  mutation DeleteNotification(
+    $input: DeleteNotificationInput!
+    $condition: ModelNotificationConditionInput
+  ) {
+    deleteNotification(input: $input, condition: $condition) {
+      id
+      instantNotification
+      biWeeklyNotification
+      biWeeklyDigest
+      newsLetter
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createPreference = /* GraphQL */ `
+  mutation CreatePreference(
+    $input: CreatePreferenceInput!
+    $condition: ModelPreferenceConditionInput
+  ) {
+    createPreference(input: $input, condition: $condition) {
+      id
+      publicDevice
+      shareDiveNotes
+      shareMyData
+      scientificDiveNotes
+      language
+      unitSystemMetricC
+      unitSystemMetricF
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updatePreference = /* GraphQL */ `
+  mutation UpdatePreference(
+    $input: UpdatePreferenceInput!
+    $condition: ModelPreferenceConditionInput
+  ) {
+    updatePreference(input: $input, condition: $condition) {
+      id
+      publicDevice
+      shareDiveNotes
+      shareMyData
+      scientificDiveNotes
+      language
+      unitSystemMetricC
+      unitSystemMetricF
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deletePreference = /* GraphQL */ `
+  mutation DeletePreference(
+    $input: DeletePreferenceInput!
+    $condition: ModelPreferenceConditionInput
+  ) {
+    deletePreference(input: $input, condition: $condition) {
+      id
+      publicDevice
+      shareDiveNotes
+      shareMyData
+      scientificDiveNotes
+      language
+      unitSystemMetricC
+      unitSystemMetricF
       createdAt
       updatedAt
       owner

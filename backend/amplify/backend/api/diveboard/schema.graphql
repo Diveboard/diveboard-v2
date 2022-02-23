@@ -19,13 +19,33 @@ type Post
 
 type PersonalInfo
 @model @auth(rules: [{ allow: owner, operations: [create, delete, update] },
-{allow: owner, ownerField: "email", operations: [update, read, delete, create]}])
+{allow: owner, ownerField: "email"}])
 {
     id: ID!
     name: String
-    email: String
     owner: String
     image: String
 }
 
+type Notification
+@model @auth(rules: [{ allow: owner }])
+{
+  id: ID!
+  instantNotification: Boolean
+  biWeeklyNotification: Boolean
+  biWeeklyDigest: Boolean
+  newsLetter: Boolean
+}
 
+type Preference
+@model @auth(rules: [{ allow: owner }])
+{
+    id: ID!
+    publicDevice: Boolean
+    shareDiveNotes: Boolean
+    shareMyData: Boolean
+    scientificDiveNotes: Boolean
+    language: String
+    unitSystemMetricC: Boolean
+    unitSystemMetricF: Boolean
+}
