@@ -1,0 +1,13 @@
+{
+  "resourceName": "s3e8f56bfb",
+  "policyUUID": "e8f56bfb",
+  "bucketName": "diveboard74378134b34e4d0b92c2808ae4d33ea9",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "S3Trigger25faf356"
+}
