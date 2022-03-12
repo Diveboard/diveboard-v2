@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Header from '../src/components/Header'
+import {Header} from '../src/components/Header'
 
 export default function Home(): JSX.Element {
   return (
