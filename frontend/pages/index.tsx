@@ -1,11 +1,10 @@
-import React from 'react';
-
-import {Header} from '../src/components/Header'
+import React from "react";
+import { MainLayout } from "../src/layouts/MainLayout";
 
 export default function Home(): JSX.Element {
   return (
     <div>
-      <Header />
+      <MainLayout />
     </div>
   );
 }

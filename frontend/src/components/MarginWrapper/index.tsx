@@ -23,5 +23,7 @@ export const MarginWrapper: FC<Props> = ({
   const mY = `${y}px 0`;
   const margin = !x && !y ? m : x ? mX : mY;
 
-  return <div style={{ margin: margin }}>{children}</div>;
+  return (
+    <div style={{ margin: margin, display: "inline-block" }}>{children}</div>
+  );
 };
