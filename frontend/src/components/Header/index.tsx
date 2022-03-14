@@ -58,7 +58,7 @@ export const Header = (): JSX.Element => {
           border="2px solid #000345"
           backgroundColor="transparent"
           onClick={() => {
-            router.push("/");
+            router.push("/signin-signup");
           }}
         >
           <span className={styles.btnText}>Log In / Sign Up</span>

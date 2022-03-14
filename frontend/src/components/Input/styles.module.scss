@@ -1,0 +1,26 @@
+
+.inputWrapper {
+  position: relative;
+
+  .input {
+    width: 570px;
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 3, 69, 0.2);
+    box-sizing: border-box;
+    box-shadow: 0 5px 20px -15px rgba(0, 62, 89, 0.12);
+    border-radius: 30px;
+    padding: 16px 16px 16px 52px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #000345;
+    outline: none;
+  }
+
+  .icon {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    opacity: 0.4;
+  }
+}
