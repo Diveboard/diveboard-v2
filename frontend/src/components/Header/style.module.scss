@@ -1,37 +1,30 @@
-.wrapper {
-  max-height: 80px;
+@import "styles/colors.scss";
+
+.header {
+  padding: 0 75px;
+  height: 80px;
   display: flex;
-  flex-direction: row;
-
-  & .regular {
-    background: #FFFFFF;
-    box-shadow: 0 5px 20px rgba(0, 24, 85, 0.1);
-  }
-  & .transparent {
-    background: none;
-  }
-}
-
-.logo {
-  margin-left: 75px;
-}
-
-.logbook {
-  margin-left: 50px;
-  display: flex;
-  flex-direction: row;
-  font-weight: 600;
-  font-size: 18px;
-  line-height: 20px;
+  justify-content: space-between;
   align-items: center;
-  text-align: center;
-  color: #000345;
+  background: #FFFFFF;
+  box-shadow: 0 5px 20px rgba(0, 24, 85, 0.1);
 
-  .title {
-    margin: 0 12px;
+  .leftGroup {
+    display: flex;
+    align-items: center;
+  }
+
+  .rightGroup {
+    display: flex;
+    align-items: center;
+
+    .btnText {
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 20px;
+      color: #000345;
+    }
   }
 }
 
-.wallet {
-  margin-left: 40px;
-}
+
