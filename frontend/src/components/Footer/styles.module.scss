@@ -112,7 +112,11 @@
     font-weight: 400;
     font-size: 12px;
     line-height: 16px;
-    transform: translateX(2%);
+
+
+    .copyright{
+      transform: translateX(15%);
+    }
   }
 }
 

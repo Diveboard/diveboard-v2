@@ -94,14 +94,14 @@ export const Footer = () => {
           </div>
         </div>
 
-        {/*<div className={styles.contentItem} />*/}
-
         <div className={styles.forkme}>
           <Image src={"/assets/images/forkme.png"} width={149} height={149} />
         </div>
       </div>
       <div className={styles.copyrightWrapper}>
-        <span>Copyright © 2021 by Diveboard. All Rights Reserved.</span>
+        <span className={styles.copyright}>
+          Copyright © 2021 by Diveboard. All Rights Reserved.
+        </span>
       </div>
     </footer>
   );
