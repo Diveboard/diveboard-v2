@@ -1,14 +1,18 @@
 import React, { FC } from "react";
-import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
+import { useWindowWidth } from "../hooks/useWindowWidth";
+import { MobileHeader } from "../components/Header/MobileHeader";
+import { MobileNavBar } from "../components/MobileNavBar";
+import { Header } from "../components/Header/DesktopHeader";
 
 export const MainLayout: FC = ({ children }) => {
+  const isWidth = useWindowWidth(500, 768);
+
   return (
     <>
-      <Header />
+      {!isWidth ? <Header /> : <MobileHeader />}
       {children}
-      <Footer />
+      {!isWidth ? <Footer /> : <MobileNavBar />}
     </>
   );
 };
-

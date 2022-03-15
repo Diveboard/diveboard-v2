@@ -17,37 +17,34 @@ export const SignInBlock = () => {
   );
   return (
     <div className={styles.signInWrapper}>
-      <MarginWrapper top={172}>
-        {mode !== "login" ? (
-          <Icon iconName={"signup"} size={70} />
-        ) : (
-          <Icon iconName={"login"} size={70} />
-        )}
-      </MarginWrapper>
-      <MarginWrapper top={30}>
-        {mode === "login/signup" && (
-          <h1 className={styles.title}>Login /Signup</h1>
-        )}
-        {mode === "signup" && <h1 className={styles.title}>Signup</h1>}
-        {mode === "login" && <h1 className={styles.title}>Login</h1>}
-      </MarginWrapper>
+      {mode !== "login" ? (
+        <Icon iconName={"signup"} size={70} />
+      ) : (
+        <Icon iconName={"login"} size={70} />
+      )}
+
+      {mode === "login/signup" && (
+        <h1 className={styles.title}>Login /Signup</h1>
+      )}
+      {mode === "signup" && <h1 className={styles.title}>Signup</h1>}
+      {mode === "login" && <h1 className={styles.title}>Login</h1>}
 
       <p className={styles.text}>
         Here you can log all of you dives. Please, register to track your dives
         and share your experience with others
       </p>
-      <MarginWrapper top={40}>
-        <Input
-          value={inputValue}
-          setValue={setInputValue}
-          placeholder={
-            mode === "login/signup"
-              ? "Your Email"
-              : "Enter the code from your email"
-          }
-          showIcon={mode === "login/signup"}
-        />
-      </MarginWrapper>
+
+      <div className={styles.inputMargin} />
+      <Input
+        value={inputValue}
+        setValue={setInputValue}
+        placeholder={
+          mode === "login/signup"
+            ? "Your Email"
+            : "Enter the code from your email"
+        }
+        showIcon={mode === "login/signup"}
+      />
 
       <MarginWrapper top={10}>
         {mode === "login/signup" && (

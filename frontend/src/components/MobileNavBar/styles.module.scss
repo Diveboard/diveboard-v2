@@ -1,0 +1,47 @@
+.navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 56px;
+  background-color: #FFFFFF;
+  box-shadow: inset 0 2px 0 rgba(0, 3, 69, 0.05);
+
+  .navItem {
+    width: 90px;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .navLabel {
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 14px;
+
+    }
+  }
+
+  .coloredNavItem {
+    box-shadow: inset 0 3px 0 #074EE8;
+    background: #F0F6FF;
+
+    span {
+      color: #0059DE;
+      font-weight: 600;
+
+    }
+
+  }
+
+  .notColoredNavItem {
+    span {
+      color: #000345;
+      font-weight: 400;
+    }
+  }
+}

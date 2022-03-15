@@ -1,0 +1,8 @@
+{
+  "mainPageRout": "/",
+  "authPageRout": "/auth",
+  "explorePageRout": "/explore",
+  "logbookPageRout": "/logbook",
+  "walletPageRout": "/wallet"
+
+}

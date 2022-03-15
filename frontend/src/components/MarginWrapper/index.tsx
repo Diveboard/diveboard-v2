@@ -7,6 +7,7 @@ type Props = {
   bottom?: number;
   x?: number;
   y?: number;
+  block?: boolean;
 };
 
 export const MarginWrapper: FC<Props> = ({
@@ -24,6 +25,13 @@ export const MarginWrapper: FC<Props> = ({
   const margin = !x && !y ? m : x ? mX : mY;
 
   return (
-    <div style={{ margin: margin, display: "inline-block" }}>{children}</div>
+    <div
+      style={{
+        margin: margin,
+        display: "inline-block",
+      }}
+    >
+      {children}
+    </div>
   );
 };

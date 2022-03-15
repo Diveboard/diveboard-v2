@@ -1,14 +1,13 @@
 import React from "react";
-import { Dropdown } from "../Dropdown";
-import { MarginWrapper } from "../MarginWrapper";
-import { LogDive, ViewLogbook } from "../Icons/IconSVGComponents";
-import { Logo } from "../Icons/Logo";
-import { Icon } from "../Icons/Icon";
-
-import styles from "./style.module.scss";
+import { Dropdown } from "../../Dropdown";
+import { LogDive, ViewLogbook } from "../../Icons/IconSVGComponents";
+import { Logo } from "../../Icons/Logo/DesktopLogo";
+import { Icon } from "../../Icons/Icon";
 import Link from "next/link";
-import { Button } from "../Buttons/Button";
+import { Button } from "../../Buttons/Button";
 import { useRouter } from "next/router";
+import pagesRouts from "../../../routs/pagesRouts.json";
+import styles from "./style.module.scss";
 
 export const Header = (): JSX.Element => {
   const router = useRouter();
@@ -31,26 +30,22 @@ export const Header = (): JSX.Element => {
     <header className={styles.header}>
       <div className={styles.leftGroup}>
         <Logo />
-        <MarginWrapper left={50}>
-          <Dropdown imgName="logbook" title="Logbook" items={logbookItems} />
-        </MarginWrapper>
-        <MarginWrapper left={50}>
-          <Link href="/">
-            <a>
-              <Icon iconName="wallet" />
-            </a>
-          </Link>
-        </MarginWrapper>
+
+        <Dropdown imgName="logbook" title="Logbook" items={logbookItems} />
+
+        <Link href="/">
+          <a>
+            <Icon iconName="wallet" />
+          </a>
+        </Link>
       </div>
 
       <div className={styles.rightGroup}>
-        <MarginWrapper right={40}>
-          <Link href="/">
-            <a>
-              <Icon iconName={"search"} />
-            </a>
-          </Link>
-        </MarginWrapper>
+        <Link href="/">
+          <a>
+            <Icon iconName={"search"} />
+          </a>
+        </Link>
         <Button
           width={206}
           height={56}
@@ -58,7 +53,7 @@ export const Header = (): JSX.Element => {
           border="2px solid #000345"
           backgroundColor="transparent"
           onClick={() => {
-            router.push("/signin-signup");
+            router.push(pagesRouts.authPageRout);
           }}
         >
           <span className={styles.btnText}>Log In / Sign Up</span>

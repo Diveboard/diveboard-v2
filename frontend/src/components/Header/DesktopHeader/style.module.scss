@@ -1,4 +1,4 @@
-@import "styles/colors.scss";
+@import "../../../../styles/colors";
 
 .header {
   position: sticky;
@@ -15,12 +15,17 @@
   box-shadow: 0 5px 20px rgba(0, 24, 85, 0.1);
 
   .leftGroup {
+    width: 530px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
   }
 
   .rightGroup {
+    margin-left: 20px;
+    width: 270px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
 
     .btnText {
@@ -32,4 +37,14 @@
   }
 }
 
+@media (max-width: 980px) {
+  .header {
+    padding: 0 25px;
+  }
+}
 
+@media (max-width: 800px) {
+  .header {
+    padding: 0 10px;
+  }
+}

@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import { MainLayout } from "../src/layouts/MainLayout";
 import { SignInBlock } from "../src/components/SignInBlock";
 
-const SigninSignup: NextPage = () => {
+const Auth: NextPage = () => {
   return (
     <MainLayout>
       <SignInBlock />
@@ -11,4 +11,4 @@ const SigninSignup: NextPage = () => {
   );
 };
 
-export default SigninSignup;
+export default Auth;

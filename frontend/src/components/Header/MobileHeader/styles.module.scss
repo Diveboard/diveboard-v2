@@ -1,0 +1,22 @@
+.header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background-color: #FFFFFF;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .signUpBtn {
+    width: 91px;
+    height: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 400;
+    font-size: 16px;
+    color: #000345;
+  }
+}
