@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
     "module": "commonjs",
     "noImplicitReturns": true,
     "noUnusedLocals": true,
@@ -7,6 +8,7 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2017",
+    "strictPropertyInitialization": false
   },
   "compileOnSave": true,
   "include": [

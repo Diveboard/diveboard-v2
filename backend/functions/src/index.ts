@@ -1,24 +1,25 @@
+import 'reflect-metadata';
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import UserRecord = admin.auth.UserRecord;
-
-// Start writing Firebase Functions
-// https://firebase.google.com/docs/functions/typescript
+import { Errors } from './common/errors';
+import { generateOtp } from './common/generate';
+import { validateRequest } from './common/validate';
+import { LogInRequest } from './validation/LogInRequest';
 
 admin.initializeApp();
 
 
-function generateOtp(): string {
-    return Math.floor(100000 + Math.random() * 900000).toString(10);
-}
 
-export const authStart = functions.https.onRequest(async (request, response): Promise<any> => {
+export const authStart = functions.https.onCall(async (request, context): Promise<any> => {
+    const data = await validateRequest(request, LogInRequest);
+
     let user: UserRecord;
     try {
-        user = await admin.auth().getUserByEmail(request.body.email);
+        user = await admin.auth().getUserByEmail(data.email);
     } catch (e) {
         user = await admin.auth().createUser({
-            email: request.body.email,
+            email: data.email,
         });
     }
 
@@ -63,21 +64,21 @@ export const authStart = functions.https.onRequest(async (request, response): Pr
 
     await admin.firestore().collection('user-otp').doc(user.email!).update(otpData)
 
-    return response.send({
+    return {
         expiresAfter: otpData.expiresAfter.toDate ? otpData.expiresAfter.toDate() : otpData.expiresAfter,
-    });
+    };
 });
 
 
-export const logIn = functions.https.onRequest(async (request, response): Promise<any> => {
+export const logIn = functions.https.onCall(async (request, context): Promise<any> => {
+    const data = await validateRequest(request, LogInRequest);
+
     let user: UserRecord;
 
     try {
-        user = await admin.auth().getUserByEmail(request.body.email);
+        user = await admin.auth().getUserByEmail(data.email);
     } catch (e) {
-        return response.send({
-            error: 'User not found',
-        })
+        throw new functions.https.HttpsError('not-found', Errors.USER_NOT_FOUND)
     }
 
     const otpDoc = await admin.firestore().collection('user-otp').doc(user.email!).get();
@@ -89,21 +90,15 @@ export const logIn = functions.https.onRequest(async (request, response): Promis
     } = otpDoc.data() as any;
 
     if (!otpDoc.exists) {
-        return response.send({
-            error: 'User has no OTP requested'
-        })
+        throw new functions.https.HttpsError('not-found', Errors.OTP_NOT_FOUND)
     }
 
     if (!otpData.otp || (!!otpData.expiresAfter && otpData.expiresAfter.toDate().getTime() < new Date().getTime())) {
-        return response.send({
-            error: 'Code is expired'
-        })
+        throw new functions.https.HttpsError('deadline-exceeded', Errors.OTP_EXPIRED)
     }
 
-    if (request.body.otp !== otpData.otp) {
-        return response.send({
-            error: 'Code is invalid'
-        })
+    if (data.otp !== otpData.otp) {
+        throw new functions.https.HttpsError('invalid-argument', Errors.OTP_INVALID)
     }
 
     const token = await admin.auth().createCustomToken(user.uid);
@@ -114,8 +109,8 @@ export const logIn = functions.https.onRequest(async (request, response): Promis
         expiresAfter: null,
     });
 
-    return response.send({
+    return {
         token,
-    })
+    }
 })
 
