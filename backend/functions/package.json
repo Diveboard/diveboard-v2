@@ -18,7 +18,8 @@
     "class-validator": "^0.13.2",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.18.0",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "stripe": "^8.211.0"
   },
   "devDependencies": {
     "@types/validator": "^13.7.1",

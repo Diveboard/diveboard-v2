@@ -4,15 +4,23 @@ import * as admin from 'firebase-admin';
 import UserRecord = admin.auth.UserRecord;
 import { Errors } from './common/errors';
 import { generateOtp } from './common/generate';
-import { validateRequest } from './common/validate';
+import { userExpectedInRequest, validateRequest } from './common/validate';
 import { LogInRequest } from './validation/LogInRequest';
+import { AuthStartRequest } from './validation/AuthStartRequest';
+import { Stripe } from 'stripe';
+import { OneTimeDonationRequest } from './validation/OneTimeDonationRequest';
+import { handleStripeError } from './common/stripe';
+
+const stripe = new Stripe(process.env.STRIPE_API_KEY || '', {
+    apiVersion: '2020-08-27',
+})
 
 admin.initializeApp();
 
-
-
 export const authStart = functions.https.onCall(async (request, context): Promise<any> => {
-    const data = await validateRequest(request, LogInRequest);
+    const data = await validateRequest(request, AuthStartRequest);
+
+    let newUser = false;
 
     let user: UserRecord;
     try {
@@ -21,6 +29,16 @@ export const authStart = functions.https.onCall(async (request, context): Promis
         user = await admin.auth().createUser({
             email: data.email,
         });
+
+        const customer = await stripe.customers.create({
+            email: data.email,
+        });
+
+        await admin.firestore().collection('user-stripe').doc(user.email!).create({
+            customerId: customer.id,
+        });
+
+        newUser = true;
     }
 
     const otpDoc = await admin.firestore().collection('user-otp').doc(user.email!).get();
@@ -65,7 +83,8 @@ export const authStart = functions.https.onCall(async (request, context): Promis
     await admin.firestore().collection('user-otp').doc(user.email!).update(otpData)
 
     return {
-        expiresAfter: otpData.expiresAfter.toDate ? otpData.expiresAfter.toDate() : otpData.expiresAfter,
+        expiresAfter: otpData.expiresAfter.toDate ? otpData.expiresAfter.toDate().getTime() : otpData.expiresAfter.getTime(),
+        newUser,
     };
 });
 
@@ -113,4 +132,55 @@ export const logIn = functions.https.onCall(async (request, context): Promise<an
         token,
     }
 })
+
+export const oneTimeDonation = functions.https.onCall(async (request, context): Promise<any> => {
+    const user = await userExpectedInRequest(context);
+    const data = await validateRequest(request, OneTimeDonationRequest);
+
+    let source = data.token;
+
+    if (data.saveCard && data.token) {
+        const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.email!).get();
+        const stripeData = stripeDoc.data();
+
+        const newSource = await stripe.customers.createSource(stripeData!.customerId, {
+            source: data.token,
+        });
+
+        await stripe.customers.update(stripeData!.customerId, {
+            default_source: newSource.id,
+        })
+
+        await admin.firestore().collection('user-stripe').doc(user.email!).set({
+            defaultSource: newSource.id,
+        }, { merge: true });
+
+        source = newSource.id;
+    } else if (!data.token) {
+        const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.email!).get();
+        const stripeData = stripeDoc.data();
+
+        if (!stripeData!.defaultSource) {
+            throw new functions.https.HttpsError('invalid-argument', Errors.STRIPE_NO_DEFAULT_METHOD)
+        }
+
+        source = stripeData!.defaultSource;
+    }
+
+
+    try {
+        await stripe.charges.create({
+            amount: data.amount,
+            source,
+            currency: 'usd',
+            description: `One-time donation by User ${user.email}`,
+        });
+    } catch (e) {
+        handleStripeError(e as Stripe.StripeError);
+    }
+
+    return {
+        success: true,
+    }
+});
 
