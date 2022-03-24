@@ -10,6 +10,7 @@ import { AuthStartRequest } from './validation/AuthStartRequest';
 import { Stripe } from 'stripe';
 import { OneTimeDonationRequest } from './validation/OneTimeDonationRequest';
 import { handleStripeError } from './common/stripe';
+import { SubscriptionDonationRequest } from './validation/SubscriptionDonationRequest';
 
 const stripe = new Stripe(process.env.STRIPE_API_KEY || '', {
     apiVersion: '2020-08-27',
@@ -149,7 +150,7 @@ export const oneTimeDonation = functions.https.onCall(async (request, context): 
 
         await stripe.customers.update(stripeData!.customerId, {
             default_source: newSource.id,
-        })
+        });
 
         await admin.firestore().collection('user-stripe').doc(user.email!).set({
             defaultSource: newSource.id,
@@ -182,5 +183,63 @@ export const oneTimeDonation = functions.https.onCall(async (request, context): 
     return {
         success: true,
     }
+});
+
+// 31536000
+
+const subscriptions: {
+    [key: string]: string;
+} = {
+    'fiveForTwelve': 'TODO INSERT ID OF ITEM',
+    'threeForTwelve': 'TODO INSERT ID OF ITEM',
+}
+
+export const subDonation = functions.https.onCall(async (request, context): Promise<any> => {
+    const user = await userExpectedInRequest(context);
+    const data = await validateRequest(request, SubscriptionDonationRequest);
+
+    if (!subscriptions) {
+        throw new functions.https.HttpsError('invalid-argument', Errors.STRIPE_INVALID_SUBSCRIPTION)
+    }
+
+    const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.email!).get();
+    const stripeData = stripeDoc.data();
+
+    if (!data.token && !stripeData!.defaultSource) {
+        throw new functions.https.HttpsError('invalid-argument', Errors.STRIPE_NO_DEFAULT_METHOD)
+    }
+
+    if (stripeData!.activeSubscription && stripeData!.subscriptionEndsAt.toDate().getTime() > (new Date().getTime()) ) {
+        throw new functions.https.HttpsError('invalid-argument', Errors.STRIPE_SUBSCRIPTION_ACTIVE)
+    }
+
+    if (data.token) {
+        const newSource = await stripe.customers.createSource(stripeData!.customerId, {
+            source: data.token,
+        });
+
+        await stripe.customers.update(stripeData!.customerId, {
+            default_source: newSource.id,
+        })
+
+        await admin.firestore().collection('user-stripe').doc(user.email!).set({
+            defaultSource: newSource.id,
+        }, { merge: true });
+    }
+
+    const sub = await stripe.subscriptions.create({
+        customer: stripeData!.customerId,
+        items: [
+            {
+                price: subscriptions[data.subType]
+            }
+        ],
+        cancel_at: (new Date().getTime() / 1000) + 31536000 // In a year
+    })
+
+    await admin.firestore().collection('user-stripe').doc(user.email!).set({
+        activeSubscription: sub.id,
+        subscriptionEndsAt: new Date(sub.cancel_at! * 1000),
+    }, { merge: true });
 });
 
