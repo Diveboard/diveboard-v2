@@ -35,14 +35,14 @@ export const authStart = functions.https.onCall(async (request, context): Promis
             email: data.email,
         });
 
-        await admin.firestore().collection('user-stripe').doc(user.email!).create({
+        await admin.firestore().collection('user-stripe').doc(user.uid).create({
             customerId: customer.id,
         });
 
         newUser = true;
     }
 
-    const otpDoc = await admin.firestore().collection('user-otp').doc(user.email!).get();
+    const otpDoc = await admin.firestore().collection('user-otp').doc(user.uid).get();
 
     let otpData: {
         otp: string | null;
@@ -51,13 +51,13 @@ export const authStart = functions.https.onCall(async (request, context): Promis
     } = otpDoc.data() as any;
 
     if (!otpDoc.exists && !otpData) {
-        await admin.firestore().collection('user-otp').doc(user.email!).create({
+        await admin.firestore().collection('user-otp').doc(user.uid).create({
             otp: null,
             sentAt: null,
             expiresAfter: null,
         });
 
-        const newOtpDoc = await admin.firestore().collection('user-otp').doc(user.email!).get();
+        const newOtpDoc = await admin.firestore().collection('user-otp').doc(user.uid).get();
 
         otpData = newOtpDoc.data() as any;
     }
@@ -81,7 +81,7 @@ export const authStart = functions.https.onCall(async (request, context): Promis
         },
     })
 
-    await admin.firestore().collection('user-otp').doc(user.email!).update(otpData)
+    await admin.firestore().collection('user-otp').doc(user.uid).update(otpData)
 
     return {
         expiresAfter: otpData.expiresAfter.toDate ? otpData.expiresAfter.toDate().getTime() : otpData.expiresAfter.getTime(),
@@ -101,7 +101,7 @@ export const logIn = functions.https.onCall(async (request, context): Promise<an
         throw new functions.https.HttpsError('not-found', Errors.USER_NOT_FOUND)
     }
 
-    const otpDoc = await admin.firestore().collection('user-otp').doc(user.email!).get();
+    const otpDoc = await admin.firestore().collection('user-otp').doc(user.uid).get();
 
     let otpData: {
         otp: string | null;
@@ -123,7 +123,7 @@ export const logIn = functions.https.onCall(async (request, context): Promise<an
 
     const token = await admin.auth().createCustomToken(user.uid);
 
-    await admin.firestore().collection('user-otp').doc(user.email!).update({
+    await admin.firestore().collection('user-otp').doc(user.uid).update({
         otp: null,
         sentAt: null,
         expiresAfter: null,
@@ -152,13 +152,13 @@ export const oneTimeDonation = functions.https.onCall(async (request, context): 
             default_source: newSource.id,
         });
 
-        await admin.firestore().collection('user-stripe').doc(user.email!).set({
+        await admin.firestore().collection('user-stripe').doc(user.uid).set({
             defaultSource: newSource.id,
         }, { merge: true });
 
         source = newSource.id;
     } else if (!data.token) {
-        const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.email!).get();
+        const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.uid).get();
         const stripeData = stripeDoc.data();
 
         if (!stripeData!.defaultSource) {
@@ -190,8 +190,8 @@ export const oneTimeDonation = functions.https.onCall(async (request, context): 
 const subscriptions: {
     [key: string]: string;
 } = {
-    'fiveForTwelve': 'TODO INSERT ID OF ITEM',
-    'threeForTwelve': 'TODO INSERT ID OF ITEM',
+    'fiveForTwelve': 'prod_LNcURiv6h4qrAG',
+    'threeForTwelve': 'prod_LNcTzlGjMPNsjP',
 }
 
 export const subDonation = functions.https.onCall(async (request, context): Promise<any> => {
@@ -202,7 +202,7 @@ export const subDonation = functions.https.onCall(async (request, context): Prom
         throw new functions.https.HttpsError('invalid-argument', Errors.STRIPE_INVALID_SUBSCRIPTION)
     }
 
-    const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.email!).get();
+    const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.uid).get();
     const stripeData = stripeDoc.data();
 
     if (!data.token && !stripeData!.defaultSource) {
@@ -222,7 +222,7 @@ export const subDonation = functions.https.onCall(async (request, context): Prom
             default_source: newSource.id,
         })
 
-        await admin.firestore().collection('user-stripe').doc(user.email!).set({
+        await admin.firestore().collection('user-stripe').doc(user.uid).set({
             defaultSource: newSource.id,
         }, { merge: true });
     }
@@ -237,9 +237,13 @@ export const subDonation = functions.https.onCall(async (request, context): Prom
         cancel_at: (new Date().getTime() / 1000) + 31536000 // In a year
     })
 
-    await admin.firestore().collection('user-stripe').doc(user.email!).set({
+    await admin.firestore().collection('user-stripe').doc(user.uid).set({
         activeSubscription: sub.id,
         subscriptionEndsAt: new Date(sub.cancel_at! * 1000),
     }, { merge: true });
+
+    return {
+        success: true,
+    }
 });
 
