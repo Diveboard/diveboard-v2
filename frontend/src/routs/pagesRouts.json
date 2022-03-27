@@ -1,5 +1,7 @@
 {
   "mainPageRout": "/",
+  "mainPageGuest": "/main/home-guest",
+  "mainPageUser": "/main/home-user",
   "authPageRout": "/auth",
   "explorePageRout": "/explore",
   "logbookPageRout": "/logbook",

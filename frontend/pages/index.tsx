@@ -1,12 +1,13 @@
-import React from "react";
-import { MainLayout } from "../src/layouts/MainLayout";
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Home(): JSX.Element {
-  return (
-    <>
-      <MainLayout>
-        <h1>Main</h1>
-      </MainLayout>
-    </>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push('/main/home-guest');
+  });
+
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return <></>;
 }

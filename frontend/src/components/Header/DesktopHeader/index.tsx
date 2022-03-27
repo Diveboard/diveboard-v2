@@ -1,62 +1,121 @@
-import React from "react";
-import { Dropdown } from "../../Dropdown";
-import { LogDive, ViewLogbook } from "../../Icons/IconSVGComponents";
-import { Logo } from "../../Icons/Logo/DesktopLogo";
-import { Icon } from "../../Icons/Icon";
-import Link from "next/link";
-import { Button } from "../../Buttons/Button";
-import { useRouter } from "next/router";
-import pagesRouts from "../../../routs/pagesRouts.json";
-import styles from "./style.module.scss";
+import React, { FC, useContext } from 'react';
+import { useRouter } from 'next/router';
+import { useScroll } from '../../../hooks/useScroll';
+import { Dropdown } from '../../Dropdown';
+import { LogDive, ViewLogbook } from '../../Icons/IconSVGComponents';
+import { Logo } from '../../Icons/Logo/DesktopLogo';
+import { Button } from '../../Buttons/Button';
+import { LinkedButton } from '../../Buttons/LinkedButton';
+import { AuthStatusContext } from '../../../layouts/AuthLayout';
+import { useWindowWidth } from '../../../hooks/useWindowWidth';
 
-export const Header = (): JSX.Element => {
+import pagesRouts from '../../../routs/pagesRouts.json';
+import styles from './style.module.scss';
+
+export const Header: FC = (): JSX.Element => {
   const router = useRouter();
+  const { scrolled } = useScroll(10);
+  const { userAuth } = useContext(AuthStatusContext);
+  const isWidth = useWindowWidth(100, 1025);
+
+  const scrolledHeaderStyle = () => {
+    if (scrolled) {
+      return `${styles.header} ${styles.filled}`;
+    }
+    return styles.header;
+  };
+
   const logbookItems = [
     {
       id: 1,
       svgItem: <LogDive />,
-      title: "Log a New Dive",
-      link: "/",
+      title: 'Log a New Dive',
+      link: '/',
     },
     {
       id: 2,
       svgItem: <ViewLogbook />,
-      title: "View a Logbook",
-      link: "/",
+      title: 'View a Logbook',
+      link: '/',
     },
   ];
 
   return (
-    <header className={styles.header}>
+    <header className={scrolledHeaderStyle()}>
       <div className={styles.leftGroup}>
-        <Logo />
+        <Logo size={!isWidth ? 'large' : 'medium'} />
 
-        <Dropdown imgName="logbook" title="Logbook" items={logbookItems} />
+        {!userAuth ? (
+          <LinkedButton
+            link="/"
+            label="Logbook"
+            iconName={
+              router.pathname === pagesRouts.mainPageGuest && !scrolled
+                ? 'logbook-white'
+                : 'logbook'
+            }
+            labelColor={
+              router.pathname === pagesRouts.mainPageGuest && !scrolled
+                ? '#FFFFFF'
+                : '#000345'
+            }
+          />
+        ) : (
+          <Dropdown imgName="logbook" title="Logbook" items={logbookItems} />
+        )}
 
-        <Link href="/">
-          <a>
-            <Icon iconName="wallet" />
-          </a>
-        </Link>
+        <LinkedButton
+          link="/"
+          label="Wallet"
+          iconName={
+            router.pathname === pagesRouts.mainPageGuest && !scrolled
+              ? 'wallet-white'
+              : 'wallet-mobile'
+          }
+          labelColor={
+            router.pathname === pagesRouts.mainPageGuest && !scrolled
+              ? '#FFFFFF'
+              : '#000345'
+          }
+        />
       </div>
 
       <div className={styles.rightGroup}>
-        <Link href="/">
-          <a>
-            <Icon iconName={"search"} />
-          </a>
-        </Link>
+        <LinkedButton
+          link="/"
+          iconName={
+            router.pathname === pagesRouts.mainPageGuest && !scrolled
+              ? 'search-white'
+              : 'search'
+          }
+        />
+
         <Button
           width={206}
           height={56}
           borderRadius={30}
-          border="2px solid #000345"
+          border={`2px solid ${
+            router.pathname === pagesRouts.mainPageGuest && !scrolled
+              ? '#FFFFFF'
+              : '#000345'
+          }`}
           backgroundColor="transparent"
           onClick={() => {
             router.push(pagesRouts.authPageRout);
           }}
         >
-          <span className={styles.btnText}>Log In / Sign Up</span>
+          <span
+            style={{
+              color: `${
+                router.pathname === pagesRouts.mainPageGuest && !scrolled
+                  ? '#FFFFFF'
+                  : '#000345'
+              }`,
+            }}
+            className={styles.btnText}
+          >
+            Log In / Sign Up
+          </span>
         </Button>
       </div>
     </header>

@@ -1,14 +1,7 @@
-import React from "react";
-import { NextPage } from "next";
-import { MainLayout } from "../src/layouts/MainLayout";
-import { SignInBlock } from "../src/components/SignInBlock";
+import React from 'react';
+import { NextPage } from 'next';
+import { SignInBlock } from '../src/components/PageBlocks/SignInBlock';
 
-const Auth: NextPage = () => {
-  return (
-    <MainLayout>
-      <SignInBlock />
-    </MainLayout>
-  );
-};
+const Auth: NextPage = () => <SignInBlock />;
 
 export default Auth;

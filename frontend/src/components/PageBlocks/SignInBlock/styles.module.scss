@@ -4,22 +4,22 @@
   align-items: center;
   flex-direction: column;
   color: #000345;
-  margin-bottom: 250px;
-  margin-top: 172px;
+  margin-bottom: 5.6vw;
+  margin-top: 7.917vw;
   padding: 0 20px;
 
   .title {
     margin-top: 30px;
     font-weight: 700;
-    font-size: 72px;
+    font-size: 3vw;
     text-align: center;
   }
 
   .text {
-    margin-top: 40px;
+    margin-top: 2.083vw;
     max-width: 570px;
     font-weight: 300;
-    font-size: 20px;
+    font-size: 1.042vw;
     line-height: 26px;
     text-align: center;
   }
@@ -30,7 +30,7 @@
 
   .conformationText {
     font-weight: 300;
-    font-size: 16px;
+    font-size: 0.833vw;
     line-height: 24px;
     text-align: center;
   }
@@ -42,7 +42,7 @@
     color: #000345;
   }
 
-  .checkboxWrapper{
+  .checkboxWrapper {
     width: 570px;
     padding-left: 15px;
   }
@@ -55,13 +55,43 @@
   }
 
   .coloredText {
-    color: #074EE8;
+    color: #074ee8;
     font-weight: 500;
     font-size: 16px;
     line-height: 24px;
 
     &:hover {
       cursor: pointer;
+    }
+  }
+
+  .disabledText {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    color: rgba(72, 70, 70, 0.22);
+  }
+}
+
+@media (max-width: 1240px) {
+  .signInWrapper {
+    margin-bottom: 5.6vw;
+    margin-top: 12.258vw;
+
+    .title {
+      margin-top: 30px;
+      font-weight: 700;
+      font-size: 24px;
+      text-align: center;
+    }
+
+    .text {
+      margin-top: 3.226vw;
+      font-size: 16px;
+    }
+
+    .conformationText {
+      font-size: 14px;
     }
   }
 }
@@ -91,7 +121,7 @@
     }
 
     .btnText {
-      font-size: 14px
+      font-size: 14px;
     }
 
     .checkboxWrapper {
@@ -103,6 +133,10 @@
     }
 
     .coloredText {
+      font-size: 12px;
+    }
+
+    .disabledText {
       font-size: 12px;
     }
   }
@@ -133,7 +167,7 @@
     }
 
     .btnText {
-      font-size: 14px
+      font-size: 14px;
     }
 
     .checkboxWrapper {

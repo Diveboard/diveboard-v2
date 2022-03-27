@@ -1,0 +1,4 @@
+{
+  "codeEndpoint": "https://us-central1-diveboard-org.cloudfunctions.net/authStart",
+  "tokenEndpoint": "https://us-central1-diveboard-org.cloudfunctions.net/logIn"
+}

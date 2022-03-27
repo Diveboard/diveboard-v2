@@ -1,15 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export const useWindowWidth = (ms: number, maxWidth: number) => {
-  const [isWidth, setIsWidth] = useState(true);
+  const [isWidth, setIsWidth] = useState(false);
 
   useEffect(() => {
+    if (typeof window !== undefined) {
+      setIsWidth(window.innerWidth < maxWidth);
+    }
+
     let timeoutId: NodeJS.Timeout;
-    const delay = async (ms: number): Promise<void> => {
+    const delay = async (msDelay: number): Promise<void> => {
       await new Promise<void>((resolve) => {
         timeoutId = setTimeout(() => {
           resolve();
-        }, ms);
+        }, msDelay);
       });
     };
 
@@ -20,9 +24,9 @@ export const useWindowWidth = (ms: number, maxWidth: number) => {
       }
     };
 
-    window.addEventListener("resize", setDelayedWidth);
+    window.addEventListener('resize', setDelayedWidth);
     return () => {
-      window.removeEventListener("resize", setDelayedWidth);
+      window.removeEventListener('resize', setDelayedWidth);
       clearTimeout(timeoutId);
     };
   }, []);

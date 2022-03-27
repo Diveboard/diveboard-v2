@@ -1,7 +1,7 @@
 @import "../../../../styles/colors";
 
 .header {
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -11,7 +11,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #FFFFFF;
   box-shadow: 0 5px 20px rgba(0, 24, 85, 0.1);
 
   .leftGroup {
@@ -19,6 +18,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    .walletLink {
+      display: flex;
+      align-items: center;
+
+      span {
+        margin-left: 12px;
+      }
+    }
   }
 
   .rightGroup {
@@ -27,19 +35,24 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    .btnText {
-      font-weight: 600;
-      font-size: 18px;
-      line-height: 20px;
-      color: #000345;
-    }
   }
 }
 
-@media (max-width: 980px) {
+.btnText {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+}
+
+.filled {
+  background-color: #FFFFFF;
+}
+
+
+@media (max-width: 1024px) {
   .header {
     padding: 0 25px;
+    height: 60px;
   }
 }
 
