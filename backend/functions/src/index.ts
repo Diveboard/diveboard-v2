@@ -141,20 +141,26 @@ export const oneTimeDonation = functions.https.onCall(async (request, context): 
     let source = data.token;
 
     if (data.saveCard && data.token) {
-        const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.email!).get();
+        const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.uid!).get();
         const stripeData = stripeDoc.data();
+        console.log(stripeData);
 
         const newSource = await stripe.customers.createSource(stripeData!.customerId, {
             source: data.token,
         });
 
-        await stripe.customers.update(stripeData!.customerId, {
+        const default_source = await stripe.customers.update(stripeData!.customerId, {
             default_source: newSource.id,
         });
 
-        await admin.firestore().collection('user-stripe').doc(user.uid).set({
+        console.log(default_source)
+
+
+        const defaultSource2 = await admin.firestore().collection('user-stripe').doc(user.uid).set({
             defaultSource: newSource.id,
         }, { merge: true });
+
+        console.log(defaultSource2)
 
         source = newSource.id;
     } else if (!data.token) {
@@ -217,6 +223,7 @@ export const subDonation = functions.https.onCall(async (request, context): Prom
         const newSource = await stripe.customers.createSource(stripeData!.customerId, {
             source: data.token,
         });
+        console.log(newSource)
 
         await stripe.customers.update(stripeData!.customerId, {
             default_source: newSource.id,

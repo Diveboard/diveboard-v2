@@ -17,7 +17,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "firebase-admin": "^10.0.2",
-    "firebase-functions": "^3.18.0",
+    "firebase-functions": "^3.19.0",
     "reflect-metadata": "^0.1.13",
     "stripe": "^8.211.0"
   },
