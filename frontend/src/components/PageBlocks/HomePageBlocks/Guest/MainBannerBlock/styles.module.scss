@@ -1,0 +1,158 @@
+.mainBannerWrapper {
+  position: relative;
+  width: 100%;
+  height: 48.438vw;
+  background-image: url("../../../../../../public/assets/images/main-banner.webp");
+  background-size: cover;
+  background-position: left;
+
+  .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(
+      185.95deg,
+      rgba(0, 3, 69, 0.36) 4.72%,
+      rgba(0, 0, 0, 0) 92.21%
+    );
+
+    .title {
+      font-family: "Permanent Marker", cursive;
+      font-weight: 400;
+      font-size: 4.792vw;
+      line-height: 4.792vw;
+      text-align: center;
+      color: #ffffff;
+      text-shadow: 0 5px 25px rgba(0, 3, 69, 0.25);
+    }
+
+    .text {
+      margin-top: 1.198vw;
+      font-weight: 300;
+      font-size: 1.042vw;
+      line-height: 26px;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    .inputBlock {
+      margin-top: 3.125vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 60%;
+
+      .inputWrapper {
+        width: 360px;
+        margin-right: 10px;
+      }
+    }
+
+    .innerBtnWrapper {
+      width: 80%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+
+      .btnText {
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 20px;
+        color: #000345;
+      }
+    }
+
+    .buttonGroup {
+      margin-top: 1.563vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 292px;
+
+      .filledBtnText {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        text-align: center;
+        color: #000345;
+      }
+
+      .outlinedBtnText {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        text-align: center;
+        color: #3fffff;
+      }
+    }
+  }
+}
+
+.label {
+  position: absolute;
+  left: 76.37%;
+  right: 4.58%;
+  top: 59.45%;
+  bottom: 18.8%;
+}
+
+@media (max-width: 1040px) {
+  .mainBannerWrapper {
+    height: 60vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .label {
+    display: none;
+  }
+
+  .mainBannerWrapper {
+    height: 570px;
+    background-image: url("../../../../../../public/assets/images/main-banner-mobile.png");
+
+    .content {
+      justify-content: flex-start;
+      padding: 90px 10px 0 10px;
+
+      .title {
+        font-size: 34px;
+        line-height: 45px;
+      }
+
+      .text {
+        font-size: 16px;
+        line-height: 22px;
+        max-width: 330px;
+      }
+
+      .inputBlock {
+        margin-top: 110px;
+        display: flex;
+        flex-direction: column;
+        width: 80%;
+        padding: 0 10px;
+
+        .inputWrapper {
+          margin-right: 0;
+          margin-bottom: 12px;
+          width: 320px;
+        }
+      }
+
+      .innerBtnWrapper {
+        width: 35%;
+      }
+
+      .buttonGroup {
+        margin-top: 15px;
+      }
+    }
+  }
+}

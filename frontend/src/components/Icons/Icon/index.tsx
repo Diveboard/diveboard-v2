@@ -1,5 +1,5 @@
-import React, { FC } from "react";
-import Image from "next/image";
+import React, { FC } from 'react';
+import Image from 'next/image';
 
 type Props = {
   iconName: string;
@@ -8,9 +8,11 @@ type Props = {
   height?: number;
 };
 
-export const Icon: FC<Props> = ({ size = 24, iconName, height, width }) => {
-  const w = width ? width : size;
-  const h = height ? height : size;
+export const Icon: FC<Props> = ({
+  size = 24, iconName, height, width,
+}) => {
+  const w = width || size;
+  const h = height || size;
   return (
     <Image
       src={`/assets/icons/${iconName}.svg`}

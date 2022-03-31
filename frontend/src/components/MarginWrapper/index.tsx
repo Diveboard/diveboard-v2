@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC } from 'react';
 
 type Props = {
   left?: number;
@@ -21,9 +21,17 @@ export const MarginWrapper: FC<Props> = ({
   const m = `${top}px ${right}px ${bottom}px ${left}px`;
   const mX = `0 ${x}px`;
   const mY = `${y}px 0`;
+  // eslint-disable-next-line no-nested-ternary
   const margin = !x && !y ? m : x ? mX : mY;
 
   return (
-    <div style={{ margin: margin, display: "inline-block" }}>{children}</div>
+    <div
+      style={{
+        margin,
+        display: 'inline-block',
+      }}
+    >
+      {children}
+    </div>
   );
 };

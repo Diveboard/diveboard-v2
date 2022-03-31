@@ -1,0 +1,109 @@
+.diveInPocketWrapper {
+  margin-top: 6.823vw;
+  height: 44.115vw;
+  position: relative;
+  background-image: url("../../../../../../public/assets/images/dive in pocket.png");
+  background-size: cover;
+  background-position: left;
+
+  .mobileImg {
+    position: absolute;
+    bottom: 8.073vw;
+    right: 13.594vw;
+    width: 35.052vw;
+    height: 28.229vw;
+  }
+
+  .contentWrapper {
+    position: absolute;
+    top: 14.479vw;
+    left: 18.49vw;
+
+    .title {
+      width: 395px;
+      font-weight: 600;
+      font-size: 55px;
+      line-height: 70px;
+      color: #ffffff;
+    }
+
+    .text {
+      margin-top: 20px;
+      width: 418px;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 24px;
+      color: #ffffff;
+    }
+
+    .btnWrapper {
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      width: 485px;
+
+      .innerBtnWrapper {
+        width: 80%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
+        .btnText {
+          font-weight: 600;
+          font-size: 18px;
+          line-height: 20px;
+          color: #000345;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1100px) {
+  .diveInPocketWrapper {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 634px;
+
+    .mobileImg {
+      margin-top: 41px;
+      position: relative;
+      bottom: 0;
+      right: 0;
+      width: 330px;
+      height: 226px;
+    }
+
+    .contentWrapper {
+      position: relative;
+      top: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+
+      .title {
+        margin-top: 40px;
+        width: 330px;
+        font-size: 24px;
+        line-height: 30px;
+      }
+
+      .text {
+        margin-top: 9px;
+        width: 330px;
+        font-size: 14px;
+        line-height: 20px;
+      }
+
+      .btnWrapper {
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: 126px;
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+.photoCard {
+  position: relative;
+  box-shadow: 0 40px 40px -20px rgba(0, 62, 89, 0.1);
+
+  .img {
+    border-radius: 20px;
+
+  }
+
+  .favouritesBlock {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 90px;
+    height: 26px;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 8px rgba(0, 62, 89, 0.1);
+    border-radius: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 10px;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 12px;
+    text-align: right;
+    color: #000345;
+    opacity: 0.8;
+  }
+}
+
+.toggleable {
+  cursor: pointer;
+}
+
+.normalImgSize {
+  width: 21.875vw;
+  height: 32.813vw;
+}
+
+.smallImgSize {
+  width: 21.875vw;
+  height: 15.625vw;
+}
+
+@media (max-width: 768px) {
+  .normalImgSize {
+    width: 41.667vw;
+    height: 54.167vw;
+  }
+  .smallImgSize {
+    width: 41.667vw;
+    height: 30.556vw;
+  }
+}
+
+@media (max-width: 360px) {
+  .normalImgSize {
+    width: 165px;
+    height: 296px;
+  }
+  .smallImgSize {
+    width: 165px;
+    height: 143px;
+  }
+}
