@@ -13,9 +13,9 @@ import {
   sendCodeOnEmail,
   setAuthKeepLogged,
 } from '../../../firebase/auth/authServise';
-import styles from './styles.module.scss';
 import { AuthCodeContext } from '../../../layouts/AuthCodeTimer';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
+import styles from './styles.module.scss';
 
 export const SignInBlock: FC = () => {
   const router = useRouter();
