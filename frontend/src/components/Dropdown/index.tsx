@@ -1,8 +1,8 @@
-import React, { FC, useRef, useState } from "react";
-import styles from "./style.module.scss";
-import { DropdownItem } from "./DropdownItem";
-import { Icon } from "../Icons/Icon";
-import { useOutsideClick } from "../../hooks/useOutsideClick";
+import React, { FC, useRef, useState } from 'react';
+import styles from './style.module.scss';
+import { DropdownItem } from './DropdownItem';
+import { Icon } from '../Icons/Icon';
+import { useOutsideClick } from '../../hooks/useOutsideClick';
 
 type Props = {
   title: string;
@@ -35,7 +35,7 @@ export const Dropdown: FC<Props> = ({ title, imgName, items }) => {
   return (
     <div
       ref={dropdownRef}
-      onClick={() => {
+      onClick={(): void => {
         setOpen(!open);
       }}
       className={styles.dropdown}

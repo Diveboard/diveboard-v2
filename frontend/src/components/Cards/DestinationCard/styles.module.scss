@@ -1,0 +1,77 @@
+.card {
+  max-width: 420px;
+  min-width: 300px;
+  width: 100%;
+  height: 380px;
+  background: #FFFFFF;
+  box-shadow: 0 25px 40px -15px rgba(0, 62, 89, 0.12);
+  border-radius: 20px;
+
+  .imgWrapper {
+    position: relative;
+    height: 283px;
+
+    .img {
+      border-radius: 20px 20px 0 0;
+    }
+  }
+
+
+  .cardFooter {
+    height: 97px;
+    padding: 15px 25px 10px 20px;
+
+    .destinationName {
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 24px;
+      color: #000345;
+    }
+
+    .footerInnerWrapper {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .countryWrapper {
+        width: 90px;
+        height: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .country {
+          font-weight: 300;
+          font-size: 14px;
+          line-height: 20px;
+          color: #000345;
+        }
+      }
+
+      .ratingWrapper {
+        width: 135px;
+        height: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .rating {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .dives {
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+          text-align: right;
+          color: #000345;
+          opacity: 0.6;
+        }
+      }
+    }
+
+  }
+}

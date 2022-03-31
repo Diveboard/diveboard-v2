@@ -23,10 +23,19 @@
   ],
   "rules": {
     "react/function-component-definition": "off",
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".ts", "tsx"] }],
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".ts",
+          "tsx"
+        ]
+      }
+    ],
     "react/jsx-props-no-spreading": "off",
     "react/button-has-type": "off",
-    "@typescript-eslint/explicit-function-return-type": 2,
+    "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-member-accessibility": "off",
     "@typescript-eslint/no-parameter-properties": "off",
     "no-useless-constructor": "off",
