@@ -138,10 +138,14 @@ export const oneTimeDonation = functions.https.onCall(async (request, context): 
     const user = await userExpectedInRequest(context);
     const data = await validateRequest(request, OneTimeDonationRequest);
 
-    let source = data.token;
+    const stripeChargeRequest: Stripe.ChargeCreateParams = {
+        amount: data.amount,
+        currency: 'usd',
+        description: `One-time donation by User ${user.email}`,
+    };
 
     if (data.saveCard && data.token) {
-        const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.email!).get();
+        const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.uid).get();
         const stripeData = stripeDoc.data();
 
         const newSource = await stripe.customers.createSource(stripeData!.customerId, {
@@ -156,7 +160,9 @@ export const oneTimeDonation = functions.https.onCall(async (request, context): 
             defaultSource: newSource.id,
         }, { merge: true });
 
-        source = newSource.id;
+        stripeChargeRequest.customer = stripeData!.customerId;
+    } else if (data.token) {
+        stripeChargeRequest.source = data.token;
     } else if (!data.token) {
         const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.uid).get();
         const stripeData = stripeDoc.data();
@@ -165,17 +171,12 @@ export const oneTimeDonation = functions.https.onCall(async (request, context): 
             throw new functions.https.HttpsError('invalid-argument', Errors.STRIPE_NO_DEFAULT_METHOD)
         }
 
-        source = stripeData!.defaultSource;
+        stripeChargeRequest.customer = stripeData!.customerId;
     }
 
 
     try {
-        await stripe.charges.create({
-            amount: data.amount,
-            source,
-            currency: 'usd',
-            description: `One-time donation by User ${user.email}`,
-        });
+        await stripe.charges.create(stripeChargeRequest);
     } catch (e) {
         handleStripeError(e as Stripe.StripeError);
     }
@@ -190,8 +191,8 @@ export const oneTimeDonation = functions.https.onCall(async (request, context): 
 const subscriptions: {
     [key: string]: string;
 } = {
-    'fiveForTwelve': 'prod_LNcURiv6h4qrAG',
-    'threeForTwelve': 'prod_LNcTzlGjMPNsjP',
+    'fiveForTwelve': 'price_1KgrFKFgvOVu5NAtdLUTc46i',
+    'threeForTwelve': 'price_1KgrEUFgvOVu5NAtPvQHvJT2',
 }
 
 export const subDonation = functions.https.onCall(async (request, context): Promise<any> => {
@@ -231,11 +232,11 @@ export const subDonation = functions.https.onCall(async (request, context): Prom
         customer: stripeData!.customerId,
         items: [
             {
-                price: subscriptions[data.subType]
-            }
+                price: subscriptions[data.subType],
+            },
         ],
-        cancel_at: (new Date().getTime() / 1000) + 31536000 // In a year
-    })
+        cancel_at: Math.ceil((new Date().getTime() / 1000) + 31536000), // In a year
+    });
 
     await admin.firestore().collection('user-stripe').doc(user.uid).set({
         activeSubscription: sub.id,

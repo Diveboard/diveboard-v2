@@ -12,6 +12,9 @@ export function handleStripeError(err: Stripe.StripeError) {
         case 'StripeConnectionError':
         case 'StripeAuthenticationError':
         default:
-            throw new functions.https.HttpsError('internal', Errors.STRIPE_GENERAL_FAILURE)
+            throw new functions.https.HttpsError('internal', Errors.STRIPE_GENERAL_FAILURE, process.env.DEBUG_ENABLED ? {
+                message: err.message,
+                error: err,
+            } : undefined)
     }
 }
