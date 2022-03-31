@@ -43,7 +43,9 @@
   }
 
   .checkboxWrapper {
-    width: 570px;
+    max-width: 570px;
+    width: 100%;
+    margin-top: 10px;
     padding-left: 15px;
   }
 
@@ -124,10 +126,6 @@
       font-size: 14px;
     }
 
-    .checkboxWrapper {
-      width: 570px;
-    }
-
     .commonText {
       font-size: 12px;
     }
@@ -168,10 +166,6 @@
 
     .btnText {
       font-size: 14px;
-    }
-
-    .checkboxWrapper {
-      width: 570px;
     }
 
     .commonText {

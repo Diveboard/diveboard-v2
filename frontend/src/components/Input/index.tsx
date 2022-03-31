@@ -42,7 +42,7 @@ export const Input: FC<Props> = ({
         className={getInputStyle(error)}
         placeholder={placeholder}
       />
-      <span className={styles.errorText}>{error}</span>
+      {error && <span className={styles.errorText}>{error}</span>}
 
       {showIcon && (
         <div className={styles.icon}>

@@ -7,7 +7,7 @@ type Props = {
 };
 
 export const Checkbox: FC<Props> = ({ name, onChecked, children }) => (
-  <>
+  <div className={styles.checkboxWrapper}>
     <input
       className={styles.checkbox}
       type="checkbox"
@@ -19,7 +19,6 @@ export const Checkbox: FC<Props> = ({ name, onChecked, children }) => (
     />
     <label htmlFor={name}>
       {children}
-      {' '}
     </label>
-  </>
+  </div>
 );

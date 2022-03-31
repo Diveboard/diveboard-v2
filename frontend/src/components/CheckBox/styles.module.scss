@@ -1,5 +1,10 @@
-.checkbox{
-  border: 2px solid rgba(0, 3, 69, 0.2);
-  box-sizing: border-box;
-  border-radius: 2px;
+.checkboxWrapper{
+  display: flex;
+  align-items: center;
+  .checkbox{
+    border: 2px solid rgba(0, 3, 69, 0.2);
+    box-sizing: border-box;
+    border-radius: 2px;
+    margin-right: 12px;
+  }
 }

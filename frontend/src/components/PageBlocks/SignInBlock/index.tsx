@@ -129,6 +129,7 @@ export const SignInBlock: FC = () => {
       </p>
 
       <div className={styles.inputMargin} />
+
       <Input
         value={inputValue}
         setValue={setInputValue}
@@ -142,31 +143,34 @@ export const SignInBlock: FC = () => {
         showIcon={mode === 'login/signup'}
       />
 
-      <MarginWrapper top={10}>
+      <div
+        className={styles.checkboxWrapper}
+      >
         {mode === 'login/signup' && (
           <p className={styles.conformationText}>
             We’ll send a Confirmation code to your email
           </p>
         )}
         {mode === 'signup' && (
-          <div className={styles.checkboxWrapper}>
-            <Checkbox name="terms-of-service" onChecked={setTermsChecked}>
-              <span className={styles.commonText}> I accept </span>
-              {' '}
-              <span className={styles.coloredText} onClick={() => {}}>
-                Terms of Services
-              </span>
-            </Checkbox>
-          </div>
+
+        <Checkbox name="terms-of-service" onChecked={setTermsChecked}>
+          <span className={styles.commonText}> I accept </span>
+          <span
+            className={styles.coloredText}
+            onClick={() => {
+            }}
+          >
+            Terms of Services
+          </span>
+        </Checkbox>
         )}
+
         {mode === 'login' && (
-          <div className={styles.checkboxWrapper}>
-            <Checkbox name="keep-logged" onChecked={setKeepLogged}>
-              <span className={styles.commonText}> Keep me Logged In </span>
-            </Checkbox>
-          </div>
+        <Checkbox name="keep-logged" onChecked={setKeepLogged}>
+          <span className={styles.commonText}> Keep me Logged In </span>
+        </Checkbox>
         )}
-      </MarginWrapper>
+      </div>
 
       <MarginWrapper top={10}>
         <Button
