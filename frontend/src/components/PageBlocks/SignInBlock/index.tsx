@@ -8,18 +8,14 @@ import { Input } from '../../Input';
 import { Button } from '../../Buttons/Button';
 import { Checkbox } from '../../CheckBox';
 import {
-  auth,
-  browserLocalPersistence,
-  browserSessionPersistence,
-  functions,
-  httpsCallable,
-  setPersistence,
-  signInWithCustomToken,
-} from '../../../firebase/firebaseAuth';
-
+  getAuthorizedUserWithToken,
+  getTokenAuth,
+  sendCodeOnEmail,
+  setAuthKeepLogged,
+} from '../../../firebase/auth/authServise';
+import styles from './styles.module.scss';
 import { AuthCodeContext } from '../../../layouts/AuthCodeTimer';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
-import styles from './styles.module.scss';
 
 export const SignInBlock: FC = () => {
   const router = useRouter();
@@ -37,21 +33,17 @@ export const SignInBlock: FC = () => {
   const authCode = async () => {
     if (availableCode) {
       try {
-        const sendCodeOnEmail = httpsCallable(functions, 'authStart');
-        const resp = await sendCodeOnEmail({
-          email: inputValue,
-        });
-        const data = resp.data as { newUser: boolean };
+        const newUser = await sendCodeOnEmail(inputValue);
 
-        userEmail.current.email = inputValue;
-        setInputValue('');
-        setAvailableCode(false);
-
-        if (data.newUser) {
+        if (newUser) {
           setMode('signup');
         } else {
           setMode('login');
         }
+
+        userEmail.current.email = inputValue;
+        setInputValue('');
+        setAvailableCode(false);
       } catch (e) {
         setError(e.message);
       }
@@ -60,36 +52,24 @@ export const SignInBlock: FC = () => {
 
   const authUser = async () => {
     try {
-      const getToken = httpsCallable(functions, 'logIn');
-      const resp = await getToken({
-        email: userEmail.current.email,
-        otp: inputValue,
-      });
-      const data = resp.data as { token: string };
-
-      if (isKeepLogged) {
-        await setPersistence(auth, browserLocalPersistence);
-      } else {
-        await setPersistence(auth, browserSessionPersistence);
-      }
-
-      const signIn = await signInWithCustomToken(auth, data.token);
-
-      if (signIn.user) {
+      const token = await getTokenAuth(userEmail.current.email, inputValue);
+      await setAuthKeepLogged(isKeepLogged);
+      const user = await getAuthorizedUserWithToken(token);
+      if (user) {
         setUserAuth({
-          uid: signIn.user.uid,
-          email: signIn.user.email,
-          photoURL: signIn.user.photoURL,
-          name: signIn.user.displayName,
+          uid: user.uid,
+          email: user.email,
+          photoURL: user.photoURL,
+          name: user.displayName,
         });
-        router.push('/');
+        await router.push('/');
       }
     } catch (e) {
       setError('invalid or expired code');
     }
   };
 
-  const submit = () => {
+  const submit = async () => {
     if (!inputValue.length) {
       return setError('empty value');
     }
@@ -99,13 +79,13 @@ export const SignInBlock: FC = () => {
       if (!inputValue.match(mailRegexp)) {
         return setError('invalid mail value');
       }
-      authCode();
+      await authCode();
     } else {
       const codeRegexp = /[0-9]{6}/;
       if (!inputValue.match(codeRegexp)) {
         return setError('invalid code value');
       }
-      authUser();
+      await authUser();
     }
   };
 

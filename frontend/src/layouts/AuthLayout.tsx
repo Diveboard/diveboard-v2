@@ -1,7 +1,7 @@
 import React, {
   FC, useEffect, useMemo, useState,
 } from 'react';
-import { auth, onAuthStateChanged } from '../firebase/firebaseAuth';
+import { auth, onAuthStateChanged } from '../firebase/auth/firebaseAuth';
 
 type UserType = {
   uid: null | string;
