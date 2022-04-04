@@ -12,7 +12,7 @@ import {
   getTokenAuth,
   sendCodeOnEmail,
   setAuthKeepLogged,
-} from '../../../firebase/auth/authServise';
+} from '../../../firebase/auth/authService';
 import { AuthCodeContext } from '../../../layouts/AuthCodeTimer';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
 import styles from './styles.module.scss';
@@ -120,7 +120,7 @@ export const SignInBlock: FC = () => {
             ? 'Your Email'
             : 'Enter the code from your email'
         }
-        showIcon={mode === 'login/signup'}
+        iconName={mode === 'login/signup' && 'email'}
       />
 
       <div

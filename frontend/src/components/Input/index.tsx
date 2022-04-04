@@ -9,7 +9,7 @@ type Props = {
   error?: string;
   setError?: React.Dispatch<React.SetStateAction<string>>;
   placeholder?: string;
-  showIcon?: boolean;
+  iconName?: string;
 };
 
 export const Input: FC<Props> = ({
@@ -18,8 +18,8 @@ export const Input: FC<Props> = ({
   error,
   setError,
   placeholder,
-  showIcon = true,
-  padding = `16px 16px 16px ${showIcon ? '52px' : '16px'}`,
+  iconName,
+  padding = `16px 16px 16px ${iconName ? '52px' : '16px'}`,
 }) => {
   const getInputStyle = (errorValue: string) => {
     if (errorValue) {
@@ -44,9 +44,9 @@ export const Input: FC<Props> = ({
       />
       {error && <span className={styles.errorText}>{error}</span>}
 
-      {showIcon && (
+      {iconName && (
         <div className={styles.icon}>
-          <Icon iconName="email" />
+          <Icon iconName={iconName} />
         </div>
       )}
     </div>
