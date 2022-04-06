@@ -249,15 +249,8 @@ export const subDonation = functions.https.onCall(async (request, context): Prom
 });
 
 export const resetEmail = functions.https.onCall(async (request, context): Promise<any> => {
-    const data = await validateRequest(request, LogInRequest);
-
-    let user: UserRecord;
-
-    try {
-        user = await admin.auth().getUserByEmail(data.email);
-    } catch (e) {
-        throw new functions.https.HttpsError('not-found', Errors.USER_NOT_FOUND)
-    }
+    const user = await userExpectedInRequest(context);
+    const data = await validateRequest(request, AuthStartRequest);
 
     const otpDoc = await admin.firestore().collection('user-otp').doc(user.uid).get();
 
@@ -291,14 +284,39 @@ export const resetEmail = functions.https.onCall(async (request, context): Promi
     }
 
     await admin.firestore().collection('mail').add({
-        to: user.email,
+        to: data.email,
         message: {
             subject: 'Diverboard OTP',
             html: `Your ot for Diverboard: <b>${otpData.otp}</b>`,
         },
     })
 
-    await admin.firestore().collection('user-otp').doc(user.uid).update(otpData)
+    await admin.firestore().collection('user-otp').doc(user.uid).update(otpData);
+
+})
+export const confirmResetEmail = functions.https.onCall(async (request, context): Promise<any> => {
+    const user = await userExpectedInRequest(context);
+    const data = await validateRequest(request, LogInRequest);
+
+    const otpDoc = await admin.firestore().collection('user-otp').doc(user.uid).get();
+
+    let otpData: {
+        otp: string | null;
+        sentAt: Date | null;
+        expiresAfter: any;
+    } = otpDoc.data() as any;
+
+    if (!otpDoc.exists) {
+        throw new functions.https.HttpsError('not-found', Errors.OTP_NOT_FOUND)
+    }
+
+    if (!otpData.otp || (!!otpData.expiresAfter && otpData.expiresAfter.toDate().getTime() < new Date().getTime())) {
+        throw new functions.https.HttpsError('deadline-exceeded', Errors.OTP_EXPIRED)
+    }
+
+    if (data.otp !== otpData.otp) {
+        throw new functions.https.HttpsError('invalid-argument', Errors.OTP_INVALID)
+    }
 
     await admin.auth().updateUser(user.uid, {
         email: data.email
