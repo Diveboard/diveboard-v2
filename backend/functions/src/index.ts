@@ -294,6 +294,7 @@ export const resetEmail = functions.https.onCall(async (request, context): Promi
     await admin.firestore().collection('user-otp').doc(user.uid).update(otpData);
 
 })
+
 export const confirmResetEmail = functions.https.onCall(async (request, context): Promise<any> => {
     const user = await userExpectedInRequest(context);
     const data = await validateRequest(request, LogInRequest);
@@ -321,5 +322,15 @@ export const confirmResetEmail = functions.https.onCall(async (request, context)
     await admin.auth().updateUser(user.uid, {
         email: data.email
     });
+
+    await admin.firestore().collection('user-otp').doc(user.uid).update({
+        otp: null,
+        sentAt: null,
+        expiresAfter: null,
+    });
+
+    return {
+        success: true,
+    }
 
 })
