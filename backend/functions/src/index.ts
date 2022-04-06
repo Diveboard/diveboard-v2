@@ -248,3 +248,60 @@ export const subDonation = functions.https.onCall(async (request, context): Prom
     }
 });
 
+export const resetEmail = functions.https.onCall(async (request, context): Promise<any> => {
+    const data = await validateRequest(request, LogInRequest);
+
+    let user: UserRecord;
+
+    try {
+        user = await admin.auth().getUserByEmail(data.email);
+    } catch (e) {
+        throw new functions.https.HttpsError('not-found', Errors.USER_NOT_FOUND)
+    }
+
+    const otpDoc = await admin.firestore().collection('user-otp').doc(user.uid).get();
+
+    let otpData: {
+        otp: string | null;
+        sentAt: Date | null;
+        expiresAfter: any;
+    } = otpDoc.data() as any;
+
+    if (!otpDoc.exists && !otpData) {
+        await admin.firestore().collection('user-otp').doc(user.uid).create({
+            otp: null,
+            sentAt: null,
+            expiresAfter: null,
+        });
+
+        const newOtpDoc = await admin.firestore().collection('user-otp').doc(user.uid).get();
+
+        otpData = newOtpDoc.data() as any;
+    }
+
+
+    if (!otpData.otp || (!!otpData.expiresAfter && otpData.expiresAfter.toDate().getTime() < new Date().getTime())) {
+        otpData = {
+            otp: generateOtp(),
+            // Now
+            sentAt: new Date(),
+            // In 5 minutes
+            expiresAfter: new Date(new Date().getTime() + 5 * 60 * 1000),
+        }
+    }
+
+    await admin.firestore().collection('mail').add({
+        to: user.email,
+        message: {
+            subject: 'Diverboard OTP',
+            html: `Your ot for Diverboard: <b>${otpData.otp}</b>`,
+        },
+    })
+
+    await admin.firestore().collection('user-otp').doc(user.uid).update(otpData)
+
+    await admin.auth().updateUser(user.uid, {
+        email: data.email
+    });
+
+})
