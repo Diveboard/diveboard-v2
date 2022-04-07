@@ -6,6 +6,7 @@ import { EditedProfileImage } from '../SettingsItemContent/EditedContent/EditedP
 import { AuthStatusContext } from '../../../../layouts/AuthLayout';
 import styles from '../itemContentStyle.module.scss';
 import { EditedProfileName } from '../SettingsItemContent/EditedContent/EditedProfileName';
+import { EditedProfileEmail } from '../SettingsItemContent/EditedContent/EditedProfileEmail';
 
 export const PersonalInfo = () => {
   const { userAuth } = useContext(AuthStatusContext);
@@ -44,7 +45,7 @@ export const PersonalInfo = () => {
         titleMuted
       >
         <span className={styles.primaryItemContent}>{email}</span>
-        <span>second</span>
+        <EditedProfileEmail />
       </SettingsItem>
     </SettingsGroup>
   );

@@ -15,6 +15,7 @@ type Props = {
 export const EditedProfileImage: FC<Props> = ({ imgSrc }) => {
   const [imgPath, setImgPath] = useState(imgSrc);
   const [avatarFile, setAvatarFile] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { userAuth, setUserAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
 
@@ -27,12 +28,14 @@ export const EditedProfileImage: FC<Props> = ({ imgSrc }) => {
 
   const uploadFileAvatar = async () => {
     if (userAuth.uid) {
+      setLoading(true);
       const res = await uploadAvatar(userAuth.uid, avatarFile);
       const url = await getAvatarUrl(res.ref);
       await updateUserAvatar(url);
       if (res) {
         setUserAuth({ ...userAuth, photoURL: url });
         setEditedSettings({ settingsBlock: '', settingsItem: '' });
+        setLoading(false);
       }
     } else {
       throw new Error('you are not authorized');
@@ -58,7 +61,11 @@ export const EditedProfileImage: FC<Props> = ({ imgSrc }) => {
           />
         </div>
       </div>
-      <SaveThisButton disabled={!avatarFile} onClick={uploadFileAvatar} />
+      <SaveThisButton
+        disabled={!avatarFile || loading}
+        onClick={uploadFileAvatar}
+        loading={loading}
+      />
     </div>
   );
 };

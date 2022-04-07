@@ -1,0 +1,18 @@
+.radio {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.label {
+  margin-left: 8px;
+  font-family: 'Prompt', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 18px;
+  color: #111111;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

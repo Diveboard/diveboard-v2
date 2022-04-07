@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import landingLabel from '../../../../../../public/assets/images/landing-label.png';
 import styles from './styles.module.scss';
-import { Input } from '../../../../Input';
+import { Input } from '../../../../Input/CommonInput';
 import { Button } from '../../../../Buttons/Button';
 import { Icon } from '../../../../Icons/Icon';
 import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
@@ -39,7 +39,6 @@ export const MainBannerBlock = () => {
               value={inputValue}
               setValue={setInputValue}
               placeholder="location"
-              showIcon={false}
             />
           </div>
 

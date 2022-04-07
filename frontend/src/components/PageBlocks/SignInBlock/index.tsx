@@ -4,7 +4,7 @@ import React, {
 import { useRouter } from 'next/router';
 import { Icon } from '../../Icons/Icon';
 import { MarginWrapper } from '../../MarginWrapper';
-import { Input } from '../../Input';
+import { Input } from '../../Input/CommonInput';
 import { Button } from '../../Buttons/Button';
 import { Checkbox } from '../../CheckBox';
 import {
@@ -133,7 +133,7 @@ export const SignInBlock: FC = () => {
         )}
         {mode === 'signup' && (
 
-        <Checkbox name="terms-of-service" onChecked={setTermsChecked}>
+        <Checkbox name="terms-of-service" onChecked={setTermsChecked} checked={isTermsChecked}>
           <span className={styles.commonText}> I accept </span>
           <span
             className={styles.coloredText}
@@ -146,7 +146,7 @@ export const SignInBlock: FC = () => {
         )}
 
         {mode === 'login' && (
-        <Checkbox name="keep-logged" onChecked={setKeepLogged}>
+        <Checkbox name="keep-logged" onChecked={setKeepLogged} checked={isKeepLogged}>
           <span className={styles.commonText}> Keep me Logged In </span>
         </Checkbox>
         )}

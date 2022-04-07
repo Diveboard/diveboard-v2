@@ -20,7 +20,8 @@
 
   .icon {
     position: absolute;
-    top: 16px;
+    top: 50%;
+    transform: translateY(-40%);
     left: 16px;
     opacity: 0.4;
   }

@@ -1,8 +1,8 @@
 import React, { FC, useRef, useState } from 'react';
 import styles from './style.module.scss';
-import { DropdownItem } from './DropdownItem';
-import { Icon } from '../Icons/Icon';
-import { useOutsideClick } from '../../hooks/useOutsideClick';
+import { LogbookDropdownItem } from './DropdownItem';
+import { Icon } from '../../Icons/Icon';
+import { useOutsideClick } from '../../../hooks/useOutsideClick';
 
 type Props = {
   title: string;
@@ -15,7 +15,7 @@ type Props = {
   }[];
 };
 
-export const Dropdown: FC<Props> = ({ title, imgName, items }) => {
+export const LogbookDropdown: FC<Props> = ({ title, imgName, items }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -28,9 +28,9 @@ export const Dropdown: FC<Props> = ({ title, imgName, items }) => {
   useOutsideClick(outsideClickHandler, dropdownRef);
 
   const dropdownElements = items.map((item) => (
-    <DropdownItem key={item.id} title={item.title} link={item.link}>
+    <LogbookDropdownItem key={item.id} title={item.title} link={item.link}>
       {item.svgItem}
-    </DropdownItem>
+    </LogbookDropdownItem>
   ));
   return (
     <div

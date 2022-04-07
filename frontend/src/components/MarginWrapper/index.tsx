@@ -7,6 +7,7 @@ type Props = {
   bottom?: number;
   x?: number;
   y?: number;
+  display?: 'block' | 'inline-block';
 };
 
 export const MarginWrapper: FC<Props> = ({
@@ -16,6 +17,7 @@ export const MarginWrapper: FC<Props> = ({
   bottom = 0,
   x = 0,
   y = 0,
+  display = 'inline-block',
   children,
 }) => {
   const m = `${top}px ${right}px ${bottom}px ${left}px`;
@@ -28,7 +30,7 @@ export const MarginWrapper: FC<Props> = ({
     <div
       style={{
         margin,
-        display: 'inline-block',
+        display,
       }}
     >
       {children}

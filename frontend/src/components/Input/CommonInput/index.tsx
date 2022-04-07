@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import styles from './styles.module.scss';
-import { Icon } from '../Icons/Icon';
+import { Icon } from '../../Icons/Icon';
 
 type Props = {
   padding?: string;
@@ -10,6 +10,7 @@ type Props = {
   setError?: React.Dispatch<React.SetStateAction<string>>;
   placeholder?: string;
   iconName?: string;
+  disabled?:boolean
 };
 
 export const Input: FC<Props> = ({
@@ -20,6 +21,7 @@ export const Input: FC<Props> = ({
   placeholder,
   iconName,
   padding = `16px 16px 16px ${iconName ? '52px' : '16px'}`,
+  disabled,
 }) => {
   const getInputStyle = (errorValue: string) => {
     if (errorValue) {
@@ -41,6 +43,7 @@ export const Input: FC<Props> = ({
         }}
         className={getInputStyle(error)}
         placeholder={placeholder}
+        disabled={disabled}
       />
       {error && <span className={styles.errorText}>{error}</span>}
 

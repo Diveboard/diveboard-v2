@@ -1,7 +1,7 @@
 import React, { FC, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { useScroll } from '../../../hooks/useScroll';
-import { Dropdown } from '../../Dropdown';
+import { LogbookDropdown } from '../../Dropdown/LogbookDropdown';
 import { LogDive, ViewLogbook } from '../../Icons/IconSVGComponents';
 import { Logo } from '../../Icons/Logo/DesktopLogo';
 import { Button } from '../../Buttons/Button';
@@ -61,7 +61,7 @@ export const Header: FC = (): JSX.Element => {
             }
           />
         ) : (
-          <Dropdown imgName="logbook" title="Logbook" items={logbookItems} />
+          <LogbookDropdown imgName="logbook" title="Logbook" items={logbookItems} />
         )}
 
         <LinkedButton
