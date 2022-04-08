@@ -15,6 +15,12 @@ import {
 } from '../../../firebase/auth/authService';
 import { AuthCodeContext } from '../../../layouts/AuthCodeTimer';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
+import {
+  firestorePublicProfileService,
+} from '../../../firebase/firestore/firestoreServises/firestorePublicProfileService';
+import {
+  firestorePreferencesService,
+} from '../../../firebase/firestore/firestoreServises/firestorePreferencesService';
 import styles from './styles.module.scss';
 
 export const SignInBlock: FC = () => {
@@ -62,6 +68,8 @@ export const SignInBlock: FC = () => {
           photoURL: user.photoURL,
           name: user.displayName,
         });
+        await firestorePublicProfileService.setEmail(user.email, user.uid);
+        await firestorePreferencesService.setDefaultPreferences(user.uid);
         await router.push('/');
       }
     } catch (e) {

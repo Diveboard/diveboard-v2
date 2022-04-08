@@ -6,7 +6,6 @@ import styles from './styles.module.scss';
 
 export const EditedPreferencesPrivacy = () => {
   const [makePublic, setMakePublic] = useState(true);
-  const [shareDives, setShareDives] = useState(false);
 
   return (
     <div>
@@ -15,12 +14,6 @@ export const EditedPreferencesPrivacy = () => {
           <span className={styles.label}>
             Make your dives public when complete
           </span>
-        </Checkbox>
-      </MarginWrapper>
-
-      <MarginWrapper bottom={10} display="block">
-        <Checkbox name="share-dives" onChecked={setShareDives} checked={shareDives}>
-          <span className={styles.label}> Share your dive notes </span>
         </Checkbox>
       </MarginWrapper>
 

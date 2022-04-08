@@ -1,5 +1,5 @@
 import React, {
-  FC, useEffect, useMemo, useState,
+  FC, useLayoutEffect, useMemo, useState,
 } from 'react';
 import { auth, onAuthStateChanged } from '../firebase/auth/firebaseAuth';
 
@@ -25,7 +25,7 @@ export const AuthLayout: FC = ({ children }) => {
     setUserAuth: setUserData,
   }), [userData, setUserData]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUserData({
