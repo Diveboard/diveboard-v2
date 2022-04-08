@@ -23,22 +23,22 @@ export const CollaborationBlock = () => (
       </p>
 
       <div className={styles.organisations}>
-        <Link href="/">
+        <Link href="https://www.daneurope.org/en/home">
           <a>
             <Icon iconName="DAN" width={133} height={40} />
           </a>
         </Link>
-        <Link href="/">
+        <Link href="https://obis.org/">
           <a>
             <Icon iconName="BIS" width={270} height={40} />
           </a>
         </Link>
-        <Link href="/">
+        <Link href="https://www.gbif.org/">
           <a>
             <Icon iconName="GBIF" width={197} height={40} />
           </a>
         </Link>
-        <Link href="/">
+        <Link href="https://www.marinespecies.org/">
           <a>
             <Icon iconName="WoRMS" width={126} height={40} />
           </a>

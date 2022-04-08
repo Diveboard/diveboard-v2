@@ -32,17 +32,17 @@ export const Footer = () => (
         <div className={styles.socialsWrapper}>
           <span className={styles.socialsTitle}>Join Us on Socials</span>
           <div className={styles.socials}>
-            <Link href="/">
+            <Link href="https://discord.gg/rkKFRjns">
               <a>
                 <Icon iconName="discord" />
               </a>
             </Link>
-            <Link href="/">
+            <Link href="https://twitter.com/diveboard?s=11&t=pF2sFevv7v1darAHt1qDtQ">
               <a>
                 <Icon iconName="twitter" />
               </a>
             </Link>
-            <Link href="/">
+            <Link href="https://github.com/Diveboard">
               <a>
                 <Icon iconName="github" />
               </a>
