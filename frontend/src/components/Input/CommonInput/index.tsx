@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import styles from './styles.module.scss';
-import { Icon } from '../Icons/Icon';
+import { Icon } from '../../Icons/Icon';
 
 type Props = {
   padding?: string;
@@ -9,7 +9,8 @@ type Props = {
   error?: string;
   setError?: React.Dispatch<React.SetStateAction<string>>;
   placeholder?: string;
-  showIcon?: boolean;
+  iconName?: string;
+  disabled?:boolean
 };
 
 export const Input: FC<Props> = ({
@@ -18,8 +19,9 @@ export const Input: FC<Props> = ({
   error,
   setError,
   placeholder,
-  showIcon = true,
-  padding = `16px 16px 16px ${showIcon ? '52px' : '16px'}`,
+  iconName,
+  padding = `16px 16px 16px ${iconName ? '52px' : '16px'}`,
+  disabled,
 }) => {
   const getInputStyle = (errorValue: string) => {
     if (errorValue) {
@@ -41,12 +43,13 @@ export const Input: FC<Props> = ({
         }}
         className={getInputStyle(error)}
         placeholder={placeholder}
+        disabled={disabled}
       />
       {error && <span className={styles.errorText}>{error}</span>}
 
-      {showIcon && (
+      {iconName && (
         <div className={styles.icon}>
-          <Icon iconName="email" />
+          <Icon iconName={iconName} />
         </div>
       )}
     </div>

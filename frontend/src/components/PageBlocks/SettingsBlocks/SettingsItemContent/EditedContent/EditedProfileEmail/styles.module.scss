@@ -1,0 +1,29 @@
+.inputWrapper {
+  max-width: 340px;
+  margin-bottom: 16px;
+}
+
+.codeWrapper {
+  max-width: 340px;
+  margin: 16px 0;
+
+  .confirm {
+    padding-top: 16px;
+    padding-bottom: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: #111111;
+  }
+}
+
+.getCodeText {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  color: #FFFFFF;
+}
+
+

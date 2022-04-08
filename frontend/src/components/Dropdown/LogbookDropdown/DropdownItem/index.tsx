@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import Link from 'next/link';
-import { MarginWrapper } from '../../MarginWrapper';
+import { MarginWrapper } from '../../../MarginWrapper';
 
 import styles from './style.module.scss';
 
@@ -9,7 +9,7 @@ type Props = {
   link: string;
 };
 
-export const DropdownItem: FC<Props> = ({ title, link, children }) => (
+export const LogbookDropdownItem: FC<Props> = ({ title, link, children }) => (
   <Link href={link}>
     <a className={styles.item}>
       {children}
