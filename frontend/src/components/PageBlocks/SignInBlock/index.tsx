@@ -34,12 +34,12 @@ export const SignInBlock: FC = () => {
   const [mode, setMode] = useState<'login/signup' | 'signup' | 'login'>(
     'login/signup',
   );
-  const [availableCode, setAvailableCode] = useContext(AuthCodeContext);
-
+  const { availableCode, setExpiresTime } = useContext(AuthCodeContext);
   const authCode = async () => {
     if (availableCode) {
       try {
-        const newUser = await sendCodeOnEmail(inputValue);
+        const { newUser, expiresAfter } = await sendCodeOnEmail(inputValue);
+        setExpiresTime(expiresAfter);
 
         if (newUser) {
           setMode('signup');
@@ -49,7 +49,6 @@ export const SignInBlock: FC = () => {
 
         userEmail.current.email = inputValue;
         setInputValue('');
-        setAvailableCode(false);
       } catch (e) {
         setError(e.message);
       }

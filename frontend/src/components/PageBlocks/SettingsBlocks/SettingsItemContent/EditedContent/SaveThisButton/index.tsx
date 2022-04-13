@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Button } from '../../../../../Buttons/Button';
+import { Loader } from '../../../../../Loader';
 import styles from './styles.module.scss';
-import { Icon } from '../../../../../Icons/Icon';
 
 type Props = {
   onClick: ()=>void;
@@ -18,11 +18,7 @@ export const SaveThisButton:FC<Props> = ({ disabled, loading, onClick }) => (
     onClick={onClick}
     disable={disabled}
   >
-    {loading && (
-    <span className={styles.loader}>
-      <Icon iconName="loader" size={21} />
-    </span>
-    )}
+    <Loader loading={loading} />
     <span className={styles.text}>Save This</span>
   </Button>
 );

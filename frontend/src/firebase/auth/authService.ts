@@ -8,15 +8,15 @@ import {
   signInWithCustomToken,
 } from './firebaseAuth';
 
-const sendCodeOnEmail = async (email: string) => {
+export const sendCodeOnEmail = async (email: string) => {
   const sendCode = httpsCallable(functions, 'authStart');
   const resp = await sendCode({
     email,
-  }) as { data: { newUser: boolean } };
-  return resp.data.newUser;
+  }) as { data: { newUser: boolean; expiresAfter:number } };
+  return resp.data;
 };
 
-const getTokenAuth = async (email: string, otp: string) => {
+export const getTokenAuth = async (email: string, otp: string) => {
   const getToken = httpsCallable(functions, 'logIn');
   const resp = await getToken({
     email,
@@ -25,7 +25,7 @@ const getTokenAuth = async (email: string, otp: string) => {
   return resp.data.token;
 };
 
-const setAuthKeepLogged = async (keepLogged: boolean) => {
+export const setAuthKeepLogged = async (keepLogged: boolean) => {
   if (keepLogged) {
     await setPersistence(auth, browserLocalPersistence);
   } else {
@@ -33,14 +33,7 @@ const setAuthKeepLogged = async (keepLogged: boolean) => {
   }
 };
 
-const getAuthorizedUserWithToken = async (token: string) => {
+export const getAuthorizedUserWithToken = async (token: string) => {
   const resp = await signInWithCustomToken(auth, token);
   return resp.user;
-};
-
-export {
-  sendCodeOnEmail,
-  getTokenAuth,
-  setAuthKeepLogged,
-  getAuthorizedUserWithToken,
 };
