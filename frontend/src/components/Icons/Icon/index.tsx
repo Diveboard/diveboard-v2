@@ -1,6 +1,10 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
 
+export const imageLoader = ({ src, width, quality }) => {
+  return `${src}?w=${width}&q=${quality || 75}`
+}
+
 type Props = {
   iconName: string;
   size?: number;
@@ -19,6 +23,7 @@ export const Icon: FC<Props> = ({
       width={w}
       height={h}
       alt={`${iconName}-icon`}
+      loader={imageLoader}
     />
   );
 };

@@ -5,7 +5,10 @@ const isDev = process.env.NODE_ENV !== 'production'
 
 const server = next({
     dev: isDev,
-    conf: { distDir: '.next' }
+    conf: { distDir: '.next',
+        images: {
+            domains: ['firebasestorage.googleapis.com'],
+        }}
 })
 
 const nextjsHandle = server.getRequestHandler();
