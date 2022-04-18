@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MarginWrapper } from '../../MarginWrapper';
-import { Icon } from '../../Icons/Icon';
+import { Icon, imageLoader } from '../../Icons/Icon';
 import styles from './styles.module.scss';
 import { ArrowLink } from '../../ArrowLink';
 
@@ -88,7 +88,7 @@ export const Footer = () => (
       </div>
 
       <div className={styles.forkme}>
-        <Image src="/assets/images/forkme.png" width={149} height={149} />
+        <Image src="/assets/images/forkme.png" loader={imageLoader} width={149} height={149} />
       </div>
     </div>
     <div className={styles.copyrightWrapper}>

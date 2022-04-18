@@ -77,7 +77,7 @@ export const authStart = functions.https.onCall(async (request, context): Promis
         to: user.email,
         message: {
             subject: 'Diverboard OTP',
-            html: `Your ot for Diverboard: <b>${otpData.otp}</b>`,
+            html: `Your otp for Diverboard: <b>${otpData.otp}</b>`,
         },
     })
 
@@ -88,7 +88,6 @@ export const authStart = functions.https.onCall(async (request, context): Promis
         newUser,
     };
 });
-
 
 export const logIn = functions.https.onCall(async (request, context): Promise<any> => {
     const data = await validateRequest(request, LogInRequest);
@@ -287,11 +286,15 @@ export const resetEmail = functions.https.onCall(async (request, context): Promi
         to: data.email,
         message: {
             subject: 'Diverboard OTP',
-            html: `Your ot for Diverboard: <b>${otpData.otp}</b>`,
+            html: `Your otp for Diverboard: <b>${otpData.otp}</b>`,
         },
     })
 
     await admin.firestore().collection('user-otp').doc(user.uid).update(otpData);
+
+    return {
+        expiresAfter: otpData.expiresAfter.toDate ? otpData.expiresAfter.toDate().getTime() : otpData.expiresAfter.getTime()
+    };
 
 })
 
@@ -306,6 +309,7 @@ export const confirmResetEmail = functions.https.onCall(async (request, context)
         sentAt: Date | null;
         expiresAfter: any;
     } = otpDoc.data() as any;
+
 
     if (!otpDoc.exists) {
         throw new functions.https.HttpsError('not-found', Errors.OTP_NOT_FOUND)
@@ -323,6 +327,8 @@ export const confirmResetEmail = functions.https.onCall(async (request, context)
         email: data.email
     });
 
+    const token = await admin.auth().createCustomToken(user.uid);
+
     await admin.firestore().collection('user-otp').doc(user.uid).update({
         otp: null,
         sentAt: null,
@@ -330,7 +336,7 @@ export const confirmResetEmail = functions.https.onCall(async (request, context)
     });
 
     return {
-        success: true,
+        token
     }
 
 })

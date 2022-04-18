@@ -2,13 +2,18 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import collaborationImage from '../../../../../../public/assets/images/collaboration.png';
-import { Icon } from '../../../../Icons/Icon';
+import { Icon, imageLoader } from '../../../../Icons/Icon';
 import styles from './styles.module.scss';
 
 export const CollaborationBlock = () => (
   <div className={styles.collaborationWrapper}>
     <div className={styles.imgWrapper}>
-      <Image src={collaborationImage} alt="Scientific collaboration" />
+      <Image
+          src ={collaborationImage}
+          layout={'intrinsic'}
+          loader={imageLoader}
+          alt="Scientific collaboration"
+      />
     </div>
     <div className={styles.block} />
     <div className={styles.contentWrapper}>
