@@ -7,19 +7,19 @@ import styles from './styles.module.scss';
 import { DropdownItem } from './DropdownItems';
 
 type Props = {
-  currentItem: string
+  language: string;
+  setLanguage: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export const LanguageDropdown: FC<Props> = ({ currentItem = 'English' }) => {
+export const LanguageDropdown: FC<Props> = ({ language, setLanguage }) => {
   const languages = ['English', 'Italian', 'Spanish', 'German'];
   const [open, setOpen] = useState(false);
-  const [lang, setLang] = useState(currentItem);
   const [langItems, setLangItems] = useState(languages);
 
   useEffect(() => {
-    const notSelectedLangs = languages.filter((item) => item !== lang);
+    const notSelectedLangs = languages.filter((item) => item !== language);
     setLangItems(notSelectedLangs);
-  }, [lang]);
+  }, [language]);
 
   const dropdownRef = useRef(null);
 
@@ -30,7 +30,8 @@ export const LanguageDropdown: FC<Props> = ({ currentItem = 'English' }) => {
   };
   useOutsideClick(outsideClickHandler, dropdownRef);
 
-  const itemComponents = langItems.map((item) => (<DropdownItem text={item} onSelect={setLang} />));
+  const itemComponents = langItems
+    .map((item) => (<DropdownItem text={item} onSelect={setLanguage} />));
 
   return (
     <div
@@ -41,7 +42,7 @@ export const LanguageDropdown: FC<Props> = ({ currentItem = 'English' }) => {
       className={styles.dropdownWrapper}
     >
       <div className={styles.dropdown}>
-        <span>{lang}</span>
+        <span>{language}</span>
         <Icon iconName="dropdown-arrow" />
       </div>
 

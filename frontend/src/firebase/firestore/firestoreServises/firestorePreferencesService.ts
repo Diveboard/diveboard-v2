@@ -1,12 +1,12 @@
 import { doc, getDoc, setDoc } from '@firebase/firestore';
-import { Preferences } from '../models';
+import { PreferencesType } from '../models';
 import { db } from '../firebaseFirestore';
 
 export const firestorePreferencesService = {
   setDefaultPreferences: async (userId: string) => {
     try {
       const ref = doc(db, 'user-preferences', userId);
-      const defaultPreferences: Preferences = {
+      const defaultPreferences: PreferencesType = {
         privacy: { divesPublic: true },
         scientificData: {
           shareData: true,
@@ -15,7 +15,7 @@ export const firestorePreferencesService = {
         language: 'English',
         unitSystem: 'metric',
       };
-      await setDoc(ref, { defaultPreferences }, { merge: true });
+      await setDoc(ref, { ...defaultPreferences }, { merge: true });
     } catch (e) {
       throw new Error('set default preferences error');
     }
@@ -30,7 +30,7 @@ export const firestorePreferencesService = {
     }
   },
 
-  setScientificData: async (scientificData: Pick<Preferences, 'scientificData'>, userId: string) => {
+  setScientificData: async (scientificData: Pick<PreferencesType, 'scientificData'>, userId: string) => {
     try {
       const ref = doc(db, 'user-preferences', userId);
       await setDoc(ref, { scientificData }, { merge: true });
@@ -39,7 +39,7 @@ export const firestorePreferencesService = {
     }
   },
 
-  setLanguage: async (language: Pick<Preferences, 'language'>, userId: string) => {
+  setLanguage: async (language: 'English' | 'Italian' | 'Spanish' | 'German', userId: string) => {
     try {
       const ref = doc(db, 'user-preferences', userId);
       await setDoc(ref, { language }, { merge: true });
@@ -48,7 +48,7 @@ export const firestorePreferencesService = {
     }
   },
 
-  setUnitSystem: async (unitSystem: Pick<Preferences, 'unitSystem'>, userId: string) => {
+  setUnitSystem: async (unitSystem: 'metric' | 'imperial', userId: string) => {
     try {
       const ref = doc(db, 'user-preferences', userId);
       await setDoc(ref, { unitSystem }, { merge: true });
@@ -60,6 +60,6 @@ export const firestorePreferencesService = {
   getAllPreferences: async (userId: string) => {
     const docRef = doc(db, 'user-preferences', userId);
     const docSnap = await getDoc(docRef);
-    return docSnap;
+    return docSnap.data();
   },
 };
