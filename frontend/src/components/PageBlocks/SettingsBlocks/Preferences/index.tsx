@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useState } from 'react';
 import { SettingsGroup } from '../SettingsGroup';
 import { SettingsItem } from '../SettingsItem';
 import {
@@ -14,23 +14,14 @@ import {
 import {
   EditedPreferencesUnitSystem,
 } from '../SettingsItemContent/EditedContent/EditedPreferencesUnitSystem';
-import {
-  firestorePreferencesService,
-} from '../../../../firebase/firestore/firestoreServises/firestorePreferencesService';
+import { PreferencesType } from '../../../../firebase/firestore/models';
 
 type Props = {
-  userUid: string;
+  preferences: PreferencesType
 };
 
-export const Preferences:FC<Props> = ({ userUid }) => {
-  useEffect(() => {
-    (async () => {
-      if (userUid) {
-        const pref = await firestorePreferencesService.getAllPreferences(userUid);
-        console.log({ pref });
-      }
-    })();
-  }, [userUid]);
+export const Preferences:FC<Props> = ({ preferences }) => {
+  const [preferencesData, setPreferencesData] = useState(preferences);
 
   return (
     <SettingsGroup title="Preferences">
@@ -38,29 +29,70 @@ export const Preferences:FC<Props> = ({ userUid }) => {
         title="Privacy"
         titleBlock="Preferences"
       >
-        <span className={styles.secondaryItemContent}>first</span>
-        <EditedPreferencesPrivacy />
+        <span
+          className={styles.secondaryItemContent}
+        >
+          {preferencesData.privacy.divesPublic
+            ? 'Make your dives public when complete'
+            : 'Make your dives private when complete'}
+        </span>
+        <EditedPreferencesPrivacy
+          preferences={preferencesData}
+          setPreferences={setPreferencesData}
+        />
       </SettingsItem>
+
       <SettingsItem
         title="Scientific data"
         titleBlock="Preferences"
       >
-        <span className={styles.secondaryItemContent}>first</span>
-        <EditedPreferencesScientificData />
+        <>
+          {preferencesData.scientificData.shareData
+            ? (
+              <div className={styles.secondaryItemContent}>
+                I want to share my data and have my name be mentioned as author
+              </div>
+            ) : (
+              <div className={styles.secondaryItemContent}>
+                I don't want to share my data and have my name be mentioned as author
+              </div>
+            )}
+          {preferencesData.scientificData.shareNotes
+            ? (
+              <div className={styles.secondaryItemContent}>
+                Share your dive notes
+              </div>
+            ) : (
+              <div className={styles.secondaryItemContent}>
+                Don't share your dive notes
+              </div>
+            )}
+        </>
+        <EditedPreferencesScientificData
+          preferences={preferencesData}
+          setPreferences={setPreferencesData}
+        />
       </SettingsItem>
+
       <SettingsItem
         title="Language"
         titleBlock="Preferences"
       >
-        <span className={styles.secondaryItemContent}>first</span>
-        <EditedPreferencesLanguage />
+        <span className={styles.secondaryItemContent}>{preferencesData.language}</span>
+        <EditedPreferencesLanguage
+          preferences={preferencesData}
+          setPreferences={setPreferencesData}
+        />
       </SettingsItem>
       <SettingsItem
         title="Unit System"
         titleBlock="Preferences"
       >
-        <span className={styles.secondaryItemContent}>first</span>
-        <EditedPreferencesUnitSystem defaultCheck="metric" />
+        <span className={styles.secondaryItemContent}>{preferencesData.unitSystem}</span>
+        <EditedPreferencesUnitSystem
+          preferences={preferencesData}
+          setPreferences={setPreferencesData}
+        />
       </SettingsItem>
     </SettingsGroup>
   );

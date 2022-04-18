@@ -1,11 +1,33 @@
-import React, { useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { Checkbox } from '../../../../../CheckBox';
 import { SaveThisButton } from '../SaveThisButton';
 import { MarginWrapper } from '../../../../../MarginWrapper';
 import styles from './styles.module.scss';
+import { PreferencesType } from '../../../../../../firebase/firestore/models';
+import {
+  firestorePreferencesService,
+} from '../../../../../../firebase/firestore/firestoreServises/firestorePreferencesService';
+import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
+import { EditContext } from '../../../EditContextWrapper';
 
-export const EditedPreferencesPrivacy = () => {
-  const [makePublic, setMakePublic] = useState(true);
+type Props = {
+  preferences: PreferencesType;
+  setPreferences: React.Dispatch<React.SetStateAction<PreferencesType>>;
+};
+
+export const EditedPreferencesPrivacy: FC<Props> = ({ preferences, setPreferences }) => {
+  const [makePublic, setMakePublic] = useState(preferences.privacy.divesPublic);
+  const [loading, setLoading] = useState(false);
+  const { userAuth } = useContext(AuthStatusContext);
+  const { setEditedSettings } = useContext(EditContext);
+
+  const setPrivacyPreferences = async () => {
+    setLoading(true);
+    await firestorePreferencesService.setPrivacy(makePublic, userAuth.uid);
+    setPreferences({ ...preferences, privacy: { divesPublic: makePublic } });
+    setLoading(false);
+    setEditedSettings({ settingsBlock: '', settingsItem: '' });
+  };
 
   return (
     <div>
@@ -17,7 +39,7 @@ export const EditedPreferencesPrivacy = () => {
         </Checkbox>
       </MarginWrapper>
 
-      <SaveThisButton onClick={() => {}} />
+      <SaveThisButton onClick={setPrivacyPreferences} loading={loading} disabled={loading} />
     </div>
   );
 };

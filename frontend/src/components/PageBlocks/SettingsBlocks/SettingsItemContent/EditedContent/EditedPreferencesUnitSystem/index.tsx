@@ -1,14 +1,33 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { RadioButton } from '../../../../../RadioButton';
 import { SaveThisButton } from '../SaveThisButton';
 import { MarginWrapper } from '../../../../../MarginWrapper';
+import { PreferencesType } from '../../../../../../firebase/firestore/models';
+import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
+import { EditContext } from '../../../EditContextWrapper';
+import {
+  firestorePreferencesService,
+} from '../../../../../../firebase/firestore/firestoreServises/firestorePreferencesService';
 
 type Props = {
-  defaultCheck: 'metric' | 'imperial';
+  preferences: PreferencesType;
+  setPreferences: React.Dispatch<React.SetStateAction<PreferencesType>>;
 };
 
-export const EditedPreferencesUnitSystem: FC<Props> = ({ defaultCheck }) => {
-  const [checkedRadio, setCheckedRadio] = useState(defaultCheck);
+export const EditedPreferencesUnitSystem: FC<Props> = ({ preferences, setPreferences }) => {
+  const [checkedRadio, setCheckedRadio] = useState(preferences.unitSystem);
+  const [loading, setLoading] = useState(false);
+  const { userAuth } = useContext(AuthStatusContext);
+  const { setEditedSettings } = useContext(EditContext);
+
+  const setMetricPreferences = async () => {
+    setLoading(true);
+    await firestorePreferencesService.setUnitSystem(checkedRadio, userAuth.uid);
+    setPreferences({ ...preferences, unitSystem: checkedRadio });
+    setLoading(false);
+    setEditedSettings({ settingsBlock: '', settingsItem: '' });
+  };
+
   return (
     <div>
       <MarginWrapper display="block" bottom={10}>
@@ -29,7 +48,11 @@ export const EditedPreferencesUnitSystem: FC<Props> = ({ defaultCheck }) => {
         />
       </MarginWrapper>
 
-      <SaveThisButton onClick={() => {}} />
+      <SaveThisButton
+        onClick={setMetricPreferences}
+        loading={loading}
+        disabled={loading}
+      />
     </div>
   );
 };

@@ -22,6 +22,9 @@ import {
   firestorePreferencesService,
 } from '../../../firebase/firestore/firestoreServises/firestorePreferencesService';
 import styles from './styles.module.scss';
+import {
+  firestoreNotificationService,
+} from '../../../firebase/firestore/firestoreServises/firestoreNotificationService';
 
 export const SignInBlock: FC = () => {
   const router = useRouter();
@@ -58,9 +61,11 @@ export const SignInBlock: FC = () => {
   const authUser = async () => {
     try {
       const token = await getTokenAuth(userEmail.current.email, inputValue);
+
       await setAuthKeepLogged(isKeepLogged);
       const user = await getAuthorizedUserWithToken(token);
       if (user) {
+        document.cookie = `diveBoardUserId=${user.uid}`;
         setUserAuth({
           uid: user.uid,
           email: user.email,
@@ -69,6 +74,7 @@ export const SignInBlock: FC = () => {
         });
         await firestorePublicProfileService.setEmail(user.email, user.uid);
         await firestorePreferencesService.setDefaultPreferences(user.uid);
+        await firestoreNotificationService.setDefaultNotification(user.uid);
         await router.push('/');
       }
     } catch (e) {

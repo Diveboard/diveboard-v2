@@ -1,24 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { SettingsGroup } from '../SettingsGroup';
 import { SettingsItem } from '../SettingsItem';
 import { ProfileImage } from '../SettingsItemContent/NotEditedContent/ProfileImage';
 import { EditedProfileImage } from '../SettingsItemContent/EditedContent/EditedProfileImage';
-import { AuthStatusContext } from '../../../../layouts/AuthLayout';
-import styles from '../itemContentStyle.module.scss';
 import { EditedProfileName } from '../SettingsItemContent/EditedContent/EditedProfileName';
 import { EditedProfileEmail } from '../SettingsItemContent/EditedContent/EditedProfileEmail';
+import { AuthStatusContext } from '../../../../layouts/AuthLayout';
+import styles from '../itemContentStyle.module.scss';
 
 export const PersonalInfo = () => {
-  const { userAuth } = useContext(AuthStatusContext);
-  const [userInfo, setUserInfo] = useState({ name: '', photoURL: '', email: '' });
-  const { name, photoURL, email } = userInfo;
-
-  useEffect(() => {
-    if (userAuth) {
-      setUserInfo(userAuth);
-    }
-  }, [userAuth]);
-
+  const { userAuth: { photoURL, name, email } } = useContext(AuthStatusContext);
   return (
     <SettingsGroup title="Personal Info">
       <SettingsItem

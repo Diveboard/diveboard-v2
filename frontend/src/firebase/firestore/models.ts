@@ -1,10 +1,10 @@
-export type PersonalInfo = {
+export type PersonalInfoType = {
   email: null | string;
   photoURL: null | string;
   name: null | string;
 };
 
-export type Preferences = {
+export type PreferencesType = {
   privacy:{
     divesPublic: boolean;
   };
@@ -16,7 +16,7 @@ export type Preferences = {
   unitSystem:'metric' | 'imperial';
 };
 
-export type Notifications = {
+export type NotificationsType = {
   instant: boolean;
   biWeeklyNotifications: boolean;
   biWeeklyDigest: boolean;
