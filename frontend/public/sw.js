@@ -1,4 +1,3 @@
-
 /**
  * Copyright 2018 Google Inc. All Rights Reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -113,4 +112,3 @@ define(['./workbox-74d02f44'], (function (workbox) { 'use strict';
 
 }));
 //# sourceMappingURL=sw.js.map
-
