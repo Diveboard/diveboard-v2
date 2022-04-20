@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import Link from 'next/link';
 import { Icon } from '../../Icon';
-import pagesRouts from '../../../../routs/pagesRouts.json';
+import pagesRoutes from '../../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
 
 type Props = {
@@ -16,7 +16,7 @@ export const Logo: FC<Props> = ({ filled = true, size = 'large' }) => {
     : `${styles.logo} ${styles.medium}`;
   return (
     <div className={logoSize}>
-      <Link href={pagesRouts.mainPageRout}>
+      <Link href={pagesRoutes.mainPageRoute}>
         <a className={logoStyle}>
           <Icon
             iconName="logo"

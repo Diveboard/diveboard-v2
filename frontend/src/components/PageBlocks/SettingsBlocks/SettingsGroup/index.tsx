@@ -4,7 +4,7 @@ import styles from './styles.module.scss';
 import editedStyles from '../editidStyle.module.scss';
 
 type Props = {
-  title: string
+  title?: string;
 };
 export const SettingsGroup: FC<Props> = ({
   title,
@@ -27,7 +27,7 @@ export const SettingsGroup: FC<Props> = ({
 
   return (
     <div className={styles.groupWrapper}>
-      <h3 className={titleStyle}>{title}</h3>
+      {title && <h3 className={titleStyle}>{title}</h3>}
       {children}
     </div>
   );

@@ -5,7 +5,20 @@ body {
   margin: 0;
   font-family: "Prompt", sans-serif;
   background: #FBFBFD;
+height: 100%;
 }
+
+#__next{
+  min-height: 100%;
+}
+
+/*html{*/
+/*  min-height: 100vh;*/
+/*}*/
+/*body{*/
+/*  height: 100%;*/
+/*}*/
+
 
 h1, h2, h3 {
   margin: 0;

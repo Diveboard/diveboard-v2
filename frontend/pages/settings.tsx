@@ -1,35 +1,66 @@
 import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { SettingsBlock } from '../src/components/PageBlocks/SettingsBlocks';
-import { PersonalInfo } from '../src/components/PageBlocks/SettingsBlocks/PersonalInfo';
-import { EditContextWrapper } from '../src/components/PageBlocks/SettingsBlocks/EditContextWrapper';
-import { Notification } from '../src/components/PageBlocks/SettingsBlocks/Notifications';
-
 import { AuthLayout } from '../src/layouts/AuthLayout';
+import { MainLayout } from '../src/layouts/MainLayout';
+import { useWindowWidth } from '../src/hooks/useWindowWidth';
+import {
+  DesktopSettings,
+} from '../src/components/PageBlocks/SettingsBlocks/SettingsModes/DesktopSettings';
+import {
+  MobileSettings,
+} from '../src/components/PageBlocks/SettingsBlocks/SettingsModes/MobileSettings';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
-import { Preferences } from '../src/components/PageBlocks/SettingsBlocks/Preferences';
 
 const Settings:
 InferGetServerSidePropsType<typeof getServerSideProps> = (
   { user, preferences, notifications },
-) => (
-  <AuthLayout user={user}>
-    <SettingsBlock>
-      <EditContextWrapper>
-        <PersonalInfo />
-        <Preferences preferences={preferences} />
-        <Notification notifications={notifications} />
-      </EditContextWrapper>
-    </SettingsBlock>
-  </AuthLayout>
-);
+) => {
+  const isWidth = useWindowWidth(500, 768);
+
+  return (
+    <AuthLayout user={user}>
+      <MainLayout>
+        {!isWidth
+          ? (
+            <DesktopSettings
+              preferences={preferences}
+              notifications={notifications}
+            />
+          )
+          : (
+            <MobileSettings
+              preferences={preferences}
+              notifications={notifications}
+            />
+          )}
+      </MainLayout>
+    </AuthLayout>
+  );
+};
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const uid = context.req.cookies.diveBoardUserId;
 
+  if (!uid) {
+    return {
+      props: {
+        user: null,
+      },
+    };
+  }
+
   const {
     email, photoURL = '', displayName = '',
   } = await firebaseAdmin.auth().getUser(uid);
+
+  if (!email) {
+    return {
+      redirect: {
+        destination: '/auth',
+        permanent: false,
+      },
+    };
+  }
 
   const snapshotPreferences = await firebaseAdmin
     .firestore().doc(`user-preferences/${uid}`).get();

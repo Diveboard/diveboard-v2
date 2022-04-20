@@ -18,13 +18,14 @@ import { PreferencesType } from '../../../../firebase/firestore/models';
 
 type Props = {
   preferences: PreferencesType
+  title?: boolean;
 };
 
-export const Preferences:FC<Props> = ({ preferences }) => {
+export const Preferences:FC<Props> = ({ preferences, title = true }) => {
   const [preferencesData, setPreferencesData] = useState(preferences);
 
   return (
-    <SettingsGroup title="Preferences">
+    <SettingsGroup title={title && 'Preferences'}>
       <SettingsItem
         title="Privacy"
         titleBlock="Preferences"

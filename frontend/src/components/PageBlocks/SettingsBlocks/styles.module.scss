@@ -1,12 +1,14 @@
-.wrapper{
+.wrapper {
   margin-top: 80px;
-  padding-top: 30px;
   display: flex;
   justify-content: center;
-  .content{
+  padding: 30px 10px 0 10px;
+
+  .content {
     width: 100%;
     max-width: 870px;
-    .title{
+
+    .title {
       margin-bottom: 10px;
       font-weight: 600;
       font-size: 40px;

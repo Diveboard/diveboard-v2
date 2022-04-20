@@ -14,9 +14,10 @@ import { EditContext } from '../EditContextWrapper';
 
 type Props = {
   notifications: NotificationsType
+  title?: boolean
 };
 
-export const Notification:FC<Props> = ({ notifications }) => {
+export const Notification:FC<Props> = ({ notifications, title = true }) => {
   const [instant, setInstant] = useState(notifications.instant);
   const [
     biWeeklyNotifications,
@@ -43,7 +44,7 @@ export const Notification:FC<Props> = ({ notifications }) => {
   };
 
   return (
-    <SettingsGroup title="Notifications">
+    <SettingsGroup title={title && 'Notifications'}>
       <div className={styles}>
         <MarginWrapper top={20} />
         <NotificationItem

@@ -1,13 +1,30 @@
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import React from 'react';
+import { GetServerSideProps, NextPage } from 'next';
+import pageRoutes from '../src/routes/pagesRoutes.json';
 
-export default function Home(): JSX.Element {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.push('/main/home-guest');
-  });
-
+const Home
+: NextPage = () => (
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return <></>;
-}
+  <></>
+);
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const uid = context.req.cookies.diveBoardUserId;
+
+  if (!uid) {
+    return {
+      redirect: {
+        destination: pageRoutes.mainPageGuest,
+        permanent: false,
+      },
+    };
+  }
+  return {
+    redirect: {
+      destination: pageRoutes.mainPageUser,
+      permanent: false,
+    },
+  };
+};
+
+export default Home;

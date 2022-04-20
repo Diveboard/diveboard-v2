@@ -3,19 +3,25 @@ import styles from './style.module.scss';
 import { LogbookDropdownItem } from './DropdownItem';
 import { Icon } from '../../Icons/Icon';
 import { useOutsideClick } from '../../../hooks/useOutsideClick';
+import { LogDive, ViewLogbook } from '../../Icons/IconSVGComponents';
+import pageRoutes from '../../../routes/pagesRoutes.json';
 
-type Props = {
-  title: string;
-  imgName: string;
-  items: {
-    id: number | string;
-    svgItem: JSX.Element;
-    title: string;
-    link: string;
-  }[];
-};
+const logbookItems = [
+  {
+    id: 1,
+    svgItem: <LogDive />,
+    title: 'Log a New Dive',
+    link: pageRoutes.logDivePageRout,
+  },
+  {
+    id: 2,
+    svgItem: <ViewLogbook />,
+    title: 'View a Logbook',
+    link: pageRoutes.logbookPageRout,
+  },
+];
 
-export const LogbookDropdown: FC<Props> = ({ title, imgName, items }) => {
+export const LogbookDropdown: FC = () => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -27,7 +33,7 @@ export const LogbookDropdown: FC<Props> = ({ title, imgName, items }) => {
 
   useOutsideClick(outsideClickHandler, dropdownRef);
 
-  const dropdownElements = items.map((item) => (
+  const dropdownElements = logbookItems.map((item) => (
     <LogbookDropdownItem key={item.id} title={item.title} link={item.link}>
       {item.svgItem}
     </LogbookDropdownItem>
@@ -41,8 +47,8 @@ export const LogbookDropdown: FC<Props> = ({ title, imgName, items }) => {
       className={styles.dropdown}
     >
       <div className={styles.dropdownButton}>
-        <Icon iconName={imgName} />
-        <span className={styles.title}>{title}</span>
+        <Icon iconName="logbook" />
+        <span className={styles.title}>Logbook</span>
         <Icon iconName="dropdown" size={10} />
       </div>
 

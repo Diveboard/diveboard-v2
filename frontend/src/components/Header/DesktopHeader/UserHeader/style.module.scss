@@ -1,4 +1,4 @@
-@import "../../../../styles/colors";
+@import "../../../../../styles/colors";
 
 .header {
   position: fixed;
@@ -12,6 +12,7 @@
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 5px 20px rgba(0, 24, 85, 0.1);
+  background-color: #FFFFFF;
 
   .leftGroup {
     width: 530px;
@@ -31,7 +32,7 @@
 
   .rightGroup {
     margin-left: 20px;
-    width: 270px;
+    width: 300px;
     display: flex;
     justify-content: space-between;
     align-items: center;
