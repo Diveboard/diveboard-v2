@@ -1,5 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
+diveboard-org-firebase-adminsdk-zqzeb-4d4b96ce53.json
 # dependencies
 /node_modules
 /.pnp
@@ -53,4 +53,5 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
-diveboard-org-firebase-adminsdk-zqzeb-4d4b96ce53
+
+
