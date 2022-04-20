@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
-import { Icon } from '../../Icons/Icon';
+import { Icon, imageLoader } from '../../Icons/Icon';
 import styles from './styles.module.scss';
 
 type Props = {
@@ -25,6 +25,7 @@ export const DestinationCard: FC<Props> = ({
         className={styles.img}
         layout="fill"
         alt={destinationName}
+        loader={imageLoader}
       />
     </div>
 

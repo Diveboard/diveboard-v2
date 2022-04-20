@@ -4,7 +4,7 @@ import landingLabel from '../../../../../../public/assets/images/landing-label.p
 import styles from './styles.module.scss';
 import { Input } from '../../../../Input/CommonInput';
 import { Button } from '../../../../Buttons/Button';
-import { Icon } from '../../../../Icons/Icon';
+import { Icon, imageLoader } from '../../../../Icons/Icon';
 import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
 
 export const MainBannerBlock = () => {
@@ -18,7 +18,11 @@ export const MainBannerBlock = () => {
   return (
     <div className={styles.mainBannerWrapper}>
       <div className={styles.label}>
-        <Image src={landingLabel} />
+        <Image src={landingLabel}
+               layout={'fill'}
+               loader={imageLoader}
+
+        />
       </div>
 
       <div className={styles.content}>
