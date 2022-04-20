@@ -6,6 +6,7 @@ import {
   httpsCallable,
   setPersistence,
   signInWithCustomToken,
+  signOut,
 } from './firebaseAuth';
 
 export const sendCodeOnEmail = async (email: string) => {
@@ -36,4 +37,8 @@ export const setAuthKeepLogged = async (keepLogged: boolean) => {
 export const getAuthorizedUserWithToken = async (token: string) => {
   const resp = await signInWithCustomToken(auth, token);
   return resp.user;
+};
+
+export const logOut = async () => {
+  await signOut(auth);
 };

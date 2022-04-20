@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { FC, useContext } from 'react';
 import { SettingsGroup } from '../SettingsGroup';
 import { SettingsItem } from '../SettingsItem';
 import { ProfileImage } from '../SettingsItemContent/NotEditedContent/ProfileImage';
@@ -8,10 +8,14 @@ import { EditedProfileEmail } from '../SettingsItemContent/EditedContent/EditedP
 import { AuthStatusContext } from '../../../../layouts/AuthLayout';
 import styles from '../itemContentStyle.module.scss';
 
-export const PersonalInfo = () => {
+type Props = {
+  title?: boolean
+};
+
+export const PersonalInfo:FC<Props> = ({ title = true }) => {
   const { userAuth: { photoURL, name, email } } = useContext(AuthStatusContext);
   return (
-    <SettingsGroup title="Personal Info">
+    <SettingsGroup title={title && 'Personal Info'}>
       <SettingsItem
         title="Profile Image"
         titleBlock="Personal Info"

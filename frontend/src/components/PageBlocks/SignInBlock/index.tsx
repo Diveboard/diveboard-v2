@@ -2,16 +2,13 @@ import React, {
   FC, useContext, useRef, useState,
 } from 'react';
 import { useRouter } from 'next/router';
-import { Icon } from '../../Icons/Icon';
 import { MarginWrapper } from '../../MarginWrapper';
 import { Input } from '../../Input/CommonInput';
 import { Button } from '../../Buttons/Button';
-import { Checkbox } from '../../CheckBox';
 import {
   getAuthorizedUserWithToken,
   getTokenAuth,
   sendCodeOnEmail,
-  setAuthKeepLogged,
 } from '../../../firebase/auth/authService';
 import { AuthCodeContext } from '../../../layouts/AuthCodeTimer';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
@@ -25,6 +22,13 @@ import styles from './styles.module.scss';
 import {
   firestoreNotificationService,
 } from '../../../firebase/firestore/firestoreServises/firestoreNotificationService';
+import { LogoIcon } from './Components/LogoIcon';
+import { Title } from './Components/Title';
+import { Description } from './Components/Description';
+import { CheckBoxContent } from './Components/CheckBoxContent';
+import { Loader } from '../../Loader';
+import { setCookiesLogin } from '../../../utils/setCookiesLogin';
+import { statusUserRedirect } from '../../../utils/statusUserRedirect';
 
 export const SignInBlock: FC = () => {
   const router = useRouter();
@@ -34,17 +38,25 @@ export const SignInBlock: FC = () => {
   const [isTermsChecked, setTermsChecked] = useState(false);
   const [isKeepLogged, setKeepLogged] = useState(false);
   const userEmail = useRef<{ email: string }>({ email: '' });
-  const [mode, setMode] = useState<'login/signup' | 'signup' | 'login'>(
+  const [mode, setMode] = useState<'login/signup' | 'signup' | 'login' | 'community'>(
     'login/signup',
   );
-  const { availableCode, setExpiresTime } = useContext(AuthCodeContext);
+  const [loading, setLoading] = useState(false);
+  const {
+    availableCode,
+    setExpiresTime,
+  } = useContext(AuthCodeContext);
   const authCode = async () => {
     if (availableCode) {
       try {
-        const { newUser, expiresAfter } = await sendCodeOnEmail(inputValue);
+        const {
+          newUser,
+          expiresAfter,
+        } = await sendCodeOnEmail(inputValue);
         setExpiresTime(expiresAfter);
 
         if (newUser) {
+          localStorage.setItem('diveBoardUser', 'newUser');
           setMode('signup');
         } else {
           setMode('login');
@@ -62,20 +74,22 @@ export const SignInBlock: FC = () => {
     try {
       const token = await getTokenAuth(userEmail.current.email, inputValue);
 
-      await setAuthKeepLogged(isKeepLogged);
       const user = await getAuthorizedUserWithToken(token);
       if (user) {
-        document.cookie = `diveBoardUserId=${user.uid}`;
+        setCookiesLogin(isKeepLogged, user.uid);
+
         setUserAuth({
           uid: user.uid,
           email: user.email,
           photoURL: user.photoURL,
           name: user.displayName,
         });
+
         await firestorePublicProfileService.setEmail(user.email, user.uid);
         await firestorePreferencesService.setDefaultPreferences(user.uid);
         await firestoreNotificationService.setDefaultNotification(user.uid);
-        await router.push('/');
+
+        await statusUserRedirect(mode, router.push, setMode);
       }
     } catch (e) {
       setError('invalid or expired code');
@@ -83,6 +97,7 @@ export const SignInBlock: FC = () => {
   };
 
   const submit = async () => {
+    setLoading(true);
     if (!inputValue.length) {
       return setError('empty value');
     }
@@ -93,6 +108,8 @@ export const SignInBlock: FC = () => {
         return setError('invalid mail value');
       }
       await authCode();
+    } else if (mode === 'community') {
+      await router.push('https://discord.gg/rkKFRjns');
     } else {
       const codeRegexp = /[0-9]{6}/;
       if (!inputValue.match(codeRegexp)) {
@@ -100,69 +117,41 @@ export const SignInBlock: FC = () => {
       }
       await authUser();
     }
+    setLoading(false);
   };
 
   return (
     <div className={styles.signInWrapper}>
-      {mode !== 'login' ? (
-        <Icon iconName="signup" size={70} />
-      ) : (
-        <Icon iconName="login" size={70} />
-      )}
-
-      {mode === 'login/signup' && (
-        <h1 className={styles.title}>Login /Signup</h1>
-      )}
-      {mode === 'signup' && <h1 className={styles.title}>Signup</h1>}
-      {mode === 'login' && <h1 className={styles.title}>Login</h1>}
-
-      <p className={styles.text}>
-        Here you can log all of you dives. Please, register to track your dives
-        and share your experience with others
-      </p>
-
+      <LogoIcon mode={mode} />
+      <Title mode={mode} />
+      <Description mode={mode} />
       <div className={styles.inputMargin} />
 
-      <Input
-        value={inputValue}
-        setValue={setInputValue}
-        error={error}
-        setError={setError}
-        placeholder={
-          mode === 'login/signup'
-            ? 'Your Email'
-            : 'Enter the code from your email'
-        }
-        iconName={mode === 'login/signup' && 'email'}
-      />
+      {mode !== 'community' && (
+        <Input
+          value={inputValue}
+          setValue={setInputValue}
+          error={error}
+          setError={setError}
+          placeholder={
+            mode === 'login/signup'
+              ? 'Your Email'
+              : 'Enter the code from your email'
+          }
+          iconName={mode === 'login/signup' && 'email'}
+        />
+      )}
 
       <div
         className={styles.checkboxWrapper}
       >
-        {mode === 'login/signup' && (
-          <p className={styles.conformationText}>
-            We’ll send a Confirmation code to your email
-          </p>
-        )}
-        {mode === 'signup' && (
-
-        <Checkbox name="terms-of-service" onChecked={setTermsChecked} checked={isTermsChecked}>
-          <span className={styles.commonText}> I accept </span>
-          <span
-            className={styles.coloredText}
-            onClick={() => {
-            }}
-          >
-            Terms of Services
-          </span>
-        </Checkbox>
-        )}
-
-        {mode === 'login' && (
-        <Checkbox name="keep-logged" onChecked={setKeepLogged} checked={isKeepLogged}>
-          <span className={styles.commonText}> Keep me Logged In </span>
-        </Checkbox>
-        )}
+        <CheckBoxContent
+          mode={mode}
+          isTermsChecked={isTermsChecked}
+          setTermsChecked={setTermsChecked}
+          isKeepLogged={isKeepLogged}
+          setKeepLogged={setKeepLogged}
+        />
       </div>
 
       <MarginWrapper top={10}>
@@ -172,9 +161,10 @@ export const SignInBlock: FC = () => {
           borderRadius={30}
           border="none"
           backgroundColor="#FDC90D"
-          disable={mode === 'signup' && !isTermsChecked}
+          disable={(mode === 'signup' && !isTermsChecked) || loading}
           onClick={submit}
         >
+          {loading && <Loader loading={loading} />}
           {mode === 'login/signup' && (
             <span className={styles.btnText}>Send Code</span>
           )}
@@ -182,13 +172,13 @@ export const SignInBlock: FC = () => {
             <span className={styles.btnText}>Register</span>
           )}
           {mode === 'login' && <span className={styles.btnText}>Log In</span>}
+          {mode === 'community' && <span className={styles.btnText}>Join on Discord</span>}
         </Button>
       </MarginWrapper>
 
       {(mode === 'signup' || mode === 'login') && (
         <MarginWrapper top={20}>
           <span className={styles.commonText}> Didn’t get a code?</span>
-          {' '}
           <span
             className={availableCode ? styles.coloredText : styles.disabledText}
             onClick={authCode}

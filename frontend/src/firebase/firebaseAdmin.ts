@@ -1,5 +1,5 @@
 import * as firebaseAdmin from 'firebase-admin';
-import serviceAccount from '../utils/diveboard-org-firebase-adminsdk-zqzeb-4d4b96ce53.json';
+import serviceAccount from '../../diveboard-org-firebase-adminsdk-zqzeb-4d4b96ce53.json';
 
 if (!firebaseAdmin.apps.length) {
   firebaseAdmin.initializeApp({

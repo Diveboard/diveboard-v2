@@ -8,6 +8,9 @@ type Props = {
   label?: string;
   labelColor?: string;
   iconName?: string;
+  iconSize?: number;
+  fontSize?: number;
+  fontWeight?:number;
 };
 
 export const LinkedButton: FC<Props> = ({
@@ -15,14 +18,20 @@ export const LinkedButton: FC<Props> = ({
   label,
   labelColor,
   iconName,
+  iconSize,
+  fontSize,
+  fontWeight,
+
 }) => (
   <Link href={link}>
     <a className={styles.linkBtn}>
-      <Icon iconName={iconName} />
+      <Icon iconName={iconName} size={iconSize} />
       {label && (
       <span
         style={{
           color: labelColor,
+          fontSize: `${fontSize}px`,
+          fontWeight,
         }}
       >
         {label}
