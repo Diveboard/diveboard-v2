@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { MarginWrapper } from '../../MarginWrapper';
-import { Icon } from '../../Icons/Icon';
+import { Icon, imageLoader } from '../../Icons/Icon';
 import styles from './styles.module.scss';
 import { ArrowLink } from '../../ArrowLink';
 
@@ -32,17 +32,17 @@ export const Footer = () => (
         <div className={styles.socialsWrapper}>
           <span className={styles.socialsTitle}>Join Us on Socials</span>
           <div className={styles.socials}>
-            <Link href="/">
+            <Link href="https://discord.gg/rkKFRjns">
               <a>
                 <Icon iconName="discord" />
               </a>
             </Link>
-            <Link href="/">
+            <Link href="https://twitter.com/diveboard?s=11&t=pF2sFevv7v1darAHt1qDtQ">
               <a>
                 <Icon iconName="twitter" />
               </a>
             </Link>
-            <Link href="/">
+            <Link href="https://github.com/Diveboard">
               <a>
                 <Icon iconName="github" />
               </a>
@@ -88,7 +88,7 @@ export const Footer = () => (
       </div>
 
       <div className={styles.forkme}>
-        <Image src="/assets/images/forkme.png" width={149} height={149} />
+        <Image src="/assets/images/forkme.png" loader={imageLoader} width={149} height={149} />
       </div>
     </div>
     <div className={styles.copyrightWrapper}>

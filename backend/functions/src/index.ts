@@ -77,7 +77,7 @@ export const authStart = functions.https.onCall(async (request, context): Promis
         to: user.email,
         message: {
             subject: 'Diverboard OTP',
-            html: `Your ot for Diverboard: <b>${otpData.otp}</b>`,
+            html: `Your otp for Diverboard: <b>${otpData.otp}</b>`,
         },
     })
 
@@ -88,7 +88,6 @@ export const authStart = functions.https.onCall(async (request, context): Promis
         newUser,
     };
 });
-
 
 export const logIn = functions.https.onCall(async (request, context): Promise<any> => {
     const data = await validateRequest(request, LogInRequest);
@@ -138,10 +137,14 @@ export const oneTimeDonation = functions.https.onCall(async (request, context): 
     const user = await userExpectedInRequest(context);
     const data = await validateRequest(request, OneTimeDonationRequest);
 
-    let source = data.token;
+    const stripeChargeRequest: Stripe.ChargeCreateParams = {
+        amount: data.amount,
+        currency: 'usd',
+        description: `One-time donation by User ${user.email}`,
+    };
 
     if (data.saveCard && data.token) {
-        const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.email!).get();
+        const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.uid).get();
         const stripeData = stripeDoc.data();
 
         const newSource = await stripe.customers.createSource(stripeData!.customerId, {
@@ -156,7 +159,9 @@ export const oneTimeDonation = functions.https.onCall(async (request, context): 
             defaultSource: newSource.id,
         }, { merge: true });
 
-        source = newSource.id;
+        stripeChargeRequest.customer = stripeData!.customerId;
+    } else if (data.token) {
+        stripeChargeRequest.source = data.token;
     } else if (!data.token) {
         const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.uid).get();
         const stripeData = stripeDoc.data();
@@ -165,17 +170,12 @@ export const oneTimeDonation = functions.https.onCall(async (request, context): 
             throw new functions.https.HttpsError('invalid-argument', Errors.STRIPE_NO_DEFAULT_METHOD)
         }
 
-        source = stripeData!.defaultSource;
+        stripeChargeRequest.customer = stripeData!.customerId;
     }
 
 
     try {
-        await stripe.charges.create({
-            amount: data.amount,
-            source,
-            currency: 'usd',
-            description: `One-time donation by User ${user.email}`,
-        });
+        await stripe.charges.create(stripeChargeRequest);
     } catch (e) {
         handleStripeError(e as Stripe.StripeError);
     }
@@ -190,8 +190,8 @@ export const oneTimeDonation = functions.https.onCall(async (request, context): 
 const subscriptions: {
     [key: string]: string;
 } = {
-    'fiveForTwelve': 'prod_LNcURiv6h4qrAG',
-    'threeForTwelve': 'prod_LNcTzlGjMPNsjP',
+    'fiveForTwelve': 'price_1KgrFKFgvOVu5NAtdLUTc46i',
+    'threeForTwelve': 'price_1KgrEUFgvOVu5NAtPvQHvJT2',
 }
 
 export const subDonation = functions.https.onCall(async (request, context): Promise<any> => {
@@ -231,11 +231,11 @@ export const subDonation = functions.https.onCall(async (request, context): Prom
         customer: stripeData!.customerId,
         items: [
             {
-                price: subscriptions[data.subType]
-            }
+                price: subscriptions[data.subType],
+            },
         ],
-        cancel_at: (new Date().getTime() / 1000) + 31536000 // In a year
-    })
+        cancel_at: Math.ceil((new Date().getTime() / 1000) + 31536000), // In a year
+    });
 
     await admin.firestore().collection('user-stripe').doc(user.uid).set({
         activeSubscription: sub.id,
@@ -247,3 +247,96 @@ export const subDonation = functions.https.onCall(async (request, context): Prom
     }
 });
 
+export const resetEmail = functions.https.onCall(async (request, context): Promise<any> => {
+    const user = await userExpectedInRequest(context);
+    const data = await validateRequest(request, AuthStartRequest);
+
+    const otpDoc = await admin.firestore().collection('user-otp').doc(user.uid).get();
+
+    let otpData: {
+        otp: string | null;
+        sentAt: Date | null;
+        expiresAfter: any;
+    } = otpDoc.data() as any;
+
+    if (!otpDoc.exists && !otpData) {
+        await admin.firestore().collection('user-otp').doc(user.uid).create({
+            otp: null,
+            sentAt: null,
+            expiresAfter: null,
+        });
+
+        const newOtpDoc = await admin.firestore().collection('user-otp').doc(user.uid).get();
+
+        otpData = newOtpDoc.data() as any;
+    }
+
+
+    if (!otpData.otp || (!!otpData.expiresAfter && otpData.expiresAfter.toDate().getTime() < new Date().getTime())) {
+        otpData = {
+            otp: generateOtp(),
+            // Now
+            sentAt: new Date(),
+            // In 5 minutes
+            expiresAfter: new Date(new Date().getTime() + 5 * 60 * 1000),
+        }
+    }
+
+    await admin.firestore().collection('mail').add({
+        to: data.email,
+        message: {
+            subject: 'Diverboard OTP',
+            html: `Your otp for Diverboard: <b>${otpData.otp}</b>`,
+        },
+    })
+
+    await admin.firestore().collection('user-otp').doc(user.uid).update(otpData);
+
+    return {
+        expiresAfter: otpData.expiresAfter.toDate ? otpData.expiresAfter.toDate().getTime() : otpData.expiresAfter.getTime()
+    };
+
+})
+
+export const confirmResetEmail = functions.https.onCall(async (request, context): Promise<any> => {
+    const user = await userExpectedInRequest(context);
+    const data = await validateRequest(request, LogInRequest);
+
+    const otpDoc = await admin.firestore().collection('user-otp').doc(user.uid).get();
+
+    let otpData: {
+        otp: string | null;
+        sentAt: Date | null;
+        expiresAfter: any;
+    } = otpDoc.data() as any;
+
+
+    if (!otpDoc.exists) {
+        throw new functions.https.HttpsError('not-found', Errors.OTP_NOT_FOUND)
+    }
+
+    if (!otpData.otp || (!!otpData.expiresAfter && otpData.expiresAfter.toDate().getTime() < new Date().getTime())) {
+        throw new functions.https.HttpsError('deadline-exceeded', Errors.OTP_EXPIRED)
+    }
+
+    if (data.otp !== otpData.otp) {
+        throw new functions.https.HttpsError('invalid-argument', Errors.OTP_INVALID)
+    }
+
+    await admin.auth().updateUser(user.uid, {
+        email: data.email
+    });
+
+    const token = await admin.auth().createCustomToken(user.uid);
+
+    await admin.firestore().collection('user-otp').doc(user.uid).update({
+        otp: null,
+        sentAt: null,
+        expiresAfter: null,
+    });
+
+    return {
+        token
+    }
+
+})

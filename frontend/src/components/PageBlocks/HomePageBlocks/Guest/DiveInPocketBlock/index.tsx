@@ -1,14 +1,14 @@
 import React from 'react';
 import Image from 'next/image';
 import { Button } from '../../../../Buttons/Button';
-import { Icon } from '../../../../Icons/Icon';
+import { Icon, imageLoader } from '../../../../Icons/Icon';
 import mobilesImg from '../../../../../../public/assets/images/mobiles.png';
 import styles from './styles.module.scss';
 
 export const DiveInPocketBlock = () => (
   <div className={styles.diveInPocketWrapper}>
     <div className={styles.mobileImg}>
-      <Image src={mobilesImg} layout="fill" />
+      <Image src={mobilesImg} layout="fill" loader={imageLoader} />
     </div>
 
     <div className={styles.contentWrapper}>
