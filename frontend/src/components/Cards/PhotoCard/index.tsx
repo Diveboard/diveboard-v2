@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
 import styles from './styles.module.scss';
-import { Icon } from '../../Icons/Icon';
+import { Icon, imageLoader } from '../../Icons/Icon';
 
 type Props = {
   imgSrc: string;
@@ -34,7 +34,9 @@ export const PhotoCard: FC<Props> = ({
       }
       onClick={onToggle}
     >
-      <Image src={imgSrc} layout="fill" className={styles.img} />
+      <Image src={imgSrc} layout="fill"
+             loader={imageLoader}
+             className={styles.img} />
       <span className={styles.favouritesBlock}>
         <span>{favourites}</span>
         <span>Saves</span>

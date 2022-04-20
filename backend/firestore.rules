@@ -1,17 +1,17 @@
 rules_version = '2';
 service cloud.firestore {
     match /databases/{database}/documents {
-        match /user-preferences/{userEmail} {
-            allow read, write, update: if userEmail == request.auth.token.email;
+        match /user-preferences/{userId} {
+            allow read, write, update: if userId == request.auth.uid;
         }
 
-        match /user-public-profile/{userEmail} {
+        match /user-public-profile/{userId} {
             allow read: if true;
-            allow write, update: if userEmail == request.auth.token.email;
+            allow write, update: if userId == request.auth.uid;
         }
 
-        match /user-stripe/{userEmail} {
-            allow read: if userEmail == request.auth.token.email;
+        match /user-stripe/{userId} {
+            allow read: if userId == request.auth.uid;
         }
     }
 }
