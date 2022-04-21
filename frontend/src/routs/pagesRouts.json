@@ -5,6 +5,7 @@
   "authPageRout": "/auth",
   "explorePageRout": "/explore",
   "logbookPageRout": "/logbook",
-  "walletPageRout": "/wallet"
-
+  "walletPageRout": "/wallet",
+  "donatePageRoute": "/donate",
+  "donateFormPageRoute": "/donate-form"
 }
