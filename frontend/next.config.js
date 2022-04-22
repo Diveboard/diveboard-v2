@@ -15,11 +15,11 @@ module.exports = withImages({
             loader: 'file-loader',
             options: {
               name: 'images/[hash]-[name].[ext]',
-            },
-          },
-        ],
-      },
-    ],
+            }
+          }
+        ]
+      }
+    ]
   }
 })
 
@@ -35,5 +35,3 @@ module.exports = withPWA({
     publicExcludes: ['!assets/**/*']
   }
 })
-
-

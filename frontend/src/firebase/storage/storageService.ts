@@ -1,7 +1,7 @@
 import {
   ref, uploadBytes, getBlob, getDownloadURL, StorageReference,
 } from 'firebase/storage';
-import { storage } from './firebaseStore';
+import { storage } from './firebaseStorage';
 
 export const uploadAvatar = (userUid: string, avatar: File) => {
   const storageRef = ref(storage, `${userUid}/avatar/userAvatar`);

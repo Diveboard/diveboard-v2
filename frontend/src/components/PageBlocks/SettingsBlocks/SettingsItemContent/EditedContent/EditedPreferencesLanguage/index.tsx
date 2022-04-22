@@ -1,15 +1,44 @@
-import React from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { LanguageDropdown } from '../../../../../Dropdown/languageDropdawn';
 import { SaveThisButton } from '../SaveThisButton';
 import { MarginWrapper } from '../../../../../MarginWrapper';
+import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
+import { EditContext } from '../../../EditContextWrapper';
+import { PreferencesType } from '../../../../../../firebase/firestore/models';
+import {
+  firestorePreferencesService,
+} from '../../../../../../firebase/firestore/firestoreServises/firestorePreferencesService';
 
-export const EditedPreferencesLanguage = () => (
-  <div>
-    <LanguageDropdown currentItem="English" />
+type Props = {
+  preferences: PreferencesType;
+  setPreferences: React.Dispatch<React.SetStateAction<PreferencesType>>;
+};
+export const EditedPreferencesLanguage: FC<Props> = ({ preferences, setPreferences }) => {
+  const [loading, setLoading] = useState(false);
+  const { userAuth } = useContext(AuthStatusContext);
+  const { setEditedSettings } = useContext(EditContext);
+  const [language, setLanguage] = useState(preferences.language);
 
-    <MarginWrapper top={10}>
-      <SaveThisButton onClick={() => {}} />
-    </MarginWrapper>
+  const setLanguagePreferences = async () => {
+    setLoading(true);
+    await firestorePreferencesService.setLanguage(language, userAuth.uid);
+    setPreferences({ ...preferences, language });
+    setLoading(false);
+    setEditedSettings({ settingsBlock: '', settingsItem: '' });
+  };
 
-  </div>
-);
+  return (
+    <div>
+      <LanguageDropdown language={language} setLanguage={setLanguage} />
+
+      <MarginWrapper top={10}>
+        <SaveThisButton
+          onClick={setLanguagePreferences}
+          loading={loading}
+          disabled={loading}
+        />
+      </MarginWrapper>
+
+    </div>
+  );
+};

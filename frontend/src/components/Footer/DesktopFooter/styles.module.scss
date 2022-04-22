@@ -1,7 +1,8 @@
 .footer {
-  position: relative;
   height: 238px;
   background: #000345;
+  position: relative;
+
 
   .contentWrapper {
     padding: 35px 0 0 75px;
@@ -111,7 +112,7 @@
     line-height: 16px;
 
 
-    .copyright{
+    .copyright {
       transform: translateX(15%);
     }
   }
@@ -123,6 +124,7 @@
     .contentWrapper {
       .contentGroup {
         width: 100%;
+
         .labelWrapper {
           display: none;
         }
