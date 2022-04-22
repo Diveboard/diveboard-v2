@@ -1,25 +1,41 @@
-import React, { createContext, FC, useState } from 'react';
+import React, {
+  createContext, FC, useEffect, useMemo, useState,
+} from 'react';
 
-export const AuthCodeContext = createContext<
-[boolean, React.Dispatch<React.SetStateAction<boolean>>]
->(
+type ContextType = {
+  availableCode: boolean,
+  setExpiresTime: React.Dispatch<React.SetStateAction<number>>
+};
+
+export const AuthCodeContext = createContext<ContextType>(
   undefined,
 );
 
 export const AuthCodeTimer: FC = ({ children }) => {
-  const availableState = useState(true);
-  const [available, setAvailable] = availableState;
-  const startTimer = () => {
-    if (!available) {
-      setTimeout(() => {
-        setAvailable(true);
-      }, 5000 * 60);
+  const [expires, setExpiresTime] = useState<number | null>(null);
+  const [availableCode, setAvailableCode] = useState(true);
+
+  useEffect(() => {
+    if (expires) {
+      setAvailableCode(false);
+      const timerId = setInterval(() => {
+        const currentTime = Date.now();
+        if (expires < currentTime) {
+          setAvailableCode(true);
+          setExpiresTime(null);
+          clearInterval(timerId);
+        }
+      }, 5000);
     }
-  };
-  startTimer();
+  }, [expires]);
+
+  const authMemoizedState = useMemo(() => ({
+    availableCode,
+    setExpiresTime,
+  }), [expires, availableCode]);
 
   return (
-    <AuthCodeContext.Provider value={availableState}>
+    <AuthCodeContext.Provider value={authMemoizedState}>
       {children}
     </AuthCodeContext.Provider>
   );

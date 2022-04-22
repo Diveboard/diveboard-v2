@@ -32,50 +32,53 @@ export const PasswordInput: FC<Props> = ({
   };
 
   return (
-    <div className={styles.inputWrapper}>
-      {show ? (
-        <input
-          type="text"
-          autoComplete="off"
-          style={{ padding }}
-          value={value}
-          onChange={(event) => {
-            setValue(event.target.value);
-            if (setError) {
-              setError('');
-            }
-          }}
-          className={getInputStyle(error)}
-          placeholder={placeholder}
-          disabled={disabled}
-        />
-      ) : (
-        <input
-          type="password"
-          autoComplete="off"
-          style={{ padding }}
-          value={value}
-          onChange={(event) => {
-            setValue(event.target.value);
-            if (setError) {
-              setError('');
-            }
-          }}
-          className={getInputStyle(error)}
-          placeholder={placeholder}
-          disabled={disabled}
-        />
-      )}
-      {error && <span className={styles.errorText}>{error}</span>}
+    <>
+      <div className={styles.inputWrapper}>
+        {show ? (
+          <input
+            type="text"
+            autoComplete="off"
+            style={{ padding }}
+            value={value}
+            onChange={(event) => {
+              setValue(event.target.value);
+              if (setError) {
+                setError('');
+              }
+            }}
+            className={getInputStyle(error)}
+            placeholder={placeholder}
+            disabled={disabled}
+          />
+        ) : (
+          <input
+            type="password"
+            autoComplete="off"
+            style={{ padding }}
+            value={value}
+            onChange={(event) => {
+              setValue(event.target.value);
+              if (setError) {
+                setError('');
+              }
+            }}
+            className={getInputStyle(error)}
+            placeholder={placeholder}
+            disabled={disabled}
+          />
+        )}
 
-      {iconName && (
-        <div className={styles.icon}>
-          <Icon iconName={iconName} />
+        {iconName && (
+          <div className={styles.icon}>
+            <Icon iconName={iconName} />
+          </div>
+        )}
+        <div className={styles.passwordIcon} onClick={() => { setShow(!show); }}>
+          <Icon iconName={show ? 'hide' : 'show'} />
         </div>
-      )}
-      <div className={styles.passwordIcon} onClick={() => { setShow(!show); }}>
-        <Icon iconName={show ? 'hide' : 'show'} />
       </div>
-    </div>
+      {error && <span className={styles.errorText}>{error}</span>}
+    </>
+
   );
 };

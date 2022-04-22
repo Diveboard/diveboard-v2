@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Icon } from '../Icons/Icon';
-import pagesRouts from '../../routs/pagesRouts.json';
+import pagesRoutes from '../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
 
 export const MobileNavBar = () => {
@@ -20,9 +20,9 @@ export const MobileNavBar = () => {
 
   return (
     <nav className={styles.navbar}>
-      <Link href={pagesRouts.explorePageRout}>
+      <Link href={pagesRoutes.explorePageRout}>
         <a className={getItemStyles(router.pathname, '/explore')}>
-          {router.pathname === pagesRouts.explorePageRout ? (
+          {router.pathname === pagesRoutes.explorePageRout ? (
             <Icon iconName="explore-mobile-colored" />
           ) : (
             <Icon iconName="explore-mobile" />
@@ -30,9 +30,9 @@ export const MobileNavBar = () => {
           <span className={styles.navLabel}>Explore</span>
         </a>
       </Link>
-      <Link href={pagesRouts.logbookPageRout}>
+      <Link href={pagesRoutes.logbookPageRout}>
         <a className={getItemStyles(router.pathname, '/logbook')}>
-          {router.pathname === pagesRouts.logbookPageRout ? (
+          {router.pathname === pagesRoutes.logbookPageRout ? (
             <Icon iconName="logbook-mobile-colored" />
           ) : (
             <Icon iconName="logbook-mobile" />
@@ -40,9 +40,9 @@ export const MobileNavBar = () => {
           <span className={styles.navLabel}>Logbook</span>
         </a>
       </Link>
-      <Link href={pagesRouts.walletPageRout}>
+      <Link href={pagesRoutes.walletPageRout}>
         <a className={getItemStyles(router.pathname, '/wallet')}>
-          {router.pathname === pagesRouts.walletPageRout ? (
+          {router.pathname === pagesRoutes.walletPageRout ? (
             <Icon iconName="wallet-mobile-colored" />
           ) : (
             <Icon iconName="wallet-mobile" />
@@ -50,9 +50,9 @@ export const MobileNavBar = () => {
           <span className={styles.navLabel}>Wallet</span>
         </a>
       </Link>
-      <Link href={pagesRouts.authPageRout}>
+      <Link href={pagesRoutes.authPageRout}>
         <a className={getItemStyles(router.pathname, '/auth')}>
-          {router.pathname === pagesRouts.authPageRout ? (
+          {router.pathname === pagesRoutes.authPageRout ? (
             <Icon iconName="login-mobile-colored" />
           ) : (
             <Icon iconName="login-mobile" />

@@ -1,12 +1,14 @@
 import React, { FC, useContext, useState } from 'react';
 import { ProfileImage } from '../../NotEditedContent/ProfileImage';
 import { SaveThisButton } from '../SaveThisButton';
-import { getAvatarUrl, uploadAvatar } from '../../../../../../firebase/store/storeService';
-import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
-
-import styles from './styles.module.scss';
-import { EditContext } from '../../../EditContextWrapper';
+import { getAvatarUrl, uploadAvatar } from '../../../../../../firebase/storage/storageService';
 import { updateUserAvatar } from '../../../../../../firebase/user/userService';
+import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
+import { EditContext } from '../../../EditContextWrapper';
+import {
+  firestorePublicProfileService,
+} from '../../../../../../firebase/firestore/firestoreServises/firestorePublicProfileService';
+import styles from './styles.module.scss';
 
 type Props = {
   imgSrc: string;
@@ -34,8 +36,9 @@ export const EditedProfileImage: FC<Props> = ({ imgSrc }) => {
       await updateUserAvatar(url);
       if (res) {
         setUserAuth({ ...userAuth, photoURL: url });
-        setEditedSettings({ settingsBlock: '', settingsItem: '' });
+        await firestorePublicProfileService.setPhotoURL(url, userAuth.uid);
         setLoading(false);
+        setEditedSettings({ settingsBlock: '', settingsItem: '' });
       }
     } else {
       throw new Error('you are not authorized');
