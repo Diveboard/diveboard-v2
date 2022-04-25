@@ -1,5 +1,5 @@
 import React, {
-  createContext, FC, useEffect, useMemo, useState,
+  createContext, FC, useEffect, useMemo, useRef, useState,
 } from 'react';
 
 type ContextType = {
@@ -14,18 +14,22 @@ export const AuthCodeContext = createContext<ContextType>(
 export const AuthCodeTimer: FC = ({ children }) => {
   const [expires, setExpiresTime] = useState<number | null>(null);
   const [availableCode, setAvailableCode] = useState(true);
+  const timerId = useRef< NodeJS.Timer>(null);
 
   useEffect(() => {
     if (expires) {
       setAvailableCode(false);
-      const timerId = setInterval(() => {
+      timerId.current = setInterval(() => {
         const currentTime = Date.now();
         if (expires < currentTime) {
           setAvailableCode(true);
           setExpiresTime(null);
-          clearInterval(timerId);
+          clearInterval(timerId.current);
         }
       }, 5000);
+    } else {
+      clearInterval(timerId.current);
+      setAvailableCode(true);
     }
   }, [expires]);
 
