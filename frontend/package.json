@@ -11,6 +11,8 @@
     "deploy": "next build && firebase deploy --only hosting,functions:nextServer"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^1.7.2",
+    "@stripe/stripe-js": "^1.28.0",
     "axios": "^0.26.1",
     "firebase": "^9.6.8",
     "firebase-admin": "^10.0.2",
