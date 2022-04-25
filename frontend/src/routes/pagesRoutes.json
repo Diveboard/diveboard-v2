@@ -7,5 +7,16 @@
   "logbookPageRout": "/logbook",
   "walletPageRout": "/wallet",
   "donatePageRoute": "/donate",
-  "donateFormPageRoute": "/donate-form"
+  "donateFormPageRoute": "/donate-form",
+  "mainPageRoute": "/",
+  "aboutPageRout": "/about",
+  "diveManagerPageRout": "/dive-manager",
+  "donatePageRout": "/donate",
+  "favouritesPageRout": "/favourites",
+  "feedsPageRout": "/feed",
+  "galleryPageRout": "/gallery",
+  "shopPageRout": "/shop",
+  "supportPageRout": "/support",
+  "settingsPageRout": "/settings",
+  "logDivePageRout": "/log-dive"
 }
