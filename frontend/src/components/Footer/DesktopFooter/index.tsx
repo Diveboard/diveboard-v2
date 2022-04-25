@@ -18,7 +18,7 @@ export const Footer = () => (
             on your generous support to keep the platform running.
           </span>
 
-          <ArrowLink text="Donate" color="#FFFFFF" link="/" />
+          <ArrowLink text="Donate" color="#FFFFFF" link="/donate" />
         </div>
 
         <div className={styles.labelWrapper}>

@@ -1,4 +1,7 @@
 import React from 'react';
+import { NextPage } from 'next';
+import { MainDonateBlock } from '../src/components/PageBlocks/DonateBlocks/MainDonateBlock';
+
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
@@ -7,7 +10,7 @@ import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 const Donate : InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
     <MainLayout>
-      Donate
+      <MainDonateBlock />
     </MainLayout>
   </AuthLayout>
 );

@@ -1,19 +1,11 @@
 {
-  "mainPageRoute": "/",
+  "mainPageRout": "/",
   "mainPageGuest": "/main/home-guest",
   "mainPageUser": "/main/home-user",
   "authPageRout": "/auth",
   "explorePageRout": "/explore",
   "logbookPageRout": "/logbook",
   "walletPageRout": "/wallet",
-  "aboutPageRout": "/about",
-  "diveManagerPageRout": "/dive-manager",
-  "donatePageRout": "/donate",
-  "favouritesPageRout": "/favourites",
-  "feedsPageRout": "/feed",
-  "galleryPageRout": "/gallery",
-  "shopPageRout": "/shop",
-  "supportPageRout": "/support",
-  "settingsPageRout": "/settings",
-  "logDivePageRout": "/log-dive"
+  "donatePageRoute": "/donate",
+  "donateFormPageRoute": "/donate-form"
 }
