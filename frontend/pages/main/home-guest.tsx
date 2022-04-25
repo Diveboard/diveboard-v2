@@ -18,7 +18,6 @@ import {
 } from '../../src/components/PageBlocks/HomePageBlocks/Guest/DiveInPocketBlock';
 import { AuthLayout } from '../../src/layouts/AuthLayout';
 import { MainLayout } from '../../src/layouts/MainLayout';
-import { firebaseAdmin } from '../../src/firebase/firebaseAdmin';
 
 const HomeGuest:
 InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
@@ -36,28 +35,19 @@ InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const uid = context.req.cookies.diveBoardUserId;
-  if (!uid) {
+
+  if (uid) {
     return {
-      props: {
-        user: null,
+      redirect: {
+        destination: '/main/home-user',
+        permanent: false,
       },
     };
   }
-  const {
-    email,
-    photoURL = '',
-    displayName = '',
-  } = await firebaseAdmin.auth()
-    .getUser(uid);
 
   return {
     props: {
-      user: {
-        uid,
-        email,
-        photoURL,
-        name: displayName,
-      },
+      user: null,
     },
   };
 };
