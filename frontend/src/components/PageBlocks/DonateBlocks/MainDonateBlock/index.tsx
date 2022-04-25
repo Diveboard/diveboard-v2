@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styles from './styles.module.scss';
 import { Button } from '../../../Buttons/Button';
-import pagesRouts from '../../../../routs/pagesRouts.json';
+import pagesRouts from '../../../../routes/pagesRouts.json';
 import { SponsorsBlock } from '../SponsorsBlock';
 import { useRouter } from 'next/router';
 
