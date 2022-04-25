@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { LogoMobile } from '../../Icons/Logo/MobileLogo';
 import { Icon } from '../../Icons/Icon';
 import styles from './styles.module.scss';
-import pagesRouts from '../../../routes/pagesRouts.json';
+import pagesRouts from '../../../routes/pagesRoutes.json';
 import { MarginWrapper } from '../../MarginWrapper';
 import { useScroll } from '../../../hooks/useScroll';
 
