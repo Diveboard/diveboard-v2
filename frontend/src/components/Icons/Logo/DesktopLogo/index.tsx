@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import Link from 'next/link';
 import { Icon } from '../../Icon';
-import pagesRouts from '../../../../routes/pagesRouts.json';
+import pagesRouts from '../../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
 
 type Props = {

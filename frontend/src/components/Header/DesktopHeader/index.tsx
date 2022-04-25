@@ -9,7 +9,7 @@ import { LinkedButton } from '../../Buttons/LinkedButton';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
 import { useWindowWidth } from '../../../hooks/useWindowWidth';
 
-import pagesRouts from '../../../routes/pagesRouts.json';
+import pagesRouts from '../../../routes/pagesRoutes.json';
 import styles from './style.module.scss';
 
 export const Header: FC = (): JSX.Element => {

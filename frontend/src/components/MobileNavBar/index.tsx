@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Icon } from '../Icons/Icon';
-import pagesRouts from '../../routes/pagesRouts.json';
+import pagesRouts from '../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
 
 export const MobileNavBar = () => {
