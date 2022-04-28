@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React, {FC} from 'react';
 import styles from './styles.module.scss';
 import Image from 'next/image';
-import userImage from '../../../../../public/TEST_IMG_THEN_DELETE/Image.png';
-import {Icon, imageLoader} from '../../../Icons/Icon';
+import userImage from '../../../../../../../public/TEST_IMG_THEN_DELETE/Image.png';
+import { Icon, imageLoader } from '../../../../../Icons/Icon';
 
 export const ProfileBlock: FC = () => (
     <div className={styles.block}>
@@ -21,6 +21,6 @@ export const ProfileBlock: FC = () => (
         </div>
         <div className={styles.follow}>
             <span> Follow </span>
-            <Icon iconName="plus" width={7} height={7} /></div>
+            <Icon iconName="plus" width={7} height={7}/></div>
     </div>
 );

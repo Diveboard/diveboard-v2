@@ -1,5 +1,5 @@
 {
-  "mainPageRout": "/",
+  "mainPageRoute": "/",
   "mainPageGuest": "/main/home-guest",
   "mainPageUser": "/main/home-user",
   "authPageRout": "/auth",
@@ -7,11 +7,8 @@
   "logbookPageRout": "/logbook",
   "walletPageRout": "/wallet",
   "donatePageRoute": "/donate",
-  "donateFormPageRoute": "/donate-form",
-  "mainPageRoute": "/",
   "aboutPageRout": "/about",
   "diveManagerPageRout": "/dive-manager",
-  "donatePageRout": "/donate",
   "favouritesPageRout": "/favourites",
   "feedsPageRout": "/feed",
   "galleryPageRout": "/gallery",
