@@ -30,7 +30,7 @@ export const Button: FC<Props> = ({
     border,
     width: `${width}px`,
     height: `${height}px`,
-    marginTop:`${marginTop}px`
+    marginTop:`${marginTop}px`,
   };
   return (
     <button
