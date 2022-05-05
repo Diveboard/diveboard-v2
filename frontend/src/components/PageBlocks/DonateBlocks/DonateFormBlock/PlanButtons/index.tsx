@@ -1,11 +1,12 @@
 import React, {FC, useState} from 'react';
 import styles from './styles.module.scss';
 import { Button } from '../../../../Buttons/Button';
-import { Props } from '../index';
+import { Props } from '../../MainDonateBlock';
+import {useRouter} from 'next/router';
+import pageRouter from '../../../../../routes/pagesRoutes.json'
 
-
-export const PlanButtons: FC<Props> = ({planMode,setPlanMode}) => {
-
+export const PlanButtons: FC<Props> = ({planMode,setPlanMode, setContentMode,contentMode}) => {
+ const router  = useRouter()
     return (
         <div className={styles.btn_wrapper}>
             <Button

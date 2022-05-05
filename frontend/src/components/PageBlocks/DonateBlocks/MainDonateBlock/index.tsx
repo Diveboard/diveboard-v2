@@ -3,7 +3,7 @@ import styles from './styles.module.scss';
 import { Button } from '../../../Buttons/Button';
 import { SponsorsBlock } from './SponsorsBlock';
 
-type Props = {
+export type Props = {
     planMode: '3/month' | '5/month' | 'custom'
     setPlanMode: React.Dispatch<React.SetStateAction<"3/month" | "5/month" | "custom">>
     contentMode: 'main' | 'plan' | 'success'

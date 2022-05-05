@@ -3,11 +3,9 @@ import { MainDonateBlock } from '../src/components/PageBlocks/DonateBlocks/MainD
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
-
-// import * as admin from 'firebase-admin';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 import { DonateFormBlock } from '../src/components/PageBlocks/DonateBlocks/DonateFormBlock';
-// admin.initializeApp();
+import { SuccessBlock } from '../src/components/PageBlocks/DonateBlocks/SuccessBlock';
 
 const Donate: InferGetServerSidePropsType<typeof getServerSideProps> = ({user}) => {
     const [planMode, setPlanMode] = useState<'3/month' | '5/month' | 'custom'>();
@@ -25,7 +23,11 @@ const Donate: InferGetServerSidePropsType<typeof getServerSideProps> = ({user}) 
                 {contentMode === 'plan' && <DonateFormBlock
                     planMode={planMode}
                     setPlanMode={setPlanMode}
+                    setContentMode={setContentMode}
+                    contentMode={contentMode}
                 />}
+                {contentMode === 'success' && < SuccessBlock/>
+                }
             </MainLayout>
         </AuthLayout>
     )
