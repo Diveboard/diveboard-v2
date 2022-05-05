@@ -2,13 +2,10 @@ import React, {FC} from 'react';
 import styles from './styles.module.scss';
 import { CheckoutForm } from "./CheckoutForm/CheckoutForm.js";
 import { PlanButtons } from './PlanButtons';
+import { Props } from '../MainDonateBlock';
 
-export type Props = {
-    planMode: '3/month' | '5/month' | 'custom'
-    setPlanMode: React.Dispatch<React.SetStateAction<"3/month" | "5/month" | "custom">>
-}
 
-export const DonateFormBlock: FC<Props> = ({planMode, setPlanMode}) => (
+export const DonateFormBlock: FC<Props> = ({planMode, setPlanMode,setContentMode,contentMode}) => (
     <div className={styles.wrapper}>
         <div className={styles.title}>
             <h2> Donate Now </h2>
@@ -17,6 +14,9 @@ export const DonateFormBlock: FC<Props> = ({planMode, setPlanMode}) => (
         <PlanButtons
             planMode={planMode}
             setPlanMode={setPlanMode}
+            //TODO DELETE BELOW MODE
+            contentMode={contentMode}
+            setContentMode={setContentMode}
         />
         <CheckoutForm
             planMode={planMode}
