@@ -5,14 +5,14 @@ import {
     CardCvcElement,
     CardExpiryElement, CardElement,
 } from '@stripe/react-stripe-js';
-import React, {useEffect, useState} from "react";
+import React, { useState } from "react";
 import styles from './styles.module.scss'
 import { Button } from "../../../../Buttons/Button";
 import { Input } from "../../../../Input/CommonInput";
 import { Checkbox } from "../../../../CheckBox";
 import { customDonation } from "../../../../../firebase/user/donateService";
 
-export const CheckoutForm = ({planMode, setPlanMode}) => {
+export const CheckoutForm = ({planMode, setPlanMode, contentMode, setContentMode}) => {
     const [amount, setAmount] = useState('');
     const [customerName, setCustomerName] = useState('');
     const [saveCustomer, setSaveCustomer ] = useState(false);
@@ -39,36 +39,6 @@ export const CheckoutForm = ({planMode, setPlanMode}) => {
         const cardElement = elements.getElement(CardElement);
         console.log(cardElement)
 
-        // try {
-        //     const {data: clientSecret } = await axios.post("/api/stripe-payment-intent", {
-        //         amount: stripeInfo.amount
-        //     });
-        //     const paymentMethodReq = await stripe.createPaymentMethod({
-        //         type: "card",
-        //         card: cardElement,
-        //         billing_details: {
-        //             name: customerName,
-        //         },
-        //     });
-        //
-        //     if (paymentMethodReq.error) {
-        //         setCheckoutError(paymentMethodReq.error.message);
-        //         setProcessingTo(false);
-        //         return;
-        //     }
-        //
-        //     const { error } = await stripe.confirmCardPayment(clientSecret, {
-        //         payment_method: paymentMethodReq.paymentMethod.id
-        //     });
-        //
-        //     if (error) {
-        //         setCheckoutError(error.message);
-        //         setProcessingTo(false);
-        //     }
-        //
-        // }  catch (err) {
-        //     console.log(err)
-        // }
 
         const result = await stripe.confirmCardPayment("pi_3KOivPJVPt1Jo8AR0OL9pLFj_secret_UYhK5EwG4GJzNjZD1QVdhD56n", {
             payment_method: {
@@ -76,6 +46,10 @@ export const CheckoutForm = ({planMode, setPlanMode}) => {
                 card: cardElement,
                 billing_details: {
                     name: customerName,
+                },
+                confirmParams: {
+                    // Return URL where the customer should be redirected after the PaymentIntent is confirmed.
+                    // return_url: '',
                 },
             },
         })

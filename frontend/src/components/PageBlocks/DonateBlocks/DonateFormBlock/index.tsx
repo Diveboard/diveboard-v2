@@ -21,6 +21,8 @@ export const DonateFormBlock: FC<Props> = ({planMode, setPlanMode,setContentMode
         <CheckoutForm
             planMode={planMode}
             setPlanMode={setPlanMode}
+            contentMode={contentMode}
+            setContentMode={setContentMode}
         />
     </div>
 );
