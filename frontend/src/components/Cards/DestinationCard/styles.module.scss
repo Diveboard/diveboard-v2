@@ -50,17 +50,12 @@
       }
 
       .ratingWrapper {
-        width: 135px;
+        width: 145px;
         height: 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
 
-        .rating {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
 
         .dives {
           font-weight: 500;
@@ -72,6 +67,5 @@
         }
       }
     }
-
   }
 }
