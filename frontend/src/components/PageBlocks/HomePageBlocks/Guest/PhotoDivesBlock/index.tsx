@@ -16,19 +16,19 @@ export const PhotoDivesBlock = () => (
             size="normal"
           />
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/shark.jpg"
+            imgSrc="/TEST_IMG_THEN_DELETE/photo2.jpg"
             favourites={136}
             size="small"
           />
         </div>
         <div className={styles.column}>
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/shark.jpg"
+            imgSrc="/TEST_IMG_THEN_DELETE/photo3.jpg"
             favourites={136}
             size="small"
           />
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/shark.jpg"
+            imgSrc="/TEST_IMG_THEN_DELETE/photo4.jpg"
             favourites={136}
             size="normal"
           />
@@ -37,24 +37,24 @@ export const PhotoDivesBlock = () => (
       <div className={styles.rightGroup}>
         <div className={styles.column}>
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/shark.jpg"
+            imgSrc="/TEST_IMG_THEN_DELETE/photo5.jpg"
             favourites={136}
             size="normal"
           />
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/shark.jpg"
+            imgSrc="/TEST_IMG_THEN_DELETE/photo6.jpg"
             favourites={136}
             size="small"
           />
         </div>
         <div className={styles.column}>
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/shark.jpg"
+            imgSrc="/TEST_IMG_THEN_DELETE/photo7.jpg"
             favourites={136}
             size="small"
           />
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/shark.jpg"
+            imgSrc="/TEST_IMG_THEN_DELETE/photo8.jpg"
             favourites={136}
             size="normal"
           />
