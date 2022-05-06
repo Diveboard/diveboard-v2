@@ -1,0 +1,15 @@
+.picturesWrapper {
+  margin-top: 75px;
+
+  .viewMore {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    color: #0059DE;
+    &:hover{
+      cursor: pointer;
+    }
+  }
+}
+
+

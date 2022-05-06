@@ -1,0 +1,53 @@
+.photoWrapper {
+  margin-top: 2.344vw;
+  margin-bottom: 26px;
+  display: flex;
+  justify-content: center;
+
+   .column {
+    display: flex;
+    flex-direction: column;
+    margin-right: 1.563vw;
+    justify-content: space-between;
+
+  }
+
+}
+
+@media (max-width: 800px) {
+  .photoWrapper {
+
+    .column {
+      margin-right: 10px;
+
+      &:last-child {
+        margin-right: 0;
+        display: none;
+      }
+
+      > div {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+
+@media (max-width: 768px) {
+  .photoWrapper {
+
+    .column {
+      margin-right: 10px;
+
+      &:nth-child(2){
+        margin-right: 0;
+        display: none;
+      }
+
+      > div {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+

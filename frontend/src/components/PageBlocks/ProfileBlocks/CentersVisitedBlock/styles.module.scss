@@ -1,0 +1,26 @@
+.centersWrapper {
+  margin-top: 75px;
+
+  .cardWrapper {
+    margin-top: 26px;
+    padding-bottom: 26px;
+    //overflow-x: scroll;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    > div {
+      margin-right: 15px;
+      margin-bottom: 10px;
+
+      &:last-child{
+        margin-right: 0;
+      }
+    }
+  }
+}
+
