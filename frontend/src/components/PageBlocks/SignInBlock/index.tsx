@@ -183,6 +183,7 @@ export const SignInBlock: FC = () => {
             className={availableCode ? styles.coloredText : styles.disabledText}
             onClick={authCode}
           >
+            {'  '}
             Resend a Code
           </span>
         </MarginWrapper>

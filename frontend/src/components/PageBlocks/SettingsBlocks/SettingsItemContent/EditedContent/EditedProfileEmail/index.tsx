@@ -46,13 +46,13 @@ export const EditedProfileEmail: FC = () => {
     if (!emailValue.match(mailRegexp)) {
       return setMailError('invalid mail value');
     }
-    setCodeLoading(true);
+    setMailLoading(true);
 
     const { expiresAfter } = await sendCodeOnNewEmail(emailValue) as { expiresAfter: number };
     if (expiresAfter) {
       setExpiresTime(expiresAfter);
     }
-    setCodeLoading(false);
+    setMailLoading(false);
     setMode('code');
   };
 
@@ -61,7 +61,7 @@ export const EditedProfileEmail: FC = () => {
     if (!codeValue.match(codeRegexp)) {
       return setCodeError('invalid code value');
     }
-    setMailLoading(true);
+    setCodeLoading(true);
     const { token } = await confirmCodeOfNewEmail(emailValue, codeValue) as { token: string };
 
     const user = await getAuthorizedUserWithToken(token);
@@ -72,7 +72,8 @@ export const EditedProfileEmail: FC = () => {
       });
 
       await firestorePublicProfileService.setEmail(emailValue, userAuth.uid);
-      setMailLoading(false);
+      setCodeLoading(false);
+      setExpiresTime(null);
       setEditedSettings({
         settingsBlock: '',
         settingsItem: '',
@@ -110,11 +111,11 @@ export const EditedProfileEmail: FC = () => {
         backgroundColor="#0059DE"
         width={193}
         height={48}
-        disable={!emailValue || !!mailError || !availableCode}
+        disable={mailLoading || !emailValue || !!mailError || !availableCode}
       >
-        <Loader loading={codeLoading} />
+        <Loader loading={mailLoading} />
         <span className={styles.getCodeText}>
-          {mode === 'email' ? 'Get a Code' : 'Resend Code'}
+          {availableCode && mode === 'code' ? 'Get a Code' : 'Resend Code'}
         </span>
       </Button>
 
@@ -138,8 +139,8 @@ export const EditedProfileEmail: FC = () => {
       </div>
       <SaveThisButton
         onClick={confirmCode}
-        disabled={mode === 'email' || mailLoading || !!codeError}
-        loading={mailLoading}
+        disabled={mode === 'email' || codeLoading || !!codeError}
+        loading={codeLoading}
       />
     </div>
   );

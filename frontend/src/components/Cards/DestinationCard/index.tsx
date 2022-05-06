@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
 import { Icon, imageLoader } from '../../Icons/Icon';
+import { Rating } from '../../Rating';
 import styles from './styles.module.scss';
 
 type Props = {
@@ -41,28 +42,7 @@ export const DestinationCard: FC<Props> = ({
         </div>
 
         <div className={styles.ratingWrapper}>
-          <div className={styles.rating}>
-            <Icon
-              iconName={rating >= 1 ? 'star filled in' : 'star outline'}
-              size={20}
-            />
-            <Icon
-              iconName={rating >= 2 ? 'star filled in' : 'star outline'}
-              size={20}
-            />
-            <Icon
-              iconName={rating >= 3 ? 'star filled in' : 'star outline'}
-              size={20}
-            />
-            <Icon
-              iconName={rating >= 4 ? 'star filled in' : 'star outline'}
-              size={20}
-            />
-            <Icon
-              iconName={rating >= 5 ? 'star filled in' : 'star outline'}
-              size={20}
-            />
-          </div>
+          <Rating rating={rating} />
           <span className={styles.dives}>{divesNumber}</span>
         </div>
       </div>
