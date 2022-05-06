@@ -9,10 +9,10 @@ export const CollaborationBlock = () => (
   <div className={styles.collaborationWrapper}>
     <div className={styles.imgWrapper}>
       <Image
-          src ={collaborationImage}
-          layout={'intrinsic'}
-          loader={imageLoader}
-          alt="Scientific collaboration"
+        src={collaborationImage}
+        layout="intrinsic"
+        loader={imageLoader}
+        alt="Scientific collaboration"
       />
     </div>
     <div className={styles.block} />
@@ -22,7 +22,8 @@ export const CollaborationBlock = () => (
         Since Diveboard started, we understood that each and every scuba diver
         is a scientist. Our observations are valuable data that can help
         better understand our environment or how body functions under
-        pressure. <br/>
+        pressure.
+        <br />
         As a consequence, we support those organizations, sharing
         anonymized raw data with them and trying to make the world a better
         place.
