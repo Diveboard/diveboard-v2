@@ -1,9 +1,7 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
 
-export const imageLoader = ({ src, width, quality }) => {
-  return `${src}?w=${width}&q=${quality || 75}`
-}
+export const imageLoader = ({ src, width, quality }) => `${src}?w=${width}&q=${quality || 75}`;
 
 type Props = {
   iconName: string;
