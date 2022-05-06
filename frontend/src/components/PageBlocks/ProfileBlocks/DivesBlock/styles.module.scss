@@ -1,0 +1,33 @@
+.divesWrapper {
+  margin-top: 75px;
+
+  .filtersWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .cardWrapper {
+    margin-top: 26px;
+    padding-bottom: 26px;
+    display: flex;
+    justify-content: center;
+
+    > div {
+      margin-right: 30px;
+      margin-bottom: 10px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .viewMore {
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    color: #0059DE;
+  }
+}

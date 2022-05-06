@@ -4,9 +4,7 @@ export const useWindowWidth = (ms: number, maxWidth: number) => {
   const [isWidth, setIsWidth] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== undefined) {
-      setIsWidth(window.innerWidth < maxWidth);
-    }
+    setIsWidth(window.innerWidth < maxWidth);
 
     let timeoutId: NodeJS.Timeout;
     const delay = async (msDelay: number): Promise<void> => {
@@ -18,10 +16,8 @@ export const useWindowWidth = (ms: number, maxWidth: number) => {
     };
 
     const setDelayedWidth = async () => {
-      if (typeof window !== undefined) {
-        await delay(ms);
-        setIsWidth(window.innerWidth < maxWidth);
-      }
+      await delay(ms);
+      setIsWidth(window.innerWidth < maxWidth);
     };
 
     window.addEventListener('resize', setDelayedWidth);

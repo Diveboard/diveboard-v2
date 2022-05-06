@@ -1,0 +1,49 @@
+.outer {
+  background: rgba(63, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .inner {
+    background: rgba(63, 255, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .point {
+      border-radius: 50%;
+      background: #3FFFFF;
+      box-shadow: 0 0 5px rgba(0, 36, 51, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .count {
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 10px;
+        color: #000345;
+      }
+    }
+  }
+}
+
+.pointNameWrapper {
+  width: 135px;
+  height: 40px;
+  background: #FFFFFF;
+  box-shadow: 0 8px 15px rgba(0, 62, 89, 0.06);
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .pointName {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 12px;
+    color: #000345;
+  }
+}
