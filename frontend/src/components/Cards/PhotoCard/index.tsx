@@ -7,8 +7,9 @@ type Props = {
   imgSrc: string;
   favourites: number;
   addedToFavourite?: boolean;
-  size: 'normal' | 'small';
+  size: 'normal' | 'small' | 'mobileScroll';
   onToggle?: () => void;
+  authorName?:string
 };
 
 export const PhotoCard: FC<Props> = ({
@@ -17,10 +18,13 @@ export const PhotoCard: FC<Props> = ({
   favourites,
   size,
   onToggle,
+  authorName,
 }) => {
   const getCardSize = () => {
     if (size === 'normal') {
       return `${styles.photoCard} ${styles.normalImgSize}`;
+    } if (size === 'mobileScroll') {
+      return `${styles.photoCard} ${styles.scrollSize}`;
     }
     return `${styles.photoCard} ${styles.smallImgSize}`;
   };
@@ -34,9 +38,12 @@ export const PhotoCard: FC<Props> = ({
       }
       onClick={onToggle}
     >
-      <Image src={imgSrc} layout="fill"
-             loader={imageLoader}
-             className={styles.img} />
+      <Image
+        src={imgSrc}
+        layout="fill"
+        loader={imageLoader}
+        className={styles.img}
+      />
       <span className={styles.favouritesBlock}>
         <span>{favourites}</span>
         <span>Saves</span>
@@ -46,6 +53,13 @@ export const PhotoCard: FC<Props> = ({
           size={16}
         />
       </span>
+      {authorName && (
+      <span className={styles.author}>
+        added by:
+        {' '}
+        {authorName}
+      </span>
+      )}
     </div>
   );
 };

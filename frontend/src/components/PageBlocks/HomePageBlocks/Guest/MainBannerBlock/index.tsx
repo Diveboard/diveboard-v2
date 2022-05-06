@@ -6,6 +6,7 @@ import { Input } from '../../../../Input/CommonInput';
 import { Button } from '../../../../Buttons/Button';
 import { Icon, imageLoader } from '../../../../Icons/Icon';
 import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
+import { ButtonGroup } from '../../../../ButtonGroup';
 
 export const MainBannerBlock = () => {
   const isWidth = useWindowWidth(500, 768);
@@ -13,14 +14,26 @@ export const MainBannerBlock = () => {
   const [filters, setFilters] = useState<'spots' | 'shops' | 'regions'>(
     'spots',
   );
-
+  const buttons = [{
+    connectedMode: 'spots',
+    text: 'Spots',
+  },
+  {
+    connectedMode: 'shops',
+    text: 'Shops',
+  },
+  {
+    connectedMode: 'regions',
+    text: 'Regions',
+  }];
   const search = () => {};
   return (
     <div className={styles.mainBannerWrapper}>
       <div className={styles.label}>
-        <Image src={landingLabel}
-               layout={'fill'}
-               loader={imageLoader}
+        <Image
+          src={landingLabel}
+          layout="fill"
+          loader={imageLoader}
 
         />
       </div>
@@ -62,56 +75,14 @@ export const MainBannerBlock = () => {
         </div>
 
         <div className={styles.buttonGroup}>
-          <Button
-            width={83}
-            height={36}
-            borderRadius={30}
-            border={
-              filters === 'spots' ? 'none' : '1px solid rgba(0, 3, 69, 0.2)'
+          <ButtonGroup
+            mode={filters}
+            setMode={setFilters}
+            buttons={
+              buttons
             }
-            backgroundColor={
-              filters === 'spots' ? 'rgba(63, 255, 255, 0.6)' : 'transparent'
-            }
-            onClick={() => {
-              setFilters('spots');
-            }}
-          >
-            <span className={styles.filledBtnText}>Spots</span>
-          </Button>
-
-          <Button
-            width={83}
-            height={36}
-            borderRadius={30}
-            border={
-              filters === 'shops' ? 'none' : '1px solid rgba(0, 3, 69, 0.2)'
-            }
-            backgroundColor={
-              filters === 'shops' ? 'rgba(63, 255, 255, 0.6)' : 'transparent'
-            }
-            onClick={() => {
-              setFilters('shops');
-            }}
-          >
-            <span className={styles.filledBtnText}>Shops</span>
-          </Button>
-
-          <Button
-            width={83}
-            height={36}
-            borderRadius={30}
-            border={
-              filters === 'regions' ? 'none' : '1px solid rgba(0, 3, 69, 0.2)'
-            }
-            backgroundColor={
-              filters === 'regions' ? 'rgba(63, 255, 255, 0.6)' : 'transparent'
-            }
-            onClick={() => {
-              setFilters('regions');
-            }}
-          >
-            <span className={styles.filledBtnText}>Regions</span>
-          </Button>
+            special
+          />
         </div>
       </div>
     </div>

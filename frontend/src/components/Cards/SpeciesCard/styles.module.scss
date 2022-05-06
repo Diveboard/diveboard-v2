@@ -1,0 +1,32 @@
+.card {
+  width: 420px;
+  background: #FFFFFF;
+  box-shadow: 0 8px 15px rgba(0, 62, 89, 0.06);
+  border-radius: 15px;
+
+  .img {
+    border-radius: 15px 15px 0 0;
+  }
+
+  .footer {
+    color: #000345;
+    padding: 11px 15px;
+    display: flex;
+    flex-direction: column;
+
+    .name {
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 22px;
+    }
+
+    .scientificName {
+      margin-top: 4px;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 10px;
+      line-height: 12px;
+      opacity: 0.8;
+    }
+  }
+}

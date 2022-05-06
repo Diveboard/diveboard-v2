@@ -28,6 +28,16 @@
     color: #000345;
     opacity: 0.8;
   }
+
+  .author {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    font-weight: 300;
+    font-size: 11px;
+    line-height: 12px;
+    color: #FFFFFF;
+  }
 }
 
 .toggleable {
@@ -42,6 +52,11 @@
 .smallImgSize {
   width: 21.875vw;
   height: 15.625vw;
+}
+
+.scrollSize{
+  width: 300px;
+  height: 176px;
 }
 
 @media (max-width: 768px) {

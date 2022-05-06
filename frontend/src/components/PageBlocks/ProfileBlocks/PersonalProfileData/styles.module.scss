@@ -1,0 +1,127 @@
+.blockWrapper {
+  font-size: 14px;
+  line-height: 20px;
+  color: #000345;
+
+  .profileDataWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .leftContent {
+      display: flex;
+
+      .backBtnWrapper {
+        margin-top: 10px;
+        margin-right: 26px;
+      }
+
+      .personalDataWrapper {
+        margin-left: 26px;
+
+        .name {
+          font-weight: 600;
+          font-size: 40px;
+          line-height: 48px;
+        }
+
+        .personalGroup {
+          margin-top: 5px;
+          display: flex;
+          align-items: center;
+
+          .countryWrapper {
+            margin-right: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 71px;
+          }
+
+          .followersWrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 91px;
+          }
+        }
+      }
+    }
+
+    .rightContent {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 125px;
+
+      .followText {
+        margin-right: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 24px;
+        color: #0059DE;
+      }
+    }
+  }
+
+
+  .diveDataWrapper {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .diveData {
+      display: flex;
+      width: 100%;
+
+      >div{
+        margin-right: 30px;
+      }
+
+      .firstBlock{
+        width: 100%;
+        max-width: 301px;
+      }
+
+      .secondBlock{
+        width: 100%;
+        max-width: 382px;
+      }
+
+      .thirdBlock{
+        width: 100%;
+        max-width: 551px;
+
+        .more{
+          font-weight: 400;
+          color: #0059DE;
+        }
+      }
+    }
+
+    .innerBtnWrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 70%;
+
+      .btnLabel {
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 20px;
+        color: #000345;
+      }
+    }
+  }
+
+  .thinText {
+    font-weight: 300;
+  }
+
+  .bold {
+    font-weight: 500;
+  }
+}
+
+
