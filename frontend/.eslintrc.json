@@ -67,6 +67,7 @@
     "no-console": "warn",
     "react/require-default-props": "off",
     "no-restricted-syntax": "off",
-    "consistent-return": "off"
+    "consistent-return": "off",
+    "no-underscore-dangle": "off"
   }
 }

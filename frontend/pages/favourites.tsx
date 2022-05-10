@@ -13,7 +13,7 @@ const Favourites: InferGetServerSidePropsType<typeof getServerSideProps> = ({ us
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const uid = context.req.cookies.diveBoardUserId;
+  const uid = context.req.cookies.__session;
 
   if (!uid) {
     return {

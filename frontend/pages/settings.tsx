@@ -40,7 +40,7 @@ InferGetServerSidePropsType<typeof getServerSideProps> = (
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    const uid = context.req.cookies.diveBoardUserId;
+    const uid = context.req.cookies.__session;
 
     if (!uid) {
       throw new Error('no user uid');
