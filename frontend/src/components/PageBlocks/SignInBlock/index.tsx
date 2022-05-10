@@ -75,6 +75,7 @@ export const SignInBlock: FC = () => {
       const token = await getTokenAuth(userEmail.current.email, inputValue);
 
       const user = await getAuthorizedUserWithToken(token);
+
       if (user) {
         setCookiesLogin(isKeepLogged, user.uid);
 
