@@ -33,16 +33,19 @@ export const CheckoutForm = ({planMode, setPlanMode, contentMode, setContentMode
             return;
         }
 
-       const stripeInfo = await customDonation(amount, saveCustomer);
-        console.log(stripeInfo)
-
-        const cardElement = elements.getElement(CardElement);
+        const cardElement = elements.getElement('cardNumber');
         console.log(cardElement)
+
+        const { token } = await stripe.createToken(cardElement);
+        console.log(token)
+
+       const stripeInfo = await customDonation(amount, saveCustomer, token.id);
+        console.log(stripeInfo)
 
 
         const result = await stripe.confirmCardPayment("pi_3KOivPJVPt1Jo8AR0OL9pLFj_secret_UYhK5EwG4GJzNjZD1QVdhD56n", {
             payment_method: {
-                type: 'card',
+                type: 'cardNumber',
                 card: cardElement,
                 billing_details: {
                     name: customerName,
@@ -59,6 +62,7 @@ export const CheckoutForm = ({planMode, setPlanMode, contentMode, setContentMode
             // Show error to your customer (for example, payment details incomplete)
             console.log(result.error.message);
         } else {
+
             // Your customer will be redirected to your `return_url`. For some payment
             // methods like iDEAL, your customer will be redirected to an intermediate
             // site first to authorize the payment, then redirected to the `return_url`.

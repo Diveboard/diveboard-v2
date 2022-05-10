@@ -26,8 +26,8 @@ export const MainDonateBlock: FC<Props> = (
                 <h2 className={styles.title}> Support Diveboard with a donation </h2>
                 <p className={styles.text}> Help keep Diveboard kickin’ ! DIveboard is a non-profit and relies on your
                     generous support to keep the platform running.
-                    <p> Donate today, and wear the “patron” badge on your profile! </p>
                 </p>
+                <p> Donate today, and wear the “patron” badge on your profile! </p>
                 <div className={styles.btn_wrapper}>
                     <Button
                         width={340}
