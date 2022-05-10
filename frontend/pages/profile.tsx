@@ -3,7 +3,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { ProfileBlock } from '../src/components/PageBlocks/ProfileBlocks';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import { MainLayout } from '../src/layouts/MainLayout';
-import pageRoutes from '../src/routes/pagesRoutes.json';
+// import pageRoutes from '../src/routes/pagesRoutes.json';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 
 const Profile:InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
@@ -17,14 +17,14 @@ const Profile:InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const uid = context.req.cookies.diveBoardUserId;
-
+  console.log({ uid });
   if (!uid) {
-    return {
-      redirect: {
-        destination: pageRoutes.mainPageGuest,
-        permanent: false,
-      },
-    };
+    // return {
+    //   redirect: {
+    //     destination: pageRoutes.mainPageGuest,
+    //     permanent: false,
+    //   },
+    // };
   }
 
   const {
