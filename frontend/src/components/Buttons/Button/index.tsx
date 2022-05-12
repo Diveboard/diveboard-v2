@@ -9,6 +9,7 @@ type Props = {
   width?: number;
   height?: number;
   disable?: boolean;
+  color?: string;
   onClick?: () => void;
 };
 
@@ -21,6 +22,7 @@ export const Button: FC<Props> = ({
   width,
   disable,
     marginTop,
+    color,
   children,
 }) => {
   const buttonStyle = {
@@ -31,6 +33,7 @@ export const Button: FC<Props> = ({
     width: `${width}px`,
     height: `${height}px`,
     marginTop:`${marginTop}px`,
+    color: '#000345'
   };
   return (
     <button

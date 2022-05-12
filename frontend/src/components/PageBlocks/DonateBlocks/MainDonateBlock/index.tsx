@@ -9,16 +9,16 @@ export type Props = {
     contentMode: 'main' | 'plan' | 'success'
     setContentMode: React.Dispatch<React.SetStateAction<"main" | "plan" | "success">>
 }
-export const MainDonateBlock: FC<Props> = (
-    {planMode, contentMode, setPlanMode, setContentMode, children}
-) => {
+export const MainDonateBlock: FC<Props> = ({planMode, contentMode, setPlanMode,
+        setContentMode, children}) => {
 
     const handlePlanChange = (plan: '3/month' | '5/month' | 'custom') => {
         setPlanMode(plan)
+
         if (contentMode === 'main') {
             setContentMode('plan')
         }
-    }
+    };
 
     return (
         <div className={styles.wrapper}>
@@ -27,8 +27,8 @@ export const MainDonateBlock: FC<Props> = (
                 <p className={styles.text}> Help keep Diveboard kickin’ ! DIveboard is a non-profit and relies on your
                     generous support to keep the platform running.
                 </p>
-                <p> Donate today, and wear the “patron” badge on your profile! </p>
-                <div className={styles.btn_wrapper}>
+                <p className={styles.textStrong}> Donate today, and wear the “patron” badge on your profile! </p>
+                <div className={styles.btnWrapper}>
                     <Button
                         width={340}
                         height={48}

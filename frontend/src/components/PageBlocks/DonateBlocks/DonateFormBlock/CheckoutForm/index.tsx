@@ -5,18 +5,19 @@ import {
     CardCvcElement,
     CardExpiryElement,
 } from '@stripe/react-stripe-js';
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import styles from './styles.module.scss'
 import { Button } from "../../../../Buttons/Button";
 import { Input } from "../../../../Input/CommonInput";
 import { Checkbox } from "../../../../CheckBox";
-import { customDonation } from "../../../../../firebase/donate/donateService";
+import { customDonation, subDonation } from "../../../../../firebase/donate/donateService";
 import { FormInput } from "../../../../Input/FormInput";
+import { Props } from '../../MainDonateBlock';
 
-export const CheckoutForm = ({ planMode, setPlaneMode }) => {
-    const [ amount, setAmount ] = useState();
-    const [ customerName, setCustomerName ] = useState('');
-    const [ saveCustomer, setSaveCustomer ] = useState(false);
+export const CheckoutForm: FC<Props> = ({planMode, contentMode, setContentMode}) => {
+    const [amount, setAmount] = useState<number>();
+    const [customerName, setCustomerName] = useState('');
+    const [saveCustomer, setSaveCustomer] = useState(false);
 
     const stripe = useStripe();
     const elements = useElements();
@@ -28,21 +29,29 @@ export const CheckoutForm = ({ planMode, setPlaneMode }) => {
             return;
         }
 
-        const cardElement = elements.getElement('cardNumber');
+        const cardElement = elements.create('cardNumber');
 
         const { token } = await stripe.createToken(cardElement);
 
-        await customDonation(amount*100, saveCustomer, token.id);
+        if (planMode === 'custom') {
+            await customDonation(amount * 100, saveCustomer, token.id)
 
-        await stripe.redirectToCheckout({
-                    successUrl: 'http://localhost:3000/success'})
+        } else {
+           let subType = planMode === '3/month' ? 'threeForTwelve' : 'fiveForTwelve'
+
+           await subDonation(token.id, subType)
+
+        }
+
+        setContentMode('success')
 
     };
+
     return (
         <div className={styles.wrapper}>
             <form onSubmit={handleSubmit}>
                 <div className={styles.elements}>
-                    { planMode === 'custom' && <label className={styles.label}> Donation Amount
+                    {planMode === 'custom' && <label className={styles.label}> Donation Amount
                         <FormInput
                             value={amount}
                             setValue={setAmount}
@@ -52,7 +61,7 @@ export const CheckoutForm = ({ planMode, setPlaneMode }) => {
                         />
                     </label>
                     }
-                    <label className={styles.labelBlock}> Card Number *
+                    <label className={styles.label}> Card Number *
                         <div className={styles.elementNumber}>
                             <CardNumberElement
                             />
@@ -79,12 +88,12 @@ export const CheckoutForm = ({ planMode, setPlaneMode }) => {
                         checked={saveCustomer}
                         onChecked={setSaveCustomer}
                     >
-                        <span className={styles.commonText}> Save Card For Later Payments </span>
+                        <span className={styles.checkboxText}> Save Card For Later Payments </span>
                     </Checkbox>
                 </div>
 
                 <Button
-                    disabled={!stripe}
+                    disable={!stripe}
                     width={420}
                     height={48}
                     borderRadius={30}
@@ -97,4 +106,3 @@ export const CheckoutForm = ({ planMode, setPlaneMode }) => {
         </div>
     )
 }
-

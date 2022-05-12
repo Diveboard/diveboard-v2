@@ -4,9 +4,11 @@
   display: flex;
   justify-content: center;
 }
+
 .content {
   width: 420px;
 }
+
 .title {
   color: #000345;
   font-weight: 600;
@@ -14,19 +16,22 @@
   font-size: 40px;
   line-height: 48px;
 }
+
 .text {
   font-weight: 300;
   font-size: 17px;
   line-height: 24px;
   color: #000345;
-  padding: 20px 0 20px 0;
+  padding-top: 20px;
   font-style: normal;
 }
 
-.text p {
+.textStrong {
+  color: #000345;
   font-weight: 500;
 }
-.btn_wrapper {
+
+.btnWrapper {
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -38,10 +43,4 @@
   font-size: 18px;
   line-height: 20px;
   color: #000345;
-}
-.sponsors_wrapper {
-  height: 218px;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
 }
