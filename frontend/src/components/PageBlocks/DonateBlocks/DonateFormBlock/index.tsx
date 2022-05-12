@@ -4,7 +4,6 @@ import { CheckoutForm } from "./CheckoutForm/CheckoutForm.js";
 import { PlanButtons } from './PlanButtons';
 import { Props } from '../MainDonateBlock';
 
-
 export const DonateFormBlock: FC<Props> = ({planMode, setPlanMode,setContentMode,contentMode}) => (
     <div className={styles.wrapper}>
         <div className={styles.title}>
@@ -19,10 +18,6 @@ export const DonateFormBlock: FC<Props> = ({planMode, setPlanMode,setContentMode
             setContentMode={setContentMode}
         />
         <CheckoutForm
-            planMode={planMode}
-            setPlanMode={setPlanMode}
-            contentMode={contentMode}
-            setContentMode={setContentMode}
-        />
+            planMode={planMode} setPlaneMode={undefined} />
     </div>
 );

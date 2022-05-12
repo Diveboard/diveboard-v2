@@ -3,7 +3,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
-import {SuccessBlock} from '../src/components/PageBlocks/DonateBlocks/SuccessBlock';
+import { SuccessBlock } from '../src/components/PageBlocks/DonateBlocks/SuccessBlock';
 
 const Success: InferGetServerSidePropsType<typeof getServerSideProps> = ({user}) => {
 
