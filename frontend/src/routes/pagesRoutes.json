@@ -15,6 +15,5 @@
   "shopPageRout": "/shop",
   "supportPageRout": "/support",
   "settingsPageRout": "/settings",
-  "logDivePageRout": "/log-dive",
-  "testSuccessPaymentRoute": "/success"
+  "logDivePageRout": "/log-dive"
 }

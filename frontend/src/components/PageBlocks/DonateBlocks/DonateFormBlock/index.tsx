@@ -1,6 +1,6 @@
-import React, {FC} from 'react';
+import React, { FC } from 'react';
 import styles from './styles.module.scss';
-import { CheckoutForm } from "./CheckoutForm/CheckoutForm.js";
+import { CheckoutForm } from './CheckoutForm'
 import { PlanButtons } from './PlanButtons';
 import { Props } from '../MainDonateBlock';
 
@@ -13,11 +13,13 @@ export const DonateFormBlock: FC<Props> = ({planMode, setPlanMode,setContentMode
         <PlanButtons
             planMode={planMode}
             setPlanMode={setPlanMode}
-            //TODO DELETE BELOW MODE
             contentMode={contentMode}
             setContentMode={setContentMode}
         />
         <CheckoutForm
-            planMode={planMode} setPlaneMode={undefined} />
+            planMode={planMode}
+            contentMode={contentMode}
+            setContentMode={setContentMode}
+            setPlanMode={setPlanMode}/>
     </div>
 );
