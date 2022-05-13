@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
-import styles from './styles.module.scss';
 import { Icon, imageLoader } from '../../Icons/Icon';
+import styles from './styles.module.scss';
 
 type Props = {
   imgSrc: string;

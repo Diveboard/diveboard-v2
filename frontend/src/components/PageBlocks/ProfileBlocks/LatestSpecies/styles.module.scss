@@ -5,9 +5,10 @@
     margin-top: 26px;
     margin-bottom: 26px;
     display: flex;
+    justify-content: space-between;
 
     > div {
-      margin-right: 30px;
+      margin-right: 10px;
 
       &:last-child {
         margin-right: 0;
@@ -23,6 +24,21 @@
 
     &:hover {
       cursor: pointer;
+    }
+  }
+}
+
+
+@media (max-width: 768px) {
+  .latestSpeciesWrapper {
+    margin-top: 50px;
+
+    .cardsWrapper {
+      overflow-x: scroll;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
   }
 }

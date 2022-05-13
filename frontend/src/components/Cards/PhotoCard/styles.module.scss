@@ -4,7 +4,8 @@
 
   .img {
     border-radius: 20px;
-
+    object-fit: cover;
+    object-position: center;
   }
 
   .favouritesBlock {
@@ -45,13 +46,15 @@
 }
 
 .normalImgSize {
-  width: 21.875vw;
-  height: 32.813vw;
+  width: 100%;
+  max-width: 420px;
+  height: 630px;
 }
 
 .smallImgSize {
-  width: 21.875vw;
-  height: 15.625vw;
+  width: 100%;
+  max-width: 420px;
+  height: 300px;
 }
 
 .scrollSize{
@@ -59,24 +62,13 @@
   height: 176px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .normalImgSize {
-    width: 41.667vw;
-    height: 54.167vw;
+    height: 460px;
   }
+
   .smallImgSize {
-    width: 41.667vw;
-    height: 30.556vw;
+    height: 220px;
   }
 }
 
-@media (max-width: 360px) {
-  .normalImgSize {
-    width: 165px;
-    height: 296px;
-  }
-  .smallImgSize {
-    width: 165px;
-    height: 143px;
-  }
-}

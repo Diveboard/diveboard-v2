@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Icon } from '../../Icons/Icon';
 import styles from './styles.module.scss';
+import { useWindowWidth } from '../../../hooks/useWindowWidth';
 
 type Props = {
   value: string;
@@ -11,7 +12,14 @@ export const SearchAnimatedInput: FC<Props> = ({
   value,
   setValue,
 }) => {
+  const isMobile = useWindowWidth(500, 768);
   const [opened, setOpened] = useState(false);
+
+  useEffect(() => {
+    if (isMobile) {
+      setOpened(true);
+    }
+  }, [isMobile]);
 
   useEffect(() => {
     // delay

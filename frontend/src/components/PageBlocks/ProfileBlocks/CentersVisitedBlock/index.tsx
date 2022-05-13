@@ -1,8 +1,8 @@
 import React from 'react';
 import { Title } from '../Title';
-import styles from './styles.module.scss';
 import { DestinationCard } from '../../../Cards/DestinationCard';
 import { ArrowLink } from '../../../ArrowLink';
+import styles from './styles.module.scss';
 
 export const CentersVisitedBlock = () => (
   <div className={styles.centersWrapper}>
