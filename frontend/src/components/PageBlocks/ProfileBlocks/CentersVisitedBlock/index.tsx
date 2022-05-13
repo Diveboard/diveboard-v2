@@ -9,7 +9,7 @@ export const CentersVisitedBlock = () => (
     <Title title="Dive Centers Visited" />
     <div className={styles.cardWrapper}>
       <DestinationCard
-        imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
+        imgSrc="/TEST_IMG_THEN_DELETE/photo8.jpg"
         destinationName="Koh Bida Nai"
         rating={4}
         country="Thailand"
@@ -23,14 +23,14 @@ export const CentersVisitedBlock = () => (
         divesNumber={146}
       />
       <DestinationCard
-        imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
+        imgSrc="/TEST_IMG_THEN_DELETE/photo7.jpg"
         destinationName="Koh Bida Nai"
         rating={4}
         country="Thailand"
         divesNumber={146}
       />
       <DestinationCard
-        imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
+        imgSrc="/TEST_IMG_THEN_DELETE/photo6.jpg"
         destinationName="Koh Bida Nai"
         rating={4}
         country="Thailand"

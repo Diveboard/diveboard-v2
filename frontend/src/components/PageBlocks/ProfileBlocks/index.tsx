@@ -57,7 +57,7 @@ export const ProfileBlock = () => {
     <div className={styles.profileBlockWrapper}>
 
       <PersonalProfileData
-        imgSrc=""
+        imgSrc="/TEST_IMG_THEN_DELETE/photo3.jpg"
         name="Ivan Carozza"
         country="Spain"
         followersCount={158}
