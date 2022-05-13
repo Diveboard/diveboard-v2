@@ -62,18 +62,22 @@ export const PersonalProfileData: FC<Props> = ({
         aboutDiver="I learned to Scuba in summer 2005 and since then have become addicted to it.
         Quickly reached the freedom of the N2 FFESSM (AOW+) and started taking cool underwater pictures."
       />
-      <Button
-        borderRadius={30}
-        border="none"
-        backgroundColor="#FDC90D"
-        width={182}
-        height={56}
-      >
-        <div className={styles.innerBtnWrapper}>
-          <Icon iconName="add-dive" size={24} />
-          <span className={styles.btnLabel}>Add Dive</span>
-        </div>
-      </Button>
+
+      <div className={styles.btnWrapper}>
+        <Button
+          borderRadius={30}
+          border="none"
+          backgroundColor="#FDC90D"
+          width={182}
+          height={56}
+        >
+          <div className={styles.innerBtnWrapper}>
+            <Icon iconName="add-dive" size={24} />
+            <span className={styles.btnLabel}>Add Dive</span>
+          </div>
+        </Button>
+      </div>
+
     </div>
   </div>
 );

@@ -4,19 +4,11 @@
   .cardWrapper {
     margin-top: 26px;
     padding-bottom: 26px;
-    //overflow-x: scroll;
     display: flex;
     justify-content: space-between;
-    flex-wrap: nowrap;
 
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    > div {
-      margin-right: 15px;
-      margin-bottom: 10px;
-
+    >div{
+      margin-right: 10px;
       &:last-child{
         margin-right: 0;
       }
@@ -24,3 +16,33 @@
   }
 }
 
+@media (max-width: 768px) {
+  .centersWrapper {
+    margin-top: 50px;
+
+    .cardWrapper {
+      max-width: 100%;
+      overflow-x: scroll;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+
+      > div {
+        margin-right: 15px;
+        margin-bottom: 30px;
+
+        &:nth-child(2) {
+          margin-right: 15px;
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+    }
+  }
+}

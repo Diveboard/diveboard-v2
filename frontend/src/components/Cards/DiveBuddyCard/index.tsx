@@ -26,17 +26,23 @@ export const DiveBuddyCard: FC<Props> = ({
       <span className={styles.name}>{name}</span>
       <span>
         <Icon iconName="oxygen-tank" size={16} />
-        <span className={styles.bold}>{onDiveBoard}</span>
-        {' '}
-        dives on Diveboard
-        (total:
-        <span className={styles.bold}>{total}</span>
-        )
+        <div className={styles.divesTextWrapper}>
+          <span className={styles.bold}>{onDiveBoard}</span>
+          <span>dives on Diveboard</span>
+          <span>
+            (total:
+            <span className={styles.bold}>{total}</span>
+            )
+          </span>
+        </div>
+
       </span>
       <span>
         <Icon iconName="dive" size={16} />
-        <span className={styles.bold}>{onSpot}</span>
-        dives on this spot
+        <div className={styles.divesTextWrapper}>
+          <span className={styles.bold}>{onSpot}</span>
+          dives on this spot
+        </div>
       </span>
     </div>
 

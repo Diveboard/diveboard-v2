@@ -6,7 +6,7 @@ import { MainLayout } from '../src/layouts/MainLayout';
 import pageRoutes from '../src/routes/pagesRoutes.json';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 
-const Profile:InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
+const Profile: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
     <MainLayout>
       <ProfileBlock />
@@ -28,8 +28,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   const {
-    email, photoURL = '', displayName = '',
-  } = await firebaseAdmin.auth().getUser(uid);
+    email,
+    photoURL = '',
+    displayName = '',
+  } = await firebaseAdmin.auth()
+    .getUser(uid);
 
   return {
     props: {

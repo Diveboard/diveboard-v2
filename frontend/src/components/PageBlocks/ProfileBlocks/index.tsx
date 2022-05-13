@@ -1,6 +1,5 @@
 import React from 'react';
 import { PersonalProfileData } from './PersonalProfileData';
-import styles from './styles.module.scss';
 import { DivesMap } from './DivesMap';
 import { DivesBlock } from './DivesBlock';
 import { PicturesBlock } from './PicturesBlock';
@@ -8,6 +7,7 @@ import { LatestSpecies } from './LatestSpecies';
 import { CertificationBlock } from './CertificationsBlock';
 import { CentersVisitedBlock } from './CentersVisitedBlock';
 import { DiveBuddies } from './DiveBuddiesBlock';
+import styles from './styles.module.scss';
 
 export const ProfileBlock = () => {
   const mapCoords = {

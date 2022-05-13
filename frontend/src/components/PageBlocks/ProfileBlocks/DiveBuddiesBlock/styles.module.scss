@@ -2,12 +2,39 @@
   margin-top: 75px;
 
   .cardsWrapper {
-    //display: flex;
-    //justify-content: center;
-    //flex-wrap: wrap;
 
     > div {
-      //margin: 30px;
+      margin-right: 30px;
+      margin-bottom: 20px;
+
+      &:last-child {
+        margin-right: 0;
+      }
     }
+  }
+
+  .arrowLinkWrapper {
+    margin-top: 26px;
+    margin-bottom: 61px;
+  }
+
+}
+
+
+@media (max-width: 1024px) {
+  .blockWrapper {
+    .cardsWrapper {
+      > div {
+        &:nth-child(2) {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .blockWrapper {
+    margin-top: 50px;
   }
 }

@@ -5,7 +5,7 @@ import styles from './styles.module.scss';
 
 export const MobilePhotoGroup:FC<PhotoGroupProps> = ({ photos }) => {
   const photosElements = photos.map((photo) => (
-    <div>
+    <div key={photo.imgScr}>
       <PhotoCard
         key={photo.imgScr}
         imgSrc={photo.imgScr}

@@ -11,11 +11,10 @@
     margin-top: 26px;
     padding-bottom: 26px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
 
     > div {
-      margin-right: 30px;
-      margin-bottom: 10px;
+      margin-right: 10px;
 
       &:last-child {
         margin-right: 0;
@@ -29,5 +28,38 @@
     font-size: 20px;
     line-height: 24px;
     color: #0059DE;
+  }
+}
+
+@media (max-width: 768px) {
+  .divesWrapper {
+    margin-top: 50px;
+
+    .filtersWrapper {
+      height: 108px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .cardWrapper {
+      flex-wrap: nowrap;
+      max-width: 100%;
+      justify-content: space-between;
+      overflow-x: scroll;
+
+      > div {
+        margin-right: 30px;
+        margin-bottom: 10px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
   }
 }
