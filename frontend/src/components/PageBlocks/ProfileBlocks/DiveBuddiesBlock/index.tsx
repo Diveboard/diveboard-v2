@@ -10,7 +10,7 @@ export const DiveBuddies: FC = () => (
     <div className={style.cardsWrapper}>
 
       <DiveBuddyCard
-        imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
+        imgSrc="/TEST_IMG_THEN_DELETE/photo4.jpg"
         name="Nolan Franci"
         onDiveBoard={125}
         total={157}
@@ -26,7 +26,7 @@ export const DiveBuddies: FC = () => (
       />
 
       <DiveBuddyCard
-        imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
+        imgSrc="/TEST_IMG_THEN_DELETE/photo5.jpg"
         name="Nolan Franci"
         onDiveBoard={125}
         total={157}
@@ -34,7 +34,7 @@ export const DiveBuddies: FC = () => (
       />
 
       <DiveBuddyCard
-        imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
+        imgSrc="/TEST_IMG_THEN_DELETE/photo6.jpg"
         name="Nolan Franci"
         onDiveBoard={125}
         total={157}

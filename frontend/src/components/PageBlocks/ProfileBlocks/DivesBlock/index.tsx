@@ -49,7 +49,7 @@ export const DivesBlock = () => {
 
         <DiveCard
           diveName="France Saint Florent Premier Août"
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
+          imgSrc="/TEST_IMG_THEN_DELETE/photo8.jpg"
           tagsNumber="131"
           addedToFavourite={false}
           date={new Date('11.04.2001')}
@@ -60,7 +60,7 @@ export const DivesBlock = () => {
 
         <DiveCard
           diveName="France Saint Florent Premier Août"
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
+          imgSrc="/TEST_IMG_THEN_DELETE/photo7.jpg"
           tagsNumber="131"
           addedToFavourite={false}
           date={new Date('11.04.2001')}
@@ -71,7 +71,7 @@ export const DivesBlock = () => {
 
         <DiveCard
           diveName="France Saint Florent Premier Août"
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
+          imgSrc="/TEST_IMG_THEN_DELETE/photo6.jpg"
           tagsNumber="131"
           addedToFavourite={false}
           date={new Date('11.04.2001')}

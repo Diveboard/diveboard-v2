@@ -8,7 +8,7 @@ export const LatestSpecies = () => (
     <Title title="Latest Species Identified" />
     <div className={styles.cardsWrapper}>
       <SpeciesCard
-        imgSrc="/TEST_IMG_THEN_DELETE/shark.jpg"
+        imgSrc="/TEST_IMG_THEN_DELETE/photo2.jpg"
         speciesName="Emperor Angelfish"
         scientificName="Pomacanthus imperator"
       />
@@ -18,12 +18,12 @@ export const LatestSpecies = () => (
         scientificName="Pomacanthus imperator"
       />
       <SpeciesCard
-        imgSrc="/TEST_IMG_THEN_DELETE/shark.jpg"
+        imgSrc="/TEST_IMG_THEN_DELETE/photo3.jpg"
         speciesName="Emperor Angelfish"
         scientificName="Pomacanthus imperator"
       />
       <SpeciesCard
-        imgSrc="/TEST_IMG_THEN_DELETE/shark.jpg"
+        imgSrc="/TEST_IMG_THEN_DELETE/photo4.jpg"
         speciesName="Emperor Angelfish"
         scientificName="Pomacanthus imperator"
       />

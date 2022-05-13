@@ -18,7 +18,17 @@ export const PicturesBlock = () => {
 
   const photos = [
     {
-      imgScr: '/TEST_IMG_THEN_DELETE/shark.jpg',
+      imgScr: '/TEST_IMG_THEN_DELETE/photo2.jpg',
+      favorites: 150,
+      author: 'Ivan Kudrja',
+    },
+    {
+      imgScr: '/TEST_IMG_THEN_DELETE/photo3.jpg',
+      favorites: 150,
+      author: 'Ivan Kudrja',
+    },
+    {
+      imgScr: '/TEST_IMG_THEN_DELETE/photo4.jpg',
       favorites: 150,
       author: 'Ivan Kudrja',
     },
@@ -28,22 +38,12 @@ export const PicturesBlock = () => {
       author: 'Ivan Kudrja',
     },
     {
-      imgScr: '/TEST_IMG_THEN_DELETE/shark.jpg',
+      imgScr: '/TEST_IMG_THEN_DELETE/photo5.jpg',
       favorites: 150,
       author: 'Ivan Kudrja',
     },
     {
-      imgScr: '/TEST_IMG_THEN_DELETE/shark.jpg',
-      favorites: 150,
-      author: 'Ivan Kudrja',
-    },
-    {
-      imgScr: '/TEST_IMG_THEN_DELETE/shark.jpg',
-      favorites: 150,
-      author: 'Ivan Kudrja',
-    },
-    {
-      imgScr: '/TEST_IMG_THEN_DELETE/shark.jpg',
+      imgScr: '/TEST_IMG_THEN_DELETE/photo6.jpg',
       favorites: 150,
       author: 'Ivan Kudrja',
     },

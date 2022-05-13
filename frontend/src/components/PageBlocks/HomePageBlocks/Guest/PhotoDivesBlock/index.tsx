@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './styles.module.scss';
 import { PhotoCard } from '../../../../Cards/PhotoCard';
 import { ArrowLink } from '../../../../ArrowLink';
+import styles from './styles.module.scss';
 
 export const PhotoDivesBlock = () => (
   <div className={styles.photoDivesWrapper}>

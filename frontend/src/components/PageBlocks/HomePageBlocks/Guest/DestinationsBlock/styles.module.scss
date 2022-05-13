@@ -13,37 +13,15 @@
     margin-top: 45px;
     padding-bottom: 26px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
 
     > div {
-      margin-right: 30px;
+      margin-right: 10px;
       margin-bottom: 10px;
 
       &:last-child {
         margin-right: 0;
       }
-    }
-  }
-}
-
-@media (max-width: 1440px) {
-  .cardWrapper {
-    flex-wrap: wrap;
-
-    > div {
-      &:nth-child(2) {
-        margin-right: 0;
-      }
-    }
-  }
-}
-
-@media (max-width: 1020px) {
-  .cardWrapper {
-    flex-wrap: wrap;
-
-    > div {
-      width: 300px;
     }
   }
 }
