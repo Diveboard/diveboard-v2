@@ -8,7 +8,6 @@ export const DonateFormBlock: FC<DonateFormProps> = ({
   planMode,
   setPlanMode,
   setContentMode,
-  contentMode,
 }) => (
   <div className={styles.wrapper}>
     <div className={styles.title}>
@@ -23,9 +22,7 @@ export const DonateFormBlock: FC<DonateFormProps> = ({
 
     <CheckoutForm
       planMode={planMode}
-      contentMode={contentMode}
       setContentMode={setContentMode}
-      setPlanMode={setPlanMode}
     />
   </div>
 );

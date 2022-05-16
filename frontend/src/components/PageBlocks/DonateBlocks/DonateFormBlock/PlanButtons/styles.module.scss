@@ -1,7 +1,14 @@
 .btn_wrapper {
-  width: 420px;
+  max-width: 420px;
+  width: 100%;
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
+  > button {
+    margin-right: 5px;
+    &:last-child{
+      margin-right: 0;
+    }
+  }
 }

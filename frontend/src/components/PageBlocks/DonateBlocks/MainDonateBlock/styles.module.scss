@@ -5,6 +5,7 @@
   justify-content: center;
 
   .content {
+    padding: 0 10px;
     max-width: 420px;
     color: #000345;
 
@@ -14,15 +15,17 @@
       line-height: 48px;
     }
 
-    text {
+    .text {
       font-weight: 300;
       font-size: 17px;
       line-height: 24px;
-      padding-top: 20px;
-      font-style: normal;
+      margin-top: 20px;
+
     }
 
     .textStrong {
+      font-size: 17px;
+      line-height: 24px;
       font-weight: 600;
     }
 
@@ -43,6 +46,28 @@
   }
 }
 
+@media (max-width: 768px) {
+  .wrapper {
+    .content {
 
+      .title {
+        font-size: 21px;
+        line-height: 29px;
+      }
+
+      .text {
+        font-size: 14px;
+        line-height: 20px;
+        margin-top: 12px;
+      }
+
+      .textStrong {
+        margin-top: 8px;
+      }
+
+    }
+  }
+
+}
 
 

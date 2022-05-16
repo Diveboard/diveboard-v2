@@ -9,7 +9,6 @@ type Props = {
   width?: number;
   height?: number;
   disable?: boolean;
-  color?: string;
   onClick?: () => void;
 };
 
@@ -21,8 +20,7 @@ export const Button: FC<Props> = ({
   height,
   width,
   disable,
-    marginTop,
-    color,
+  marginTop,
   children,
 }) => {
   const buttonStyle = {
@@ -30,10 +28,11 @@ export const Button: FC<Props> = ({
     opacity: !disable ? '1' : '0.25',
     borderRadius: `${borderRadius}px`,
     border,
-    width: `${width}px`,
+    maxWidth: `${width}px`,
+    width: '100%',
     height: `${height}px`,
-    marginTop:`${marginTop}px`,
-    color: '#000345'
+    marginTop: `${marginTop}px`,
+    color: '#000345',
   };
   return (
     <button

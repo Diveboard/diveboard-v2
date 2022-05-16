@@ -65,23 +65,25 @@ export const CheckoutForm: FC<FormProps> = ({
             </label>
           )}
           <label className={styles.label}>
-            {' '}
             Card Number *
             <div className={styles.elementNumber}>
               <CardNumberElement />
             </div>
           </label>
           <div className={styles.block}>
-            <label className={styles.label}>
-              {' '}
-              Exp Date *
+            <div className={styles.smallInputWrapper}>
+              <label className={styles.label}>
+                Exp Date *
+              </label>
               <CardExpiryElement className={styles.blockElement} />
-            </label>
-            <label className={styles.label}>
-              {' '}
-              CVV *
+            </div>
+            <div className={styles.smallInputWrapper}>
+              <label className={styles.label}>
+                CVV *
+              </label>
               <CardCvcElement className={styles.blockElement} />
-            </label>
+            </div>
+
           </div>
           <label className={styles.label}>
             {' '}
