@@ -1,0 +1,65 @@
+.inputWrapper {
+  position: relative;
+
+  .input {
+
+    height: 56px;
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 3, 69, 0.2);
+    box-sizing: border-box;
+    box-shadow: 0 5px 20px -15px rgba(0, 62, 89, 0.12);
+    border-radius: 30px;
+    outline: none;
+    font-weight: 400;
+    font-size: 16px;
+    color: #000345;
+  }
+
+  .closedInput {
+    width: 80px;
+    padding: 0;
+    transition: all 0.4s;
+  }
+
+  .openedInput {
+    width: 420px;
+    padding: 0 100px 0 55px;
+    transition: all 0.4s;
+  }
+
+  .closeButton {
+    position: absolute;
+    left: 11px;
+    transform: rotateZ(180deg);
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .searchButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 80px;
+    background: #FDC90D;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .inputWrapper {
+    .openedInput {
+      width: 340px;
+    }
+  }
+
+}

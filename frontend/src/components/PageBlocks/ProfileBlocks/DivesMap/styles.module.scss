@@ -1,0 +1,23 @@
+.mapWrapper {
+  //position: relative;
+  height: 785px;
+  margin-top: 75px;
+
+  .map {
+    //position: absolute;
+    //left: -75px;
+    //right: -75px;
+    //top: 0;
+    //bottom: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .mapWrapper {
+    margin-top: 50px;
+    height: 250px;
+  }
+}

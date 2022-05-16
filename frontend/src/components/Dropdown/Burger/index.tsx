@@ -68,7 +68,7 @@ export const Burger: FC = () => {
 
   const logOutUser = async () => {
     await logOut();
-    Cookies.remove('diveBoardUserId');
+    Cookies.remove('__session');
     await router.push('/');
   };
 

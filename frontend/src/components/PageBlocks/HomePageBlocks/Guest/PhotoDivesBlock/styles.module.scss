@@ -23,8 +23,10 @@
     .leftGroup,
     .rightGroup {
       display: flex;
+      width: 100%;
 
       .column {
+        width: 100%;
         display: flex;
         flex-direction: column;
         margin-right: 1.563vw;
@@ -40,6 +42,7 @@
 @media (max-width: 768px) {
   .photoDivesWrapper {
     margin-top: 145px;
+
     .title {
       font-size: 24px;
       line-height: 30px;

@@ -1,0 +1,169 @@
+.diveCard {
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 8px 15px rgba(0, 62, 89, 0.06);
+  border-radius: 15px;
+  position: relative;
+
+  .imgWrapper {
+    position: relative;
+    height: 224px;
+
+    .img {
+      border-radius: 15px 15px 0 0;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+
+
+  .tags {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 8px rgba(0, 62, 89, 0.1);
+    border-radius: 30px;
+
+    width: 41px;
+    height: 26px;
+
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 16px;
+
+    color: rgba(0, 3, 69, 0.8);
+  }
+
+  .favourite {
+    padding: 3px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    width: 26px;
+    height: 26px;
+
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 8px rgba(0, 62, 89, 0.1);
+    border-radius: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .footer {
+    padding: 11px 15px;
+    color: #000345;
+    display: flex;
+    flex-direction: column;
+
+    .date {
+      font-style: italic;
+      font-weight: 400;
+      font-size: 10px;
+      line-height: 12px;
+      opacity: 0.6;
+    }
+
+    .diveName {
+      margin-top: 3px;
+      font-weight: 600;
+      font-size: 1.031vw;
+      line-height: 1.237vw;
+    }
+
+    .dataWrapper {
+      margin-top: 10px;
+      display: flex;
+
+      .dataItem {
+        margin-right: 12px;
+        display: flex;
+        align-items: center;
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        > span {
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 0.670vw;
+          margin-left: 7px;
+        }
+      }
+    }
+  }
+}
+
+
+@media (max-width: 1440px) {
+  .diveCard {
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .diveCard {
+    .footer {
+      padding: 0.764vw 1.042vw;
+
+      .diveName {
+        margin-top: 3px;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 21px;
+      }
+
+      .dataWrapper {
+        .dataItem {
+          margin-right: 0.5vw;
+
+          > span {
+            font-weight: 500;
+            font-size: 10px;
+            line-height: 13px;
+            margin-left: 0.486vw;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .diveCard {
+    min-width: 300px;
+    .footer {
+      padding: 11px 15px;
+
+      .diveName {
+        margin-top: 3px;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 24px;
+      }
+
+      .dataWrapper {
+        .dataItem {
+          margin-right: 12px;
+
+          > span {
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 13px;
+            margin-left: 6px;
+          }
+        }
+      }
+    }
+  }
+}

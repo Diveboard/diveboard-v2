@@ -13,29 +13,34 @@ const About: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user })
 
 );
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const uid = context.req.cookies.diveBoardUserId;
+  try {
+    const uid = context.req.cookies.__session;
 
-  if (!uid) {
+    if (!uid) {
+      throw new Error('no user uid');
+    }
+
+    const {
+      email, photoURL = '', displayName = '',
+    } = await firebaseAdmin.auth().getUser(uid);
+
     return {
       props: {
-        user: null,
+        user: {
+          uid,
+          email,
+          photoURL,
+          name: displayName,
+        },
+      },
+    };
+  } catch (e) {
+    return {
+      redirect: {
+        destination: '/auth',
+        permanent: false,
       },
     };
   }
-
-  const {
-    email, photoURL = '', displayName = '',
-  } = await firebaseAdmin.auth().getUser(uid);
-
-  return {
-    props: {
-      user: {
-        uid,
-        email,
-        photoURL,
-        name: displayName,
-      },
-    },
-  };
 };
 export default About;

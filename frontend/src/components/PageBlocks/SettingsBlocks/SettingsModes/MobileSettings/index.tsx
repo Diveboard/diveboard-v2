@@ -5,6 +5,7 @@ import { Preferences } from '../../Preferences';
 import { Notification } from '../../Notifications';
 import { EditContextWrapper } from '../../EditContextWrapper';
 import { NotificationsType, PreferencesType } from '../../../../../firebase/firestore/models';
+import { MarginWrapper } from '../../../../MarginWrapper';
 
 type Props = {
   preferences: PreferencesType
@@ -19,9 +20,27 @@ export const MobileSettings: FC<Props> = ({ preferences, notifications }) => {
     <>
       <MobileSettingsTabs mode={mode} setMode={setMode} />
       <EditContextWrapper>
-        {mode === 'personal info' && <PersonalInfo title={false} />}
-        {mode === 'preferences' && <Preferences preferences={preferences} title={false} />}
-        {mode === 'notifications' && <Notification notifications={notifications} title={false} />}
+
+        {mode === 'personal info' && (
+        <>
+          <PersonalInfo title={false} />
+          <MarginWrapper bottom={60} display="inline-block" />
+        </>
+        )}
+
+        {mode === 'preferences' && (
+        <>
+          <Preferences preferences={preferences} title={false} />
+          <MarginWrapper bottom={60} display="inline-block" />
+        </>
+        )}
+
+        {mode === 'notifications' && (
+        <>
+          <Notification notifications={notifications} title={false} />
+          <MarginWrapper bottom={60} display="inline-block" />
+        </>
+        )}
       </EditContextWrapper>
     </>
   );
