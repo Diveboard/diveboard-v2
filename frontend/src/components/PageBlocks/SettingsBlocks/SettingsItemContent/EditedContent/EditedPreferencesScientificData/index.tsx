@@ -26,6 +26,7 @@ export const EditedPreferencesScientificData: FC <Props> = ({ preferences, setPr
     setLoading(true);
     await firestorePreferencesService
       .setScientificData({ scientificData: { shareData, shareNotes } }, userAuth.uid);
+
     setPreferences({ ...preferences, scientificData: { shareData, shareNotes } });
     setLoading(false);
     setEditedSettings({ settingsBlock: '', settingsItem: '' });

@@ -4,16 +4,26 @@ import {
 import { storage } from './firebaseStorage';
 
 export const uploadAvatar = (userUid: string, avatar: File) => {
-  const storageRef = ref(storage, `${userUid}/avatar/userAvatar`);
-  return uploadBytes(storageRef, avatar);
+  try {
+    const storageRef = ref(storage, `${userUid}/avatar/userAvatar`);
+    return uploadBytes(storageRef, avatar);
+  } catch (e) {
+    throw new Error('upload avatar error');
+  }
 };
 
 export const getAvatarUrl = async (reference: StorageReference) => {
-  const url = await getDownloadURL(reference);
-  return url;
+  try {
+    return await getDownloadURL(reference);
+  } catch (e) {
+    throw new Error('get avatar url error');
+  }
 };
 
 export const downloadAvatar = async (reference: StorageReference) => {
-  const blob = await getBlob(reference);
-  return blob;
+  try {
+    return await getBlob(reference);
+  } catch (e) {
+    throw new Error('download avatar error');
+  }
 };

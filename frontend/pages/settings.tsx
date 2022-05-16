@@ -39,21 +39,38 @@ InferGetServerSidePropsType<typeof getServerSideProps> = (
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const uid = context.req.cookies.diveBoardUserId;
+  try {
+    const uid = context.req.cookies.__session;
 
-  if (!uid) {
+    if (!uid) {
+      throw new Error('no user uid');
+    }
+
+    const {
+      email, photoURL = '', displayName = '',
+    } = await firebaseAdmin.auth().getUser(uid);
+
+    const snapshotPreferences = await firebaseAdmin
+      .firestore().doc(`user-preferences/${uid}`).get();
+    const preferences = await snapshotPreferences.data();
+
+    const snapshotNotifications = await firebaseAdmin
+      .firestore().doc(`notifications/${uid}`).get();
+    const notifications = await snapshotNotifications.data();
+
     return {
       props: {
-        user: null,
+        user: {
+          uid,
+          email,
+          photoURL,
+          name: displayName,
+        },
+        preferences,
+        notifications,
       },
     };
-  }
-
-  const {
-    email, photoURL = '', displayName = '',
-  } = await firebaseAdmin.auth().getUser(uid);
-
-  if (!email) {
+  } catch (e) {
     return {
       redirect: {
         destination: '/auth',
@@ -61,27 +78,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-
-  const snapshotPreferences = await firebaseAdmin
-    .firestore().doc(`user-preferences/${uid}`).get();
-  const preferences = await snapshotPreferences.data();
-
-  const snapshotNotifications = await firebaseAdmin
-    .firestore().doc(`notifications/${uid}`).get();
-  const notifications = await snapshotNotifications.data();
-
-  return {
-    props: {
-      user: {
-        uid,
-        email,
-        photoURL,
-        name: displayName,
-      },
-      preferences,
-      notifications,
-    },
-  };
 };
 
 export default Settings;

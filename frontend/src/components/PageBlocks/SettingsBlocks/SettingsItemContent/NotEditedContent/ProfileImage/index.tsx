@@ -1,19 +1,22 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
 import styles from './styles.module.scss';
+import { imageLoader } from '../../../../../Icons/Icon';
 
 type Props = {
   imgSrc: string;
+  size?:number;
 };
-export const ProfileImage:FC<Props> = ({ imgSrc }) => (
+export const ProfileImage:FC<Props> = ({ imgSrc, size = 80 }) => (
   <div className={styles.profileImg}>
 
     <Image
       src={imgSrc || '/assets/icons/no-photo.svg'}
-      width={80}
-      height={80}
+      width={size}
+      height={size}
       alt="avatar"
       className={styles.img}
+      loader={imageLoader}
     />
 
   </div>

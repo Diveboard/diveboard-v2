@@ -1,0 +1,15 @@
+.title {
+  margin-bottom: 26px;
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 48px;
+  color: #000345;
+}
+
+@media (max-width: 768px) {
+  .title {
+    margin-bottom: 8px;
+    font-size: 21px;
+    line-height: 29px;
+  }
+}

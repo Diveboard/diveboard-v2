@@ -1,0 +1,44 @@
+.latestSpeciesWrapper {
+  margin-top: 75px;
+
+  .cardsWrapper {
+    margin-top: 26px;
+    margin-bottom: 26px;
+    display: flex;
+    justify-content: space-between;
+
+    > div {
+      margin-right: 10px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .viewMore {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    color: #0059DE;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+
+@media (max-width: 768px) {
+  .latestSpeciesWrapper {
+    margin-top: 50px;
+
+    .cardsWrapper {
+      overflow-x: scroll;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+}
