@@ -1,13 +1,14 @@
 .wrapper {
   margin-top: 80px;
-  padding-top: 30px;
+  padding: 30px 10px 0 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 .title {
-  width: 420px;
+  max-width: 420px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -21,9 +22,20 @@
 }
 
 .title p {
-  margin: 20px 0 20px 0;
+  margin: 20px 0;
   font-weight: 300;
   font-size: 14px;
   line-height: 20px;
   color: #000345;
+}
+
+@media (max-width: 768px) {
+  .title p {
+    margin: 12px 0 20px 0;
+  }
+
+  .title h2{
+    font-size: 21px;
+    line-height: 29px;
+  }
 }

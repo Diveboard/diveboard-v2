@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 import { MainDonateBlock } from '../src/components/PageBlocks/DonateBlocks/MainDonateBlock';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
-import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 import { DonateFormBlock } from '../src/components/PageBlocks/DonateBlocks/DonateFormBlock';
 import { SuccessBlock } from '../src/components/PageBlocks/DonateBlocks/SuccessBlock';
 import { ContentModeType, PlanType } from '../src/components/PageBlocks/DonateBlocks/donateTypes';
+import pageRoutes from '../src/routes/pagesRoutes.json';
 
 const Donate: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => {
   const [planMode, setPlanMode] = useState<PlanType>();
@@ -40,8 +41,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   if (!uid) {
     return {
-      props: {
-        user: null,
+      redirect: {
+        destination: pageRoutes.mainPageGuest,
+        permanent: false,
       },
     };
   }

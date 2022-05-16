@@ -22,7 +22,7 @@ export const MainDonateBlock: FC<DonateMainProps> = ({
           relies on your
           generous support to keep the platform running.
         </p>
-        <p className={`${styles.text} ${styles.textStrong}`}>
+        <p className={styles.textStrong}>
           Donate today, and wear the “patron” badge on your profile!
         </p>
 

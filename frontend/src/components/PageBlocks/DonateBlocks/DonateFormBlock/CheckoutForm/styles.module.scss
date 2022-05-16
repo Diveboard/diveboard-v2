@@ -1,5 +1,7 @@
 .wrapper {
   margin-bottom: 130px;
+  max-width: 420px;
+  width: 100%;
 }
 
 .btnText {
@@ -10,7 +12,7 @@
 }
 
 .elements {
-  margin: 20px 0 20px 0;
+  margin: 20px 0;
 }
 
 .elements ::placeholder {
@@ -37,14 +39,21 @@
   height: 48px;
 }
 
-.block  {
+.block {
   margin: 20px 0 20px 0;
   display: flex;
   justify-content: space-between;
 }
 
+.smallInputWrapper{
+  width: 100%;
+  &:last-child{
+    margin-left: 20px;
+  }
+}
+
 .blockElement {
-  width: 200px;
+  width: 100%;
   height: 48px;
   box-sizing: border-box;
   border: 1px solid rgba(0, 3, 69, 0.55);
@@ -54,6 +63,7 @@
 }
 
 .label {
+  margin-left: 16px;
   font-weight: 400;
   font-size: 10px;
   line-height: 12px;
