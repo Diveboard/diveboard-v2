@@ -1,108 +1,120 @@
+import React, { FC, useState } from 'react';
 import {
-    useStripe,
-    useElements,
-    CardNumberElement,
-    CardCvcElement,
-    CardExpiryElement,
+  useStripe,
+  useElements,
+  CardNumberElement,
+  CardCvcElement,
+  CardExpiryElement,
 } from '@stripe/react-stripe-js';
-import React, { FC, useState } from "react";
-import styles from './styles.module.scss'
-import { Button } from "../../../../Buttons/Button";
-import { Input } from "../../../../Input/CommonInput";
-import { Checkbox } from "../../../../CheckBox";
-import { customDonation, subDonation } from "../../../../../firebase/donate/donateService";
-import { FormInput } from "../../../../Input/FormInput";
-import { Props } from '../../MainDonateBlock';
 
-export const CheckoutForm: FC<Props> = ({planMode, contentMode, setContentMode}) => {
-    const [amount, setAmount] = useState<number>();
-    const [customerName, setCustomerName] = useState('');
-    const [saveCustomer, setSaveCustomer] = useState(false);
+import { Button } from '../../../../Buttons/Button';
+import { Input } from '../../../../Input/CommonInput';
+import { Checkbox } from '../../../../CheckBox';
+import { customDonation, subDonation } from '../../../../../firebase/donate/donateService';
+import { FormInput } from '../../../../Input/FormInput';
+import { FormProps } from '../../donateTypes';
+import styles from './styles.module.scss';
 
-    const stripe = useStripe();
-    const elements = useElements();
+export const CheckoutForm: FC<FormProps> = ({
+  planMode,
+  setContentMode,
+}) => {
+  const [amount, setAmount] = useState<number>();
+  const [customerName, setCustomerName] = useState('');
+  const [saveCustomer, setSaveCustomer] = useState(false);
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+  const stripe = useStripe();
+  const elements = useElements();
 
-        if (!stripe || !elements) {
-            return;
-        }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-        const cardElement = elements.create('cardNumber');
+    if (!stripe || !elements) {
+      return;
+    }
 
-        const { token } = await stripe.createToken(cardElement);
+    const cardElement = elements.getElement('cardNumber');
 
-        if (planMode === 'custom') {
-            await customDonation(amount * 100, saveCustomer, token.id)
+    const { token } = await stripe.createToken(cardElement);
 
-        } else {
-           let subType = planMode === '3/month' ? 'threeForTwelve' : 'fiveForTwelve'
+    if (planMode === 'custom') {
+      await customDonation(amount * 100, saveCustomer, token.id);
+    } else {
+      const subType = planMode === '3/month' ? 'threeForTwelve' : 'fiveForTwelve';
+      await subDonation(token.id, subType);
+    }
 
-           await subDonation(token.id, subType)
+    setContentMode('success');
+  };
 
-        }
-
-        setContentMode('success')
-
-    };
-
-    return (
-        <div className={styles.wrapper}>
-            <form onSubmit={handleSubmit}>
-                <div className={styles.elements}>
-                    {planMode === 'custom' && <label className={styles.label}> Donation Amount
-                        <FormInput
-                            value={amount}
-                            setValue={setAmount}
-                            width={160}
-                            height={48}
-                            placeholder={'$ 10.00'}
-                        />
-                    </label>
-                    }
-                    <label className={styles.label}> Card Number *
-                        <div className={styles.elementNumber}>
-                            <CardNumberElement
-                            />
-                        </div>
-                    </label>
-                    <div className={styles.block}>
-                        <label className={styles.label}> Exp Date *
-                            <CardExpiryElement className={styles.blockElement}/> </label>
-                        <label className={styles.label}> CVV *
-                            <CardCvcElement className={styles.blockElement}/> </label>
-                    </div>
-                    <label className={styles.label}> Card Holder’s Name *
-                        <Input
-                            value={customerName}
-                            setValue={setCustomerName}
-                            height={48}
-                            placeholder={'Name'}
-                        />
-                    </label>
-                </div>
-                <div className={styles.checkbox}>
-                    <Checkbox
-                        name={'save-customer'}
-                        checked={saveCustomer}
-                        onChecked={setSaveCustomer}
-                    >
-                        <span className={styles.checkboxText}> Save Card For Later Payments </span>
-                    </Checkbox>
-                </div>
-
-                <Button
-                    disable={!stripe}
-                    width={420}
-                    height={48}
-                    borderRadius={30}
-                    border='none'
-                    backgroundColor='#FDC90D'
-                >
-                    <span className={styles.btnDonate}>  Donate Now </span>
-                </Button>
-            </form>
+  return (
+    <div className={styles.wrapper}>
+      <form onSubmit={handleSubmit}>
+        <div className={styles.elements}>
+          {planMode === 'custom' && (
+            <label className={styles.label}>
+              {' '}
+              Donation Amount
+              <FormInput
+                value={amount}
+                setValue={setAmount}
+                width={160}
+                height={48}
+                placeholder="$ 10.00"
+              />
+            </label>
+          )}
+          <label className={styles.label}>
+            {' '}
+            Card Number *
+            <div className={styles.elementNumber}>
+              <CardNumberElement />
+            </div>
+          </label>
+          <div className={styles.block}>
+            <label className={styles.label}>
+              {' '}
+              Exp Date *
+              <CardExpiryElement className={styles.blockElement} />
+            </label>
+            <label className={styles.label}>
+              {' '}
+              CVV *
+              <CardCvcElement className={styles.blockElement} />
+            </label>
+          </div>
+          <label className={styles.label}>
+            {' '}
+            Card Holder’s Name *
+            <Input
+              value={customerName}
+              setValue={setCustomerName}
+              height={48}
+              placeholder="Name"
+            />
+          </label>
         </div>
-    )
-}
+        <div className={styles.checkbox}>
+          <Checkbox
+            name="save-customer"
+            checked={saveCustomer}
+            onChecked={setSaveCustomer}
+          >
+            <span className={styles.checkboxText}> Save Card For Later Payments </span>
+          </Checkbox>
+        </div>
+
+        <Button
+          disable={!stripe}
+          width={420}
+          height={48}
+          borderRadius={30}
+          border="none"
+          backgroundColor="#FDC90D"
+        >
+          <span className={styles.btnDonate}>  Donate Now </span>
+        </Button>
+      </form>
+    </div>
+  );
+};
