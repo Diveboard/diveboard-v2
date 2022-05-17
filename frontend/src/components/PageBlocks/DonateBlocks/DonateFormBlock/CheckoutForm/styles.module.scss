@@ -16,7 +16,7 @@
 }
 
 .elements ::placeholder {
-  font-weight: 500;
+  font-weight: 400;
   font-size: 14px;
   line-height: 20px;
   color: #000345;
@@ -80,4 +80,14 @@
 
 .checkbox {
   margin-bottom: 24px;
+}
+
+.errorTextForm {
+  display: block;
+  margin-top: 3px;
+  margin-left: 15px;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #FF645A;
 }
