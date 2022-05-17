@@ -24,9 +24,8 @@ export const SuccessBlock: FC = () => (
         Would you like to add it to your Profile?
       </p>
     </div>
-    <div>
+    <div className={styles.btnWrapper}>
       <Button
-        width={340}
         height={48}
         backgroundColor="#FDC90D"
         border="none"
@@ -36,7 +35,6 @@ export const SuccessBlock: FC = () => (
       </Button>
 
       <Button
-        width={340}
         height={48}
         border="2px solid #000345"
         borderRadius={30}

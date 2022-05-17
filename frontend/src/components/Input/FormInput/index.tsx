@@ -6,8 +6,8 @@ type Props = {
     padding?: string;
     value: number;
     setValue: React.Dispatch<React.SetStateAction<number>>;
-    error?: string;
-    setError?: React.Dispatch<React.SetStateAction<string>>;
+    inputError?: string;
+    setInputError?: React.Dispatch<React.SetStateAction<string>>;
     placeholder?: string;
     iconName?: string;
     disabled?: boolean
@@ -18,8 +18,8 @@ type Props = {
 export const FormInput: FC<Props> = ({
                                      value,
                                      setValue,
-                                     error,
-                                     setError,
+                                     inputError,
+                                     setInputError,
                                      placeholder,
                                      iconName,
                                      disabled,
@@ -47,15 +47,16 @@ export const FormInput: FC<Props> = ({
                     value={value}
                     onChange={(event) => {
                         setValue(+(event.target.value))
-                        if (setError) {
-                            setError('');
+                        if (setInputError) {
+                            setInputError('');
                         }
                     }}
-                    className={getInputStyle(error)}
+                    className={getInputStyle(inputError)}
                     placeholder={placeholder}
                     disabled={disabled}
 
                 />
+                {inputError && <span className={styles.errorTextForm}>{inputError}</span>}
 
                 {iconName && (
                     <div className={styles.icon}>
@@ -63,7 +64,7 @@ export const FormInput: FC<Props> = ({
                     </div>
                 )}
             </div>
-            {error && <span className={styles.errorText}>{error}</span>}
+
         </>
     );
 };

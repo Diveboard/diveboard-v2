@@ -19,7 +19,7 @@
 }
 
 .title {
-  width: 340px;
+  max-width: 340px;
 }
 
 .title h2 {
@@ -45,4 +45,16 @@
   font-size: 18px;
   line-height: 20px;
   color: #000345;
+}
+
+.btnWrapper {
+  max-width: 340px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .title h2  {
+    font-size: 24px;
+    line-height: 30px;
+  }
 }
