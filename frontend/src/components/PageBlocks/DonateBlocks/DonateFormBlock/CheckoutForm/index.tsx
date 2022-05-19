@@ -14,6 +14,7 @@ import { customDonation, subDonation } from '../../../../../firebase/donate/dona
 import { FormInput } from '../../../../Input/FormInput';
 import { FormProps } from '../../donateTypes';
 import styles from './styles.module.scss';
+import {Loader} from '../../../../Loader';
 
 export const CheckoutForm: FC<FormProps> = ({
                                                 planMode,
@@ -24,6 +25,7 @@ export const CheckoutForm: FC<FormProps> = ({
     const [saveCustomer, setSaveCustomer] = useState(false);
     const [error, setError] = useState('');
     const [inputError, setInputError] = useState('');
+    const [loading, setLoading] = useState(false);
 
 
     const stripe = useStripe();
@@ -31,6 +33,7 @@ export const CheckoutForm: FC<FormProps> = ({
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setLoading(true);
 
         if (!stripe || !elements) {
             return;
@@ -41,7 +44,8 @@ export const CheckoutForm: FC<FormProps> = ({
         const { token, error } = await stripe.createToken(cardElement, {name: customerName});
 
         if(error){
-            setError('The fields must not be empty')
+            setError('The field is required')
+            setLoading(false);
         }
 
         if (planMode === 'custom') {
@@ -49,7 +53,7 @@ export const CheckoutForm: FC<FormProps> = ({
             const amountInDollars = amount * 100;
 
             if (!amountInDollars) {
-                setInputError(  'The field must not be empty')
+                setInputError(  'Amount - Required')
             }
 
             await customDonation(amountInDollars, saveCustomer, token.id);
@@ -72,23 +76,9 @@ export const CheckoutForm: FC<FormProps> = ({
                     textTransform: 'lowercase',
                 },
             },
-            invalid: {
-                color: "#b70b23",
-            }
         },
     };
 
-    const CARD_NUMBER_OPTIONS = {
-        style: {
-            base: {
-                fontWeight: '400',
-                fontSize: "14px",
-            },
-            empty: {
-                color: "#b70b23"
-            }
-        },
-    }
 
     return (
         <div className={styles.wrapper}>
@@ -112,10 +102,10 @@ export const CheckoutForm: FC<FormProps> = ({
                     <label className={styles.label}>
                         Card Number *
                         <div className={styles.elementNumber}>
-                            <CardNumberElement options={CARD_NUMBER_OPTIONS}
+                            <CardNumberElement options={CARD_ELEMENT_OPTIONS}
                             />
                         </div>
-                        {error && <span className={styles.errorTextForm}> Enter Card Number </span>}
+                        {error && <span className={styles.errorTextForm}> Card Number - Required </span>}
                     </label>
                     <div className={styles.block}>
                         <div className={styles.smallInputWrapper}>
@@ -124,7 +114,7 @@ export const CheckoutForm: FC<FormProps> = ({
                             </label>
                             <CardExpiryElement className={styles.blockElement}
                                                options={CARD_ELEMENT_OPTIONS}/>
-                            {error && <span className={styles.errorTextForm}> Enter Card Expiry</span>}
+                            {error && <span className={styles.errorTextForm}> Card Expiry - Required</span>}
                         </div>
                         <div className={styles.smallInputWrapper}>
                             <label className={styles.label}>
@@ -132,7 +122,7 @@ export const CheckoutForm: FC<FormProps> = ({
                             </label>
                             <CardCvcElement className={styles.blockElement}
                                             options={CARD_ELEMENT_OPTIONS}/>
-                            {error && <span className={styles.errorTextForm}> Enter CVC </span>}
+                            {error && <span className={styles.errorTextForm}> CVC - Required </span>}
                         </div>
 
                     </div>
@@ -165,6 +155,7 @@ export const CheckoutForm: FC<FormProps> = ({
                     border="none"
                     backgroundColor="#FDC90D"
                 >
+                    {loading && <Loader loading={loading} />}
                     <span className={styles.btnDonate}>  Donate Now </span>
                 </Button>
             </form>
