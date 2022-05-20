@@ -1,16 +1,40 @@
 .mapWrapper {
-  //position: relative;
   height: 785px;
   margin-top: 75px;
 
   .map {
-    //position: absolute;
-    //left: -75px;
-    //right: -75px;
-    //top: 0;
-    //bottom: 0;
+    position: relative;
     width: 100%;
     height: 100%;
+  }
+
+  .mapCover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 7, 33, 0.15);
+    z-index: 1;
+  }
+
+  .navigate{
+    display: none;
+  }
+
+  .buttonWrapper {
+    position: absolute;
+    top: 27px;
+    right: 40px;
+    min-width: 188px;
+    z-index: 2;
+
+    > button {
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 20px;
+      color: #000345;
+    }
   }
 }
 
