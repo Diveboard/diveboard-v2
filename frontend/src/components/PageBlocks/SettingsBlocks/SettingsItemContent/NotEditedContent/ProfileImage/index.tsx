@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
 import styles from './styles.module.scss';
+import { imageLoader } from '../../../../../Icons/Icon';
 
 type Props = {
   imgSrc: string;
@@ -15,6 +16,7 @@ export const ProfileImage:FC<Props> = ({ imgSrc, size = 80 }) => (
       height={size}
       alt="avatar"
       className={styles.img}
+      loader={imageLoader}
     />
 
   </div>

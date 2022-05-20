@@ -2,10 +2,8 @@ import Cookies from 'js-cookie';
 
 export const setCookiesLogin = (isKeepLogged: boolean, uid: string) => {
   Cookies.set(
-    'diveBoardUserId',
+    '__session',
     uid,
-    {
-      expires: isKeepLogged ? 14 : 1, secure: true, sameSite: 'strict',
-    },
+    { expires: isKeepLogged ? 14 : 1, secure: true, sameSite: 'strict' },
   );
 };

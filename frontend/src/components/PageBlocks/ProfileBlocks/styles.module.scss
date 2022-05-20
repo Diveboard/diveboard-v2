@@ -1,10 +1,15 @@
 .profileBlockWrapper {
   margin: 118px auto 0 auto;
-  padding: 0 75px;
+  padding: 0 3.866vw;
   max-width: 1940px;
-
 
   .contentMarginTop {
     margin-top: 75px;
+  }
+}
+
+@media (max-width: 768px) {
+  .profileBlockWrapper {
+    margin: 70px auto 0 auto;
   }
 }

@@ -155,15 +155,15 @@ export const SignInBlock: FC = () => {
         />
       </div>
 
-      <MarginWrapper top={10}>
+      <div className={styles.btnWrapper}>
+        <MarginWrapper top={10} display={'block'}>
         <Button
-          width={250}
-          height={56}
-          borderRadius={30}
-          border="none"
-          backgroundColor="#FDC90D"
-          disable={(mode === 'signup' && !isTermsChecked) || loading}
-          onClick={submit}
+            height={56}
+            borderRadius={30}
+            border="none"
+            backgroundColor="#FDC90D"
+            disable={(mode === 'signup' && !isTermsChecked) || loading}
+            onClick={submit}
         >
           {loading && <Loader loading={loading} />}
           {mode === 'login/signup' && (
@@ -176,6 +176,7 @@ export const SignInBlock: FC = () => {
           {mode === 'community' && <span className={styles.btnText}>Join on Discord</span>}
         </Button>
       </MarginWrapper>
+      </div>
 
       {(mode === 'signup' || mode === 'login') && (
         <MarginWrapper top={20}>
@@ -184,6 +185,7 @@ export const SignInBlock: FC = () => {
             className={availableCode ? styles.coloredText : styles.disabledText}
             onClick={authCode}
           >
+            {'  '}
             Resend a Code
           </span>
         </MarginWrapper>

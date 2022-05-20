@@ -28,14 +28,14 @@ export const DiveCard: FC<Props> = ({
   const diveDate = `${month[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
   return (
     <div className={styles.diveCard}>
-
-      <Image
-        src={imgSrc}
-        width={420}
-        height={224}
-        loader={imageLoader}
-        className={styles.img}
-      />
+      <div className={styles.imgWrapper}>
+        <Image
+          src={imgSrc}
+          layout="fill"
+          loader={imageLoader}
+          className={styles.img}
+        />
+      </div>
 
       <span className={styles.tags}>
         #
@@ -58,7 +58,7 @@ export const DiveCard: FC<Props> = ({
             <span>
               {diveTime}
               {' '}
-              m
+              min
             </span>
           </div>
           <div className={styles.dataItem}>

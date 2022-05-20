@@ -54,3 +54,12 @@
     }
   }
 }
+
+@media (max-width: 768px) {
+  .inputWrapper {
+    .openedInput {
+      width: 340px;
+    }
+  }
+
+}
