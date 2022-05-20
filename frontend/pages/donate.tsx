@@ -42,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!uid) {
     return {
       redirect: {
-        destination: pageRoutes.mainPageGuest,
+        destination: pageRoutes.authPageRout,
         permanent: false,
       },
     };
