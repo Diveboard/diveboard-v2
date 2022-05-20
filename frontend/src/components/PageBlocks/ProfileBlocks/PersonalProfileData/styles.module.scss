@@ -64,6 +64,10 @@
     }
   }
 
+  .btnWrapper {
+    max-width: 180px;
+    width: 100%;
+  }
 
   .diveDataWrapper {
     margin-top: 40px;
@@ -75,25 +79,25 @@
       display: flex;
       width: 100%;
 
-      >div{
+      > div {
         margin-right: 30px;
       }
 
-      .firstBlock{
+      .firstBlock {
         width: 100%;
         max-width: 301px;
       }
 
-      .secondBlock{
+      .secondBlock {
         width: 100%;
         max-width: 382px;
       }
 
-      .thirdBlock{
+      .thirdBlock {
         width: 100%;
         max-width: 551px;
 
-        .more{
+        .more {
           font-weight: 400;
           color: #0059DE;
         }
@@ -105,6 +109,7 @@
       justify-content: space-between;
       align-items: center;
       width: 70%;
+
 
       .btnLabel {
         font-weight: 600;
@@ -125,3 +130,91 @@
 }
 
 
+@media (max-width: 768px) {
+  .blockWrapper {
+    .profileDataWrapper {
+      position: relative;
+      align-items: flex-start;
+
+      .leftContent {
+        align-items: flex-start;
+
+        .backBtnWrapper {
+          display: none;
+        }
+
+        .personalDataWrapper {
+          margin-left: 15px;
+
+          .name {
+            font-size: 16px;
+            line-height: 21px;
+          }
+
+          .personalGroup {
+            margin-top: 10px;
+
+            .countryWrapper {
+              margin-right: 12px;
+            }
+
+            .followersWrapper {
+
+            }
+          }
+        }
+      }
+
+      .rightContent {
+        position: absolute;
+        top: -10px;
+        right: 0;
+        width: 110px;
+
+        .followText {
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+    }
+
+
+    .diveDataWrapper {
+      margin-top: 18px;
+
+
+      .diveData {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        > div {
+          margin-right: 30px;
+        }
+
+        .firstBlock {
+          width: 100%;
+          max-width: 301px;
+        }
+
+        .secondBlock {
+          width: 100%;
+          max-width: 382px;
+        }
+
+        .thirdBlock {
+          margin-top: 16px;
+
+          > button {
+            padding: 0;
+          }
+        }
+      }
+
+      .btnWrapper {
+        display: none;
+      }
+    }
+
+  }
+}

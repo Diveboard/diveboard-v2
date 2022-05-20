@@ -3,7 +3,6 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { MainLayout } from '../../src/layouts/MainLayout';
 import { AuthLayout } from '../../src/layouts/AuthLayout';
 import { firebaseAdmin } from '../../src/firebase/firebaseAdmin';
-import pageRoutes from '../../src/routes/pagesRoutes.json';
 
 const HomeUser: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
@@ -19,31 +18,35 @@ const HomeUser: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const uid = context.req.cookies.diveBoardUserId;
+  try {
+    const uid = context.req.cookies.__session;
 
-  if (!uid) {
+    if (!uid) {
+      throw new Error('no user uid');
+    }
+
+    const {
+      email, photoURL = '', displayName = '',
+    } = await firebaseAdmin.auth().getUser(uid);
+
+    return {
+      props: {
+        user: {
+          uid,
+          email,
+          photoURL,
+          name: displayName,
+        },
+      },
+    };
+  } catch (e) {
     return {
       redirect: {
-        destination: pageRoutes.mainPageGuest,
+        destination: '/auth',
         permanent: false,
       },
     };
   }
-
-  const {
-    email, photoURL = '', displayName = '',
-  } = await firebaseAdmin.auth().getUser(uid);
-
-  return {
-    props: {
-      user: {
-        uid,
-        email,
-        photoURL,
-        name: displayName,
-      },
-    },
-  };
 };
 
 export default HomeUser;

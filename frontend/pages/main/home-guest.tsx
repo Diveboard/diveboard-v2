@@ -1,63 +1,33 @@
 import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import {
-  MainBannerBlock,
-} from '../../src/components/PageBlocks/HomePageBlocks/Guest/MainBannerBlock';
-import { MapBlock } from '../../src/components/PageBlocks/HomePageBlocks/Guest/MapBlock';
-import {
-  DestinationBlock,
-} from '../../src/components/PageBlocks/HomePageBlocks/Guest/DestinationsBlock';
-import {
-  CollaborationBlock,
-} from '../../src/components/PageBlocks/HomePageBlocks/Guest/CollaborationBlock';
-import {
-  PhotoDivesBlock,
-} from '../../src/components/PageBlocks/HomePageBlocks/Guest/PhotoDivesBlock';
-import {
-  DiveInPocketBlock,
-} from '../../src/components/PageBlocks/HomePageBlocks/Guest/DiveInPocketBlock';
 import { AuthLayout } from '../../src/layouts/AuthLayout';
 import { MainLayout } from '../../src/layouts/MainLayout';
-import { firebaseAdmin } from '../../src/firebase/firebaseAdmin';
+import Guest from '../../src/components/PageBlocks/HomePageBlocks/Guest';
 
 const HomeGuest:
 InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
     <MainLayout>
-      <MainBannerBlock />
-      <MapBlock />
-      <DestinationBlock />
-      <CollaborationBlock />
-      <PhotoDivesBlock />
-      <DiveInPocketBlock />
+      <Guest />
     </MainLayout>
   </AuthLayout>
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const uid = context.req.cookies.diveBoardUserId;
-  if (!uid) {
+  const uid = context.req.cookies.__session;
+
+  if (uid) {
     return {
-      props: {
-        user: null,
+      redirect: {
+        destination: '/main/home-user',
+        permanent: false,
       },
     };
   }
-  const {
-    email,
-    photoURL = '',
-    displayName = '',
-  } = await firebaseAdmin.auth()
-    .getUser(uid);
 
   return {
     props: {
-      user: {
-        uid,
-        email,
-        photoURL,
-        name: displayName,
-      },
+      user: null,
     },
   };
 };

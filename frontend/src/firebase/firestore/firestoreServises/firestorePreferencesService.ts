@@ -33,7 +33,7 @@ export const firestorePreferencesService = {
   setScientificData: async (scientificData: Pick<PreferencesType, 'scientificData'>, userId: string) => {
     try {
       const ref = doc(db, 'user-preferences', userId);
-      await setDoc(ref, { scientificData }, { merge: true });
+      await setDoc(ref, { ...scientificData }, { merge: true });
     } catch (e) {
       throw new Error('set scientific data error');
     }

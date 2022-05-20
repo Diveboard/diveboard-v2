@@ -29,7 +29,6 @@ export const DeskTopPhotoGroup: FC<PhotoGroupProps> = ({ photos }) => {
   });
   return (
     <div className={styles.photoWrapper}>
-
       <div className={styles.column}>
         {photosElements[0]}
       </div>
@@ -47,7 +46,6 @@ export const DeskTopPhotoGroup: FC<PhotoGroupProps> = ({ photos }) => {
         {photosElements[4]}
         {photosElements[5]}
       </div>
-
     </div>
   );
 };
