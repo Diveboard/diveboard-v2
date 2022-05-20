@@ -33,8 +33,10 @@
     .btnWrapper {
       position: absolute;
       bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
 
       .innerBtnWrapper {
         width: 70%;
@@ -85,7 +87,6 @@
 
     .mapWrapper {
       height: 340px;
-      //background-image: url("../../../../../../public/assets/images/map.png");
 
       .btnWrapper {
         .innerBtnWrapper {
