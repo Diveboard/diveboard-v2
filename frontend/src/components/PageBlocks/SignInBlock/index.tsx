@@ -98,7 +98,6 @@ export const SignInBlock: FC = () => {
   };
 
   const submit = async () => {
-    setLoading(true);
     if (!inputValue.length) {
       return setError('empty value');
     }
@@ -108,6 +107,7 @@ export const SignInBlock: FC = () => {
       if (!inputValue.match(mailRegexp)) {
         return setError('invalid mail value');
       }
+      setLoading(true);
       await authCode();
     } else if (mode === 'community') {
       await router.push('https://discord.gg/rkKFRjns');
@@ -116,6 +116,7 @@ export const SignInBlock: FC = () => {
       if (!inputValue.match(codeRegexp)) {
         return setError('invalid code value');
       }
+      setLoading(true);
       await authUser();
     }
     setLoading(false);
@@ -156,26 +157,26 @@ export const SignInBlock: FC = () => {
       </div>
 
       <div className={styles.btnWrapper}>
-        <MarginWrapper top={10} display={'block'}>
-        <Button
+        <MarginWrapper top={10} display="block">
+          <Button
             height={56}
             borderRadius={30}
             border="none"
             backgroundColor="#FDC90D"
             disable={(mode === 'signup' && !isTermsChecked) || loading}
             onClick={submit}
-        >
-          {loading && <Loader loading={loading} />}
-          {mode === 'login/signup' && (
+          >
+            {loading && <Loader loading={loading} />}
+            {mode === 'login/signup' && (
             <span className={styles.btnText}>Send Code</span>
-          )}
-          {mode === 'signup' && (
+            )}
+            {mode === 'signup' && (
             <span className={styles.btnText}>Register</span>
-          )}
-          {mode === 'login' && <span className={styles.btnText}>Log In</span>}
-          {mode === 'community' && <span className={styles.btnText}>Join on Discord</span>}
-        </Button>
-      </MarginWrapper>
+            )}
+            {mode === 'login' && <span className={styles.btnText}>Log In</span>}
+            {mode === 'community' && <span className={styles.btnText}>Join on Discord</span>}
+          </Button>
+        </MarginWrapper>
       </div>
 
       {(mode === 'signup' || mode === 'login') && (

@@ -94,7 +94,6 @@ export const EditedProfileEmail: FC = () => {
         <Input
           value={emailValue}
           setValue={setEmailValue}
-          padding="11px 16px 11px 54px"
           iconName="email"
           placeholder="Your New Email"
           disabled={!availableCode}

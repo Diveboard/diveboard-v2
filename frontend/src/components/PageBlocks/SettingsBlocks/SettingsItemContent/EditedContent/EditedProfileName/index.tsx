@@ -34,7 +34,6 @@ export const EditedProfileName: FC = () => {
           value={nameValue}
           setValue={setNameValue}
           iconName="name-input"
-          padding="11px 16px 11px 54px"
         />
       </div>
       <SaveThisButton
