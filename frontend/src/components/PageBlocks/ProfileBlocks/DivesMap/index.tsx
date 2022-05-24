@@ -1,14 +1,15 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import GoogleMapReact from 'google-map-react';
 import DivePoint from '../../../Point';
 import styles from './styles.module.scss';
+import { Button } from '../../../Buttons/Button';
 
 type Maps = typeof google.maps;
 
 const getMapOptions = (maps: Maps) => ({
   keyboardShortcuts: false,
   streetViewControl: false,
-  scaleControl: true,
+  scaleControl: false,
   fullscreenControl: false,
   mapTypeId: maps.MapTypeId.SATELLITE,
   zoomControl: false,
@@ -36,6 +37,8 @@ export const DivesMap: FC<Props> = ({
   zoom,
   points,
 }) => {
+  const [navigate, setNavigate] = useState(false);
+
   const handleApiLoaded = (map, maps) => {
     console.log({ maps });
   };
@@ -53,6 +56,20 @@ export const DivesMap: FC<Props> = ({
   return (
     <div className={styles.mapWrapper}>
       <div className={styles.map}>
+        <div className={`${styles.mapCover} ${navigate && styles.navigate}`} />
+        <div className={styles.buttonWrapper}>
+          <Button
+            width={188}
+            height={52}
+            border="none"
+            backgroundColor="#FDC90D"
+            borderRadius={30}
+            onClick={() => { setNavigate(!navigate); }}
+          >
+            {!navigate ? 'UNLOCK MAP' : 'LOCK MAP'}
+          </Button>
+        </div>
+
         <GoogleMapReact
           bootstrapURLKeys={
             {

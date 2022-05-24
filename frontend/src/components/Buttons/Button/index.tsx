@@ -3,6 +3,7 @@ import styles from './styles.module.scss';
 
 type Props = {
   backgroundColor?: string;
+  marginTop?: number;
   borderRadius?: number;
   border?: string;
   width?: number;
@@ -19,6 +20,7 @@ export const Button: FC<Props> = ({
   height,
   width,
   disable,
+  marginTop,
   children,
 }) => {
   const buttonStyle = {
@@ -26,8 +28,11 @@ export const Button: FC<Props> = ({
     opacity: !disable ? '1' : '0.25',
     borderRadius: `${borderRadius}px`,
     border,
-    width: `${width}px`,
+    maxWidth: `${width}px`,
+    width: '100%',
     height: `${height}px`,
+    marginTop: `${marginTop}px`,
+    color: '#000345',
   };
   return (
     <button
