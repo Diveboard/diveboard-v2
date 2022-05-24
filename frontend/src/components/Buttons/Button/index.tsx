@@ -20,7 +20,7 @@ export const Button: FC<Props> = ({
   height,
   width,
   disable,
-  marginTop,
+  marginTop = 0,
   children,
 }) => {
   const buttonStyle = {

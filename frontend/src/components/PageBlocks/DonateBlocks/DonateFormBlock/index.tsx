@@ -1,8 +1,12 @@
 import React, { FC } from 'react';
-import styles from './styles.module.scss';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 import { CheckoutForm } from './CheckoutForm';
 import { PlanButtons } from './PlanButtons';
 import { DonateFormProps } from '../donateTypes';
+import styles from './styles.module.scss';
+
+const stripePromise = loadStripe(`${process.env.NEXT_PUBLIC_STRIPE_TEST_PUBLISHABLE_KEY}`);
 
 export const DonateFormBlock: FC<DonateFormProps> = ({
   planMode,
@@ -19,10 +23,11 @@ export const DonateFormBlock: FC<DonateFormProps> = ({
       planMode={planMode}
       setPlanMode={setPlanMode}
     />
-
-    <CheckoutForm
-      planMode={planMode}
-      setContentMode={setContentMode}
-    />
+    <Elements stripe={stripePromise}>
+      <CheckoutForm
+        planMode={planMode}
+        setContentMode={setContentMode}
+      />
+    </Elements>
   </div>
 );

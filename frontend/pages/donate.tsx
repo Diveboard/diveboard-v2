@@ -16,20 +16,25 @@ const Donate: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }
   return (
     <AuthLayout user={user}>
       <MainLayout>
+
         {contentMode === 'main' && (
-        <MainDonateBlock
-          setContentMode={setContentMode}
-          setPlanMode={setPlanMode}
-        />
+          <MainDonateBlock
+            setContentMode={setContentMode}
+            setPlanMode={setPlanMode}
+          />
         )}
+
         {contentMode === 'plan' && (
+
         <DonateFormBlock
           planMode={planMode}
           setPlanMode={setPlanMode}
           setContentMode={setContentMode}
           contentMode={contentMode}
         />
+
         )}
+
         {contentMode === 'success' && <SuccessBlock />}
       </MainLayout>
     </AuthLayout>
