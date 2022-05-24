@@ -3,8 +3,8 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { ProfileBlock } from '../src/components/PageBlocks/ProfileBlocks';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import { MainLayout } from '../src/layouts/MainLayout';
-import pageRoutes from '../src/routes/pagesRoutes.json';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
+import pageRoutes from '../src/routes/pagesRoutes.json';
 
 const Profile: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>

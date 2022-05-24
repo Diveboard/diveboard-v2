@@ -108,6 +108,7 @@ export const CheckoutForm: FC<FormProps> = ({
   };
 
   return (
+
     <div className={styles.wrapper}>
       <form onSubmit={handleSubmit}>
 
