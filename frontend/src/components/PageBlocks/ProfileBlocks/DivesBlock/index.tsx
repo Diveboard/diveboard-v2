@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { ButtonGroup } from '../../../ButtonGroup';
-import styles from './styles.module.scss';
 import { Title } from '../Title';
 import { SearchAnimatedInput } from '../../../Input/SearchAnimatedInput';
 import { DiveCard } from '../../../Cards/DiveCard';
+import styles from './styles.module.scss';
 
 export const DivesBlock = () => {
   const [diveMode, setDiveMode] = useState<'all' | 'favourite' | 'drafts'>('all');

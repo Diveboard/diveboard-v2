@@ -52,7 +52,6 @@ export const MainBannerBlock = () => {
         <div className={styles.inputBlock}>
           <div className={styles.inputWrapper}>
             <Input
-              padding={!isWidth ? '16px' : '12px 16px'}
               value={inputValue}
               setValue={setInputValue}
               placeholder="location"
