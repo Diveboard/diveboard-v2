@@ -31,7 +31,7 @@ export const EditedPreferencesLanguage: FC<Props> = ({ preferences, setPreferenc
     <div>
       <LanguageDropdown language={language} setLanguage={setLanguage} />
 
-      <MarginWrapper top={10}>
+      <MarginWrapper top={10} display={'block'}>
         <SaveThisButton
           onClick={setLanguagePreferences}
           loading={loading}
