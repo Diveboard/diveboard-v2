@@ -13,7 +13,10 @@ type Props = {
   preferences: PreferencesType;
   setPreferences: React.Dispatch<React.SetStateAction<PreferencesType>>;
 };
-export const EditedPreferencesLanguage: FC<Props> = ({ preferences, setPreferences }) => {
+export const EditedPreferencesLanguage: FC<Props> = ({
+  preferences,
+  setPreferences,
+}) => {
   const [loading, setLoading] = useState(false);
   const { userAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
@@ -22,16 +25,22 @@ export const EditedPreferencesLanguage: FC<Props> = ({ preferences, setPreferenc
   const setLanguagePreferences = async () => {
     setLoading(true);
     await firestorePreferencesService.setLanguage(language, userAuth.uid);
-    setPreferences({ ...preferences, language });
+    setPreferences({
+      ...preferences,
+      language,
+    });
     setLoading(false);
-    setEditedSettings({ settingsBlock: '', settingsItem: '' });
+    setEditedSettings({
+      settingsBlock: '',
+      settingsItem: '',
+    });
   };
 
   return (
     <div>
       <LanguageDropdown language={language} setLanguage={setLanguage} />
 
-      <MarginWrapper top={10} display={'block'}>
+      <MarginWrapper top={10} display="block">
         <SaveThisButton
           onClick={setLanguagePreferences}
           loading={loading}

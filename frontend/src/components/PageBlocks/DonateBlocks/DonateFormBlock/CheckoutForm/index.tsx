@@ -170,7 +170,6 @@ export const CheckoutForm: FC<FormProps> = ({
               />
               {expDateError && (
                 <span className={styles.errorTextForm}>
-                  {' '}
                   {expDateError}
                 </span>
               )}
@@ -233,7 +232,9 @@ export const CheckoutForm: FC<FormProps> = ({
           backgroundColor="#FDC90D"
         >
           {loading && <Loader loading={loading} />}
-          <span className={styles.btnDonate}>  Donate Now </span>
+          <span className={styles.btnDonate}>
+            Donate Now
+          </span>
         </Button>
       </form>
     </div>
