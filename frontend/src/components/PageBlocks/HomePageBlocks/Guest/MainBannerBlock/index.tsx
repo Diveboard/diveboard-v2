@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import landingLabel from '../../../../../../public/assets/images/landing-label.png';
+import landingLabel from '../../../../../../public/images/landing-label.png';
 import styles from './styles.module.scss';
 import { Input } from '../../../../Input/CommonInput';
 import { Button } from '../../../../Buttons/Button';

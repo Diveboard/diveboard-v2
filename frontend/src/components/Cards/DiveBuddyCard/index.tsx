@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
-import { Icon } from '../../Icons/Icon';
+import { Icon, imageLoader } from '../../Icons/Icon';
 import styles from './styles.module.scss';
 
 type Props = {
@@ -20,7 +20,13 @@ export const DiveBuddyCard: FC<Props> = ({
 }) => (
   <div className={styles.card}>
     <div className={styles.imgWrapper}>
-      <Image src={imgSrc} width={110} height={110} className={styles.img} />
+      <Image
+        src={imgSrc}
+        width={110}
+        height={110}
+        className={styles.img}
+        loader={imageLoader}
+      />
     </div>
     <div className={styles.contentWrapper}>
       <span className={styles.name}>{name}</span>
