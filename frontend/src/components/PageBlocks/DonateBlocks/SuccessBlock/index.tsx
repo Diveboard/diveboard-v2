@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import Image from 'next/image';
 import { imageLoader } from '../../../Icons/Icon';
 import { Button } from '../../../Buttons/Button';
-import dollarImage from '../../../../../public/assets/icons/Vector.svg';
+import dollarImage from '../../../../../public/appIcons/Vector.svg';
 import styles from './styles.module.scss';
 
 export const SuccessBlock: FC = () => (

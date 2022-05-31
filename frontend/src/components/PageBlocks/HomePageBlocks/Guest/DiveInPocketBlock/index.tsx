@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Button } from '../../../../Buttons/Button';
 import { Icon, imageLoader } from '../../../../Icons/Icon';
-import mobilesImg from '../../../../../../public/assets/images/mobiles.png';
+import mobilesImg from '../../../../../../public/images/mobiles.png';
 import styles from './styles.module.scss';
 
 export const DiveInPocketBlock = () => (

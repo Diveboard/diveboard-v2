@@ -3,8 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MarginWrapper } from '../../MarginWrapper';
 import { Icon, imageLoader } from '../../Icons/Icon';
-import styles from './styles.module.scss';
 import { ArrowLink } from '../../ArrowLink';
+import styles from './styles.module.scss';
 
 export const Footer = () => (
   <footer className={styles.footer}>
@@ -88,7 +88,7 @@ export const Footer = () => (
       </div>
 
       <div className={styles.forkme}>
-        <Image src="/assets/images/forkme.png" loader={imageLoader} width={149} height={149} />
+        <Image src="/images/forkme.png" loader={imageLoader} width={149} height={149} />
       </div>
     </div>
     <div className={styles.copyrightWrapper}>

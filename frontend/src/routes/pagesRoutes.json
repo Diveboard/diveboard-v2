@@ -15,5 +15,6 @@
   "shopPageRout": "/shop",
   "supportPageRout": "/support",
   "settingsPageRout": "/settings",
-  "logDivePageRout": "/log-dive"
+  "logDivePageRout": "/log-dive",
+  "profilePageRout": "/profile"
 }
