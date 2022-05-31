@@ -1,9 +1,9 @@
-const withImages = require('next-images')
+const withImages = require('next-images');
 
 module.exports = withImages({
   reactStrictMode: true,
   images: {
-    domains: ['firebasestorage.googleapis.com']
+    domains: ['firebasestorage.googleapis.com'],
   },
   module: {
     rules: [
@@ -23,15 +23,41 @@ module.exports = withImages({
   }
 })
 
-const withPWA = require('next-pwa')
+const withPWA = require('next-pwa');
+const WebpackShellPlugin = require('webpack-shell-plugin-next');
 
 module.exports = withPWA({
-  extends: ["next", "prettier"],
+  extends: ['next', 'prettier'],
   images: {
-    domains: ['firebasestorage.googleapis.com']
+    domains: ['firebasestorage.googleapis.com'],
+  },
+
+  webpack: (config, {  isServer }) => {
+    if (isServer) {
+      config.plugins.push(
+        new WebpackShellPlugin({
+          onBuildExit: {
+            scripts: [
+              'echo "Transfering files ... "',
+              'cp -r .next/build-manifest.json public/build-manifest.json',
+              'echo "DONE ... "',
+            ],
+            blocking: false,
+            parallel: true
+          }
+        })
+      )
+    }
+    return config
   },
   pwa: {
     dest: 'public',
-    publicExcludes: ['!assets/**/*']
+    // disable: process.env.NODE_ENV === 'development',
+    publicExcludes: ['!assets/**/*'],
+    dynamicStartUrlRedirect: true,
+
+    fallbacks: {
+      image: '/appIcons/diveboard-logo.svg',
+    }
   }
-})
+});

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
 
-export const imageLoader = ({ src, width, quality }) => `${src}?w=${width}&q=${quality || 75}`;
+export const imageLoader = ({ src }) => `${src}`;
 
 type Props = {
   iconName: string;
@@ -17,7 +17,7 @@ export const Icon: FC<Props> = ({
   const h = height || size;
   return (
     <Image
-      src={`/assets/icons/${iconName}.svg`}
+      src={`/appIcons/${iconName}.svg`}
       width={w}
       height={h}
       alt={`${iconName}-icon`}

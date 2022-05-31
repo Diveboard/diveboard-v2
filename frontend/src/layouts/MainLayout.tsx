@@ -2,8 +2,8 @@ import React, { FC, useContext } from 'react';
 import { Footer } from '../components/Footer/DesktopFooter';
 import { useWindowWidth } from '../hooks/useWindowWidth';
 import { MobileGuestHeader, MobileUserHeader } from '../components/Header/MobileHeader';
-import { MobileNavBar } from '../components/MobileNavBar';
 import { GuestHeader, UserHeader } from '../components/Header/DesktopHeader';
+import { MobileNavBar } from '../components/MobileNavBar';
 import { FooterMobile } from '../components/Footer/MobileFooter';
 import { AuthStatusContext } from './AuthLayout';
 
