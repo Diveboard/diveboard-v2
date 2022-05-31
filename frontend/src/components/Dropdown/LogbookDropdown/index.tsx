@@ -11,7 +11,7 @@ const logbookItems = [
     id: 1,
     svgItem: <LogDive />,
     title: 'Log a New Dive',
-    link: pageRoutes.logDivePageRout,
+    link: pageRoutes.profilePageRout,
   },
   {
     id: 2,

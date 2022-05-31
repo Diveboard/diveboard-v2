@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import collaborationImage from '../../../../../../public/assets/images/collaboration.png';
+import collaborationImage from '../../../../../../public/images/collaboration.png';
 import { Icon, imageLoader } from '../../../../Icons/Icon';
 import styles from './styles.module.scss';
 

@@ -54,3 +54,8 @@ amplifytools.xcconfig
 **.sample
 #amplify-do-not-edit-end
 diveboard-org-firebase-adminsdk-zqzeb-4d4b96ce53.json
+
+
+**/public/workbox-*.js
+**/public/sw.js
+**/public/fallback-*.js
