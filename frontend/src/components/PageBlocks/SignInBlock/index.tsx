@@ -29,6 +29,8 @@ import { CheckBoxContent } from './Components/CheckBoxContent';
 import { Loader } from '../../Loader';
 import { setCookiesLogin } from '../../../utils/setCookiesLogin';
 import { statusUserRedirect } from '../../../utils/statusUserRedirect';
+import { precachePages } from '../../../utils/precachePages';
+import { WaitingCache } from './Components/WaitingCache';
 
 export const SignInBlock: FC = () => {
   const router = useRouter();
@@ -42,10 +44,13 @@ export const SignInBlock: FC = () => {
     'login/signup',
   );
   const [loading, setLoading] = useState(false);
+  const [caching, setCaching] = useState(false);
+
   const {
     availableCode,
     setExpiresTime,
   } = useContext(AuthCodeContext);
+
   const authCode = async () => {
     if (availableCode) {
       try {
@@ -90,6 +95,10 @@ export const SignInBlock: FC = () => {
         await firestorePreferencesService.setDefaultPreferences(user.uid);
         await firestoreNotificationService.setDefaultNotification(user.uid);
 
+        setCaching(true);
+        await precachePages(['/profile', '/settings']);
+        setCaching(false);
+
         await statusUserRedirect(mode, router.push, setMode);
       }
     } catch (e) {
@@ -121,6 +130,10 @@ export const SignInBlock: FC = () => {
     }
     setLoading(false);
   };
+
+  if (caching) {
+    return <WaitingCache />;
+  }
 
   return (
     <div className={styles.signInWrapper}>
