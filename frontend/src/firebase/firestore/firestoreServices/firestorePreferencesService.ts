@@ -21,37 +21,37 @@ export const firestorePreferencesService = {
     }
   },
 
-  setPrivacy: async (divesPublic: boolean, userId: string) => {
+  setPrivacy: (divesPublic: boolean, userId: string) => {
     try {
       const ref = doc(db, 'user-preferences', userId);
-      await setDoc(ref, { privacy: { divesPublic } }, { merge: true });
+      setDoc(ref, { privacy: { divesPublic } }, { merge: true });
     } catch (e) {
       throw new Error('set privacy error');
     }
   },
 
-  setScientificData: async (scientificData: Pick<PreferencesType, 'scientificData'>, userId: string) => {
+  setScientificData: (scientificData: Pick<PreferencesType, 'scientificData'>, userId: string) => {
     try {
       const ref = doc(db, 'user-preferences', userId);
-      await setDoc(ref, { ...scientificData }, { merge: true });
+      setDoc(ref, { ...scientificData }, { merge: true });
     } catch (e) {
       throw new Error('set scientific data error');
     }
   },
 
-  setLanguage: async (language: 'English' | 'Italian' | 'Spanish' | 'German', userId: string) => {
+  setLanguage: (language: 'English' | 'Italian' | 'Spanish' | 'German', userId: string) => {
     try {
       const ref = doc(db, 'user-preferences', userId);
-      await setDoc(ref, { language }, { merge: true });
+      setDoc(ref, { language }, { merge: true });
     } catch (e) {
       throw new Error('set language error');
     }
   },
 
-  setUnitSystem: async (unitSystem: 'metric' | 'imperial', userId: string) => {
+  setUnitSystem: (unitSystem: 'metric' | 'imperial', userId: string) => {
     try {
       const ref = doc(db, 'user-preferences', userId);
-      await setDoc(ref, { unitSystem }, { merge: true });
+      setDoc(ref, { unitSystem }, { merge: true });
     } catch (e) {
       throw new Error('set unit system error');
     }

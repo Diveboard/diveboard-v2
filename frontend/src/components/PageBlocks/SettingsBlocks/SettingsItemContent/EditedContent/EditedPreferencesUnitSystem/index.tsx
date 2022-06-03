@@ -7,7 +7,7 @@ import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
 import {
   firestorePreferencesService,
-} from '../../../../../../firebase/firestore/firestoreServises/firestorePreferencesService';
+} from '../../../../../../firebase/firestore/firestoreServices/firestorePreferencesService';
 
 type Props = {
   preferences: PreferencesType;
@@ -20,9 +20,9 @@ export const EditedPreferencesUnitSystem: FC<Props> = ({ preferences, setPrefere
   const { userAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
 
-  const setMetricPreferences = async () => {
+  const setMetricPreferences = () => {
     setLoading(true);
-    await firestorePreferencesService.setUnitSystem(checkedRadio, userAuth.uid);
+    firestorePreferencesService.setUnitSystem(checkedRadio, userAuth.uid);
     setPreferences({ ...preferences, unitSystem: checkedRadio });
     setLoading(false);
     setEditedSettings({ settingsBlock: '', settingsItem: '' });
