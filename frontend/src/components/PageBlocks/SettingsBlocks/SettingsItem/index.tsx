@@ -31,7 +31,7 @@ export const SettingsItem: FC<Props> = ({
   const count = React.Children.count(children);
 
   if (count !== 2) {
-    throw new Error('component mast contain two children');
+    throw new Error('component must contain two children');
   }
 
   const arrChildren = React.Children.toArray(children);

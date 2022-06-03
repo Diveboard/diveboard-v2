@@ -7,7 +7,7 @@ import { EditContext } from '../../../EditContextWrapper';
 import { PreferencesType } from '../../../../../../firebase/firestore/models';
 import {
   firestorePreferencesService,
-} from '../../../../../../firebase/firestore/firestoreServises/firestorePreferencesService';
+} from '../../../../../../firebase/firestore/firestoreServices/firestorePreferencesService';
 
 type Props = {
   preferences: PreferencesType;
@@ -22,9 +22,9 @@ export const EditedPreferencesLanguage: FC<Props> = ({
   const { setEditedSettings } = useContext(EditContext);
   const [language, setLanguage] = useState(preferences.language);
 
-  const setLanguagePreferences = async () => {
+  const setLanguagePreferences = () => {
     setLoading(true);
-    await firestorePreferencesService.setLanguage(language, userAuth.uid);
+    firestorePreferencesService.setLanguage(language, userAuth.uid);
     setPreferences({
       ...preferences,
       language,

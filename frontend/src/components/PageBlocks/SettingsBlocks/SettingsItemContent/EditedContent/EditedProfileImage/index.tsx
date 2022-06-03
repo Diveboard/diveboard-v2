@@ -7,7 +7,7 @@ import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
 import {
   firestorePublicProfileService,
-} from '../../../../../../firebase/firestore/firestoreServises/firestorePublicProfileService';
+} from '../../../../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
 import styles from './styles.module.scss';
 
 type Props = {

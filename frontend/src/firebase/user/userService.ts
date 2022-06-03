@@ -1,6 +1,4 @@
-import {
-  updateProfile,
-} from 'firebase/auth';
+import { updateProfile } from 'firebase/auth';
 import { auth, functions, httpsCallable } from '../auth/firebaseAuth';
 
 export const updateUserAvatar = async (avatarUrl: string) => {
@@ -13,7 +11,7 @@ export const updateUserAvatar = async (avatarUrl: string) => {
   }
 };
 
-export const updateUserName = async (name:string) => {
+export const updateUserName = async (name: string) => {
   try {
     await updateProfile(auth.currentUser, {
       displayName: name,
@@ -36,7 +34,7 @@ export const sendCodeOnNewEmail = async (email: string) => {
   }
 };
 
-export const confirmCodeOfNewEmail = async (email: string, otp:string) => {
+export const confirmCodeOfNewEmail = async (email: string, otp: string) => {
   try {
     const confirmCode = httpsCallable(functions, 'confirmResetEmail');
     const resp = await confirmCode({
