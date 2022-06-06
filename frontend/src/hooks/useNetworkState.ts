@@ -1,19 +1,27 @@
 import React, { useEffect } from 'react';
 
 export const useNetworkState = (
-  isOffline: boolean,
   setIsOffline: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
-  const networkStateHandler = () => {
-    setIsOffline(!isOffline);
+  const networkOfflineHandler = () => {
+    setIsOffline(true);
+  };
+  const networkOnlineHandler = () => {
+    setIsOffline(false);
   };
 
   useEffect(() => {
-    window.addEventListener('offline', networkStateHandler);
-    window.addEventListener('online', networkStateHandler);
+    if (!navigator.onLine) {
+      setIsOffline(true);
+    } else {
+      setIsOffline(false);
+    }
+
+    window.addEventListener('offline', networkOfflineHandler);
+    window.addEventListener('online', networkOnlineHandler);
     return () => {
-      window.removeEventListener('offline', networkStateHandler);
-      window.removeEventListener('online', networkStateHandler);
+      window.removeEventListener('offline', networkOfflineHandler);
+      window.removeEventListener('online', networkOnlineHandler);
     };
   }, []);
 };
