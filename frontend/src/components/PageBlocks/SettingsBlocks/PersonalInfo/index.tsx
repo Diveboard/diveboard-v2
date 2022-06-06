@@ -23,8 +23,8 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
     },
   } = useContext(AuthStatusContext);
 
-  const [isOffline, setIsOffline] = useState(false);
-  useNetworkState(isOffline, setIsOffline);
+  const [isOffline, setIsOffline] = useState(true);
+  useNetworkState(setIsOffline);
 
   return (
     <div className={coverStyles.opacityWrapper}>
