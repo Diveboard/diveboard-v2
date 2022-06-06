@@ -17,7 +17,7 @@ import {
 import { getAuthorizedUserWithToken } from '../../../../../../firebase/auth/authService';
 import {
   firestorePublicProfileService,
-} from '../../../../../../firebase/firestore/firestoreServises/firestorePublicProfileService';
+} from '../../../../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
 
 import styles from './styles.module.scss';
 import editedStyle from '../../../editidStyle.module.scss';

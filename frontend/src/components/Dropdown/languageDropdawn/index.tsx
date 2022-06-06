@@ -31,7 +31,7 @@ export const LanguageDropdown: FC<Props> = ({ language, setLanguage }) => {
   useOutsideClick(outsideClickHandler, dropdownRef);
 
   const itemComponents = langItems
-    .map((item) => (<DropdownItem text={item} onSelect={setLanguage} />));
+    .map((item) => (<DropdownItem key={item} text={item} onSelect={setLanguage} />));
 
   return (
     <div

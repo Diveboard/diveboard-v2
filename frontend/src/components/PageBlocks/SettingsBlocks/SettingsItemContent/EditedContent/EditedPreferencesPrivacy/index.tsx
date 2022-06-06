@@ -6,7 +6,7 @@ import styles from './styles.module.scss';
 import { PreferencesType } from '../../../../../../firebase/firestore/models';
 import {
   firestorePreferencesService,
-} from '../../../../../../firebase/firestore/firestoreServises/firestorePreferencesService';
+} from '../../../../../../firebase/firestore/firestoreServices/firestorePreferencesService';
 import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
 
@@ -21,9 +21,9 @@ export const EditedPreferencesPrivacy: FC<Props> = ({ preferences, setPreference
   const { userAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
 
-  const setPrivacyPreferences = async () => {
+  const setPrivacyPreferences = () => {
     setLoading(true);
-    await firestorePreferencesService.setPrivacy(makePublic, userAuth.uid);
+    firestorePreferencesService.setPrivacy(makePublic, userAuth.uid);
     setPreferences({ ...preferences, privacy: { divesPublic: makePublic } });
     setLoading(false);
     setEditedSettings({ settingsBlock: '', settingsItem: '' });

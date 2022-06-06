@@ -1,4 +1,6 @@
-import React, { FC, useContext, useState } from 'react';
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react';
 import { SettingsGroup } from '../SettingsGroup';
 import { NotificationItem } from './NotificationItem';
 import { SaveThisButton } from '../SettingsItemContent/EditedContent/SaveThisButton';
@@ -6,18 +8,21 @@ import { MarginWrapper } from '../../../MarginWrapper';
 import { NotificationsType } from '../../../../firebase/firestore/models';
 import {
   firestoreNotificationService,
-} from '../../../../firebase/firestore/firestoreServises/firestoreNotificationService';
+} from '../../../../firebase/firestore/firestoreServices/firestoreNotificationService';
 import { AuthStatusContext } from '../../../../layouts/AuthLayout';
-
-import editedStyles from '../editidStyle.module.scss';
 import { EditContext } from '../EditContextWrapper';
+import { sameServerData } from '../../../../utils/sameServerData';
+import editedStyles from '../editidStyle.module.scss';
 
 type Props = {
   notifications: NotificationsType
   title?: boolean
 };
 
-export const Notification:FC<Props> = ({ notifications, title = true }) => {
+export const Notification: FC<Props> = ({
+  notifications,
+  title = true,
+}) => {
   const [instant, setInstant] = useState(notifications.instant);
   const [
     biWeeklyNotifications,
@@ -25,11 +30,26 @@ export const Notification:FC<Props> = ({ notifications, title = true }) => {
   ] = useState(notifications.biWeeklyNotifications);
   const [biWeeklyDigest, setBiWeeklyDigest] = useState(notifications.biWeeklyDigest);
   const [newsletters, setNewsletters] = useState(notifications.newsletters);
+
   const [loading, setLoading] = useState(false);
   const { userAuth } = useContext(AuthStatusContext);
   const { editedSettings } = useContext(EditContext);
 
   const styles = editedSettings.settingsBlock ? editedStyles.edited : editedStyles.active;
+
+  useEffect(() => {
+    (async () => {
+      const clientNotifications = await firestoreNotificationService
+        .getNotifications(userAuth.uid) as NotificationsType;
+
+      if (!sameServerData(notifications, clientNotifications)) {
+        setInstant(clientNotifications.instant);
+        setBiWeeklyNotifications(clientNotifications.biWeeklyNotifications);
+        setBiWeeklyDigest(clientNotifications.biWeeklyDigest);
+        setNewsletters(clientNotifications.newsletters);
+      }
+    })();
+  }, []);
 
   const setNotifications = async () => {
     setLoading(true);
@@ -39,7 +59,12 @@ export const Notification:FC<Props> = ({ notifications, title = true }) => {
       biWeeklyDigest,
       newsletters,
     };
-    await firestoreNotificationService.setNotifications(notificationData, userAuth.uid);
+    firestoreNotificationService.setNotifications(notificationData, userAuth.uid);
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        resolve('');
+      }, 700);
+    });
     setLoading(false);
   };
 

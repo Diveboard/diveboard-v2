@@ -14,14 +14,14 @@ import { AuthCodeContext } from '../../../layouts/AuthCodeTimer';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
 import {
   firestorePublicProfileService,
-} from '../../../firebase/firestore/firestoreServises/firestorePublicProfileService';
+} from '../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
 import {
   firestorePreferencesService,
-} from '../../../firebase/firestore/firestoreServises/firestorePreferencesService';
+} from '../../../firebase/firestore/firestoreServices/firestorePreferencesService';
 import styles from './styles.module.scss';
 import {
   firestoreNotificationService,
-} from '../../../firebase/firestore/firestoreServises/firestoreNotificationService';
+} from '../../../firebase/firestore/firestoreServices/firestoreNotificationService';
 import { LogoIcon } from './Components/LogoIcon';
 import { Title } from './Components/Title';
 import { Description } from './Components/Description';
