@@ -22,6 +22,7 @@ export const Icon: FC<Props> = ({
       height={h}
       alt={`${iconName}-icon`}
       loader={imageLoader}
+      unoptimized
     />
   );
 };

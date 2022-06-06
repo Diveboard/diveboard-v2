@@ -34,6 +34,7 @@ export const DiveCard: FC<Props> = ({
           layout="fill"
           loader={imageLoader}
           className={styles.img}
+          unoptimized
         />
       </div>
 

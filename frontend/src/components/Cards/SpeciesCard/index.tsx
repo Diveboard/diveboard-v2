@@ -22,6 +22,7 @@ export const SpeciesCard: FC<Props> = ({
         className={styles.img}
         layout="fill"
         loader={imageLoader}
+        unoptimized
       />
     </div>
 
