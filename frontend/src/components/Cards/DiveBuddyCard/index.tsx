@@ -26,6 +26,7 @@ export const DiveBuddyCard: FC<Props> = ({
         height={110}
         className={styles.img}
         loader={imageLoader}
+        unoptimized
       />
     </div>
     <div className={styles.contentWrapper}>

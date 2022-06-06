@@ -18,10 +18,10 @@ export const firestoreNotificationService = {
     }
   },
 
-  setNotifications: async (notifications: NotificationsType, userId: string) => {
+  setNotifications: (notifications: NotificationsType, userId: string) => {
     try {
       const ref = doc(db, 'notifications', userId);
-      await setDoc(ref, { ...notifications }, { merge: true });
+      setDoc(ref, { ...notifications }, { merge: true });
     } catch (e) {
       throw new Error('set  notifications error');
     }

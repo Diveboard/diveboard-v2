@@ -6,7 +6,7 @@ import styles from './styles.module.scss';
 import { PreferencesType } from '../../../../../../firebase/firestore/models';
 import {
   firestorePreferencesService,
-} from '../../../../../../firebase/firestore/firestoreServises/firestorePreferencesService';
+} from '../../../../../../firebase/firestore/firestoreServices/firestorePreferencesService';
 import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
 
@@ -22,9 +22,9 @@ export const EditedPreferencesScientificData: FC <Props> = ({ preferences, setPr
   const { setEditedSettings } = useContext(EditContext);
   const [loading, setLoading] = useState(false);
 
-  const setScientificDataPreferences = async () => {
+  const setScientificDataPreferences = () => {
     setLoading(true);
-    await firestorePreferencesService
+    firestorePreferencesService
       .setScientificData({ scientificData: { shareData, shareNotes } }, userAuth.uid);
 
     setPreferences({ ...preferences, scientificData: { shareData, shareNotes } });

@@ -17,6 +17,7 @@ export const ProfileImage:FC<Props> = ({ imgSrc, size = 80 }) => (
       alt="avatar"
       className={styles.img}
       loader={imageLoader}
+      unoptimized
     />
 
   </div>

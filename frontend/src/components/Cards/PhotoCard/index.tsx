@@ -43,6 +43,7 @@ export const PhotoCard: FC<Props> = ({
         layout="fill"
         loader={imageLoader}
         className={styles.img}
+        unoptimized
       />
       <span className={styles.favouritesBlock}>
         <span>{favourites}</span>

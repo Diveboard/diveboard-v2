@@ -1,4 +1,6 @@
-import React, { FC, useState } from 'react';
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react';
 import { SettingsGroup } from '../SettingsGroup';
 import { SettingsItem } from '../SettingsItem';
 import {
@@ -15,6 +17,11 @@ import {
   EditedPreferencesUnitSystem,
 } from '../SettingsItemContent/EditedContent/EditedPreferencesUnitSystem';
 import { PreferencesType } from '../../../../firebase/firestore/models';
+import {
+  firestorePreferencesService,
+} from '../../../../firebase/firestore/firestoreServices/firestorePreferencesService';
+import { AuthStatusContext } from '../../../../layouts/AuthLayout';
+import { sameServerData } from '../../../../utils/sameServerData';
 
 type Props = {
   preferences: PreferencesType
@@ -23,6 +30,16 @@ type Props = {
 
 export const Preferences:FC<Props> = ({ preferences, title = true }) => {
   const [preferencesData, setPreferencesData] = useState(preferences);
+  const { userAuth } = useContext(AuthStatusContext);
+
+  useEffect(() => {
+    (async () => {
+      const clientPreferences = await firestorePreferencesService.getAllPreferences(userAuth.uid);
+      if (!sameServerData(preferences, clientPreferences)) {
+        setPreferencesData(clientPreferences as PreferencesType);
+      }
+    })();
+  }, []);
 
   return (
     <SettingsGroup title={title && 'Preferences'}>

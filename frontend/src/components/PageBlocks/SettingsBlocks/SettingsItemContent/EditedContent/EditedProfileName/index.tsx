@@ -7,7 +7,7 @@ import { EditContext } from '../../../EditContextWrapper';
 import styles from './styles.module.scss';
 import {
   firestorePublicProfileService,
-} from '../../../../../../firebase/firestore/firestoreServises/firestorePublicProfileService';
+} from '../../../../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
 
 export const EditedProfileName: FC = () => {
   const { userAuth, setUserAuth } = useContext(AuthStatusContext);

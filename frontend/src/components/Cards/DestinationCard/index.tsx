@@ -27,6 +27,7 @@ export const DestinationCard: FC<Props> = ({
         layout="fill"
         alt={destinationName}
         loader={imageLoader}
+        unoptimized
       />
     </div>
 
