@@ -6,9 +6,9 @@ import { EditedProfileImage } from '../SettingsItemContent/EditedContent/EditedP
 import { EditedProfileName } from '../SettingsItemContent/EditedContent/EditedProfileName';
 import { EditedProfileEmail } from '../SettingsItemContent/EditedContent/EditedProfileEmail';
 import { AuthStatusContext } from '../../../../layouts/AuthLayout';
-import styles from '../itemContentStyle.module.scss';
 import { useNetworkState } from '../../../../hooks/useNetworkState';
 import coverStyles from './styles.module.scss';
+import styles from '../itemContentStyle.module.scss';
 
 type Props = {
   title?: boolean

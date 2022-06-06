@@ -71,6 +71,7 @@ export const DivesMap: FC<Props> = ({
         </div>
 
         <GoogleMapReact
+          yesIWantToUseGoogleMapApiInternals
           bootstrapURLKeys={
             {
               key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY,

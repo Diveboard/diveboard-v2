@@ -88,7 +88,7 @@ export const Footer = () => (
       </div>
 
       <div className={styles.forkme}>
-        <Image src="/images/forkme.png" loader={imageLoader} width={149} height={149} />
+        <Image src="/images/forkme.png" loader={imageLoader} width={149} height={149} unoptimized />
       </div>
     </div>
     <div className={styles.copyrightWrapper}>
