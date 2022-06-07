@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { MarginWrapper } from '../../MarginWrapper';
 import { Icon, imageLoader } from '../../Icons/Icon';
 import { ArrowLink } from '../../ArrowLink';
+import pageRoutes from '../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
 
 export const Footer = () => (
@@ -55,7 +56,7 @@ export const Footer = () => (
         <div className={styles.contentItem}>
           <div className={styles.linksWrapper}>
             <div className={styles.linkTextWrapper}>
-              <Link href="/">
+              <Link href={pageRoutes.aboutPageRout}>
                 <a>
                   <span className={styles.linkText}>About Diveboard</span>
                 </a>
