@@ -4,12 +4,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Icon } from '../../Icons/Icon';
 import { ArrowLink } from '../../ArrowLink';
+import pageRoutes from '../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
 
 export const FooterMobile: FC = () => {
   const router = useRouter();
 
-  if (router.pathname !== '/main/home-guest') {
+  if (router.pathname !== pageRoutes.mainPageGuest
+    && router.pathname !== pageRoutes.aboutPageRout) {
     return null;
   }
 
@@ -33,7 +35,7 @@ export const FooterMobile: FC = () => {
         </div>
 
         <div className={styles.contentGroup}>
-          <Link href="/">
+          <Link href={pageRoutes.aboutPageRout}>
             <a>
               <span className={styles.linkText}>About Diveboard</span>
             </a>

@@ -7,7 +7,7 @@
   "logbookPageRout": "/logbook",
   "walletPageRout": "/wallet",
   "donatePageRoute": "/donate",
-  "aboutPageRout": "/about",
+  "aboutPageRout": "/about-us",
   "diveManagerPageRout": "/dive-manager",
   "favouritesPageRout": "/favourites",
   "feedsPageRout": "/feed",

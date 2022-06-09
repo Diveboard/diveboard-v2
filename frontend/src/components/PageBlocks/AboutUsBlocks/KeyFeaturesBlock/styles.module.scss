@@ -1,0 +1,143 @@
+.featuresWrapper {
+  margin-top: 100px;
+
+  .imagesWrapper {
+    position: relative;
+
+    .rightImage {
+      position: absolute;
+      bottom: -50px;
+      right: 200px;
+      width: 300px;
+      height: 300px;
+      z-index: -1;
+    }
+
+    .leftImage {
+      position: absolute;
+      top: 250px;
+      left: 70px;
+      width: 600px;
+      height: 600px;
+      z-index: -1;
+    }
+  }
+
+
+  .cardsWrapper {
+    margin: 0 auto;
+    padding: 0 10px;
+    display: grid;
+    grid-template-columns: repeat(3, max(420px));
+    grid-gap: 1.546vw;
+    max-width: 1320px;
+
+
+    .titleWrapper {
+      width: 100%;
+      max-width: 420px;
+      min-width: 300px;
+      height: 304px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #000345;
+
+      h2 {
+        font-weight: 600;
+        font-size: 55px;
+        line-height: 70px;
+      }
+
+      p {
+        margin-top: 15px;
+        font-weight: 300;
+        font-size: 16px;
+        line-height: 24px;
+      }
+    }
+  }
+}
+
+
+@media (max-width: 1312px) {
+  .featuresWrapper {
+    .imagesWrapper {
+
+      .rightImage {
+        right: 100px;
+        bottom: 200px;
+      }
+
+      .cardsWrapper {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 900px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .featuresWrapper {
+    margin-top: 80px;
+    padding-top: 0;
+
+
+    .imagesWrapper {
+      .leftImage {
+        width: 350px;
+        height: 350px;
+        top: 50px;
+        left: -50px;
+      }
+
+      .rightImage {
+        width: 250px;
+        height: 250px;
+        bottom: -50px;
+        right: 0;
+      }
+
+      .cardsWrapper {
+        padding-bottom: 45px;
+        grid-template-columns: repeat(4, max(253px));
+        grid-template-rows: 100px auto auto;
+        overflow-x: scroll;
+
+        .titleWrapper {
+          width: 100%;
+          max-width: max-content;
+          min-width: 300px;
+          height: 100px;
+
+          grid-column-start: 1;
+          grid-column-end: 5;
+
+          align-items: flex-start;
+
+          h2 {
+            font-weight: 600;
+            font-size: 30px;
+            line-height: 20px;
+          }
+
+          p {
+            margin-top: 15px;
+            font-weight: 300;
+            font-size: 16px;
+            line-height: 24px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 520px) {
+  .featuresWrapper {
+
+
+  }
+
+}
