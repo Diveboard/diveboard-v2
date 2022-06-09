@@ -6,6 +6,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding: 0 10px;
 
   h1 {
     font-weight: 700;
@@ -34,8 +35,25 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .banner {
+    margin-top: 60px;
+  }
+}
+
 @media (max-width: 768px) {
   .banner {
     margin-top: 50px;
+
+    h1 {
+      font-size: 42px;
+      line-height: 52px;
+    }
+
+    p {
+      font-size: 14px;
+      line-height: 20px;
+
+    }
   }
 }

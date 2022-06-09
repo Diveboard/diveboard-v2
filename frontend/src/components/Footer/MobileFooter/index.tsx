@@ -10,7 +10,8 @@ import styles from './styles.module.scss';
 export const FooterMobile: FC = () => {
   const router = useRouter();
 
-  if (router.pathname !== '/main/home-guest') {
+  if (router.pathname !== pageRoutes.mainPageGuest
+    && router.pathname !== pageRoutes.aboutPageRout) {
     return null;
   }
 
