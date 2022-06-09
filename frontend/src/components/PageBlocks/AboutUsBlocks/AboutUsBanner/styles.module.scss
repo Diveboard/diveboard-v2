@@ -1,0 +1,59 @@
+.banner {
+  margin-top: 80px;
+  position: relative;
+  height: 387px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 10px;
+
+  h1 {
+    font-weight: 700;
+    font-size: 72px;
+    line-height: 100px;
+    color: #0059DE;
+  }
+
+  p {
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 24px;
+    color: #000345;
+    max-width: 739px;
+    text-align: center;
+  }
+
+  .imgWrapper {
+    position: absolute;
+    bottom: -60px;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media (max-width: 1024px) {
+  .banner {
+    margin-top: 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .banner {
+    margin-top: 50px;
+
+    h1 {
+      font-size: 42px;
+      line-height: 52px;
+    }
+
+    p {
+      font-size: 14px;
+      line-height: 20px;
+
+    }
+  }
+}
