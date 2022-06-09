@@ -64,9 +64,6 @@
 @media (max-width: 1312px) {
   .featuresWrapper {
     .imagesWrapper {
-      .leftImage {
-
-      }
 
       .rightImage {
         right: 100px;
@@ -83,24 +80,42 @@
 
 @media (max-width: 768px) {
   .featuresWrapper {
-    padding-top: 30px;
+    margin-top: 80px;
+    padding-top: 0;
+
+
     .imagesWrapper {
       .leftImage {
-        width: 450px;
-        height: 450px;
-        top: -50px;
+        width: 350px;
+        height: 350px;
+        top: 50px;
         left: -50px;
       }
 
       .rightImage {
-        display: none;
+        width: 250px;
+        height: 250px;
+        bottom: -50px;
+        right: 0;
       }
 
       .cardsWrapper {
-        display: flex;
+        padding-bottom: 45px;
+        grid-template-columns: repeat(4, max(253px));
+        grid-template-rows: 100px auto auto;
         overflow-x: scroll;
 
         .titleWrapper {
+          width: 100%;
+          max-width: max-content;
+          min-width: 300px;
+          height: 100px;
+
+          grid-column-start: 1;
+          grid-column-end: 5;
+
+          align-items: flex-start;
+
           h2 {
             font-weight: 600;
             font-size: 30px;

@@ -1,4 +1,5 @@
 .partnersWrapper {
+  margin-top: 140px;
   position: relative;
   height: 700px;
 
@@ -67,7 +68,7 @@
 
 @media (max-width: 1240px) {
   .partnersWrapper {
-    .img{
+    .img {
       object-fit: cover;
       object-position: center;
     }
@@ -129,9 +130,48 @@
   }
 }
 
-@media (max-width: 1240px) {
-  .partnersWrapper{
+@media (max-width: 768px) {
+  .partnersWrapper {
+    margin-top: 80px;
     padding-bottom: 70px;
     height: 100%;
+
+    .contentWrapper {
+      padding: 0 15px;
+
+      .textWrapper {
+        h2 {
+
+          font-size: 24px;
+          line-height: 30px;
+        }
+
+        p {
+          font-size: 16px;
+          line-height: 22px;
+        }
+      }
+
+
+      .partners {
+        .partnersItem {
+          > div {
+            max-width: 250px;
+            margin-left: 10px;
+
+          }
+
+          h3 {
+            font-size: 20px;
+            line-height: 26px;
+          }
+
+          p {
+            font-size: 14px;
+            line-height: 20px;
+          }
+        }
+      }
+    }
   }
 }
