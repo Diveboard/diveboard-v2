@@ -22,7 +22,7 @@ export const CrewBlock = () => (
     <div className={styles.imageBlock}>
       <Image src="/images/crew-1.jpg" width={384} height={460} />
       <Image src="/images/crew-2.jpg" width={384} height={460} />
-      <Image src="/images/crew-3.jpg" width={384} height={460} />
+      <Image src="/images/crew-3.jpg" width={384} height={460} className={styles.img} />
       <Image src="/images/crew-4.jpg" width={384} height={460} />
       <Image src="/images/crew-5.jpg" width={384} height={460} />
     </div>

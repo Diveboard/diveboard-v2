@@ -57,19 +57,19 @@
   .crew {
     .titleBlock {
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
 
       h2 {
         font-size: 30px;
         line-height: 20px;
+        margin-left: 0;
       }
 
       .textBlock {
-        text-align: center;
-
         p {
           margin-top: 20px;
           font-size: 14px;
+          text-align: left;
         }
 
         .text {
@@ -82,6 +82,12 @@
       margin-top: 30px;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto 50vw auto;
+
+      .img {
+        object-fit: cover;
+        object-position: center;
+      }
 
       > span {
         &:nth-child(3) {
