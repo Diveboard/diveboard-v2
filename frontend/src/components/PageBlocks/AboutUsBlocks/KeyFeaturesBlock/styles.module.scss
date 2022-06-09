@@ -103,6 +103,8 @@
         padding-bottom: 45px;
         grid-template-columns: repeat(4, max(253px));
         grid-template-rows: 100px auto auto;
+        grid-column-gap: 10px;
+        grid-row-gap: 24px;
         overflow-x: scroll;
 
         .titleWrapper {
@@ -134,10 +136,4 @@
   }
 }
 
-@media (max-width: 520px) {
-  .featuresWrapper {
 
-
-  }
-
-}
