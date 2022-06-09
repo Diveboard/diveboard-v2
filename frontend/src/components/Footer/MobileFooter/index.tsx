@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Icon } from '../../Icons/Icon';
+import { Icon, imageLoader } from '../../Icons/Icon';
 import { ArrowLink } from '../../ArrowLink';
 import pageRoutes from '../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
@@ -84,7 +84,7 @@ export const FooterMobile: FC = () => {
         </div>
 
         <div className={styles.forkme}>
-          <Image src="/assets/images/forkme.png" width={149} height={149} />
+          <Image src="/images/forkme.png" width={149} height={149} loader={imageLoader} />
         </div>
       </div>
       <div className={styles.copyrightWrapper}>
