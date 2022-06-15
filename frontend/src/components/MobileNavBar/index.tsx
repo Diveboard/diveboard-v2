@@ -1,65 +1,61 @@
-import React from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { Icon } from '../Icons/Icon';
+import React, { FC } from 'react';
 import pagesRoutes from '../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
+import { NavItem, NavType } from './NavItem';
 
-export const MobileNavBar = () => {
-  const router = useRouter();
-
-  const getItemStyles = (
-    path: string,
-    itemType: '/explore' | '/logbook' | '/wallet' | '/auth',
-  ) => {
-    if (path === itemType) {
-      return `${styles.navItem} ${styles.coloredNavItem}`;
-    }
-    return `${styles.navItem} ${styles.notColoredNavItem} `;
-  };
-
-  return (
-    <nav className={styles.navbar}>
-      <Link href={pagesRoutes.explorePageRout}>
-        <a className={getItemStyles(router.pathname, '/explore')}>
-          {router.pathname === pagesRoutes.explorePageRout ? (
-            <Icon iconName="explore-mobile-colored" />
-          ) : (
-            <Icon iconName="explore-mobile" />
-          )}
-          <span className={styles.navLabel}>Explore</span>
-        </a>
-      </Link>
-      <Link href={pagesRoutes.logbookPageRout}>
-        <a className={getItemStyles(router.pathname, '/logbook')}>
-          {router.pathname === pagesRoutes.logbookPageRout ? (
-            <Icon iconName="logbook-mobile-colored" />
-          ) : (
-            <Icon iconName="logbook-mobile" />
-          )}
-          <span className={styles.navLabel}>Logbook</span>
-        </a>
-      </Link>
-      <Link href={pagesRoutes.walletPageRout}>
-        <a className={getItemStyles(router.pathname, '/wallet')}>
-          {router.pathname === pagesRoutes.walletPageRout ? (
-            <Icon iconName="wallet-mobile-colored" />
-          ) : (
-            <Icon iconName="wallet-mobile" />
-          )}
-          <span className={styles.navLabel}>Wallet</span>
-        </a>
-      </Link>
-      <Link href={pagesRoutes.authPageRout}>
-        <a className={getItemStyles(router.pathname, '/auth')}>
-          {router.pathname === pagesRoutes.authPageRout ? (
-            <Icon iconName="login-mobile-colored" />
-          ) : (
-            <Icon iconName="login-mobile" />
-          )}
-          <span className={styles.navLabel}>LogIn</span>
-        </a>
-      </Link>
-    </nav>
-  );
+type Props = {
+  loggedIn: boolean
 };
+
+export const MobileNavBar: FC<Props> = ({ loggedIn }) => (
+  <nav className={styles.navbar}>
+    {loggedIn && (
+    <NavItem
+      activeIconName="feed-mobile-colored"
+      mainIconName="feed-mobile"
+      navItemName="Feed"
+      navLink={pagesRoutes.feedsPageRout as NavType}
+    />
+    )}
+
+    <NavItem
+      activeIconName="explore-mobile-colored"
+      mainIconName="explore-mobile"
+      navItemName="Explore"
+      navLink={pagesRoutes.explorePageRout as NavType}
+    />
+
+    <NavItem
+      activeIconName="logbook-mobile-colored"
+      mainIconName="logbook-mobile"
+      navItemName="Logbook"
+      navLink={pagesRoutes.profilePageRout as NavType}
+    />
+
+    <NavItem
+      activeIconName="wallet-mobile-colored"
+      mainIconName="wallet-mobile"
+      navItemName="Wallet"
+      navLink={pagesRoutes.walletPageRout as NavType}
+    />
+
+    {!loggedIn && (
+    <NavItem
+      activeIconName="login-mobile-colored"
+      mainIconName="login-mobile"
+      navItemName="LogIn"
+      navLink={pagesRoutes.authPageRout as NavType}
+    />
+    )}
+
+    {loggedIn && (
+      <NavItem
+        activeIconName="favorites-mobile-colored"
+        mainIconName="favorites-mobile"
+        navItemName="Favorites"
+        navLink={pagesRoutes.favouritesPageRout as NavType}
+      />
+    )}
+
+  </nav>
+);

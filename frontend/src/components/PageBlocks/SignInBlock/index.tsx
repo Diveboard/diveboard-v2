@@ -96,7 +96,7 @@ export const SignInBlock: FC = () => {
         await firestoreNotificationService.setDefaultNotification(user.uid);
 
         setCaching(true);
-        await precachePages(['/profile', '/settings']);
+        await precachePages(['/logbook', '/settings', '/log-dive']);
         setCaching(false);
 
         await statusUserRedirect(mode, router.push, setMode);

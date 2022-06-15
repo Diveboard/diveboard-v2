@@ -4,7 +4,6 @@
   "mainPageUser": "/main/home-user",
   "authPageRout": "/auth",
   "explorePageRout": "/explore",
-  "logbookPageRout": "/logbook",
   "walletPageRout": "/wallet",
   "donatePageRoute": "/donate",
   "aboutPageRout": "/about-us",
@@ -16,5 +15,5 @@
   "supportPageRout": "/support",
   "settingsPageRout": "/settings",
   "logDivePageRout": "/log-dive",
-  "profilePageRout": "/profile"
+  "profilePageRout": "/logbook"
 }

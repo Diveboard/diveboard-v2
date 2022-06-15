@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useContext } from 'react';
 import { SettingsGroup } from '../SettingsGroup';
 import { SettingsItem } from '../SettingsItem';
 import { ProfileImage } from '../SettingsItemContent/NotEditedContent/ProfileImage';
@@ -6,7 +6,7 @@ import { EditedProfileImage } from '../SettingsItemContent/EditedContent/EditedP
 import { EditedProfileName } from '../SettingsItemContent/EditedContent/EditedProfileName';
 import { EditedProfileEmail } from '../SettingsItemContent/EditedContent/EditedProfileEmail';
 import { AuthStatusContext } from '../../../../layouts/AuthLayout';
-import { useNetworkState } from '../../../../hooks/useNetworkState';
+import { NetworkStatusContext } from '../../../../layouts/NetworkStatus';
 import coverStyles from './styles.module.scss';
 import styles from '../itemContentStyle.module.scss';
 
@@ -23,8 +23,7 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
     },
   } = useContext(AuthStatusContext);
 
-  const [isOffline, setIsOffline] = useState(true);
-  useNetworkState(setIsOffline);
+  const isOffline = useContext(NetworkStatusContext);
 
   return (
     <div className={coverStyles.opacityWrapper}>

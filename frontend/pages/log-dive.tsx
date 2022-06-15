@@ -1,18 +1,24 @@
 import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { ProfileBlock } from '../src/components/PageBlocks/ProfileBlocks';
-import { AuthLayout } from '../src/layouts/AuthLayout';
-import { MainLayout } from '../src/layouts/MainLayout';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
+import { MainLayout } from '../src/layouts/MainLayout';
+import { AuthLayout } from '../src/layouts/AuthLayout';
 import pageRoutes from '../src/routes/pagesRoutes.json';
 
-const Profile: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
+const LogDive: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
     <MainLayout>
-      <ProfileBlock />
+      <div style={{
+        height: '80vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      >
+        LOG A DIVE
+      </div>
     </MainLayout>
   </AuthLayout>
-
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -21,7 +27,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!uid) {
     return {
       redirect: {
-        destination: pageRoutes.mainPageGuest,
+        destination: pageRoutes.authPageRout,
         permanent: false,
       },
     };
@@ -45,5 +51,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   };
 };
-
-export default Profile;
+export default LogDive;
