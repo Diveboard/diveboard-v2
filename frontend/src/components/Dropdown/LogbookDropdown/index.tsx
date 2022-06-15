@@ -11,13 +11,13 @@ const logbookItems = [
     id: 1,
     svgItem: <LogDive />,
     title: 'Log a New Dive',
-    link: pageRoutes.profilePageRout,
+    link: pageRoutes.logDivePageRout,
   },
   {
     id: 2,
     svgItem: <ViewLogbook />,
     title: 'View a Logbook',
-    link: pageRoutes.logbookPageRout,
+    link: pageRoutes.profilePageRout,
   },
 ];
 
