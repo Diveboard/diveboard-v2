@@ -3,11 +3,20 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
+import pageRoutes from '../src/routes/pagesRoutes.json';
 
 const Feed: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
     <MainLayout>
-      Favourites
+      <div style={{
+        height: '80vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      >
+        Feed
+      </div>
     </MainLayout>
   </AuthLayout>
 );
@@ -17,8 +26,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   if (!uid) {
     return {
-      props: {
-        user: null,
+      redirect: {
+        destination: pageRoutes.authPageRout,
+        permanent: false,
       },
     };
   }
