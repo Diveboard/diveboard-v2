@@ -20,7 +20,7 @@ export const MainLayout: FC = ({ children }) => {
       {children}
       {!isWidth ? <Footer /> : <FooterMobile />}
 
-      {isWidth && <MobileNavBar />}
+      {isWidth && <MobileNavBar loggedIn={!!userAuth} />}
     </>
   );
 };

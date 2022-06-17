@@ -1,0 +1,27 @@
+.btnWrapper {
+  display: none;
+  position: fixed;
+  bottom: 70px;
+  right: 10px;
+  z-index: 1;
+
+  .btn {
+    width: 60px;
+    height: 60px;
+    background: #0059DE;
+    box-shadow: 0 10px 10px -5px rgba(0, 3, 69, 0.13);
+    border-radius: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .btnWrapper {
+    display: inline-block;
+
+  }
+}
+
+

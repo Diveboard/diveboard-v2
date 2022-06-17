@@ -1,6 +1,7 @@
 import React from 'react';
 import { AuthCodeTimer } from '../src/layouts/AuthCodeTimer';
 import '../styles/globals.css';
+import { NetworkStatus } from '../src/layouts/NetworkStatus';
 
 function MyApp({
   Component,
@@ -8,7 +9,9 @@ function MyApp({
 }): JSX.Element {
   return (
     <AuthCodeTimer>
-      <Component {...pageProps} />
+      <NetworkStatus>
+        <Component {...pageProps} />
+      </NetworkStatus>
     </AuthCodeTimer>
   );
 }

@@ -7,6 +7,8 @@ import { LatestSpecies } from './LatestSpecies';
 import { CertificationBlock } from './CertificationsBlock';
 import { CentersVisitedBlock } from './CentersVisitedBlock';
 import { DiveBuddies } from './DiveBuddiesBlock';
+import { MobileAddButton } from '../../Buttons/MobileAddButton';
+import pagesRoutes from '../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
 
 export const ProfileBlock = () => {
@@ -44,17 +46,43 @@ export const ProfileBlock = () => {
   ];
 
   const certifications = [
-    { certificateName: 'CMAS 3* VDST / N4 ', obtainingDate: '(Aug 2012)' },
-    { certificateName: 'CMAS Nitrox 1', obtainingDate: '(Aug 2012)' },
-    { certificateName: 'PADI Ice Diver', obtainingDate: '(Jan 2012)' },
-    { certificateName: 'Self-assessed Photography', obtainingDate: '(Mar 2011)' },
-    { certificateName: 'CMAS 2 Star', obtainingDate: '(Jul 2006)' },
-    { certificateName: 'FFESSM Level 2', obtainingDate: '(Jul 2006)' },
-    { certificateName: 'CMAS 1 Star', obtainingDate: '(Jul 2005)' },
+    {
+      certificateName: 'CMAS 3* VDST / N4 ',
+      obtainingDate: '(Aug 2012)',
+    },
+    {
+      certificateName: 'CMAS Nitrox 1',
+      obtainingDate: '(Aug 2012)',
+    },
+    {
+      certificateName: 'PADI Ice Diver',
+      obtainingDate: '(Jan 2012)',
+    },
+    {
+      certificateName: 'Self-assessed Photography',
+      obtainingDate: '(Mar 2011)',
+    },
+    {
+      certificateName: 'CMAS 2 Star',
+      obtainingDate: '(Jul 2006)',
+    },
+    {
+      certificateName: 'FFESSM Level 2',
+      obtainingDate: '(Jul 2006)',
+    },
+    {
+      certificateName: 'CMAS 1 Star',
+      obtainingDate: '(Jul 2005)',
+    },
   ];
 
   return (
     <div className={styles.profileBlockWrapper}>
+
+      <MobileAddButton
+        iconName="new-dive-white"
+        link={pagesRoutes.logDivePageRout}
+      />
 
       <PersonalProfileData
         imgSrc="/TEST_IMG_THEN_DELETE/photo3.jpg"

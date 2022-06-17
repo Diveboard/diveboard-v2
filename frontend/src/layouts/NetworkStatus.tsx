@@ -1,22 +1,27 @@
-import React, { useEffect } from 'react';
+import React, {
+  createContext, FC, useEffect, useState,
+} from 'react';
 
-export const useNetworkState = (
-  setIsOffline: React.Dispatch<React.SetStateAction<boolean>>,
-) => {
+export const NetworkStatusContext = createContext<boolean>(
+  undefined,
+);
+
+export const NetworkStatus: FC = ({ children }) => {
+  const [isOffline, setIsOffline] = useState(true);
+
   const networkOfflineHandler = () => {
     setIsOffline(true);
   };
+
   const networkOnlineHandler = () => {
     setIsOffline(false);
   };
 
   useEffect(() => {
-    if (!navigator.onLine) {
-      setIsOffline(true);
-    } else {
-      setIsOffline(false);
-    }
+    setIsOffline(!navigator.onLine);
+  }, []);
 
+  useEffect(() => {
     window.addEventListener('offline', networkOfflineHandler);
     window.addEventListener('online', networkOnlineHandler);
     return () => {
@@ -24,4 +29,10 @@ export const useNetworkState = (
       window.removeEventListener('online', networkOnlineHandler);
     };
   }, []);
+
+  return (
+    <NetworkStatusContext.Provider value={isOffline}>
+      {children}
+    </NetworkStatusContext.Provider>
+  );
 };
