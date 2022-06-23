@@ -1,0 +1,20 @@
+.score{
+  display: flex;
+
+
+  .name{
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: right;
+    color: #000345;
+    margin-right: 10px;
+  }
+
+  .starItem{
+    &:hover{
+      cursor: pointer;
+      opacity: 0.8;
+    }
+  }
+}

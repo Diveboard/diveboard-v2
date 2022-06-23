@@ -1,0 +1,36 @@
+.diveActivities {
+  margin-top: 20px;
+
+  .wrapper {
+    display: flex;
+    margin-top: 16px;
+
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 20px;
+    color: #000345;
+
+    > div > div {
+      margin-bottom: 10px;
+    }
+
+    .left {
+      margin-right: 40px;
+    }
+
+    .right {
+      .inputWrapper {
+        margin-top: 10px;
+
+        .label {
+          margin-left: 20px;
+          font-weight: 400;
+          font-size: 10px;
+          line-height: 12px;
+          color: #000345;
+          opacity: 0.4;
+        }
+      }
+    }
+  }
+}
