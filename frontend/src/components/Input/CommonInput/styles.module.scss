@@ -2,7 +2,11 @@
   position: relative;
   max-width: 570px;
   width: 100%;
-  box-shadow: 0 5px 20px -15px rgba(0, 62, 89, 0.12);
+  border-radius: 30px;
+  box-shadow: 0 5px 20px -15px rgb(0, 62, 89);
+  -webkit-box-shadow: 0 5px 20px -15px rgb(0, 62, 89);
+  -moz-box-shadow: 0 5px 20px -15px rgb(0, 62, 89);
+  -o-box-shadow: 0 5px 20px -15px rgb(0, 62, 89);
 
   .input {
     width: 100%;

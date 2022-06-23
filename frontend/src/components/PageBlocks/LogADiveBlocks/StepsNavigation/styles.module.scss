@@ -1,0 +1,30 @@
+.navigationWrapper {
+  padding: 10px 0;
+  background: #FFFFFF;
+  box-shadow: inset 0 2px 0 rgba(0, 3, 69, 0.05);
+  display: flex;
+  justify-content: center;
+
+
+  .navigation {
+    padding: 0 10px;
+    width: 100%;
+    max-width: 870px;
+    display: flex;
+    justify-content: space-between;
+
+    .leftBtn {
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 13px;
+      color: #000345;
+    }
+
+    .rightBtn {
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 13px;
+      color: #FFFFFF
+    }
+  }
+}
