@@ -1,5 +1,3 @@
-/** @format */
-
 import React, { FC, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 
