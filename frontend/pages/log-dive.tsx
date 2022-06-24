@@ -5,17 +5,22 @@ import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import pageRoutes from '../src/routes/pagesRoutes.json';
 
-const LogDive: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
+import DepthChart from '../src/components/DepthChart/depthChart';
+
+const LogDive: InferGetServerSidePropsType<typeof getServerSideProps> = ({
+  user,
+}) => (
   <AuthLayout user={user}>
     <MainLayout>
-      <div style={{
-        height: '80vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
+      <div
+        style={{
+          height: '80vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
       >
-        LOG A DIVE
+        <DepthChart />
       </div>
     </MainLayout>
   </AuthLayout>
@@ -37,8 +42,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     email,
     photoURL = '',
     displayName = '',
-  } = await firebaseAdmin.auth()
-    .getUser(uid);
+  } = await firebaseAdmin.auth().getUser(uid);
 
   return {
     props: {
