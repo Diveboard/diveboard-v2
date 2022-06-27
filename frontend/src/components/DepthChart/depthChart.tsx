@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { getOptions } from './getChartOptions';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -43,7 +44,7 @@ const DUMMY_DATA = [
   },
   {
     depth: 0,
-    divetime: 1,
+    divetime: 49,
     temperature: 210.9,
   },
   {
@@ -55,7 +56,7 @@ const DUMMY_DATA = [
 
 const DepthChart: FC = (): JSX.Element => {
   const [data, setData] = useState([]);
-  const [options, setOptions] = useState({});
+  const [divetimeData, setdivetimeData] = useState([]);
 
   useEffect(() => {
     const depth = [];
@@ -70,109 +71,13 @@ const DepthChart: FC = (): JSX.Element => {
       depth.push(item.depth);
       divetime.push(item.divetime);
     });
-
+    setdivetimeData(divetime);
     setData([{ name: 'depth', type: 'area', data: depth }]);
-    setOptions({
-      // responsive: [
-      //   {
-      //     breakpoint: 880,
-      //     options: {
-      //       // new options for 880px
-      //       chart: {
-      //         width: 650,
-      //       },
-      //     },
-      //   },
-      // ],
-      chart: {
-        toolbar: {
-          show: false,
-        },
-        background: '#CEEAFF',
-      },
-      stroke: {
-        curve: 'smooth', // smoother lines
-        width: [3], // line thickness
-        colors: ['#0059DE'],
-      },
-      markers: {
-        colors: '#3FFFFF',
-        strokeColors: 'rgba(63, 255, 255, 0.6)',
-        strokeWidth: 10,
-        strokeOpacity: 0.7,
-        fillOpacity: 1,
-      },
-
-      fill: {
-        // area background
-        type: 'gradient',
-        gradient: {
-          type: 'vertical',
-          colorFrom: '#E9F4FF',
-          colorTo: '#f50509',
-          stops: [0, 100],
-          opacityFrom: 0,
-          opacityTo: 1,
-        },
-      },
-      dataLabels: {
-        // signature data on the graph
-        enabled: false,
-      },
-      grid: {
-        show: false,
-      },
-      legend: {
-        show: false,
-      },
-      xaxis: {
-        categories: divetime,
-        show: false,
-        tooltip: {
-          // signature when hovering
-          enabled: false,
-        },
-        labels: { show: false },
-        crosshairs: {
-          // vertikal line when hovering
-          show: false,
-        },
-      },
-      yaxis: {
-        show: false,
-        reversed: true,
-        crosshairs: {
-          show: false,
-        },
-      },
-      tooltip: {
-        followCursor: false,
-        show: true,
-        x: {
-          show: true,
-        },
-        marker: {
-          show: false,
-        },
-        custom({ series, seriesIndex, dataPointIndex, w }) {
-          return (
-            '<div class="apexcharts__tooltip_custom">' +
-            '<div class="apexcharts__tooltip_custom_depth">' +
-            `<span>${series[seriesIndex][dataPointIndex]} m</span>` +
-            '</div>' +
-            '<div class="apexcharts__tooltip_custom_divetime">' +
-            `<span>${w.globals.categoryLabels[dataPointIndex]} min</span>` +
-            '</div>' +
-            '</div>'
-          );
-        },
-      },
-    });
   }, []);
 
   return (
     <ReactApexChart
-      options={options}
+      options={getOptions(divetimeData)}
       series={data}
       type="area"
       height={423}
