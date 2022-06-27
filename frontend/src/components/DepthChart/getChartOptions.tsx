@@ -6,6 +6,9 @@ export const getOptions = (divetime: number[]): ApexOptions => ({
       show: false,
     },
     background: '#CEEAFF',
+    zoom: {
+      enabled: false,
+    },
   },
   stroke: {
     curve: 'smooth', // smoother lines
