@@ -4,12 +4,13 @@ import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import { LogDiveBlock } from '../src/components/PageBlocks/LogADiveBlocks';
-import {
-  LogDiveProvider,
-} from '../src/components/PageBlocks/LogADiveBlocks/LogDiveData/LogDiveProvider';
+
+import { LogDiveProvider } from '../src/components/PageBlocks/LogADiveBlocks/LogDiveData/LogDiveProvider';
 import pageRoutes from '../src/routes/pagesRoutes.json';
 
-const LogDive: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
+const LogDive: InferGetServerSidePropsType<typeof getServerSideProps> = ({
+  user,
+}) => (
   <AuthLayout user={user}>
     <MainLayout>
       <LogDiveProvider>
@@ -35,8 +36,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     email,
     photoURL = '',
     displayName = '',
-  } = await firebaseAdmin.auth()
-    .getUser(uid);
+  } = await firebaseAdmin.auth().getUser(uid);
 
   return {
     props: {
