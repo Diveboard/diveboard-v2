@@ -1,0 +1,11 @@
+@import '../profile-log-dive.module';
+
+.timePicker {
+  > input {
+    @extend .profileInput;
+  }
+
+  a {
+    display: none !important;
+  }
+}

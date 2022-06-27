@@ -1,8 +1,8 @@
 import React, { FC, useEffect } from 'react';
-import { Input } from '../../../../Input/CommonInput';
-import { TextArea } from '../../../../TextArea';
+import { Input } from '../../../../../Input/CommonInput';
+import { TextArea } from '../../../../../Input/TextArea';
 import styles from './styles.module.scss';
-import { StepType } from '../../types/commonTypes';
+import { StepType } from '../../../types/commonTypes';
 
 type Props = {
   diveNumber: string;

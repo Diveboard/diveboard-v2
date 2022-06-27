@@ -1,0 +1,28 @@
+@import '../profile-log-dive.module';
+
+.datePicker {
+  @extend .profileInput;
+}
+
+.calender {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 20px;
+  color: #000345;
+  font-family: "Prompt", sans-serif;
+
+  > div {
+    &:first-child {
+      display: none;
+    }
+  }
+}
+
+.weekDay {
+  background-color: #0059DE;
+  border-radius: 20%;
+  color: #F0F6FF;
+}
+
+
+

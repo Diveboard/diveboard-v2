@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { ScoreType } from '../../../types/commonTypes';
-import { Icon } from '../../../../../Icons/Icon';
+import { ScoreType } from '../../../../types/commonTypes';
+import { Icon } from '../../../../../../Icons/Icon';
 import styles from './styles.module.scss';
 
 type Props = {

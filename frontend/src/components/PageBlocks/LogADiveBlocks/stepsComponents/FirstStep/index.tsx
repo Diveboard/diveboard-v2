@@ -1,19 +1,13 @@
 import React, { FC, useContext, useState } from 'react';
 import { Overview } from './Overview';
-import { usePrevStepCallback } from '../logDiveHooks/usePrevStepCallback';
+import { usePrevStepCallback } from '../../logDiveHooks/usePrevStepCallback';
 import { DiveReviews } from './DiveReviews';
 import DiveActivities from './DiveTypeAndActivities';
-import { LogDiveDataContext } from '../LogDiveData/logDiveContext';
-import { ScoreType, StepType } from '../types/commonTypes';
-import { FirstStepType } from '../types/stepTypes';
+import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
+import { ScoreType, StepProps } from '../../types/commonTypes';
+import { FirstStepType } from '../../types/stepTypes';
 
-type Props = {
-  step: StepType
-  prevStep: StepType
-  setStep: React.Dispatch<React.SetStateAction<StepType>>
-};
-
-export const FirstStep: FC<Props> = ({
+export const FirstStep: FC<StepProps> = ({
   step,
   prevStep,
   setStep,

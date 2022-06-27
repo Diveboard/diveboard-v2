@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { ScoreRating } from './ScoreRating';
-import { ScoreType } from '../../types/commonTypes';
+import { ScoreType } from '../../../types/commonTypes';
 import styles from './styles.module.scss';
-import { Checkbox } from '../../../../CheckBox';
+import { Checkbox } from '../../../../../CheckBox';
 
 type Props = {
   overReviewScore: ScoreType;

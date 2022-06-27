@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import styles from '../Input/CommonInput/styles.module.scss';
+import styles from '../CommonInput/styles.module.scss';
 import stylesTextArea from './styles.module.scss';
 
 type Props = {
