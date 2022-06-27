@@ -1,0 +1,20 @@
+@import "../../add-style.module";
+
+.safetySpotsWrapper {
+  margin-top: 20px;
+
+  .spot{
+    margin: 10px 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .add {
+    display: flex;
+
+    >span {
+      margin-right: 4px;
+    }
+  }
+}

@@ -7,7 +7,12 @@ type Props = {
 };
 
 export const DropdownItem: FC<Props> = ({ text, onSelect }) => (
-  <div className={styles.item} onClick={() => { onSelect(text); }}>
+  <div
+    className={styles.item}
+    onClick={() => {
+      onSelect(text);
+    }}
+  >
     <span>
       {text}
     </span>

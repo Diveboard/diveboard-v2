@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { Checkbox } from '../../../../CheckBox';
+import { Checkbox } from '../../../../../CheckBox';
 import styles from './styles.module.scss';
-import { Input } from '../../../../Input/CommonInput';
+import { Input } from '../../../../../Input/CommonInput';
 
 type Props = {
   recreational: boolean;
