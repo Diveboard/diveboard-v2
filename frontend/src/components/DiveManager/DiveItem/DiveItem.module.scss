@@ -1,0 +1,134 @@
+.wrapper {
+  height: 110px;
+  padding: 16px;
+  box-shadow: 0px 8px 15px rgba(0, 62, 89, 0.06);
+  border-radius: 15px;
+  margin-bottom: 20px;
+  background: #ffffff;
+
+  transition: all 0.3s;
+
+  &:first-child {
+    margin-top: 22px;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &__higher {
+    height: 143px;
+  }
+}
+
+.info {
+  display: flex;
+  align-items: center;
+}
+
+.number {
+  font-weight: 500;
+  font-size: 11px;
+  color: #074ee8;
+  margin-right: 6px;
+}
+
+.date {
+  font-style: italic;
+  font-weight: 400;
+  font-size: 10px;
+  color: #000345;
+  opacity: 0.6;
+}
+
+.subwrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 26px;
+  color: #000345;
+}
+
+.more {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  ul {
+    display: flex;
+    padding-left: 0;
+    margin: 0;
+
+    li {
+      list-style: none;
+      font-weight: 300;
+      font-size: 14px;
+      color: #000345;
+      margin-right: 20px;
+
+      span {
+        font-weight: 500;
+        font-size: 14px;
+        color: #000345;
+        text-transform: capitalize;
+      }
+    }
+  }
+}
+
+.infowrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.switch {
+  transition: all 0.8s ease;
+  font-weight: 500;
+  font-size: 11px;
+  color: #0059de;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &::after {
+    width: 10px;
+    height: 10px;
+    content: '';
+    margin-left: 3px;
+    background-image: url('/appIcons/blue-arrow.svg');
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-10%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+.enterActive {
+  animation: fade-in 500ms forwards;
+}
+
+.exitActive {
+  animation: fade-out 500ms forwards;
+}
