@@ -4,7 +4,7 @@ export type FirstStepType =
   {
     overview:
     {
-      diveNumber: string,
+      diveNumber: number,
       notes: string,
       tripName: string,
     },
@@ -12,7 +12,9 @@ export type FirstStepType =
     {
       overReview: ScoreType,
       diveDifficulty: ScoreType,
-      marineLifeQuality: ScoreType
+      marineLifeQuality: ScoreType,
+      wreck: boolean,
+      bigFish: boolean,
     },
     diveActivities: {
       recreational: boolean,
@@ -56,7 +58,7 @@ export type SecondStepType = {
     cylinder: '1x' | '2x';
     volume: number;
     size: 'L' | 'cuft';
-    material:'steel' | 'aluminum' | 'carbon';
+    material: 'steel' | 'aluminum' | 'carbon';
     mixture: 'air' | 'nitrox' | 'trimix';
     pressureStart: number;
     pressureEnd: number;

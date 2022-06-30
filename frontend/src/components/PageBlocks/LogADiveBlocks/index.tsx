@@ -1,16 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StepsNavigation } from './StepsNavigation';
 import { StepsIndicator } from './StepsIndicator';
-import { FirstStep } from './stepsComponents/FirstStep';
-import { usePrevStep } from './logDiveHooks/usePrevStep';
+import { FirstStep } from './StepsComponents/FirstStep';
 import { StepType } from './types/commonTypes';
-import styles from './styles.module.scss';
 import { LogDiveDataContext } from './LogDiveData/logDiveContext';
-import { SecondStep } from './stepsComponents/SecondStep';
+import { SecondStep } from './StepsComponents/SecondStep';
+import styles from './styles.module.scss';
 
 export const LogDiveBlock = () => {
-  const [step, setStep] = useState<StepType>(2);
-  const prev = usePrevStep(step);
+  const [step, setStep] = useState<StepType>(1);
   const { setCurrentStep } = useContext(LogDiveDataContext);
 
   useEffect(() => {
@@ -27,10 +24,10 @@ export const LogDiveBlock = () => {
           </span>
         </div>
         {step !== 0 && <StepsIndicator step={step} setStep={setStep} />}
-        <FirstStep step={step} prevStep={prev} setStep={setStep} />
-        <SecondStep step={step} prevStep={prev} setStep={setStep} />
+        <FirstStep step={step} setStep={setStep} />
+        <SecondStep step={step} setStep={setStep} />
       </div>
-      {step !== 0 && <StepsNavigation setStep={setStep} />}
+      {/* {step !== 0 && <StepsNavigation setStep={setStep} />} */}
     </>
   );
 };

@@ -1,6 +1,9 @@
+@import "../styles.module";
+
 .indicatorWrapper {
   display: flex;
   justify-content: space-between;
+  @extend .container;
 
   .indicatorItem {
     width: 91px;

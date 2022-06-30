@@ -1,7 +1,7 @@
 import { FirstStepType, SecondStepType } from '../types/stepTypes';
 import { StepType } from '../types/commonTypes';
 
-export const DiveDataActions = {
+export const diveDataActions = {
   setStep: (step: StepType) => ({
     type: 'set-step',
     payload: { step },
@@ -9,7 +9,7 @@ export const DiveDataActions = {
 
 };
 
-export const diveDataActions = {
+export const diveStepDataActions = {
   setFirstStepData: (firstStepData: FirstStepType) => ({
     type: 'set-first-step-data',
     payload: { firstStepData },
@@ -20,4 +20,4 @@ export const diveDataActions = {
   } as const),
 };
 
-export type ActionsType = typeof DiveDataActions & typeof diveDataActions;
+export type ActionsType = typeof diveDataActions & typeof diveStepDataActions;

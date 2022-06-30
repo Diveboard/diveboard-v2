@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import { SecondStepType } from '../../../types/stepTypes';
-import styles from './styles.module.scss';
 import { getTankActions } from '../../../LogDiveHelpers/getTankActions';
 import { incrementId } from '../../../LogDiveHelpers/incrementId';
 import { Tank } from './Tank';
+import { SecondStepType } from '../../../types/stepTypes';
+import styles from './styles.module.scss';
 
 type Props = {
   setTanks: React.Dispatch<React.SetStateAction<SecondStepType['tanks']>>,
@@ -57,7 +57,7 @@ export const Tanks:FC<Props> = ({ tanks, setTanks }) => {
   });
 
   return (
-    <div>
+    <div className={styles.tanksWrapper}>
       <h2>Tanks & gas mix</h2>
       {tanksComponents}
       <span className={styles.addStyle} onClick={add}>Add Tank</span>

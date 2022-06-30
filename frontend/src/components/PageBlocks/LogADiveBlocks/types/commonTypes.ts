@@ -8,7 +8,6 @@ export type ScoreType = 0 | 1 | 2 | 3 | 4 | 5;
 
 export type StepProps = {
   step: StepType
-  prevStep: StepType
   setStep: React.Dispatch<React.SetStateAction<StepType>>
 };
 

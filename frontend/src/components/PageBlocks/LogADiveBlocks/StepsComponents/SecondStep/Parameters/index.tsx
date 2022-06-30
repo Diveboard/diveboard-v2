@@ -1,39 +1,25 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { TimePickerInput } from '../../../../../Input/TimePickerInput';
 import { DatePickerInput } from '../../../../../Input/DatePickerInput';
 import { InputLabelWrapper } from '../../../inputLabelWrapper';
 import { Input } from '../../../../../Input/CommonInput';
 import { SecondStepType } from '../../../types/stepTypes';
 import styles from './styles.module.scss';
-import { StepType } from '../../../types/commonTypes';
+import { SecondStepErrors } from '../../../types/errorTypes';
 
 type Props = {
   parameters: SecondStepType['parameters'];
   setParameters: React.Dispatch<React.SetStateAction<SecondStepType['parameters']>>
-  step: StepType;
-  setStep: React.Dispatch<React.SetStateAction<StepType>>;
   errors:
-  {
-    timeError: string,
-    dateError: string,
-    maxDepthError: string,
-    durationError: string
-  }
+  SecondStepErrors
   setErrors:
-  React.Dispatch<React.SetStateAction<{
-    timeError: string,
-    dateError: string,
-    maxDepthError: string,
-    durationError: string
-  }>>
+  React.Dispatch<React.SetStateAction<SecondStepErrors>>
 
 };
 
 export const Parameters: FC<Props> = ({
   parameters,
   setParameters,
-  step,
-  setStep,
   errors,
   setErrors,
 }) => {
@@ -72,70 +58,24 @@ export const Parameters: FC<Props> = ({
     });
   };
 
-  useEffect(() => {
-    if (errors.timeError || errors.dateError || errors.maxDepthError || errors.durationError) {
-      setStep(2);
-    }
-  }, [errors.timeError, errors.dateError, errors.maxDepthError, errors.durationError, step]);
-
-  useEffect(() => {
-    if (step !== 2) {
-      if (!parameters.time.length) {
-        setErrors({
-          ...errors,
-          timeError: 'fill time of dive',
-        });
-      }
-
-      if (!parameters.date) {
-        setErrors({
-          ...errors,
-          dateError: 'fill date of a dive',
-        });
-      }
-
-      if (!parameters.maxDepth) {
-        setErrors({
-          ...errors,
-          maxDepthError: 'fill max depth of a dive',
-        });
-      }
-
-      if (Number.isNaN(+parameters.maxDepth)) {
-        setErrors({
-          ...errors,
-          maxDepthError: 'incorrect depth',
-        });
-      }
-
-      if (!parameters.duration) {
-        setErrors({
-          ...errors,
-          durationError: 'fill duration of a dive',
-        });
-      }
-
-      if (Number.isNaN(+parameters.duration)) {
-        setErrors({
-          ...errors,
-          durationError: 'incorrect duration',
-        });
-      }
-    }
-  }, [step]);
-
-  if (step !== 2) {
-    return null;
-  }
-
   return (
     <div className={styles.parameters}>
       <InputLabelWrapper label="Time In">
-        <TimePickerInput setTime={setTime} />
+        <TimePickerInput
+          setTime={setTime}
+          currentTime={parameters.time}
+          error={errors.timeError}
+          setError={() => { setErrors({ ...errors, timeError: '' }); }}
+        />
       </InputLabelWrapper>
 
       <InputLabelWrapper label="Date">
-        <DatePickerInput date={parameters.date} setDate={setDate} />
+        <DatePickerInput
+          date={parameters.date}
+          setDate={setDate}
+          error={errors.dateError}
+          setError={() => { setErrors({ ...errors, dateError: '' }); }}
+        />
       </InputLabelWrapper>
 
       <InputLabelWrapper label="Max depth">
