@@ -31,9 +31,11 @@ import { setCookiesLogin } from '../../../utils/setCookiesLogin';
 import { statusUserRedirect } from '../../../utils/statusUserRedirect';
 import { precachePages } from '../../../utils/precachePages';
 import { WaitingCache } from './Components/WaitingCache';
+import { useWindowWidth } from '../../../hooks/useWindowWidth';
 
 export const SignInBlock: FC = () => {
   const router = useRouter();
+  const isMobile = useWindowWidth(100, 768);
   const { setUserAuth } = useContext(AuthStatusContext);
   const [inputValue, setInputValue] = useState('');
   const [error, setError] = useState('');
@@ -154,6 +156,7 @@ export const SignInBlock: FC = () => {
               : 'Enter the code from your email'
           }
           iconName={mode === 'login/signup' && 'email'}
+          width={!isMobile ? 570 : 340}
         />
       )}
 
