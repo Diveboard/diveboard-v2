@@ -1,5 +1,5 @@
 import React, {
-  FC, useContext, useState,
+  FC, useContext, useEffect, useRef, useState,
 } from 'react';
 import { Button } from '../../../../Buttons/Button';
 import { MarginWrapper } from '../../../../MarginWrapper';
@@ -9,17 +9,75 @@ import { AdvancedParameters } from './AdvancedParameters';
 import { Tanks } from './Tanks';
 import { setStepErrors } from '../../LogDiveHelpers/stepsErrors/setStepErrors';
 import { StepsNavigation } from '../../StepsNavigation';
+import { DepthChart } from '../../../../DepthChart/depthChart';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { StepProps } from '../../types/commonTypes';
 import { SecondStepType } from '../../types/stepTypes';
 import { SecondStepErrors } from '../../types/errorTypes';
 import styles from './styles.module.scss';
 
+// const DUMMY_DATA = [
+//   {
+//     depth: 2.74,
+//     diveTime: 30,
+//     temperature: 287.2,
+//   },
+//   {
+//     depth: 10.74,
+//     diveTime: 70,
+//     temperature: 245.4,
+//   },
+//   {
+//     depth: 12.74,
+//     diveTime: 10,
+//     temperature: 217.8,
+//   },
+//   {
+//     depth: 120.74,
+//     diveTime: 50,
+//     temperature: 285.7,
+//   },
+//   {
+//     depth: 8.74,
+//     diveTime: 18,
+//     temperature: 299.0,
+//   },
+//   {
+//     depth: 45.74,
+//     diveTime: 7,
+//     temperature: 310.5,
+//   },
+//   {
+//     depth: 3.74,
+//     diveTime: 28,
+//     temperature: 210.9,
+//   },
+//   {
+//     depth: 0,
+//     diveTime: 49,
+//     temperature: 210.9,
+//   },
+//   {
+//     depth: 14.74,
+//     diveTime: 37,
+//     temperature: 210.9,
+//   },
+// ];
+
 export const SecondStep: FC<StepProps> = ({
   step,
   setStep,
 }) => {
   const { setStepData } = useContext(LogDiveDataContext);
+
+  const [showChart, setShowChart] = useState(false);
+  const showedChart = useRef(false);
+
+  const [spots, setSpots] = useState<{
+    depth: number;
+    diveTime: number;
+    temperature: number;
+  }[]>([]);
 
   const [parameters, setParameters] = useState<SecondStepType['parameters']>({
     time: '',
@@ -29,8 +87,8 @@ export const SecondStep: FC<StepProps> = ({
     surfaceInterval: undefined,
     safetySpots: [{
       id: 1,
-      period: undefined,
-      depth: undefined,
+      period: 0,
+      depth: 0,
     }],
   });
 
@@ -67,6 +125,26 @@ export const SecondStep: FC<StepProps> = ({
     tanks,
   };
 
+  useEffect(() => {
+    // load points //todo
+  }, []);
+
+  useEffect(() => {
+    if (showedChart.current) {
+      setShowChart(true);
+    }
+    showedChart.current = true;
+  }, [parameters, advancedParameters, tanks]);
+
+  useEffect(() => {
+    const newSpots = parameters.safetySpots.map((spot) => ({
+      depth: spot.depth,
+      diveTime: spot.period,
+      temperature: 0,
+    }));
+    setSpots(newSpots);
+  }, [parameters.safetySpots]);
+
   if (step !== 2) {
     return null;
   }
@@ -78,47 +156,51 @@ export const SecondStep: FC<StepProps> = ({
         <h2>
           Profile
         </h2>
-        <MarginWrapper top={10} />
-        <p>
-          To display on Diveboard the exact profile of your dive, you can either connect directly
-          your
-          dive computer, or select an export from another software.
-          If you don't upload your dive profile, a generic profile will be generated based on the
-          duration and safety stops you entered. You can always upload later.
-        </p>
-        <p>
-          If you don't upload your dive profile, a generic profile will be generated based on the
-          duration and safety stops you entered. You can always upload later.
-        </p>
+        {showChart && <DepthChart points={spots} />}
+        {!showChart && (
+        <>
+          <MarginWrapper top={10} />
+          <p>
+            To display on Diveboard the exact profile of your dive, you can either connect directly
+            your
+            dive computer, or select an export from another software.
+            If you don't upload your dive profile, a generic profile will be generated based on the
+            duration and safety stops you entered. You can always upload later.
+          </p>
+          <p>
+            If you don't upload your dive profile, a generic profile will be generated based on the
+            duration and safety stops you entered. You can always upload later.
+          </p>
 
-        <div className={styles.buttonGroup}>
+          <div className={styles.buttonGroup}>
 
-          <Button
-            backgroundColor="#0059DE"
-            border="none"
-            borderRadius={30}
-            width={305}
-            height={48}
-          >
-            <span className={styles.primaryButton}>
-              Import from Dive Computer
-            </span>
+            <Button
+              backgroundColor="#0059DE"
+              border="none"
+              borderRadius={30}
+              width={305}
+              height={48}
+            >
+              <span className={styles.primaryButton}>
+                Import from Dive Computer
+              </span>
 
-          </Button>
+            </Button>
 
-          <Button
-            backgroundColor="transparent"
-            border="2px solid #000345"
-            borderRadius={30}
-            width={373}
-            height={48}
-          >
-            <span className={styles.secondaryButton}>
-              Import from File & Partner Services
-            </span>
-          </Button>
-        </div>
-
+            <Button
+              backgroundColor="transparent"
+              border="2px solid #000345"
+              borderRadius={30}
+              width={373}
+              height={48}
+            >
+              <span className={styles.secondaryButton}>
+                Import from File & Partner Services
+              </span>
+            </Button>
+          </div>
+        </>
+        )}
         <Parameters
           parameters={parameters}
           setParameters={setParameters}

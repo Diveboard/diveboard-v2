@@ -6,78 +6,41 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
 });
 
-const DUMMY_DATA = [
-  {
-    depth: 2.74,
-    divetime: 30,
-    temperature: 287.2,
-  },
-  {
-    depth: 10.74,
-    divetime: 70,
-    temperature: 245.4,
-  },
-  {
-    depth: 12.74,
-    divetime: 10,
-    temperature: 217.8,
-  },
-  {
-    depth: 120.74,
-    divetime: 50,
-    temperature: 285.7,
-  },
-  {
-    depth: 8.74,
-    divetime: 18,
-    temperature: 299.0,
-  },
-  {
-    depth: 45.74,
-    divetime: 7,
-    temperature: 310.5,
-  },
-  {
-    depth: 3.74,
-    divetime: 28,
-    temperature: 210.9,
-  },
-  {
-    depth: 0,
-    divetime: 49,
-    temperature: 210.9,
-  },
-  {
-    depth: 14.74,
-    divetime: 37,
-    temperature: 210.9,
-  },
-];
+type Props = {
+  points: {
+    depth: number,
+    diveTime: number,
+    temperature: number,
+  }[]
 
-const DepthChart: FC = (): JSX.Element => {
+};
+
+export const DepthChart: FC<Props> = ({ points }): JSX.Element => {
   const [data, setData] = useState([]);
-  const [divetimeData, setdivetimeData] = useState([]);
+  const [diveTimeData, setDiveTimeData] = useState([]);
 
   useEffect(() => {
     const depth = [];
-    const divetime = [];
-    let sortedData = [];
+    const diveTime = [];
+    const sortedData = [...points];
 
-    sortedData = [...DUMMY_DATA];
-
-    sortedData.sort((a, b) => a.divetime - b.divetime);
+    sortedData.sort((a, b) => a.diveTime - b.diveTime);
 
     sortedData.forEach((item) => {
       depth.push(item.depth);
-      divetime.push(item.divetime);
+      diveTime.push(item.diveTime);
     });
-    setdivetimeData(divetime);
-    setData([{ name: 'depth', type: 'area', data: depth }]);
-  }, []);
+    setDiveTimeData(diveTime);
+    setData([{
+      name: 'depth',
+      type: 'area',
+      data: depth,
+    }]);
+  }, [points]);
 
   return (
     <ReactApexChart
-      options={getOptions(divetimeData)}
+      options={getOptions(diveTimeData)}
       series={data}
       type="area"
       height={423}
@@ -85,5 +48,3 @@ const DepthChart: FC = (): JSX.Element => {
     />
   );
 };
-
-export default DepthChart;
