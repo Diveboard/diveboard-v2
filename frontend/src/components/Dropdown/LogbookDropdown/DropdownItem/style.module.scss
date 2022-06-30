@@ -10,16 +10,23 @@
 
   &:hover {
     cursor: pointer;
-    background: #F0F6FF;
-    color: #0059DE;
+    background: #f0f6ff;
+    color: #0059de;
 
     .title {
       font-weight: 500;
     }
-
     svg path {
-      fill: #0059DE;
+      fill: #0059de;
     }
+  }
+}
 
+.stroke {
+  &:hover {
+    svg path {
+      stroke: #0059de;
+      fill: none;
+    }
   }
 }
