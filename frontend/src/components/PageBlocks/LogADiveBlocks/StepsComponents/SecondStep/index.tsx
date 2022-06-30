@@ -1,19 +1,22 @@
-import React, { FC, useContext, useState } from 'react';
-import { StepProps } from '../../types/commonTypes';
-import { SecondStepType } from '../../types/stepTypes';
+import React, {
+  FC, useContext, useState,
+} from 'react';
 import { Button } from '../../../../Buttons/Button';
-import styles from './styles.module.scss';
 import { MarginWrapper } from '../../../../MarginWrapper';
 import { Parameters } from './Parameters';
 import { SafetySpots } from './SafetySpots';
 import { AdvancedParameters } from './AdvancedParameters';
 import { Tanks } from './Tanks';
-import { usePrevStepCallback } from '../../logDiveHooks/usePrevStepCallback';
+import { setStepErrors } from '../../LogDiveHelpers/stepsErrors/setStepErrors';
+import { StepsNavigation } from '../../StepsNavigation';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
+import { StepProps } from '../../types/commonTypes';
+import { SecondStepType } from '../../types/stepTypes';
+import { SecondStepErrors } from '../../types/errorTypes';
+import styles from './styles.module.scss';
 
 export const SecondStep: FC<StepProps> = ({
   step,
-  prevStep,
   setStep,
 }) => {
   const { setStepData } = useContext(LogDiveDataContext);
@@ -31,11 +34,18 @@ export const SecondStep: FC<StepProps> = ({
     }],
   });
 
-  const [errors, setErrors] = useState({
+  const [parametersErrors, setParametersErrors] = useState<SecondStepErrors>({
     timeError: '',
     dateError: '',
     maxDepthError: '',
     durationError: '',
+  });
+
+  const setErrors = () => setStepErrors({
+    stepType: 2,
+    data: parameters,
+    errors: parametersErrors,
+    setErrors: setParametersErrors,
   });
 
   const [advancedParameters,
@@ -57,24 +67,14 @@ export const SecondStep: FC<StepProps> = ({
     tanks,
   };
 
-  const isError = !!parameters.time
-    || !!parameters.date
-    || !!parameters.maxDepth
-    || !!parameters.duration;
-
-  usePrevStepCallback(
-    2,
-    prevStep,
-    isError,
-    () => {
-      setStepData(2, secondStepData);
-    },
-  );
+  if (step !== 2) {
+    return null;
+  }
 
   return (
-    <div className={styles.secondStep}>
-      {step === 2 && (
-      <>
+    <>
+      <div className={styles.secondStep}>
+
         <h2>
           Profile
         </h2>
@@ -118,29 +118,29 @@ export const SecondStep: FC<StepProps> = ({
             </span>
           </Button>
         </div>
-      </>
-      )}
 
-      <Parameters
-        parameters={parameters}
-        setParameters={setParameters}
-        errors={errors}
-        setErrors={setErrors}
-        step={step}
-        setStep={setStep}
-      />
+        <Parameters
+          parameters={parameters}
+          setParameters={setParameters}
+          errors={parametersErrors}
+          setErrors={setParametersErrors}
+        />
 
-      {step === 2 && (
-      <>
         <SafetySpots parameters={parameters} setParameters={setParameters} />
         <AdvancedParameters
           advancedParameters={advancedParameters}
           setAdvancedParameters={setAdvancedParameters}
         />
         <Tanks tanks={tanks} setTanks={setTanks} />
-      </>
-      )}
 
-    </div>
+      </div>
+      <StepsNavigation
+        setStep={setStep}
+        setErrors={setErrors}
+        setStepData={() => {
+          setStepData(2, secondStepData);
+        }}
+      />
+    </>
   );
 };
