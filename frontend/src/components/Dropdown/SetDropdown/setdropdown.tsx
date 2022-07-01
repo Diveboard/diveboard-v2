@@ -31,8 +31,8 @@ export const SetDropdown: FC<Props> = ({
   const outsideClickHandler = (ev: Event): void => {
     const target = ev.target as HTMLElement;
     if (
-      ev.target !== dropdownRef.current &&
-      !dropdownButton.current.contains(target)
+      ev.target !== dropdownRef.current
+      && !dropdownButton.current.contains(target)
     ) {
       hideDropdown(false);
     }
