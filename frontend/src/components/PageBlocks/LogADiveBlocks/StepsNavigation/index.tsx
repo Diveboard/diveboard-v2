@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { Button } from '../../../Buttons/Button';
-import { StepType } from '../index';
 import styles from './styles.module.scss';
 import { Icon } from '../../../Icons/Icon';
+import { StepType } from '../types/commonTypes';
 
 type Props = {
   setStep: React.Dispatch<React.SetStateAction<StepType>>

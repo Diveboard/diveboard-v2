@@ -1,4 +1,4 @@
-.checkboxWrapper{
+.checkboxWrapper {
   display: flex;
   align-items: center;
 
@@ -17,5 +17,24 @@
     &:hover {
       cursor: pointer;
     }
+  }
+}
+
+.column {
+  flex-direction: column;
+
+  .checkbox {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+  }
+
+  .label {
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    color: #000345;
+    margin-top: 4px;
   }
 }

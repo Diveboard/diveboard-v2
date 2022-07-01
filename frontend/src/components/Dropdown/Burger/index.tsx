@@ -7,7 +7,8 @@ import { Icon } from '../../Icons/Icon';
 import {
   About,
   DiveManager,
-  Gallery, Logout,
+  Gallery,
+  Logout,
   Settings,
   Shop,
   Support,
@@ -22,32 +23,38 @@ const burgerItems = [
     svgItem: <DiveManager />,
     title: 'Dive Manager',
     link: pageRoutes.diveManagerPageRout,
-  }, {
+  },
+  {
     id: 2,
     svgItem: <Gallery />,
     title: 'Gallery',
     link: pageRoutes.galleryPageRout,
-  }, {
+  },
+  {
     id: 3,
     svgItem: <Settings />,
     title: 'Settings',
     link: pageRoutes.settingsPageRout,
-  }, {
+  },
+  {
     id: 4,
     svgItem: <About />,
     title: 'About',
     link: pageRoutes.aboutPageRout,
-  }, {
+  },
+  {
     id: 5,
     svgItem: <Support />,
     title: 'Support',
     link: pageRoutes.supportPageRout,
-  }, {
+  },
+  {
     id: 6,
     svgItem: <Shop />,
     title: 'My Shop',
     link: pageRoutes.shopPageRout,
-  }, {
+  },
+  {
     id: 7,
     svgItem: <Logout />,
     title: 'Log Out',
@@ -76,7 +83,11 @@ export const Burger: FC = () => {
     if (item.title === 'Log Out') {
       return (
         <div onClick={logOutUser} key={item.id}>
-          <LogbookDropdownItem key={item.id} title={item.title} link={item.link}>
+          <LogbookDropdownItem
+            key={item.id}
+            title={item.title}
+            link={item.link}
+          >
             {item.svgItem}
           </LogbookDropdownItem>
         </div>
