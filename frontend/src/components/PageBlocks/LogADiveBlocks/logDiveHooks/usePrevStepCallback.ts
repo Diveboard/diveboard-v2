@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { StepType } from '../index';
+import { StepType } from '../types/commonTypes';
 
 export const usePrevStepCallback = (
   currentStep:StepType,
