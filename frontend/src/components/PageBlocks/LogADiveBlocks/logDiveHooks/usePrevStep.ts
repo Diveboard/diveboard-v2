@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { StepType } from '../index';
+import { StepType } from '../types/commonTypes';
 
 export const usePrevStep = (step: StepType) => {
   const tempStep = useRef<StepType>(step);

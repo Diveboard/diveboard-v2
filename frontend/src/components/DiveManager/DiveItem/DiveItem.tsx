@@ -23,7 +23,7 @@ const DiveItem: FC<Props> = ({
   const {
     number,
     date,
-    divedPlace,
+    spot,
     divetime,
     depth,
     diversCount,
@@ -70,7 +70,7 @@ const DiveItem: FC<Props> = ({
         <div className={classes.date}>{date}</div>
       </div>
       <div className={classes.subwrapper}>
-        <div className={classes.title}>{divedPlace}</div>
+        <div className={classes.spot}>{spot}</div>
         <Checkbox
           name="name"
           className="column"

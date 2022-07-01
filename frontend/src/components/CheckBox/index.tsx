@@ -15,10 +15,9 @@ export const Checkbox: FC<Props> = ({
   children,
   className,
 }) => {
-  const classNameDefinition = (classtitle: string) =>
-    className
-      ? `${styles[className]} ${styles[classtitle]} `
-      : styles[classtitle];
+  const classNameDefinition = (classtitle: string) => (className
+    ? `${styles[className]} ${styles[classtitle]} `
+    : styles[classtitle]);
 
   return (
     <div className={classNameDefinition('checkboxWrapper')}>

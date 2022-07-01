@@ -2,7 +2,7 @@ export type DummyDataObj = {
   id: number;
   number: number;
   date: string;
-  divedPlace: string;
+  spot: string;
   divetime: number;
   depth: number;
   diversCount: number;
