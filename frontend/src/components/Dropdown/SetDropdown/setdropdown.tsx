@@ -1,79 +1,53 @@
-import React, { FC } from 'react';
-import { CopyProperty } from '../../Icons/IconSVGComponents/CopyProperty';
-import { Delete } from '../../Icons/IconSVGComponents/Delete';
-import { EditDive } from '../../Icons/IconSVGComponents/Editdive';
-import { Export } from '../../Icons/IconSVGComponents/Export';
-import { Paste } from '../../Icons/IconSVGComponents/Paste';
-import { Print } from '../../Icons/IconSVGComponents/Print';
-import { Unpublish } from '../../Icons/IconSVGComponents/Unpublish';
-import pageRoutes from '../../../routes/pagesRoutes.json';
-
+import React, { FC, useRef, useState } from 'react';
 import { LogbookDropdownItem } from '../LogbookDropdown/DropdownItem';
 
 import styles from './styles.module.scss';
+import { useOutsideClick } from '../../../hooks/useOutsideClick';
 
-const dropdownList = [
-  {
-    id: 1,
-    title: 'Print',
-    link: pageRoutes.diveManagerPageRout,
-    svgItem: <Print />,
-  },
-  {
-    id: 2,
-    title: 'Export',
-    link: pageRoutes.diveManagerPageRout,
-    svgItem: <Export />,
-  },
-  {
-    id: 3,
-    title: 'Edit Dive',
-    link: pageRoutes.diveManagerPageRout,
-    svgItem: <EditDive />,
-  },
-  {
-    id: 4,
-    title: 'Copy Property',
-    link: pageRoutes.diveManagerPageRout,
-    svgItem: <CopyProperty />,
-  },
-  {
-    id: 5,
-    title: 'Paste properties',
-    link: pageRoutes.diveManagerPageRout,
-    svgItem: <Paste />,
-  },
-  {
-    id: 6,
-    title: 'Unpublish',
-    link: pageRoutes.diveManagerPageRout,
-    svgItem: <Unpublish />,
-  },
-  {
-    id: 7,
-    title: 'Delete',
-    link: pageRoutes.diveManagerPageRout,
-    svgItem: <Delete />,
-  },
-];
+type Props = {
+  dropdownList: {
+    id: number;
+    title: string;
+    link: string;
+    svgItem: JSX.Element;
+  }[];
+  dropdownButton: React.RefObject<HTMLDivElement>;
+  hideDropdown: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-const dropdownElements = dropdownList.map((item) => (
-  <LogbookDropdownItem key={item.id} title={item.title} link={item.link}>
-    {item.svgItem}
-  </LogbookDropdownItem>
-));
+export const SetDropdown: FC<Props> = ({
+  hideDropdown,
+  dropdownButton,
+  dropdownList,
+}) => {
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
-const SetDropdown: FC = () => (
-  <div
-    // ref={dropdownRef}
-    // onClick={(): void => {
-    //   setOpen(!open);
-    // }}
-    className={styles.dropdown}
-  >
-    <div className={styles.itemsWrapper}>{dropdownElements}</div>
-    {/* {open && <div className={styles.itemsWrapper}>{dropdownElements}</div>} */}
-  </div>
-);
+  const dropdownElements = dropdownList.map((item) => (
+    <LogbookDropdownItem key={item.id} title={item.title} link={item.link}>
+      {item.svgItem}
+    </LogbookDropdownItem>
+  ));
+  const outsideClickHandler = (ev: Event): void => {
+    const target = ev.target as HTMLElement;
+    if (
+      ev.target !== dropdownRef.current &&
+      !dropdownButton.current.contains(target)
+    ) {
+      hideDropdown(false);
+    }
+  };
+  useOutsideClick(outsideClickHandler, dropdownRef);
 
-export default SetDropdown;
+  return (
+    <div
+      ref={dropdownRef}
+      onClick={(): void => {
+        setOpen(!open);
+      }}
+      className={styles.itemsWrapper}
+    >
+      {dropdownElements}
+    </div>
+  );
+};

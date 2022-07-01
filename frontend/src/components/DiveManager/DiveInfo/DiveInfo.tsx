@@ -12,15 +12,27 @@ const DiveInfo: FC<Props> = ({ diveTime, deepness, diversCount }) => (
   <div className={classes.dataWrapper}>
     <div className={classes.dataItem}>
       <Icon iconName="time" size={16} />
-      <span>{diveTime} min</span>
+      <span>
+        {diveTime}
+        {' '}
+        min
+      </span>
     </div>
     <div className={classes.dataItem}>
       <Icon iconName="depth" size={16} />
-      <span>{deepness} m</span>
+      <span>
+        {deepness}
+        {' '}
+        m
+      </span>
     </div>
     <div className={classes.dataItem}>
       <Icon iconName="divers" size={16} />
-      <span>{diversCount} divers</span>
+      <span>
+        {diversCount}
+        {' '}
+        divers
+      </span>
     </div>
   </div>
 );

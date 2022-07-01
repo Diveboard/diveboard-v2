@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "format": "prettier-eslint \"src/**/*.js\"",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -28,6 +29,7 @@
     "next-pwa": "^5.4.4",
     "next-transpile-modules": "^9.0.0",
     "prettier": "^2.5.1",
+    "prettier-eslint-cli": "^6.0.1",
     "react": "17.0.2",
     "react-apexcharts": "^1.4.0",
     "react-dom": "17.0.2",

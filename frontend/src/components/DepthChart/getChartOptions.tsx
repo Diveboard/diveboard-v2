@@ -71,16 +71,18 @@ export const getOptions = (divetime: number[]): ApexOptions => ({
     marker: {
       show: false,
     },
-    custom({ series, seriesIndex, dataPointIndex, w }) {
+    custom({
+      series, seriesIndex, dataPointIndex, w,
+    }) {
       return (
-        '<div class="apexcharts__tooltip_custom">' +
-        '<div class="apexcharts__tooltip_custom_depth">' +
-        `<span>${series[seriesIndex][dataPointIndex]} m</span>` +
-        '</div>' +
-        '<div class="apexcharts__tooltip_custom_divetime">' +
-        `<span>${w.globals.categoryLabels[dataPointIndex]} min</span>` +
-        '</div>' +
-        '</div>'
+        '<div class="apexcharts__tooltip_custom">'
+        + '<div class="apexcharts__tooltip_custom_depth">'
+        + `<span>${series[seriesIndex][dataPointIndex]} m</span>`
+        + '</div>'
+        + '<div class="apexcharts__tooltip_custom_divetime">'
+        + `<span>${w.globals.categoryLabels[dataPointIndex]} min</span>`
+        + '</div>'
+        + '</div>'
       );
     },
   },
