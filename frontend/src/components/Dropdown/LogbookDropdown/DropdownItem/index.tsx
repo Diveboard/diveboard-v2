@@ -8,14 +8,13 @@ type Props = {
   title: string;
   link: string;
 };
-//it`s a kostyl for color icons
-const classNameDefinition = (title: string) =>
-  title === 'Print' ||
-  title === 'Export' ||
-  title === 'Edit Dive' ||
-  title === 'Copy Property'
-    ? `${styles.stroke} ${styles.item}`
-    : styles.item;
+// it`s a kostyl for color icons
+const classNameDefinition = (title: string) => (title === 'Print'
+  || title === 'Export'
+  || title === 'Edit Dive'
+  || title === 'Copy Property'
+  ? `${styles.stroke} ${styles.item}`
+  : styles.item);
 
 export const LogbookDropdownItem: FC<Props> = ({ title, link, children }) => (
   <Link href={link}>

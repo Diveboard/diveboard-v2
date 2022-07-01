@@ -54,11 +54,6 @@ const DiveItem: FC<Props> = ({
     setShow(() => !isShow);
   };
 
-  // const classNameDefinition = (classtitle: string) =>
-  // className
-  //   ? `${styles[className]} ${styles[classtitle]} `
-  //   : styles[classtitle];
-
   return (
     <div
       className={
@@ -68,7 +63,10 @@ const DiveItem: FC<Props> = ({
       }
     >
       <div className={classes.info}>
-        <div className={classes.number}>#{number}</div>
+        <div className={classes.number}>
+          #
+          {number}
+        </div>
         <div className={classes.date}>{date}</div>
       </div>
       <div className={classes.subwrapper}>
@@ -107,22 +105,34 @@ const DiveItem: FC<Props> = ({
         <div className={classes.more}>
           <ul>
             <li>
-              Trip: <span>{trip}</span>
+              Trip:
+              {' '}
+              <span>{trip}</span>
             </li>
             <li>
-              Dive shop: <span>{diveShop}</span>
+              Dive shop:
+              {' '}
+              <span>{diveShop}</span>
             </li>
             <li>
-              Water: <span>{water}</span>
+              Water:
+              {' '}
+              <span>{water}</span>
             </li>
             <li>
-              Visibility: <span>{visibility}</span>
+              Visibility:
+              {' '}
+              <span>{visibility}</span>
             </li>
             <li>
-              Altitude: <span>{altitude}</span>
+              Altitude:
+              {' '}
+              <span>{altitude}</span>
             </li>
             <li>
-              Featured gear: <span>{featuredGear}</span>
+              Featured gear:
+              {' '}
+              <span>{featuredGear}</span>
             </li>
           </ul>
           <span className={classes.switch} onClick={showHandler}>

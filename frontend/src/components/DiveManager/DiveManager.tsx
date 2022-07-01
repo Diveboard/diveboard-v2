@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+
 import { ButtonGroup } from '../ButtonGroup';
 import KebabButton from '../Buttons/KebabButton/KebabButton';
 import { Checkbox } from '../CheckBox';
-import SetDropdown from '../Dropdown/SetDropdown/setdropdown';
+import { SetDropdown } from '../Dropdown/SetDropdown/setdropdown';
 import { Icon } from '../Icons/Icon';
 import DaveItem from './DiveItem/DiveItem';
+import { DUMMY_DATA, dropdownList, buttons } from './DiveData';
 
 import classes from './DiveManager.module.scss';
-
-import { DUMMY_DATA } from './DummyData';
 
 const DiveManager = () => {
   const [diveMode, setDiveMode] = useState<'recent' | 'oldest' | 'drafts'>(
@@ -16,31 +16,23 @@ const DiveManager = () => {
   );
   const [checkboxItem, setCheckboxItem] = useState(false);
   const [isChangeSelectAll, setChangeSelectAll] = useState(false);
-  const [isShowSettings, setShowSettings] = useState(true);
-
-  const buttons = [
-    {
-      connectedMode: 'recent',
-      text: 'Recent',
-    },
-    {
-      connectedMode: 'oldest',
-      text: 'Oldest',
-    },
-    {
-      connectedMode: 'drafts',
-      text: 'Drafts',
-    },
-  ];
+  const [isShowSettings, setShowSettings] = useState(false);
+  const dropdownButton = useRef(null); // button block
 
   const kebabButtonHandler = () => {
     setShowSettings(() => !isShowSettings);
   };
+
+  const hideDropdown = (status: boolean) => {
+    setShowSettings(status);
+  };
+
   const changeSelectAllHandler = () => {
     // if click another checkbox
     setCheckboxItem(() => !checkboxItem);
     setChangeSelectAll(false); // checkbox "Select All" was`t click
   };
+
   const checkboxHandler = () => {
     // if click checkbox "Select All"
     setCheckboxItem(() => !checkboxItem);
@@ -63,11 +55,19 @@ const DiveManager = () => {
       <div className={classes.wrapper__buttons}>
         <ButtonGroup mode={diveMode} setMode={setDiveMode} buttons={buttons} />
 
-        <KebabButton className="kebab" onClick={kebabButtonHandler}>
-          Settings
-          <Icon iconName="kebab" width={16} height={16} />
-        </KebabButton>
-        <SetDropdown />
+        <div ref={dropdownButton} className={classes.buttones}>
+          <KebabButton className="kebab" onClick={kebabButtonHandler}>
+            Settings
+            <Icon iconName="kebab" width={16} height={16} />
+          </KebabButton>
+        </div>
+        {isShowSettings && (
+          <SetDropdown
+            dropdownList={dropdownList}
+            dropdownButton={dropdownButton}
+            hideDropdown={hideDropdown}
+          />
+        )}
       </div>
       <div className={classes.checkbox}>
         <Checkbox
