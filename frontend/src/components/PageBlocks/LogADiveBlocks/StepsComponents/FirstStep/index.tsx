@@ -72,7 +72,6 @@ export const FirstStep: FC<StepProps> = ({
 
   return (
     <>
-
       <div className={styles.container}>
         <Overview
           overviewData={overview}

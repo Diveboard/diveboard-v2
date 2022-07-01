@@ -37,12 +37,12 @@ export const Input: FC<Props> = ({
   const inputStyle = {
     padding: `16px 16px 16px ${iconName ? '52px' : '16px'}`,
     height: `${height}px`,
-    width: `${width}px`,
+    maxWidth: width ? `${width}px` : '100%',
   };
 
   return (
     <>
-      <div className={styles.inputWrapper}>
+      <div className={styles.inputWrapper} style={{ maxWidth: width }}>
         <input
           type={type}
           style={inputStyle}

@@ -14,7 +14,6 @@ type Props = {
   SecondStepErrors
   setErrors:
   React.Dispatch<React.SetStateAction<SecondStepErrors>>
-
 };
 
 export const Parameters: FC<Props> = ({
@@ -124,7 +123,6 @@ export const Parameters: FC<Props> = ({
           placeholder="min"
         />
       </InputLabelWrapper>
-
     </div>
   );
 };

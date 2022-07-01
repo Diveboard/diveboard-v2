@@ -1,6 +1,6 @@
 import { ApexOptions } from 'apexcharts';
 
-export const getOptions = (divetime: number[]): ApexOptions => ({
+export const getOptions = (diveTime: number[]): ApexOptions => ({
   chart: {
     toolbar: {
       show: false,
@@ -10,6 +10,7 @@ export const getOptions = (divetime: number[]): ApexOptions => ({
       enabled: false,
     },
   },
+
   stroke: {
     curve: 'smooth', // smoother lines
     width: [3], // line thickness
@@ -45,7 +46,7 @@ export const getOptions = (divetime: number[]): ApexOptions => ({
     show: false,
   },
   xaxis: {
-    categories: divetime,
+    categories: diveTime,
     tooltip: {
       // signature when hovering
       enabled: false,
@@ -71,29 +72,22 @@ export const getOptions = (divetime: number[]): ApexOptions => ({
     marker: {
       show: false,
     },
-    custom({ series, seriesIndex, dataPointIndex, w }) {
+    custom({
+      series,
+      seriesIndex,
+      dataPointIndex,
+      w,
+    }) {
       return (
-        '<div class="apexcharts__tooltip_custom">' +
-        '<div class="apexcharts__tooltip_custom_depth">' +
-        `<span>${series[seriesIndex][dataPointIndex]} m</span>` +
-        '</div>' +
-        '<div class="apexcharts__tooltip_custom_divetime">' +
-        `<span>${w.globals.categoryLabels[dataPointIndex]} min</span>` +
-        '</div>' +
-        '</div>'
+        '<div class="apexcharts__tooltip_custom">'
+        + '<div class="apexcharts__tooltip_custom_depth">'
+        + `<span>${series[seriesIndex][dataPointIndex]} m</span>`
+        + '</div>'
+        + '<div class="apexcharts__tooltip_custom_divetime">'
+        + `<span>${w.globals.categoryLabels[dataPointIndex]} min</span>`
+        + '</div>'
+        + '</div>'
       );
     },
   },
 });
-
-// responsive: [
-//   {
-//     breakpoint: 880,
-//     options: {
-//       // new options for 880px
-//       chart: {
-//         width: 650,
-//       },
-//     },
-//   },
-// ],

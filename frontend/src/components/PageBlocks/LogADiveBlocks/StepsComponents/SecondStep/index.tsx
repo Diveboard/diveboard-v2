@@ -16,54 +16,6 @@ import { SecondStepType } from '../../types/stepTypes';
 import { SecondStepErrors } from '../../types/errorTypes';
 import styles from './styles.module.scss';
 
-// const DUMMY_DATA = [
-//   {
-//     depth: 2.74,
-//     diveTime: 30,
-//     temperature: 287.2,
-//   },
-//   {
-//     depth: 10.74,
-//     diveTime: 70,
-//     temperature: 245.4,
-//   },
-//   {
-//     depth: 12.74,
-//     diveTime: 10,
-//     temperature: 217.8,
-//   },
-//   {
-//     depth: 120.74,
-//     diveTime: 50,
-//     temperature: 285.7,
-//   },
-//   {
-//     depth: 8.74,
-//     diveTime: 18,
-//     temperature: 299.0,
-//   },
-//   {
-//     depth: 45.74,
-//     diveTime: 7,
-//     temperature: 310.5,
-//   },
-//   {
-//     depth: 3.74,
-//     diveTime: 28,
-//     temperature: 210.9,
-//   },
-//   {
-//     depth: 0,
-//     diveTime: 49,
-//     temperature: 210.9,
-//   },
-//   {
-//     depth: 14.74,
-//     diveTime: 37,
-//     temperature: 210.9,
-//   },
-// ];
-
 export const SecondStep: FC<StepProps> = ({
   step,
   setStep,
