@@ -34,3 +34,15 @@
     }
   }
 }
+
+
+@media (max-width: 768px) {
+  .indicatorWrapper {
+    .indicatorItem {
+      height: 3px;
+      border-radius: 2px;
+      margin-right: 4px;
+
+    }
+  }
+}

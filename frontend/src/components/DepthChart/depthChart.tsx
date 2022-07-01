@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { getOptions } from './getChartOptions';
+import { useWindowWidthNumber } from '../../hooks/useWindowWidthNumber';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -18,6 +19,7 @@ type Props = {
 export const DepthChart: FC<Props> = ({ points }): JSX.Element => {
   const [data, setData] = useState([]);
   const [diveTimeData, setDiveTimeData] = useState([]);
+  const width = useWindowWidthNumber(100);
 
   useEffect(() => {
     const depth = [];
@@ -43,8 +45,8 @@ export const DepthChart: FC<Props> = ({ points }): JSX.Element => {
       options={getOptions(diveTimeData)}
       series={data}
       type="area"
-      height={423}
-      width={869}
+      height={width >= 890 ? 423 : width / 2.1}
+      width={width >= 890 ? 870 : width - 20}
     />
   );
 };

@@ -37,3 +37,27 @@
     }
   }
 }
+
+
+@media (max-width: 768px) {
+  .secondStep {
+    p {
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .buttonGroup {
+      display: flex;
+      flex-direction: column;
+      max-width: 310px;
+      margin: 20px auto 0 auto;
+
+      > button {
+        &:first-child {
+          margin-right: 0;
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+}

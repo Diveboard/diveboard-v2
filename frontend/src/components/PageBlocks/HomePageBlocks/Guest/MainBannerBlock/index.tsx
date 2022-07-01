@@ -57,7 +57,6 @@ export const MainBannerBlock = () => {
               value={inputValue}
               setValue={setInputValue}
               placeholder="location"
-              width={320}
             />
           </div>
 
