@@ -4,7 +4,7 @@ import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 
-import DiveManagerBlock from '../src/components/DiveManager/DiveManager';
+import DiveManagerBlock from '../src/components/DiveManager';
 
 const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   user,
