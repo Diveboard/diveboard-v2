@@ -1,6 +1,7 @@
 .wrapper {
   padding: 110px 75px 100px 75px;
   max-width: 1249px;
+  
   &__buttons {
     margin-top: 30px;
     display: flex;
@@ -28,6 +29,7 @@
   flex-direction: column;
 }
 
-.buttones {
+.button__wrap {
   display: flex;
 }
+
