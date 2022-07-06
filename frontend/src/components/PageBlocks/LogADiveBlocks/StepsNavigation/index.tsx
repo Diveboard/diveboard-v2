@@ -1,32 +1,42 @@
 import React, { FC } from 'react';
 import { Button } from '../../../Buttons/Button';
-import styles from './styles.module.scss';
 import { Icon } from '../../../Icons/Icon';
 import { StepType } from '../types/commonTypes';
+import styles from './styles.module.scss';
 
 type Props = {
   setStep: React.Dispatch<React.SetStateAction<StepType>>
+  setStepData: () => void
+  setErrors: () => boolean
 };
 
 export const StepsNavigation: FC<Props> = ({
   setStep,
+  setStepData,
+  setErrors,
 }) => {
   const setPrev = () => {
-    setStep((prevState) => {
-      if (prevState !== 1) {
-        return prevState - 1 as StepType;
-      }
-      return prevState as StepType;
-    });
+    if (!setErrors()) {
+      setStepData();
+      setStep((prevState) => {
+        if (prevState !== 1) {
+          return prevState - 1 as StepType;
+        }
+        return prevState as StepType;
+      });
+    }
   };
 
   const setNext = () => {
-    setStep((prevState) => {
-      if (prevState !== 9) {
-        return prevState + 1 as StepType;
-      }
-      return prevState as StepType;
-    });
+    if (!setErrors()) {
+      setStepData();
+      setStep((prevState) => {
+        if (prevState !== 9) {
+          return prevState + 1 as StepType;
+        }
+        return prevState as StepType;
+      });
+    }
   };
 
   return (

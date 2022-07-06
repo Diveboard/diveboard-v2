@@ -1,0 +1,37 @@
+.parameters {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+
+  > div {
+    margin-right: 5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .parameters {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+
+    > div {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+
+@media (max-width: 529px) {
+  .parameters {
+    > div {
+      &:last-child {
+        > div {
+          max-width: 492px !important;
+
+          > input {
+            max-width: 492px !important;
+          }
+        }
+      }
+    }
+  }
+}
