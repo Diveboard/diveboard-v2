@@ -1,0 +1,35 @@
+.wrapper {
+  padding: 110px 75px 100px 75px;
+  max-width: 1249px;
+  
+  &__buttons {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+}
+
+.title {
+  font-weight: 600;
+  font-size: 55px;
+  line-height: 70px;
+  color: #000345;
+}
+
+.checkbox {
+  margin-top: 26px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.divelist {
+  display: flex;
+  flex-direction: column;
+}
+
+.button__wrap {
+  display: flex;
+}
+

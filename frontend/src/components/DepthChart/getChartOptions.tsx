@@ -10,7 +10,6 @@ export const getOptions = (diveTime: number[]): ApexOptions => ({
       enabled: false,
     },
   },
-
   stroke: {
     curve: 'smooth', // smoother lines
     width: [3], // line thickness

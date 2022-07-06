@@ -4,10 +4,14 @@ import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 
-const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
+import DiveManagerBlock from '../src/components/DiveManager';
+
+const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
+  user,
+}) => (
   <AuthLayout user={user}>
     <MainLayout>
-      Dive Manager
+      <DiveManagerBlock />
     </MainLayout>
   </AuthLayout>
 );
@@ -24,7 +28,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   const {
-    email, photoURL = '', displayName = '',
+    email,
+    photoURL = '',
+    displayName = '',
   } = await firebaseAdmin.auth().getUser(uid);
 
   return {
