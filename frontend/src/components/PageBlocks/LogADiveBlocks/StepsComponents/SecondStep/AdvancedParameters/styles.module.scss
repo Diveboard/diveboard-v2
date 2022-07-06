@@ -1,0 +1,14 @@
+.advancedParametersWrapper {
+  margin-top: 30px;
+
+  .content {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    >div{
+      margin-right: 5px;
+      margin-bottom: 20px;
+    }
+  }
+
+}

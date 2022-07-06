@@ -1,5 +1,5 @@
 import React, { FC, useContext, useState } from 'react';
-import { LanguageDropdown } from '../../../../../Dropdown/languageDropdawn';
+import { Dropdown } from '../../../../../Dropdown/Dropdawn';
 import { SaveThisButton } from '../SaveThisButton';
 import { MarginWrapper } from '../../../../../MarginWrapper';
 import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
@@ -38,7 +38,11 @@ export const EditedPreferencesLanguage: FC<Props> = ({
 
   return (
     <div>
-      <LanguageDropdown language={language} setLanguage={setLanguage} />
+      <Dropdown
+        item={language}
+        setItem={setLanguage}
+        allItems={['English', 'Italian', 'Spanish', 'German']}
+      />
 
       <MarginWrapper top={10} display="block">
         <SaveThisButton

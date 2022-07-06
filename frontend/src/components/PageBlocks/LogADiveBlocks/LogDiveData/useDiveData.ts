@@ -1,9 +1,9 @@
 import { useReducer } from 'react';
 import { diveDataReducer } from './reducer/reducer';
 import { initialDiveDataState } from './state';
-import { DiveDataActions, firstStepDiveDataActions } from './actions';
+import { diveDataActions, diveStepDataActions } from './actions';
 import { StepType } from '../types/commonTypes';
-import { StepsDataType } from '../types/stepTypes';
+import { FirstStepType, SecondStepType, StepsDataType } from '../types/stepTypes';
 
 export const UseDiveData = () => {
   const [state, dispatch] = useReducer(diveDataReducer, initialDiveDataState);
@@ -11,7 +11,7 @@ export const UseDiveData = () => {
   console.log('state', { state });
 
   const setCurrentStep = (step: StepType) => {
-    dispatch(DiveDataActions.setStep(step));
+    dispatch(diveDataActions.setStep(step));
   };
 
   const getCurrentStep = (): StepType => state.step;
@@ -19,7 +19,9 @@ export const UseDiveData = () => {
   const setStepData = (step: StepType, StepData: StepsDataType) => {
     switch (step) {
       case 1:
-        return dispatch(firstStepDiveDataActions.setFirstStepData(StepData));
+        return dispatch(diveStepDataActions.setFirstStepData(StepData as FirstStepType));
+      case 2:
+        return dispatch(diveStepDataActions.setSecondStepData(StepData as SecondStepType));
       default:
         throw new Error('incorrect step');
     }
@@ -29,6 +31,8 @@ export const UseDiveData = () => {
     switch (step) {
       case 1:
         return state.firstStep;
+      case 2:
+        return state.secondStep;
       default:
         throw new Error('incorrect step');
     }

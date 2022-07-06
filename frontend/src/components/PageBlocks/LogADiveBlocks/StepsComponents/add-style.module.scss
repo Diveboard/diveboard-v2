@@ -1,0 +1,10 @@
+.addStyle {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #0059DE;
+  &:hover{
+    cursor: pointer;
+    opacity: 0.8;
+  }
+}

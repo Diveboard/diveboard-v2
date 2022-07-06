@@ -4,7 +4,7 @@
   box-shadow: inset 0 2px 0 rgba(0, 3, 69, 0.05);
   display: flex;
   justify-content: center;
-
+  height: 52px;
 
   .navigation {
     padding: 0 10px;
@@ -26,5 +26,15 @@
       line-height: 13px;
       color: #FFFFFF
     }
+  }
+}
+
+@media (max-width: 768px) {
+  .navigationWrapper {
+    position: fixed;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    z-index: 100;
   }
 }

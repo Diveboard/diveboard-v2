@@ -12,6 +12,7 @@ type Props = {
   disabled?: boolean
   height?: number;
   width?: number
+  type?: 'text' | 'number'
 };
 
 export const Input: FC<Props> = ({
@@ -24,6 +25,7 @@ export const Input: FC<Props> = ({
   disabled,
   height,
   width,
+  type,
 }) => {
   const getInputStyle = (errorValue: string) => {
     if (errorValue) {
@@ -35,13 +37,14 @@ export const Input: FC<Props> = ({
   const inputStyle = {
     padding: `16px 16px 16px ${iconName ? '52px' : '16px'}`,
     height: `${height}px`,
-    width: `${width}px`,
+    maxWidth: width ? `${width}px` : '100%',
   };
 
   return (
     <>
-      <div className={styles.inputWrapper}>
+      <div className={styles.inputWrapper} style={{ maxWidth: width }}>
         <input
+          type={type}
           style={inputStyle}
           value={value}
           onChange={(event) => {
@@ -53,7 +56,6 @@ export const Input: FC<Props> = ({
           className={getInputStyle(error)}
           placeholder={placeholder}
           disabled={disabled}
-
         />
 
         {iconName && (

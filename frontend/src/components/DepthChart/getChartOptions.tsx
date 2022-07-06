@@ -1,6 +1,6 @@
 import { ApexOptions } from 'apexcharts';
 
-export const getOptions = (divetime: number[]): ApexOptions => ({
+export const getOptions = (diveTime: number[]): ApexOptions => ({
   chart: {
     toolbar: {
       show: false,
@@ -45,7 +45,7 @@ export const getOptions = (divetime: number[]): ApexOptions => ({
     show: false,
   },
   xaxis: {
-    categories: divetime,
+    categories: diveTime,
     tooltip: {
       // signature when hovering
       enabled: false,
@@ -72,7 +72,10 @@ export const getOptions = (divetime: number[]): ApexOptions => ({
       show: false,
     },
     custom({
-      series, seriesIndex, dataPointIndex, w,
+      series,
+      seriesIndex,
+      dataPointIndex,
+      w,
     }) {
       return (
         '<div class="apexcharts__tooltip_custom">'
@@ -87,15 +90,3 @@ export const getOptions = (divetime: number[]): ApexOptions => ({
     },
   },
 });
-
-// responsive: [
-//   {
-//     breakpoint: 880,
-//     options: {
-//       // new options for 880px
-//       chart: {
-//         width: 650,
-//       },
-//     },
-//   },
-// ],

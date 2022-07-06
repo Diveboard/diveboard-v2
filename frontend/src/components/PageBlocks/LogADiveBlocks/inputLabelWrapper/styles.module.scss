@@ -1,0 +1,13 @@
+.wrapper {
+  max-width: max-content;
+  display: flex;
+  flex-direction: column;
+
+  .label {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: #000345;
+    margin-bottom: 4px;
+  }
+}

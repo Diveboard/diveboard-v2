@@ -4,7 +4,7 @@ export type FirstStepType =
   {
     overview:
     {
-      diveNumber: string,
+      diveNumber: number,
       notes: string,
       tripName: string,
     },
@@ -12,7 +12,9 @@ export type FirstStepType =
     {
       overReview: ScoreType,
       diveDifficulty: ScoreType,
-      marineLifeQuality: ScoreType
+      marineLifeQuality: ScoreType,
+      wreck: boolean,
+      bigFish: boolean,
     },
     diveActivities: {
       recreational: boolean,
@@ -29,4 +31,39 @@ export type FirstStepType =
     }
   };
 
-export type StepsDataType = FirstStepType;
+export type SecondStepType = {
+  parameters: {
+    time: string;
+    date: Date;
+    maxDepth: number;
+    duration: number;
+    surfaceInterval: number;
+    safetySpots: {
+      id: number;
+      depth: number;
+      period: number;
+    }[]
+  }
+  advancedParameters: {
+    surfaceTemp: number;
+    bottomTemp: number;
+    weights: number;
+    waterVisibility: 'bad' | 'average' | 'good' | 'excellent';
+    current: 'none' | 'light' | 'medium' | ' strong' | 'extreme';
+    altitude: number;
+    waterType: 'salt' | 'fresh';
+  }
+  tanks: {
+    id: number;
+    cylinder: '1x' | '2x';
+    volume: number;
+    size: 'L' | 'cuft';
+    material: 'steel' | 'aluminum' | 'carbon';
+    mixture: 'air' | 'nitrox' | 'trimix';
+    pressureStart: number;
+    pressureEnd: number;
+    pressureMeasures: 'bar' | 'psi';
+  }[]
+};
+
+export type StepsDataType = FirstStepType | SecondStepType;

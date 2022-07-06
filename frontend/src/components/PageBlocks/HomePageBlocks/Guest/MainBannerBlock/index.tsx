@@ -14,6 +14,7 @@ export const MainBannerBlock = () => {
   const [filters, setFilters] = useState<'spots' | 'shops' | 'regions'>(
     'spots',
   );
+
   const buttons = [{
     connectedMode: 'spots',
     text: 'Spots',
@@ -26,6 +27,7 @@ export const MainBannerBlock = () => {
     connectedMode: 'regions',
     text: 'Regions',
   }];
+
   const search = () => {};
   return (
     <div className={styles.mainBannerWrapper}>
