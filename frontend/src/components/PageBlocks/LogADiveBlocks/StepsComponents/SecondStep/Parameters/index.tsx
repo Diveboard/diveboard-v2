@@ -6,6 +6,7 @@ import { Input } from '../../../../../Input/CommonInput';
 import { SecondStepType } from '../../../types/stepTypes';
 import styles from './styles.module.scss';
 import { SecondStepErrors } from '../../../types/errorTypes';
+import { setParams } from '../../../LogDiveHelpers/setParams/setParams';
 
 type Props = {
   parameters: SecondStepType['parameters'];
@@ -22,58 +23,37 @@ export const Parameters: FC<Props> = ({
   errors,
   setErrors,
 }) => {
-  const setTime = (time: string) => {
-    setParameters({
-      ...parameters,
-      time,
-    });
-  };
+  const params = setParams(
+    parameters,
+    setParameters,
+  );
 
-  const setDate = (currentDate: Date) => {
-    setParameters({
-      ...parameters,
-      date: currentDate,
-    });
-  };
-
-  const setMaxDepth = (depth: string) => {
-    setParameters({
-      ...parameters,
-      maxDepth: +depth,
-    });
-  };
-
-  const setDuration = (duration: string) => {
-    setParameters({
-      ...parameters,
-      duration: +duration,
-    });
-  };
-
-  const setSurfaceInterval = (surfaceInterval: string) => {
-    setParameters({
-      ...parameters,
-      surfaceInterval: +surfaceInterval,
-    });
-  };
+  const errorsParams = setParams(
+    errors,
+    setErrors,
+  );
 
   return (
     <div className={styles.parameters}>
       <InputLabelWrapper label="Time In">
         <TimePickerInput
-          setTime={setTime}
+          setTime={(val) => params('time', val)}
           currentTime={parameters.time}
           error={errors.timeError}
-          setError={() => { setErrors({ ...errors, timeError: '' }); }}
+          setError={(val) => {
+            errorsParams('timeError', val as string);
+          }}
         />
       </InputLabelWrapper>
 
       <InputLabelWrapper label="Date">
         <DatePickerInput
           date={parameters.date}
-          setDate={setDate}
+          setDate={(val) => params('date', val)}
           error={errors.dateError}
-          setError={() => { setErrors({ ...errors, dateError: '' }); }}
+          setError={(val) => {
+            errorsParams('dateError', val as string);
+          }}
         />
       </InputLabelWrapper>
 
@@ -81,16 +61,13 @@ export const Parameters: FC<Props> = ({
         <Input
           type="number"
           value={parameters.maxDepth ? parameters.maxDepth.toString() : ''}
-          setValue={setMaxDepth}
+          setValue={(val) => params('maxDepth', +(val as string))}
           height={48}
           width={165}
           placeholder="m"
           error={errors.maxDepthError}
-          setError={(value) => {
-            setErrors({
-              ...errors,
-              maxDepthError: value as string,
-            });
+          setError={(val) => {
+            errorsParams('maxDepthError', val as string);
           }}
         />
       </InputLabelWrapper>
@@ -99,16 +76,13 @@ export const Parameters: FC<Props> = ({
         <Input
           type="number"
           value={parameters.duration ? parameters.duration.toString() : ''}
-          setValue={setDuration}
+          setValue={(val) => params('duration', +(val as string))}
           height={48}
           width={165}
           placeholder="min"
           error={errors.durationError}
-          setError={(value) => {
-            setErrors({
-              ...errors,
-              durationError: value as string,
-            });
+          setError={(val) => {
+            errorsParams('durationError', val as string);
           }}
         />
       </InputLabelWrapper>
@@ -117,7 +91,7 @@ export const Parameters: FC<Props> = ({
         <Input
           type="number"
           value={parameters.surfaceInterval ? parameters.surfaceInterval.toString() : ''}
-          setValue={setSurfaceInterval}
+          setValue={(val) => params('surfaceInterval', +(val as string))}
           height={48}
           width={165}
           placeholder="min"
