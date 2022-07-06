@@ -1,33 +1,43 @@
 import React, { FC, useRef, useState } from 'react';
-import { LogbookDropdownItem } from '../LogbookDropdown/DropdownItem';
+
+import { useOutsideClick } from '../../../hooks/useOutsideClick';
+import { SetDropdownItem } from './SetDropdownItem';
 
 import styles from './styles.module.scss';
-import { useOutsideClick } from '../../../hooks/useOutsideClick';
 
 type Props = {
   dropdownList: {
     id: number;
     title: string;
-    link: string;
     svgItem: JSX.Element;
+    onClick: React.Dispatch<React.SetStateAction<boolean>>; // setState popup modal
   }[];
   dropdownButton: React.RefObject<HTMLDivElement>;
-  hideDropdown: React.Dispatch<React.SetStateAction<boolean>>;
+  hideDropdown: (status: boolean) => void;
+  showBackdrop: (status: boolean) => void;
 };
 
 export const SetDropdown: FC<Props> = ({
   hideDropdown,
   dropdownButton,
   dropdownList,
+  showBackdrop,
 }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const dropdownElements = dropdownList.map((item) => (
-    <LogbookDropdownItem key={item.id} title={item.title} link={item.link}>
+    <SetDropdownItem
+      key={item.id}
+      title={item.title}
+      onClick={item.onClick}
+      hideDropdown={hideDropdown}
+      showBackdrop={showBackdrop}
+    >
       {item.svgItem}
-    </LogbookDropdownItem>
+    </SetDropdownItem>
   ));
+
   const outsideClickHandler = (ev: Event): void => {
     const target = ev.target as HTMLElement;
     if (
@@ -37,6 +47,7 @@ export const SetDropdown: FC<Props> = ({
       hideDropdown(false);
     }
   };
+
   useOutsideClick(outsideClickHandler, dropdownRef);
 
   return (

@@ -23,3 +23,24 @@
     background: #fdc90d;
   }
 }
+
+.popup {
+  height: 48px;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000345;
+  background: #fdc90d;
+  border-radius: 30px;
+  padding: 14px 0;
+
+  &__small {
+    width: 183px;
+  }
+  &__big {
+    width: 300px;
+  }
+}
