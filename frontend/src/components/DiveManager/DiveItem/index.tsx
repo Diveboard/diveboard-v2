@@ -2,10 +2,10 @@ import React, { FC, useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 import { Checkbox } from '../../CheckBox';
-import DiveInfo from '../DiveInfo/DiveInfo';
+import DiveInfo from '../DiveInfo';
 import { DummyDataObj } from '../DUMMY_DATA_OBJ';
 
-import classes from './DiveItem.module.scss';
+import styles from './styles.module.scss';
 
 type Props = {
   itm: DummyDataObj;
@@ -14,7 +14,7 @@ type Props = {
   isChange: boolean;
 };
 
-const DiveItem: FC<Props> = ({
+export const DiveItem: FC<Props> = ({
   itm,
   isSelectAll,
   changeIsSelectAll,
@@ -58,19 +58,19 @@ const DiveItem: FC<Props> = ({
     <div
       className={
         !isShow
-          ? `${classes.wrapper} ${classes.wrapper__higher} `
-          : classes.wrapper
+          ? `${styles.wrapper} ${styles.wrapper__higher} `
+          : styles.wrapper
       }
     >
-      <div className={classes.info}>
-        <div className={classes.number}>
+      <div className={styles.info}>
+        <div className={styles.number}>
           #
           {number}
         </div>
-        <div className={classes.date}>{date}</div>
+        <div className={styles.date}>{date}</div>
       </div>
-      <div className={classes.subwrapper}>
-        <div className={classes.spot}>{spot}</div>
+      <div className={styles.subwrapper}>
+        <div className={styles.spot}>{spot}</div>
         <Checkbox
           name="name"
           className="column"
@@ -78,7 +78,7 @@ const DiveItem: FC<Props> = ({
           onChecked={checkboxHandler}
         />
       </div>
-      <div className={classes.infowrapper}>
+      <div className={styles.infowrapper}>
         <DiveInfo
           diveTime={divetime}
           deepness={depth}
@@ -86,7 +86,7 @@ const DiveItem: FC<Props> = ({
         />
 
         {isShow && (
-          <span className={classes.switch} onClick={showHandler}>
+          <span className={styles.switch} onClick={showHandler}>
             More
           </span>
         )}
@@ -96,13 +96,13 @@ const DiveItem: FC<Props> = ({
         in={!isShow}
         timeout={200}
         classNames={{
-          enterActive: classes.enterActive,
-          exitActive: classes.exitActive,
+          enterActive: styles.enterActive,
+          exitActive: styles.exitActive,
         }}
         mountOnEnter
         unmountOnExit
       >
-        <div className={classes.more}>
+        <div className={styles.more}>
           <ul>
             <li>
               Trip:
@@ -135,7 +135,7 @@ const DiveItem: FC<Props> = ({
               <span>{featuredGear}</span>
             </li>
           </ul>
-          <span className={classes.switch} onClick={showHandler}>
+          <span className={styles.switch} onClick={showHandler}>
             Less
           </span>
         </div>
@@ -143,5 +143,3 @@ const DiveItem: FC<Props> = ({
     </div>
   );
 };
-
-export default DiveItem;

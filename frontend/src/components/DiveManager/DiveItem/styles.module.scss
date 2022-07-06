@@ -58,6 +58,7 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 10px;
+
   ul {
     display: flex;
     padding-left: 0;
@@ -114,6 +115,7 @@
     transform: translateY(0);
   }
 }
+
 @keyframes fade-out {
   0% {
     opacity: 1;

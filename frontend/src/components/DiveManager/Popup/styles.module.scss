@@ -1,0 +1,42 @@
+.popup {
+  width: 340px;
+  padding: 50px 20px;
+  position: relative;
+  background: #ffffff;
+  box-shadow: 0px 8px 15px rgba(0, 62, 89, 0.06);
+  border-radius: 15px;
+  margin-bottom: 30px;
+
+  position: fixed;
+  top: 30vh;
+  margin-left: auto;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 16;
+
+  span {
+    cursor: pointer;
+  }
+}
+
+.cross {
+  position: absolute;
+  top: 13px;
+  right: 33px;
+
+  &::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    background-image: url('/appIcons/cross.svg');
+  }
+}
+
+.title {
+  font-weight: 600;
+  font-size: 21px;
+  line-height: 29px;
+  text-align: center;
+  color: #000345;
+}

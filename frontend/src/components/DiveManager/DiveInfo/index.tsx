@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Icon } from '../../Icons/Icon';
-import classes from './DiveInfo.module.scss';
+import styles from './styles.module.scss';
 
 type Props = {
   diveTime: number;
@@ -9,8 +9,8 @@ type Props = {
 };
 
 const DiveInfo: FC<Props> = ({ diveTime, deepness, diversCount }) => (
-  <div className={classes.dataWrapper}>
-    <div className={classes.dataItem}>
+  <div className={styles.dataWrapper}>
+    <div className={styles.dataItem}>
       <Icon iconName="time" size={16} />
       <span>
         {diveTime}
@@ -18,7 +18,7 @@ const DiveInfo: FC<Props> = ({ diveTime, deepness, diversCount }) => (
         min
       </span>
     </div>
-    <div className={classes.dataItem}>
+    <div className={styles.dataItem}>
       <Icon iconName="depth" size={16} />
       <span>
         {deepness}
@@ -26,7 +26,7 @@ const DiveInfo: FC<Props> = ({ diveTime, deepness, diversCount }) => (
         m
       </span>
     </div>
-    <div className={classes.dataItem}>
+    <div className={styles.dataItem}>
       <Icon iconName="divers" size={16} />
       <span>
         {diversCount}
