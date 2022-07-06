@@ -19,9 +19,9 @@ import { PopupCopy } from './Popup/PopupCopy';
 import { PopupDelete } from './Popup/PopupDelete';
 import { PopupUnpublish } from './Popup/PopupUnpublish';
 import { Popup } from './Popup';
+import { Backdrop } from '../Backdrop';
 
 import styles from './styles.module.scss';
-import { Backdrop } from '../Backdrop';
 
 const DiveManager = () => {
   const [diveMode, setDiveMode] = useState<'recent' | 'oldest' | 'drafts'>('recent');
@@ -32,6 +32,7 @@ const DiveManager = () => {
   const [isShowPopupUnpublish, setShowPopupUnpublish] = useState(false);
   const [isShowPopupDelete, setShowPopupDelete] = useState(false);
   const dropdownButton = useRef(null); // button block
+  const dropdownKebab = useRef(null); // kebab block
   const [isBackdrop, setBackdrop] = useState(false);
 
   const titleCopy = 'Select Properties to Copy';
@@ -139,7 +140,14 @@ const DiveManager = () => {
 
   return (
     <section className={styles.wrapper}>
-      <div className={styles.title}>Dive Manager</div>
+      <div className={styles.subheader}>
+        <div className={styles.title}>Dive Manager</div>
+        <div ref={dropdownKebab}>
+          <KebabButton className="no__border" onClick={kebabButtonHandler}>
+            <Icon iconName="kebab" width={24} height={24} />
+          </KebabButton>
+        </div>
+      </div>
       {isShowPopupCopy && (
         <Popup closePopup={closePopup} title={titleCopy}>
           <PopupCopy copyButtonHandler={copyButtonHandler} />
@@ -165,7 +173,7 @@ const DiveManager = () => {
           <div className={styles.wrapper__buttons}>
             <ButtonGroup mode={diveMode} setMode={setDiveMode} buttons={buttons} />
 
-            <div ref={dropdownButton} className={styles.buttones}>
+            <div ref={dropdownButton}>
               <KebabButton className="kebab" onClick={kebabButtonHandler}>
                 Settings
                 <Icon iconName="kebab" width={16} height={16} />
@@ -174,11 +182,16 @@ const DiveManager = () => {
             {isShowSettings && (
               <SetDropdown
                 dropdownList={dropdownList}
-                dropdownButton={dropdownButton}
+                dropdownButtons={[dropdownButton, dropdownKebab]}
                 hideDropdown={hideDropdown}
                 showBackdrop={backdropHandler}
               />
             )}
+            <div className={styles.checkbox__mobile}>
+              <Checkbox name="name" className="column" checked={checkboxItem} onChecked={checkboxHandler}>
+                Select All
+              </Checkbox>
+            </div>
           </div>
           <div className={styles.checkbox}>
             <Checkbox name="name" className="column" checked={checkboxItem} onChecked={checkboxHandler}>
