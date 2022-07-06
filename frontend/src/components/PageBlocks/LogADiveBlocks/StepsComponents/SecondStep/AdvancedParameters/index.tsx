@@ -1,9 +1,10 @@
 import React, { FC } from 'react';
 import { Input } from '../../../../../Input/CommonInput';
 import { InputLabelWrapper } from '../../../inputLabelWrapper';
+import { Dropdown } from '../../../../../Dropdown/Dropdawn';
+import { setParams } from '../../../LogDiveHelpers/setParams/setParams';
 import { SecondStepType } from '../../../types/stepTypes';
 import styles from './styles.module.scss';
-import { Dropdown } from '../../../../../Dropdown/Dropdawn';
 
 type Props = {
   advancedParameters: SecondStepType['advancedParameters'];
@@ -14,53 +15,10 @@ export const AdvancedParameters: FC<Props> = ({
   advancedParameters,
   setAdvancedParameters,
 }) => {
-  const setSurfaceTemp = (surfaceTemp: string) => {
-    setAdvancedParameters({
-      ...advancedParameters,
-      surfaceTemp: +surfaceTemp,
-    });
-  };
-  const setBottomTemp = (bottomTemp: string) => {
-    setAdvancedParameters({
-      ...advancedParameters,
-      bottomTemp: +bottomTemp,
-    });
-  };
-  const setWeights = (weights: string) => {
-    setAdvancedParameters({
-      ...advancedParameters,
-      weights: +weights,
-    });
-  };
-
-  const setWaterVisibility = (waterVisibility:
-  SecondStepType['advancedParameters']['waterVisibility']) => {
-    setAdvancedParameters({
-      ...advancedParameters,
-      waterVisibility,
-    });
-  };
-
-  const setCurrent = (current:
-  SecondStepType['advancedParameters']['current']) => {
-    setAdvancedParameters({
-      ...advancedParameters,
-      current,
-    });
-  };
-
-  const setAltitude = (altitude: string) => {
-    setAdvancedParameters({ ...advancedParameters, altitude: +altitude });
-  };
-
-  const setWaterType = (
-    waterType: SecondStepType['advancedParameters']['waterType'],
-  ) => {
-    setAdvancedParameters({
-      ...advancedParameters,
-      waterType,
-    });
-  };
+  const params = setParams(
+    advancedParameters,
+    setAdvancedParameters,
+  );
 
   return (
     <div className={styles.advancedParametersWrapper}>
@@ -70,7 +28,7 @@ export const AdvancedParameters: FC<Props> = ({
           <Input
             type="number"
             value={advancedParameters.surfaceTemp ? `${advancedParameters.surfaceTemp}` : ''}
-            setValue={setSurfaceTemp}
+            setValue={(val) => params('surfaceTemp', +(val as string))}
             height={48}
             width={165}
             placeholder="ºC"
@@ -81,7 +39,7 @@ export const AdvancedParameters: FC<Props> = ({
           <Input
             type="number"
             value={advancedParameters.bottomTemp ? `${advancedParameters.bottomTemp}` : ''}
-            setValue={setBottomTemp}
+            setValue={(val) => params('bottomTemp', +(val as string))}
             height={48}
             width={165}
             placeholder="ºC"
@@ -92,7 +50,7 @@ export const AdvancedParameters: FC<Props> = ({
           <Input
             type="number"
             value={advancedParameters.weights ? `${advancedParameters.weights}` : ''}
-            setValue={setWeights}
+            setValue={(val) => params('weights', +(val as string))}
             height={48}
             width={165}
             placeholder="kg"
@@ -102,7 +60,10 @@ export const AdvancedParameters: FC<Props> = ({
         <InputLabelWrapper label="Water visibility:">
           <Dropdown
             item={advancedParameters.waterVisibility}
-            setItem={setWaterVisibility}
+            setItem={(val) => params(
+              'waterVisibility',
+              val as typeof advancedParameters.waterVisibility,
+            )}
             allItems={['bad', 'average', 'good', 'excellent']}
             width={165}
           />
@@ -112,7 +73,10 @@ export const AdvancedParameters: FC<Props> = ({
           <Dropdown
             item={advancedParameters.current}
             setItem={
-              setCurrent
+              (val) => params(
+                'current',
+                val as typeof advancedParameters.current,
+              )
             }
             allItems={['none', 'light', 'medium', ' strong', 'extreme']}
             width={165}
@@ -123,7 +87,10 @@ export const AdvancedParameters: FC<Props> = ({
           <Input
             type="number"
             value={advancedParameters.altitude ? `${advancedParameters.altitude}` : ''}
-            setValue={setAltitude}
+            setValue={(val) => params(
+              'altitude',
+              +(val as string),
+            )}
             height={48}
             width={165}
             placeholder="m"
@@ -134,7 +101,10 @@ export const AdvancedParameters: FC<Props> = ({
           <Dropdown
             item={advancedParameters.waterType}
             setItem={
-              setWaterType
+              (val) => params(
+                'waterType',
+                val as typeof advancedParameters.waterType,
+              )
             }
             allItems={['salt', 'fresh']}
             width={165}

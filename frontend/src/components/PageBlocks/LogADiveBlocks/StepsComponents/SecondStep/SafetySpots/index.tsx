@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
-import { SecondStepType } from '../../../types/stepTypes';
 import { InputLabelWrapper } from '../../../inputLabelWrapper';
-import styles from './styles.module.scss';
 import { Icon } from '../../../../../Icons/Icon';
 import { incrementId } from '../../../LogDiveHelpers/incrementId';
 import { Input } from '../../../../../Input/CommonInput';
 import { MarginWrapper } from '../../../../../MarginWrapper';
+import { SecondStepType } from '../../../types/stepTypes';
+import styles from './styles.module.scss';
 
 type Props = {
   parameters: SecondStepType['parameters'];
@@ -89,7 +89,6 @@ export const SafetySpots: FC<Props> = ({
         width={270}
         placeholder="mins"
       />
-
     </div>
   ));
 
