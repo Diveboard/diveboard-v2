@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "format": "prettier-eslint \"src/**/*.js\"",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -14,6 +15,7 @@
     "@stripe/react-stripe-js": "^1.7.2",
     "@types/google.maps": "^3.48.6",
     "@types/js-cookie": "^3.0.1",
+    "@types/react-transition-group": "^4.4.5",
     "apexcharts": "^3.35.3",
     "axios": "^0.26.1",
     "firebase": "^9.6.8",
@@ -32,6 +34,7 @@
     "react-datepicker": "^4.8.0",
     "react-apexcharts": "^1.4.0",
     "react-dom": "17.0.2",
+    "react-transition-group": "^4.4.2",
     "sass": "^1.49.8",
     "webpack-shell-plugin-next": "^2.2.2",
     "workbox-core": "^6.5.3",
