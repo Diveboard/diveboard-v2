@@ -94,6 +94,7 @@ const DiveManager = () => {
 
   // close all popup window
   const closePopup = () => {
+    document.body.style.overflow = 'unset';
     setBackdrop(false);
     setShowPopupCopy(false);
     setShowPopupUnpublish(false);
