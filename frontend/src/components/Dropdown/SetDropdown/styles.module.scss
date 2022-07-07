@@ -11,3 +11,16 @@
   background-color: #ffffff;
   z-index: 1;
 }
+
+@media (max-width: 1344px) {
+  .itemsWrapper {
+    left: 101%;
+  }
+}
+
+@media (max-width: 1320px) {
+  .itemsWrapper {
+    right: 13%;
+    left: unset;
+  }
+}

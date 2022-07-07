@@ -12,19 +12,17 @@ type Props = {
     svgItem: JSX.Element;
     onClick: React.Dispatch<React.SetStateAction<boolean>>; // setState popup modal
   }[];
-  dropdownButton: React.RefObject<HTMLDivElement>;
+  dropdownButtons: React.RefObject<HTMLDivElement>[];
   hideDropdown: (status: boolean) => void;
   showBackdrop: (status: boolean) => void;
 };
 
 export const SetDropdown: FC<Props> = ({
-  hideDropdown,
-  dropdownButton,
-  dropdownList,
-  showBackdrop,
+  hideDropdown, dropdownList, showBackdrop, dropdownButtons,
 }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [dropdownButton, dropdownKebab] = dropdownButtons;
 
   const dropdownElements = dropdownList.map((item) => (
     <SetDropdownItem
@@ -40,10 +38,8 @@ export const SetDropdown: FC<Props> = ({
 
   const outsideClickHandler = (ev: Event): void => {
     const target = ev.target as HTMLElement;
-    if (
-      ev.target !== dropdownRef.current
-      && !dropdownButton.current.contains(target)
-    ) {
+    if (ev.target !== dropdownRef.current
+      && !dropdownButton.current.contains(target) && !dropdownKebab.current.contains(target)) {
       hideDropdown(false);
     }
   };
