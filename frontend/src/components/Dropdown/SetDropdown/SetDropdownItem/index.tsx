@@ -21,6 +21,7 @@ export const SetDropdownItem: FC<Props> = ({
     onClick(true);
     hideDropdown(false);
     showBackdrop(true);
+    document.body.style.overflow = 'hidden';
   };
 
   return (
