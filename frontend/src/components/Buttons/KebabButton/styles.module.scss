@@ -4,7 +4,6 @@
   cursor: pointer;
   font-weight: 400;
   font-size: 10px;
-  line-height: 2px;
   text-align: center;
   color: #000345;
   background: #f0f6ff;
@@ -43,4 +42,26 @@
   &__big {
     width: 300px;
   }
+}
+
+.no__border {
+  display: none;
+  width: 24px;
+  align-items: center;
+  border: none;
+  box-shadow: none;
+  background: none;
+  padding: 0;
+  border-radius: unset;
+}
+
+@media (max-width: 767px) {
+  .kebab {
+    display: none;
+  }
+
+  .no__border {
+    display:flex;
+  }
+
 }
