@@ -2,7 +2,7 @@
   max-width: 420px;
   min-width: 300px;
   width: 100%;
-  background: #FFFFFF;
+  background: #ffffff;
   box-shadow: 0 8px 15px rgba(0, 62, 89, 0.06);
   border-radius: 15px;
 
@@ -16,7 +16,6 @@
       object-position: center;
     }
   }
-
 
   .footer {
     color: #000345;
@@ -41,23 +40,53 @@
   }
 }
 
+.smallCard {
+  min-width: unset;
+  max-width: unset;
+  width: unset;
+  margin-right: 26px;
+  margin-bottom: 20px;
+  box-shadow: 11px 2px 15px rgba(0, 62, 89, 0.06);
+
+  .imgWrapper {
+    height: 112px;
+  }
+
+  .footer {
+    padding: 0px 10px 10px 10px;
+    .name {
+      font-weight: 600;
+    }
+  }
+}
+
 @media (max-width: 1440px) {
   .card {
     max-width: 300px;
     min-width: 220px;
   }
 
+  .smallCard {
+    max-width: unset;
+    min-width: unset;
+  }
 }
 
 @media (max-width: 1024px) {
   .card {
     max-width: 220px;
     min-width: 160px;
+    .footer {
+      .name {
+        font-size: 14px;
+      }
+    }
 
     .imgWrapper {
       height: 122px;
     }
   }
+
 }
 
 @media (max-width: 768px) {
