@@ -1,0 +1,100 @@
+.wrapper {
+  padding: 118px 3.866vw 215px 3.866vw;
+  max-width: 1940px;
+  margin: 0 auto;
+  overflow: hidden;
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+
+    li {
+      font-weight: 300;
+      font-size: 14px;
+      color: #000345;
+
+      span {
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.subwrapper {
+  display: flex;
+  margin-top: 75px;
+}
+
+.thirdWrapper {
+  width: 49%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardsWrapper {
+  margin-top: 14px;
+  width: 101%;
+}
+
+.speciesWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 1200px) {
+  .wrapper {
+    padding: 100px 3.866vw 150px 3.866vw;
+  }
+}
+
+@media (max-width: 1024px) {
+  .subwrapper {
+    flex-direction: column;
+  }
+
+  .wrapper {
+    padding-top: 75px;
+  }
+
+  .thirdWrapper {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    padding-top: 65px;
+  }
+
+  .subwrapper {
+    margin-top: 15px;
+  }
+
+  .thirdWrapper {
+    margin-top: 50px;
+  }
+
+  .cardsWrapper {
+    display: flex;
+    justify-content: space-between;
+    overflow-x: scroll;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    > div {
+      margin-right: 10px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .wrapper {
+    padding: 50px 0 85px 0;
+  }
+}

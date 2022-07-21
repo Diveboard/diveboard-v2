@@ -55,6 +55,9 @@ export const getOptions = (diveTime: number[]): ApexOptions => ({
       // vertikal line when hovering
       show: false,
     },
+    axisBorder: {
+      show: false,
+    },
   },
   yaxis: {
     show: false,
@@ -72,10 +75,7 @@ export const getOptions = (diveTime: number[]): ApexOptions => ({
       show: false,
     },
     custom({
-      series,
-      seriesIndex,
-      dataPointIndex,
-      w,
+      series, seriesIndex, dataPointIndex, w,
     }) {
       return (
         '<div class="apexcharts__tooltip_custom">'
