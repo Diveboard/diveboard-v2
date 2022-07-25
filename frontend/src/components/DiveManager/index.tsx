@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { ButtonGroup } from '../ButtonGroup';
 import KebabButton from '../Buttons/KebabButton';
@@ -44,19 +44,19 @@ const DiveManager = () => {
       id: 1,
       title: 'Print',
       svgItem: <Print />,
-      onClick: setShowPopupUnpublish, // TODO change
+      onClick: () => {}, // TODO change
     },
     {
       id: 2,
       title: 'Export',
       svgItem: <Export />,
-      onClick: setShowPopupUnpublish, // TODO change
+      onClick: () => {}, // TODO change
     },
     {
       id: 3,
       title: 'Edit Dive',
       svgItem: <EditDive />,
-      onClick: setShowPopupUnpublish, // TODO change
+      onClick: () => {}, // TODO change
     },
     {
       id: 4,
@@ -68,7 +68,7 @@ const DiveManager = () => {
       id: 5,
       title: 'Paste properties',
       svgItem: <Paste />,
-      onClick: setShowPopupUnpublish, // TODO change
+      onClick: () => {}, // TODO change
     },
     {
       id: 6,
@@ -128,6 +128,18 @@ const DiveManager = () => {
   const backdropHandler = (val: boolean) => {
     setBackdrop(val);
   };
+
+  useEffect(() => {
+    function handleEscapeKey(event: KeyboardEvent) {
+      if (event.code === 'Escape') {
+        backdropHandler(false);
+        closePopup();
+      }
+    }
+
+    document.addEventListener('keydown', handleEscapeKey);
+    return () => document.removeEventListener('keydown', handleEscapeKey);
+  }, []);
 
   const renderDives = () => DUMMY_DATA.map((itm) => (
     <DiveItem
