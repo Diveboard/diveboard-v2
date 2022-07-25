@@ -1,0 +1,186 @@
+.diveDataWrapper {
+  display: flex;
+  margin-top: 40px;
+}
+
+.rightContentMob {
+  display: none;
+}
+
+.spotDataWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 75px;
+}
+
+.spotDataSubWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.leftContent,
+.leftContentWrapper {
+  display: flex;
+}
+
+.backBtnWrapper {
+  margin-top: 5px;
+  margin-right: 16px;
+}
+
+.spotTitleWrapper {
+  margin-left: 26px;
+}
+
+.spotTitle {
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 48px;
+  color: #000345;
+}
+
+.spotCountryWrapper {
+  display: flex;
+  margin-top: 4px;
+}
+
+.spotLocation {
+  margin-left: 8px;
+  font-weight: 300;
+  font-size: 14px;
+  color: #000345;
+}
+
+.rightContent {
+  display: flex;
+  align-items: center;
+}
+
+.share {
+  display: flex;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0px 0px 8px rgba(0, 62, 89, 0.1);
+  cursor: pointer;
+  margin-right: 19px;
+}
+
+.diveInfo {
+  ul {
+    margin: 0;
+    margin-right: 40px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-height: 112px;
+    width: 519px;
+
+    li {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 233px;
+      span {
+        sup {
+          font-size: 9px;
+        }
+      }
+    }
+  }
+}
+
+.comment {
+  width: 551px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000345;
+}
+
+@media (max-width: 1200px) {
+  .diveInfo {
+    ul {
+      margin-right: 15px;
+    }
+  }
+
+  .spotTitle {
+    font-size: 36px;
+  }
+
+  .spotTitleWrapper {
+    margin-left: 15px;
+  }
+}
+
+@media (max-width: 1024px) { 
+  .leftContent {
+    flex-direction: column;
+  }
+  .leftContentWrapper {
+    display: flex;
+  }
+
+  .rightContent {
+    display: none;
+  }
+
+  .rightContentMob {
+    display: flex;
+    align-items: center;
+  }
+
+  .leftContentSubwrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .spotDataWrapper {
+    margin-bottom: 50px;
+  }
+  
+  .leftContent {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+
+.spotDataWrapper {
+  margin-bottom: 30px;
+}
+
+  .spotTitle {
+    font-size: 16px;
+    line-height: 21px;
+  }
+
+  .share {
+    margin-right: 13px;
+  }
+
+  .spotTitleWrapper {
+    margin-left: 15px;
+  }
+
+  .diveDataWrapper {
+    margin-top: 18px;
+    flex-direction: column;
+  }
+
+  .comment {
+    margin-top: 16px;
+    width: unset;
+  }
+
+  .diveInfo {
+    ul {
+      max-height: unset;
+      width: unset;
+    }
+  }
+}

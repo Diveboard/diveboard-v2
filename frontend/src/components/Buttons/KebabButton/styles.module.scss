@@ -1,5 +1,6 @@
 .button {
-  width: 81px;
+  font-family: 'Prompt', sans-serif;
+  min-width: 81px;
   height: 26px;
   cursor: pointer;
   font-weight: 400;
@@ -55,13 +56,68 @@
   border-radius: unset;
 }
 
+.saves {
+  width: 92px;
+  padding-left: 10px;
+  padding-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0px 0px 8px rgba(0, 62, 89, 0.1);
+  font-weight: 400;
+  font-size: 10px;
+  color: #000345;
+  opacity: 0.8;
+  line-height: 20px;
+  span {
+    margin-right: 4px;
+  }
+}
+
+.more {
+  min-width: unset;
+  height: unset;
+  border: none;
+  background: none;
+  box-shadow: none;
+  color: #0059de;
+  font-size: inherit;
+  margin: 0;
+  padding: 0;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 12px;
+  color: #0059de;
+}
+
+.bigYellowButton {
+  width: 228px;
+  height: 56px;
+  background: #fdc90d;
+  font-weight: 600;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000345;
+  span {
+    margin-left: 15px;
+  }
+}
+
 @media (max-width: 767px) {
   .kebab {
     display: none;
   }
 
   .no__border {
-    display:flex;
+    display: flex;
   }
+}
 
+@media (max-width: 360px) {
+  .bigYellowButton {
+    width: 100%;
+  }
 }
