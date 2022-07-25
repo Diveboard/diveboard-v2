@@ -32,3 +32,13 @@
 .apexcharts__tooltip_custom_divetime span::before {
   background-image: url('/appIcons/time.svg');
 }
+
+.apexcharts-canvas svg {
+  border-radius: 20px;
+}
+
+@media (max-width: 360px) {
+  #no_border_radius .apexcharts-canvas svg {
+    border-radius: 0;
+  }
+}
