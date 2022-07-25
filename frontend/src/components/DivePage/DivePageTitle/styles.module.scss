@@ -1,0 +1,12 @@
+.title {
+  font-weight: 600;
+  font-size: 40px;
+  color: #000345;
+  text-transform: capitalize;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 26px;
+  }
+}

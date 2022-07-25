@@ -53,8 +53,10 @@ export const SafetySpots: FC<Props> = ({
           ...parameters.safetySpots,
           {
             id: incrementId(parameters.safetySpots),
-            depth: undefined,
-            period: undefined,
+            // depth: undefined,
+            // period: undefined,
+            depth: 0,
+            period: 0,
           }],
       },
     );
