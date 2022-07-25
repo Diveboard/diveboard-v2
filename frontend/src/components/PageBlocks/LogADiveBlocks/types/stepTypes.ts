@@ -66,4 +66,6 @@ export type SecondStepType = {
   }[]
 };
 
-export type StepsDataType = FirstStepType | SecondStepType;
+export type FourthStepType = {};
+
+export type StepsDataType = FirstStepType | SecondStepType | FourthStepType;

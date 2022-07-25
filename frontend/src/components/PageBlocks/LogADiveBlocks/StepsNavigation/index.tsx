@@ -7,7 +7,7 @@ import styles from './styles.module.scss';
 type Props = {
   setStep: React.Dispatch<React.SetStateAction<StepType>>
   setStepData: () => void
-  setErrors: () => boolean
+  setErrors?: () => boolean
 };
 
 export const StepsNavigation: FC<Props> = ({
