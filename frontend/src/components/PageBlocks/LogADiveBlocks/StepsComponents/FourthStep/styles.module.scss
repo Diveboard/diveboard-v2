@@ -1,0 +1,7 @@
+@import "../../styles.module";
+
+.fourthStep {
+    @extend .container;
+    margin-bottom: 50px;
+    margin-top: 30px;
+}
