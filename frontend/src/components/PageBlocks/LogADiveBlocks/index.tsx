@@ -5,9 +5,10 @@ import { StepType } from './types/commonTypes';
 import { LogDiveDataContext } from './LogDiveData/logDiveContext';
 import { SecondStep } from './StepsComponents/SecondStep';
 import styles from './styles.module.scss';
+import { ThirdStep } from './StepsComponents/ThirdStep';
 
 export const LogDiveBlock = () => {
-  const [step, setStep] = useState<StepType>(2);
+  const [step, setStep] = useState<StepType>(3);
   const { setCurrentStep } = useContext(LogDiveDataContext);
 
   useEffect(() => {
@@ -25,6 +26,7 @@ export const LogDiveBlock = () => {
       {step !== 0 && <StepsIndicator step={step} setStep={setStep} />}
       <FirstStep step={step} setStep={setStep} />
       <SecondStep step={step} setStep={setStep} />
+      <ThirdStep step={step} setStep={setStep} />
     </div>
   );
 };

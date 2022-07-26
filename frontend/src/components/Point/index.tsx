@@ -31,7 +31,7 @@ type Props = {
   lng?:number;
 };
 
-const DivePoint: FC<Props> = ({ divesCount, diveName }) => {
+export const DivePoint: FC<Props> = ({ divesCount, diveName }) => {
   const memoizedSizes = useMemo(() => getPointCircleWidth(divesCount), [divesCount]);
   const [showDiveName, setShowDiveName] = useState(false);
   return (
@@ -75,5 +75,3 @@ const DivePoint: FC<Props> = ({ divesCount, diveName }) => {
 
   );
 };
-
-export default DivePoint;
