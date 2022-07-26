@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { ButtonGroup } from '../ButtonGroup';
 import KebabButton from '../Buttons/KebabButton';
@@ -30,6 +30,7 @@ const DiveManager = () => {
   const [isShowPopupUnpublish, setShowPopupUnpublish] = useState(false);
   const [isShowPopupDelete, setShowPopupDelete] = useState(false);
   const dropdownButton = useRef(null); // button block
+  const dropdownKebab = useRef(null); // kebab block
   const [isBackdrop, setBackdrop] = useState(false);
 
   const titleCopy = 'Select Properties to Copy';
@@ -41,19 +42,19 @@ const DiveManager = () => {
       id: 1,
       title: 'Print',
       svgItem: <Print />,
-      onClick: setShowPopupUnpublish, // TODO change
+      onClick: () => {}, // TODO change
     },
     {
       id: 2,
       title: 'Export',
       svgItem: <Export />,
-      onClick: setShowPopupUnpublish, // TODO change
+      onClick: () => {}, // TODO change
     },
     {
       id: 3,
       title: 'Edit Dive',
       svgItem: <EditDive />,
-      onClick: setShowPopupUnpublish, // TODO change
+      onClick: () => {}, // TODO change
     },
     {
       id: 4,
@@ -65,7 +66,7 @@ const DiveManager = () => {
       id: 5,
       title: 'Paste properties',
       svgItem: <Paste />,
-      onClick: setShowPopupUnpublish, // TODO change
+      onClick: () => {}, // TODO change
     },
     {
       id: 6,
@@ -91,6 +92,7 @@ const DiveManager = () => {
 
   // close all popup window
   const closePopup = () => {
+    document.body.style.overflow = 'unset';
     setBackdrop(false);
     setShowPopupCopy(false);
     setShowPopupUnpublish(false);
@@ -125,6 +127,18 @@ const DiveManager = () => {
     setBackdrop(val);
   };
 
+  useEffect(() => {
+    function handleEscapeKey(event: KeyboardEvent) {
+      if (event.code === 'Escape') {
+        backdropHandler(false);
+        closePopup();
+      }
+    }
+
+    document.addEventListener('keydown', handleEscapeKey);
+    return () => document.removeEventListener('keydown', handleEscapeKey);
+  }, []);
+
   const renderDives = () => DUMMY_DATA.map((itm) => (
     <DiveItem
       key={itm.id}
@@ -137,7 +151,14 @@ const DiveManager = () => {
 
   return (
     <section className={styles.wrapper}>
-      <div className={styles.title}>Dive Manager</div>
+      <div className={styles.subheader}>
+        <div className={styles.title}>Dive Manager</div>
+        <div ref={dropdownKebab}>
+          <KebabButton className="no__border" onClick={kebabButtonHandler}>
+            <Icon iconName="kebab" width={24} height={24} />
+          </KebabButton>
+        </div>
+      </div>
       {isShowPopupCopy && (
         <Popup closePopup={closePopup} title={titleCopy}>
           <PopupCopy copyButtonHandler={copyButtonHandler} />
@@ -163,7 +184,7 @@ const DiveManager = () => {
           <div className={styles.wrapper__buttons}>
             <ButtonGroup buttons={buttons} onClick={() => {}} />
 
-            <div ref={dropdownButton} className={styles.buttones}>
+            <div ref={dropdownButton}>
               <KebabButton className="kebab" onClick={kebabButtonHandler}>
                 Settings
                 <Icon iconName="kebab" width={16} height={16} />
@@ -172,11 +193,16 @@ const DiveManager = () => {
             {isShowSettings && (
               <SetDropdown
                 dropdownList={dropdownList}
-                dropdownButton={dropdownButton}
+                dropdownButtons={[dropdownButton, dropdownKebab]}
                 hideDropdown={hideDropdown}
                 showBackdrop={backdropHandler}
               />
             )}
+            <div className={styles.checkbox__mobile}>
+              <Checkbox name="name" className="column" checked={checkboxItem} onChecked={checkboxHandler}>
+                Select All
+              </Checkbox>
+            </div>
           </div>
           <div className={styles.checkbox}>
             <Checkbox name="name" className="column" checked={checkboxItem} onChecked={checkboxHandler}>
