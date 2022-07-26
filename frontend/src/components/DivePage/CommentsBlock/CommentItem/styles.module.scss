@@ -1,0 +1,47 @@
+.itemWrapper {
+  margin-bottom: 38px;
+}
+
+.user {
+  display: flex;
+}
+
+.userWrapper {
+  display: flex;
+  margin-left: 14px;
+  flex-direction: column;
+}
+
+.nameAuthor {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000345;
+}
+
+.datePublish {
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #000345;
+  opacity: 0.6;
+}
+
+.buttonsWrapper {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buttonsSubwrapper {
+  width: 90px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.text {
+  font-weight: 300;
+  font-size: 14px;
+  color: #000345;
+}
