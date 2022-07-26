@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Title } from '../Title';
 import { ButtonGroup } from '../../../ButtonGroup';
 import { PhotoGroup } from '../../../PhotoGroup';
 import styles from './styles.module.scss';
 
 export const PicturesBlock = () => {
-  const [pictureMode, setPictureMode] = useState<'all' | 'favourites'>('all');
   const buttons = [{
     connectedMode: 'all',
     text: 'All pictures',
@@ -52,11 +51,11 @@ export const PicturesBlock = () => {
     <div className={styles.picturesWrapper}>
       <Title title="Pictures" />
       <ButtonGroup
-        mode={pictureMode}
-        setMode={setPictureMode}
+        defaultChecked="all"
         buttons={
           buttons
         }
+        onClick={() => {}}
       />
       <PhotoGroup photos={photos} />
       <span
