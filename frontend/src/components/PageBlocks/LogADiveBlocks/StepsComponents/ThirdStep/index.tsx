@@ -8,8 +8,11 @@ import { Input } from '../../../../Input/CommonInput';
 import { Button } from '../../../../Buttons/Button';
 import { Icon } from '../../../../Icons/Icon';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
-import { StepProps } from '../../types/commonTypes';
+import { MarkerType, StepProps } from '../../types/commonTypes';
 import { ThirdStepType } from '../../types/stepTypes';
+import {
+  usePointsHandlers,
+} from './thirdStepHelpers';
 import styles from './styles.module.scss';
 
 const mapCoords = {
@@ -59,13 +62,7 @@ export const ThirdStep: FC<StepProps> = ({
     lng: number,
   }>(mapCoords);
 
-  const [markers, setMarkers] = useState<{
-    id: number,
-    divesCount: number,
-    lat: number,
-    lng: number,
-    diveName: string
-  }[]>(markerPoints);
+  const [markers, setMarkers] = useState<MarkerType[]>(markerPoints);
 
   const [newPoint, setNewPoint] = useState(false);
   const [newPointCoords, setNewPointCoords] = useState({
@@ -78,13 +75,7 @@ export const ThirdStep: FC<StepProps> = ({
     text: item.diveName,
   })), [markers]);
 
-  const [chosenPoint, setChosenPoint] = useState<{
-    id: number,
-    divesCount: number,
-    lat: number,
-    lng: number,
-    diveName: string
-  }>();
+  const [chosenPoint, setChosenPoint] = useState<MarkerType>();
 
   const thirdStepData: ThirdStepType = {
     spot: chosenPoint && {
@@ -102,27 +93,16 @@ export const ThirdStep: FC<StepProps> = ({
     }
   }, [region, newPoint]);
 
-  const setPointHandler = (value: string) => {
-    const point = markers.find((item) => item.diveName === value);
-    setChosenPoint(point);
-  };
-
-  const setNewPointHandler = () => {
-    if (newSpotName.length >= 5) {
-      const newMarker = {
-        id: markerPoints[markerPoints.length - 1].id + 1,
-        divesCount: 1,
-        lat: newPointCoords.lat,
-        lng: newPointCoords.lng,
-        diveName: newSpotName,
-      };
-      setMarkers([...markers, newMarker]);
-      setChosenPoint(newMarker);
-      setNewPoint(false);
-    } else {
-      setNewSpotNameError('fill spot name, please');
-    }
-  };
+  const {
+    setPointHandler,
+    setNewPointHandler,
+  } = usePointsHandlers(
+    markers,
+    setChosenPoint,
+    setMarkers,
+    setNewPoint,
+    setNewSpotNameError,
+  );
 
   if (step !== 3) {
     return null;
@@ -188,7 +168,9 @@ export const ThirdStep: FC<StepProps> = ({
                 borderRadius={30}
                 backgroundColor="#F4BF00"
                 border="none"
-                onClick={setNewPointHandler}
+                onClick={() => {
+                  setNewPointHandler(newSpotName, newPointCoords);
+                }}
               >
                 <span className={styles.saveBtn}>Save</span>
 
