@@ -6,7 +6,6 @@ import { DiveCard } from '../../../Cards/DiveCard';
 import styles from './styles.module.scss';
 
 export const DivesBlock = () => {
-  const [diveMode, setDiveMode] = useState<'all' | 'favourite' | 'drafts'>('all');
   const [searchValue, setSearchValue] = useState('');
 
   const buttons = [{
@@ -27,11 +26,10 @@ export const DivesBlock = () => {
       <Title title="Dives" />
       <div className={styles.filtersWrapper}>
         <ButtonGroup
-          mode={diveMode}
-          setMode={setDiveMode}
           buttons={
             buttons
           }
+          onClick={() => {}}
         />
         <SearchAnimatedInput value={searchValue} setValue={setSearchValue} />
       </div>
@@ -81,7 +79,13 @@ export const DivesBlock = () => {
         />
       </div>
 
-      <span className={styles.viewMore} onClick={() => {}}>View More</span>
+      <span
+        className={styles.viewMore}
+        onClick={() => {
+        }}
+      >
+        View More
+      </span>
 
     </div>
 
