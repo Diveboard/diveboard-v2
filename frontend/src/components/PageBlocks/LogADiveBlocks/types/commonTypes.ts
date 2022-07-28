@@ -35,3 +35,11 @@ export type SetTankParametersType = {
     deleteTank:()=>void;
   }
 };
+
+export type MarkerType = {
+  id: number,
+  divesCount: number,
+  lat: number,
+  lng: number,
+  diveName: string
+};

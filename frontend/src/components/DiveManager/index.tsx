@@ -20,11 +20,9 @@ import { PopupDelete } from './Popup/PopupDelete';
 import { PopupUnpublish } from './Popup/PopupUnpublish';
 import { Popup } from './Popup';
 import { Backdrop } from '../Backdrop';
-
 import styles from './styles.module.scss';
 
 const DiveManager = () => {
-  const [diveMode, setDiveMode] = useState<'recent' | 'oldest' | 'drafts'>('recent');
   const [checkboxItem, setCheckboxItem] = useState(false);
   const [isChangeSelectAll, setChangeSelectAll] = useState(false);
   const [isShowSettings, setShowSettings] = useState(false);
@@ -184,7 +182,7 @@ const DiveManager = () => {
       ) : (
         <>
           <div className={styles.wrapper__buttons}>
-            <ButtonGroup mode={diveMode} setMode={setDiveMode} buttons={buttons} />
+            <ButtonGroup buttons={buttons} onClick={() => {}} />
 
             <div ref={dropdownButton}>
               <KebabButton className="kebab" onClick={kebabButtonHandler}>
