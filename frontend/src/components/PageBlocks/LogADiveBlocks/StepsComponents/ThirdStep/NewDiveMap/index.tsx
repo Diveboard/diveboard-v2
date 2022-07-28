@@ -54,8 +54,7 @@ export const LogADiveDiveMap: FC<Props> = ({
   const handleApiLoaded = (map, maps) => {
     const marker = new maps.Marker({
       position: {
-        lat: coords.lat,
-        lng: coords.lng,
+        ...coords,
       },
       draggable: true,
       icon: '/appIcons/new-point.png',
@@ -79,11 +78,7 @@ export const LogADiveDiveMap: FC<Props> = ({
 
   useEffect(() => {
     if (setVisible.current) {
-      if (newPoint) {
-        setVisible.current(true);
-      } else {
-        setVisible.current(false);
-      }
+      setVisible.current(newPoint);
     }
   }, [newPoint]);
 
