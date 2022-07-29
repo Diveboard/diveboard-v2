@@ -1,0 +1,49 @@
+.wrapper {
+margin-top: 34px;
+}
+
+.titleWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.title {
+    font-weight: 400;
+    font-size: 16px;
+    color: #000345;
+    text-transform: capitalize;
+    margin-left: 8px;
+}
+
+.cardsWrapper {
+    margin-top: 23px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+  
+  @keyframes fade-out {
+    0% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+  }
+  
+  .exitActive {
+    animation: fade-out 200ms forwards;
+  }
+  
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 14px;
+    }
+
+    .cardsWrapper {
+        flex-direction: column;
+    }
+}
