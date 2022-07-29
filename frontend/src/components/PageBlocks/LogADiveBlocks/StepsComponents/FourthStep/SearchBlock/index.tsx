@@ -1,6 +1,5 @@
 import React, { FC, useRef, useState } from 'react';
 
-import { useOutsideClick } from '../../../../../../hooks/useOutsideClick';
 import KebabButton from '../../../../../Buttons/KebabButton';
 import { Icon } from '../../../../../Icons/Icon';
 
@@ -13,25 +12,20 @@ export const Search: FC = () => {
 
   const onChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
     setSearchValue(event.currentTarget.value);
+    setValid(true);
   };
 
   const searchHandler = (event: React.FormEvent) => {
     event.preventDefault();
+    if (searchValue.length === 0) {
+      return;
+    }
     if (searchValue.length < 3) {
       setValid(false);
     } else {
       setValid(true);
     }
   };
-
-  // checking if the field is empty again and the click is out of search field
-  const ifClickOutside = (ev: Event): void => {
-    if (ev.target !== formArea.current && searchValue.length === 0) {
-      setValid(true);
-    }
-  };
-
-  useOutsideClick(ifClickOutside, formArea);
 
   return (
     <form className={styles.search} onSubmit={searchHandler} ref={formArea}>
