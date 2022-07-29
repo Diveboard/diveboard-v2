@@ -66,6 +66,8 @@ export type SecondStepType = {
   }[]
 };
 
+export type FourthStepType = {};
+
 export type ThirdStepType = {
   spot: {
     name: string;
@@ -74,4 +76,4 @@ export type ThirdStepType = {
   }
 };
 
-export type StepsDataType = FirstStepType | SecondStepType | ThirdStepType;
+export type StepsDataType = FirstStepType | SecondStepType | ThirdStepType | FourthStepType;

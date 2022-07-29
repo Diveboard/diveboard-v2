@@ -56,6 +56,31 @@
   border-radius: unset;
 }
 
+.backButton {
+  min-width: unset;
+  width: 30px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.8); 
+  box-shadow: 0px 0px 8px rgba(0, 62, 89, 0.1);
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.search {
+  width: 159px;
+  height: 48px;
+  background: #fdc90d;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 0px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 6;
 .saves {
   width: 92px;
   padding-left: 10px;
@@ -114,6 +139,16 @@
   .no__border {
     display: flex;
   }
+
+  .search {
+    width: unset;
+    padding: 0 23px;
+
+    span {
+      display: none;
+    }
+  }
+  }
 }
 
 @media (max-width: 360px) {
@@ -121,3 +156,4 @@
     width: 100%;
   }
 }
+
