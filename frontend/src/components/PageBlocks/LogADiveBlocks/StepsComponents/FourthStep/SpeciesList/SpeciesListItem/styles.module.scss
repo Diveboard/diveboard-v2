@@ -1,0 +1,30 @@
+.listItem {
+    padding: 12px 12px 12px 16px;
+    background: #FFFFFF;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: inset 0px -2px 0px rgba(0, 3, 69, 0.05);
+    color: #000345;
+    cursor: pointer;
+
+    
+    &:hover {
+        background: #F2F2F2;
+        color: #074EE8;
+        
+        svg path {
+            fill: #074EE8;
+        }
+    }
+}
+
+.leftSide {
+    display: flex;
+    font-weight: 300;
+    font-size: 16px;
+    text-transform: capitalize;
+
+    svg {
+        margin-right: 10px;
+    }
+}

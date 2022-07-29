@@ -6,8 +6,9 @@ type Props = {
   children?: React.ReactNode;
   className?: string;
   thirdClassName?: string;
-  onClick: () => void;
+  onClick?: () => void;
   disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset'
 };
 
 const KebabButton: FC<Props> = ({
@@ -16,8 +17,10 @@ const KebabButton: FC<Props> = ({
   disabled = false,
   onClick,
   children,
+  type,
 }) => (
   <button
+    type={type}
     className={`${styles.button} ${styles[className]}  ${styles[thirdClassName]}`}
     disabled={disabled}
     onClick={onClick}
