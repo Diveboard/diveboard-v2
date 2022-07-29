@@ -1,14 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
+
 import { StepsIndicator } from './StepsIndicator';
-import { FirstStep } from './StepsComponents/FirstStep';
 import { StepType } from './types/commonTypes';
 import { LogDiveDataContext } from './LogDiveData/logDiveContext';
+import { FirstStep } from './StepsComponents/FirstStep';
 import { SecondStep } from './StepsComponents/SecondStep';
+import { FourthStep } from './StepsComponents/FourthStep';
+
 import styles from './styles.module.scss';
-import { FourthStep } from './StepsComponents/FourthStep/fourthStep';
 
 export const LogDiveBlock = () => {
-  const [step, setStep] = useState<StepType>(2);
+  const [step, setStep] = useState<StepType>(4);
   const { setCurrentStep } = useContext(LogDiveDataContext);
 
   useEffect(() => {
