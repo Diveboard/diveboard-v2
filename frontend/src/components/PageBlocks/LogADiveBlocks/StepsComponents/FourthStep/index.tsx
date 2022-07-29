@@ -96,13 +96,15 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
           setSelectedSpecies((prevSelected) => [...prevSelected, itm]);
         }
       });
-    } else { // if species alredy in array then delete
+    } else {
+      // if species alredy in array then delete
       const updateSelectedSpecies = selectedSpecies.filter(
         (item) => item.id !== speciesId,
       );
       setSelectedSpecies(updateSelectedSpecies);
 
-      if (isTypeSelected) { // if type SELECTED chosen rerender species list
+      if (isTypeSelected) {
+        // if type SELECTED chosen rerender species list
         setRenderedSpeciesList({
           ...renderedSpeciesList,
           speciesArray: updateSelectedSpecies,
@@ -116,48 +118,50 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
   }
 
   return (
-    <div className={styles.container}>
+    <>
       <div className={styles.fourthStep}>
-        <div className={styles.title}>Species</div>
-        <div className={styles.description}>
-          Search and add marine species to yuor dive
-        </div>
-        <Search />
-        <div className={styles.radioButtonWrapper} onChange={radioButtonChange}>
-          <input
-            type="radio"
-            value="local"
-            name="Location species"
-            id="local species"
-            defaultChecked
-          />
-          <label htmlFor="local species">Local species</label>
-          <input type="radio" value="all" name="Location species" id="all species" />
-          <label htmlFor="all species">All</label>
-        </div>
-        {!isTypeChosen ? (
-          <SpeciesList
-            onClick={typeSelectionHandler}
-            mySpecies={mySpecies}
-            selectedSpecies={selectedSpecies}
-            speciesListData={speciesListData}
-          />
-        ) : (
-          <SpeciesCardList
-            selectedSpecies={selectedSpecies}
-            renderedSpeciesList={renderedSpeciesList}
-            backButtonHandler={backButtonHandler}
-            selectedSpeciesHandler={selectedSpeciesHandler}
-          />
-        )}
-        <div className={styles.sponsored}>
-          Data provided through
-          {' '}
-          <a href="https://eol.org/">EOL</a>
-          {' '}
-          and
-          {' '}
-          <a href="https://www.gbif.org/">GBIF</a>
+        <div className={styles.container}>
+          <div className={styles.title}>Species</div>
+          <div className={styles.description}>
+            Search and add marine species to yuor dive
+          </div>
+          <Search />
+          <div className={styles.radioButtonWrapper} onChange={radioButtonChange}>
+            <input
+              type="radio"
+              value="local"
+              name="Location species"
+              id="local species"
+              defaultChecked
+            />
+            <label htmlFor="local species">Local species</label>
+            <input type="radio" value="all" name="Location species" id="all species" />
+            <label htmlFor="all species">All</label>
+          </div>
+          {(!isTypeChosen || (selectedSpecies.length === 0 && isTypeSelected)) ? (
+            <SpeciesList
+              onClick={typeSelectionHandler}
+              mySpecies={mySpecies}
+              selectedSpecies={selectedSpecies}
+              speciesListData={speciesListData}
+            />
+          ) : (
+            <SpeciesCardList
+              selectedSpecies={selectedSpecies}
+              renderedSpeciesList={renderedSpeciesList}
+              backButtonHandler={backButtonHandler}
+              selectedSpeciesHandler={selectedSpeciesHandler}
+            />
+          )}
+          <div className={styles.sponsored}>
+            Data provided through
+            {' '}
+            <a href="https://eol.org/">EOL</a>
+            {' '}
+            and
+            {' '}
+            <a href="https://www.gbif.org/">GBIF</a>
+          </div>
         </div>
       </div>
       <StepsNavigation
@@ -166,6 +170,6 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
           setStepData(4, secondStepData);
         }}
       />
-    </div>
+    </>
   );
 };
