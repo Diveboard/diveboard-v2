@@ -50,9 +50,9 @@ export const PopupCopy: FC<Props> = ({ copyButtonHandler }) => {
         onClick={copyButtonHandler}
         disabled={count === 0 && true}
       >
-        CopyProperty Properties
+        Copy Properties
         {' '}
-        {count > 0 && `( ${count} )`}
+        {count > 0 && `(${count})`}
       </KebabButton>
     </>
   );

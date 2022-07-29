@@ -68,4 +68,12 @@ export type SecondStepType = {
 
 export type FourthStepType = {};
 
-export type StepsDataType = FirstStepType | SecondStepType | FourthStepType;
+export type ThirdStepType = {
+  spot: {
+    name: string;
+    lat: number;
+    lng: number;
+  }
+};
+
+export type StepsDataType = FirstStepType | SecondStepType | ThirdStepType | FourthStepType;

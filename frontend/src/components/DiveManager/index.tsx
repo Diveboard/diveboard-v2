@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { ButtonGroup } from '../ButtonGroup';
 import KebabButton from '../Buttons/KebabButton';
@@ -20,11 +20,9 @@ import { PopupDelete } from './Popup/PopupDelete';
 import { PopupUnpublish } from './Popup/PopupUnpublish';
 import { Popup } from './Popup';
 import { Backdrop } from '../Backdrop';
-
 import styles from './styles.module.scss';
 
 const DiveManager = () => {
-  const [diveMode, setDiveMode] = useState<'recent' | 'oldest' | 'drafts'>('recent');
   const [checkboxItem, setCheckboxItem] = useState(false);
   const [isChangeSelectAll, setChangeSelectAll] = useState(false);
   const [isShowSettings, setShowSettings] = useState(false);
@@ -44,19 +42,19 @@ const DiveManager = () => {
       id: 1,
       title: 'Print',
       svgItem: <Print />,
-      onClick: setShowPopupUnpublish, // TODO change
+      onClick: () => {}, // TODO change
     },
     {
       id: 2,
       title: 'Export',
       svgItem: <Export />,
-      onClick: setShowPopupUnpublish, // TODO change
+      onClick: () => {}, // TODO change
     },
     {
       id: 3,
       title: 'Edit Dive',
       svgItem: <EditDive />,
-      onClick: setShowPopupUnpublish, // TODO change
+      onClick: () => {}, // TODO change
     },
     {
       id: 4,
@@ -68,7 +66,7 @@ const DiveManager = () => {
       id: 5,
       title: 'Paste properties',
       svgItem: <Paste />,
-      onClick: setShowPopupUnpublish, // TODO change
+      onClick: () => {}, // TODO change
     },
     {
       id: 6,
@@ -129,6 +127,18 @@ const DiveManager = () => {
     setBackdrop(val);
   };
 
+  useEffect(() => {
+    function handleEscapeKey(event: KeyboardEvent) {
+      if (event.code === 'Escape') {
+        backdropHandler(false);
+        closePopup();
+      }
+    }
+
+    document.addEventListener('keydown', handleEscapeKey);
+    return () => document.removeEventListener('keydown', handleEscapeKey);
+  }, []);
+
   const renderDives = () => DUMMY_DATA.map((itm) => (
     <DiveItem
       key={itm.id}
@@ -172,7 +182,7 @@ const DiveManager = () => {
       ) : (
         <>
           <div className={styles.wrapper__buttons}>
-            <ButtonGroup mode={diveMode} setMode={setDiveMode} buttons={buttons} />
+            <ButtonGroup buttons={buttons} onClick={() => {}} />
 
             <div ref={dropdownButton}>
               <KebabButton className="kebab" onClick={kebabButtonHandler}>

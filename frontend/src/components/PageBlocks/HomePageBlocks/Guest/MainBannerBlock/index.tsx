@@ -11,9 +11,6 @@ import { ButtonGroup } from '../../../../ButtonGroup';
 export const MainBannerBlock = () => {
   const isWidth = useWindowWidth(500, 768);
   const [inputValue, setInputValue] = useState('');
-  const [filters, setFilters] = useState<'spots' | 'shops' | 'regions'>(
-    'spots',
-  );
 
   const buttons = [{
     connectedMode: 'spots',
@@ -28,7 +25,8 @@ export const MainBannerBlock = () => {
     text: 'Regions',
   }];
 
-  const search = () => {};
+  const search = () => {
+  };
   return (
     <div className={styles.mainBannerWrapper}>
       <div className={styles.label}>
@@ -77,12 +75,13 @@ export const MainBannerBlock = () => {
 
         <div className={styles.buttonGroup}>
           <ButtonGroup
-            mode={filters}
-            setMode={setFilters}
+            onClick={() => {
+            }}
             buttons={
               buttons
             }
             special
+            defaultChecked="spots"
           />
         </div>
       </div>

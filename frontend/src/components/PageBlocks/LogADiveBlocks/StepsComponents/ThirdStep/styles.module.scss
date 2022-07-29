@@ -1,0 +1,44 @@
+@import "../../styles.module";
+
+.thirdStep {
+  margin-top: 30px;
+  padding-bottom: 30px;
+  @extend .container;
+
+  .pointsBtnGroup {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    overflow: auto;
+  }
+
+  .newSpotGroup {
+    margin-top: 30px;
+
+    .newSpotInputWrapper {
+      margin: 20px 0;
+    }
+
+    .explanationText {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+      color: #000345;
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .buttonWrapper {
+      margin-bottom: 50px;
+
+      .saveBtn {
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 20px;
+        color: #000345;
+      }
+    }
+
+  }
+
+}

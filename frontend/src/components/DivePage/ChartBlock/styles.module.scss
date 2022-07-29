@@ -1,0 +1,56 @@
+.chartWrapper {
+  margin-right: 30px;
+  width: 50%;
+}
+
+.depthChartMargin {
+  margin-top: 12px;
+}
+
+.chartInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.typeFillingBalon {
+  margin-top: 9px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #000345;
+  text-transform: uppercase;
+}
+
+.characteristics {
+  margin-top: 6px;
+
+  ul {
+    display: flex;
+
+    li {
+      margin-right: 20px;
+    }
+  }
+}
+
+
+@media (max-width: 1024px) {
+  .chartWrapper {
+    margin-right: unset;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .characteristics {
+    margin-top: 10px;
+    
+    ul {
+      flex-direction: column;
+      margin: 0;
+    }
+  }
+
+  .typeFillingBalon {
+    margin-top: 0;
+  }
+}
