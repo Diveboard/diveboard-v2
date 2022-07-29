@@ -1,0 +1,33 @@
+.nextArrowBottom {
+    right: 0px;
+    top: unset;
+    bottom: -24px;
+}
+.prevArrowBottom {
+    right: 40px;
+    left: unset;
+    top: unset;
+    bottom: -24px;
+}
+
+.nextArrowTop {
+    right: 15px;
+    top: -24px;
+}
+
+.prevArrowTop {
+    right: 55px;
+    left: unset;
+    top: -24px;
+}
+
+
+@media (max-width: 1441px) {
+    
+    .nextArrowBottom {
+        right: 2px;
+    }
+    .prevArrowBottom {
+        right: 42px;
+    }
+}

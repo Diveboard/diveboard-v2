@@ -3,17 +3,18 @@ import dynamic from 'next/dynamic';
 import { getOptions } from './getChartOptions';
 import { useWindowWidthNumber } from '../../hooks/useWindowWidthNumber';
 
+React.useLayoutEffect = useEffect;
+
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
 });
 
 type Props = {
   points: {
-    depth: number,
-    diveTime: number,
-    temperature: number,
-  }[]
-
+    depth: number;
+    diveTime: number;
+    temperature: number;
+  }[];
 };
 
 export const DepthChart: FC<Props> = ({ points }): JSX.Element => {
@@ -33,11 +34,13 @@ export const DepthChart: FC<Props> = ({ points }): JSX.Element => {
       diveTime.push(item.diveTime);
     });
     setDiveTimeData(diveTime);
-    setData([{
-      name: 'depth',
-      type: 'area',
-      data: depth,
-    }]);
+    setData([
+      {
+        name: 'depth',
+        type: 'area',
+        data: depth,
+      },
+    ]);
   }, [points]);
 
   return (
@@ -46,7 +49,7 @@ export const DepthChart: FC<Props> = ({ points }): JSX.Element => {
       series={data}
       type="area"
       height={width >= 890 ? 423 : width / 2.1}
-      width={width >= 890 ? 870 : width - 20}
+      // width={width >= 890 ? 870 : width - 20}
     />
   );
 };

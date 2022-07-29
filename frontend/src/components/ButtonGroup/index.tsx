@@ -1,23 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './styles.module.scss';
 
-type Props<T> = {
-  mode: T;
-  setMode: React.Dispatch<React.SetStateAction<T>>;
+type Props = {
   special?: boolean;
+  defaultChecked?: string
   buttons: {
     text: string;
-    connectedMode: T;
+    connectedMode: string;
   }[];
+  onClick: (buttonName: string) => void;
 };
 
-export const ButtonGroup = <T extends unknown>(
+export const ButtonGroup = (
   {
-    mode,
-    setMode,
     buttons,
     special,
-  }: Props<T>): JSX.Element => {
+    defaultChecked,
+    onClick,
+  }: Props,
+): JSX.Element => {
+  const [mode, setMode] = useState(defaultChecked);
+
   const buttonComponents = buttons.map((btn) => {
     let btnStyle;
     if (btn.connectedMode === mode) {
@@ -34,6 +37,7 @@ export const ButtonGroup = <T extends unknown>(
         className={btnStyle}
         onClick={() => {
           setMode(btn.connectedMode);
+          onClick(btn.text);
         }}
       >
         {btn.text}
