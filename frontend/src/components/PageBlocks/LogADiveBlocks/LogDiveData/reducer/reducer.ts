@@ -7,7 +7,10 @@ export const diveDataReducer = (
 ): InitialDiveDataStateType => {
   switch (action.type) {
     case 'set-step':
-      return { ...state, step: action.payload.step };
+      return {
+        ...state,
+        step: action.payload.step,
+      };
     case 'set-first-step-data':
       return {
         ...state,
@@ -17,6 +20,11 @@ export const diveDataReducer = (
       return {
         ...state,
         secondStep: action.payload.secondStepData,
+      };
+    case 'set-third-step-data':
+      return {
+        ...state,
+        thirdStep: action.payload.thirdStepData,
       };
 
     default:

@@ -56,7 +56,7 @@ module.exports = withPWA({
     publicExcludes: ['!assets/**/*'],
     dynamicStartUrlRedirect: true,
     cacheOnFrontEndNav: true,
-    register:false,
+    // register:false,
     fallbacks: {
       image: '/appIcons/diveboard-logo.svg',
     }
