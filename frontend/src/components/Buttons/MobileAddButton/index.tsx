@@ -11,13 +11,22 @@ type Props = {
 
 export const MobileAddButton: FC<Props> = ({ iconName, link, onClick }) => (
   <span className={styles.btnWrapper} onClick={onClick}>
-    <Link href={link}>
-      <a className={styles.btn}>
+    {link ? (
+      <Link href={link}>
+        <a className={styles.btn}>
+          <Icon
+            iconName={iconName}
+            size={24}
+          />
+        </a>
+      </Link>
+    ) : (
+      <span className={styles.btn}>
         <Icon
           iconName={iconName}
           size={24}
         />
-      </a>
-    </Link>
+      </span>
+    )}
   </span>
 );

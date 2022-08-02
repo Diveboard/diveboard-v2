@@ -1,0 +1,66 @@
+@import '../../styles.module';
+
+.fourthStep {
+  @extend .container;
+  margin-bottom: 50px;
+  margin-top: 30px;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 20px;
+  color: #111111;
+}
+
+.description {
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 16px;
+  color: #000345;
+}
+
+.radioButtonWrapper {
+  margin-top: 15px;
+  display: flex;
+  padding-left: 5px;
+
+  input {
+    cursor: pointer;
+    margin: 0;
+    width: 20px;
+    height: 20px;
+  }
+
+  label {
+    text-transform: capitalize;
+    padding-top: 1px;
+    cursor: pointer;
+    margin-left: 8px;
+    margin-right: 24px;
+    font-weight: 300;
+    font-size: 14px;
+    color: #000345;
+  }
+}
+
+.sponsored {
+  margin-top: 13px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #000345; 
+
+  a {
+    color: -webkit-link;
+    text-decoration: underline;
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 16px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+}

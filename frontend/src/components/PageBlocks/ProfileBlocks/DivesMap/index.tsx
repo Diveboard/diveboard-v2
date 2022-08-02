@@ -1,21 +1,9 @@
 import React, { FC, useState } from 'react';
 import GoogleMapReact from 'google-map-react';
-import DivePoint from '../../../Point';
-import styles from './styles.module.scss';
+import { DivePoint } from '../../../Point';
 import { Button } from '../../../Buttons/Button';
-
-type Maps = typeof google.maps;
-
-const getMapOptions = (maps: Maps) => ({
-  keyboardShortcuts: false,
-  streetViewControl: false,
-  scaleControl: false,
-  fullscreenControl: false,
-  mapTypeId: maps.MapTypeId.SATELLITE,
-  zoomControl: false,
-  clickableIcons: true,
-  disableDefaultUI: true,
-});
+import { getMapOptions } from '../../../../utils/getMapOptions';
+import styles from './styles.module.scss';
 
 type Props = {
   coords: {
