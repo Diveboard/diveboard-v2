@@ -1,4 +1,6 @@
-import React, { FC, useContext, useState } from 'react';
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react';
 import { Overview } from './Overview';
 import { DiveReviews } from './DiveReviews';
 import { DiveActivities } from './DiveTypeAndActivities';
@@ -14,7 +16,8 @@ export const FirstStep: FC<StepProps> = ({
   step,
   setStep,
 }) => {
-  const { setStepData } = useContext(LogDiveDataContext);
+  const { setStepData, getStepData } = useContext(LogDiveDataContext);
+
   // overview
   const [overview, setOverview] = useState<FirstStepType['overview']>({
     diveNumber: 0,
@@ -65,6 +68,15 @@ export const FirstStep: FC<StepProps> = ({
     diveReviews,
     diveActivities: { ...diveActivities, other: other.split(',') },
   };
+
+  useEffect(() => {
+    const data = getStepData(1) as FirstStepType;
+    if (Object.values(data).every((item) => !!item)) {
+      setOverview(data.overview);
+      setDiveReviews(data.diveReviews);
+      setDiveActivities(data.diveActivities);
+    }
+  }, [step]);
 
   if (step !== 1) {
     return null;
