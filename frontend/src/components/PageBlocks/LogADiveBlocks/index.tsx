@@ -6,12 +6,12 @@ import { LogDiveDataContext } from './LogDiveData/logDiveContext';
 import { FirstStep } from './StepsComponents/FirstStep';
 import { SecondStep } from './StepsComponents/SecondStep';
 import { FourthStep } from './StepsComponents/FourthStep';
-
-import styles from './styles.module.scss';
 import { ThirdStep } from './StepsComponents/ThirdStep';
+import { FifthStep } from './StepsComponents/FifthStep';
+import styles from './styles.module.scss';
 
 export const LogDiveBlock = () => {
-  const [step, setStep] = useState<StepType>(3);
+  const [step, setStep] = useState<StepType>(5);
   const { setCurrentStep } = useContext(LogDiveDataContext);
 
   useEffect(() => {
@@ -31,6 +31,7 @@ export const LogDiveBlock = () => {
       <SecondStep step={step} setStep={setStep} />
       <ThirdStep step={step} setStep={setStep} />
       <FourthStep step={step} setStep={setStep} />
+      <FifthStep step={step} setStep={setStep} />
     </div>
   );
 };

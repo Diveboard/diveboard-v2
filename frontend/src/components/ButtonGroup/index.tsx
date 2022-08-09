@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './styles.module.scss';
+import { ButtonImage } from './ButtonImage';
 
 type Props = {
   special?: boolean;
@@ -7,6 +8,7 @@ type Props = {
   buttons: {
     text: string;
     connectedMode: string;
+    imgSrc?: string;
   }[];
   onClick: (buttonName: string) => void;
 };
@@ -40,7 +42,13 @@ export const ButtonGroup = (
           onClick(btn.text);
         }}
       >
-        {btn.text}
+        {btn.imgSrc ? (
+          <div className={styles.withImg}>
+            <ButtonImage src={btn.imgSrc} />
+            {btn.text}
+          </div>
+        ) : btn.text}
+
       </button>
     );
   });
