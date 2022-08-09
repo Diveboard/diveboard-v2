@@ -1,0 +1,21 @@
+.fileInput {
+  &::-webkit-file-upload-button {
+    display: none;
+  }
+
+  &::before {
+    content: 'Import from File';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0059DE;
+    width: 230px;
+    height: 48px;
+    border-radius: 30px;
+    font-size: 18px;
+    line-height: 20px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+  }
+}
