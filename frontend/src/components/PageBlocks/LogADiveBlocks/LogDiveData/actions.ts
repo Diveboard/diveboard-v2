@@ -25,7 +25,7 @@ export const diveStepDataActions = {
     payload: { thirdStepData },
   } as const),
   setFifthStepData: (fifthStepData: FifthStepType) => ({
-    type: 'set-third-step-data',
+    type: 'set-fifth-step-data',
     payload: { fifthStepData },
   } as const),
 };
