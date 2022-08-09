@@ -76,4 +76,10 @@ export type ThirdStepType = {
   }
 };
 
+export type FifthStepType = {
+  diveCenter: string;
+  guideName: string;
+  buddy: string;
+};
+
 export type StepsDataType = FirstStepType | SecondStepType | ThirdStepType | FourthStepType;

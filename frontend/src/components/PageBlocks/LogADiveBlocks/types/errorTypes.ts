@@ -8,8 +8,9 @@ export type SecondStepErrors = {
   dateError: string,
   maxDepthError: string,
   durationError: string,
-
 };
 
+export type FifthStepErrors = string;
+
 export type StepsErrorsType = FirstStepErrors
-| SecondStepErrors;
+| SecondStepErrors | FifthStepErrors;

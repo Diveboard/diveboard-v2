@@ -2,6 +2,13 @@
   width: max-content;
 }
 
+.withImg{
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .btn {
   box-sizing: border-box;
   padding: 6px 20px;

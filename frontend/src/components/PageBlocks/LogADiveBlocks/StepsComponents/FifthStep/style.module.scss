@@ -1,0 +1,41 @@
+.fifthStep {
+  margin-top: 30px;
+  padding-bottom: 50px;
+
+  h3 {
+    margin-top: 20px;
+    margin-bottom: 4px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  p {
+    margin-top: 10px;
+  }
+
+  .ref {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #0059DE;
+  }
+  .ref2{
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    color: #0059DE;
+  }
+
+  .checkBoxWrapper{
+    display: flex;
+    justify-content: space-between;
+    width: 250px;
+  }
+
+  .buddiesWrapper{
+    margin-top: 26px;
+  }
+}
+
+
