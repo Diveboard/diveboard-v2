@@ -1,6 +1,7 @@
 import {
-  FirstStepType, SecondStepType, SixthStepType, ThirdStepType,
+  SixthStepType,FifthStepType, FirstStepType, SecondStepType, ThirdStepType,
 } from '../types/stepTypes';
+
 import { StepType } from '../types/commonTypes';
 
 const firstStep: FirstStepType = {
@@ -23,6 +24,12 @@ const thirdStep: ThirdStepType = {
   },
 };
 
+const fifthStep: FifthStepType = {
+  diveCenter: undefined,
+  guideName: undefined,
+  buddy: undefined,
+};
+
 const sixthStep: SixthStepType = {
   files: undefined,
   mediaUrl: undefined,
@@ -33,5 +40,6 @@ export const initialDiveDataState = {
   firstStep,
   secondStep,
   thirdStep,
+  fifthStep,
   sixthStep,
 };

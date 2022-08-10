@@ -6,9 +6,9 @@ import { LogDiveDataContext } from './LogDiveData/logDiveContext';
 import { FirstStep } from './StepsComponents/FirstStep';
 import { SecondStep } from './StepsComponents/SecondStep';
 import { FourthStep } from './StepsComponents/FourthStep';
-
-import styles from './styles.module.scss';
 import { ThirdStep } from './StepsComponents/ThirdStep';
+import { FifthStep } from './StepsComponents/FifthStep';
+import styles from './styles.module.scss';
 import { SixthStep } from './StepsComponents/SixthStep';
 import PreStep from './StepsComponents/PreStep';
 
@@ -37,6 +37,7 @@ export const LogDiveBlock = () => {
       <ThirdStep step={step} setStep={setStep} />
       <FourthStep step={step} setStep={setStep} />
       <SixthStep step={step} setStep={setStep} />
+      <FifthStep step={step} setStep={setStep} />
     </div>
   );
 };
