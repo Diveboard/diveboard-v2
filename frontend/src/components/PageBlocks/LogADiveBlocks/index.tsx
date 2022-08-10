@@ -11,9 +11,10 @@ import { FifthStep } from './StepsComponents/FifthStep';
 import styles from './styles.module.scss';
 import { SixthStep } from './StepsComponents/SixthStep';
 import PreStep from './StepsComponents/PreStep';
+import { NinthStep } from './StepsComponents/NinthStep';
 
 export const LogDiveBlock = () => {
-  const [step, setStep] = useState<StepType>(6);
+  const [step, setStep] = useState<StepType>(9);
   const { setCurrentStep } = useContext(LogDiveDataContext);
 
   useEffect(() => {
@@ -36,8 +37,10 @@ export const LogDiveBlock = () => {
       <SecondStep step={step} setStep={setStep} />
       <ThirdStep step={step} setStep={setStep} />
       <FourthStep step={step} setStep={setStep} />
-      <SixthStep step={step} setStep={setStep} />
       <FifthStep step={step} setStep={setStep} />
+      <SixthStep step={step} setStep={setStep} />
+
+      <NinthStep step={step} setStep={setStep} />
     </div>
   );
 };
