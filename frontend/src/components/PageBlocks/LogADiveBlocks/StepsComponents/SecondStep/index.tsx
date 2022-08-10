@@ -20,7 +20,7 @@ export const SecondStep: FC<StepProps> = ({
   step,
   setStep,
 }) => {
-  const { setStepData } = useContext(LogDiveDataContext);
+  const { setStepData, getStepData } = useContext(LogDiveDataContext);
 
   const [showChart, setShowChart] = useState(false);
   const showedChart = useRef(false);
@@ -96,6 +96,14 @@ export const SecondStep: FC<StepProps> = ({
     }));
     setSpots(newSpots);
   }, [parameters.safetySpots]);
+
+  useEffect(() => {
+    const data = getStepData(2) as SecondStepType;
+    if (Object.values(data).every((item) => !!item)) {
+      setParameters(data.parameters);
+      setAdvancedParameters(data.advancedParameters);
+    }
+  }, [step]);
 
   if (step !== 2) {
     return null;
