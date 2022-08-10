@@ -1,0 +1,21 @@
+.eighthStep {
+  margin-top: 30px;
+  padding-bottom: 50px;
+
+  .titleBlock {
+    p {
+      margin-top: 10px;
+    }
+  }
+
+  .cards {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    > div {
+      margin-bottom: 10px;
+    }
+  }
+}
