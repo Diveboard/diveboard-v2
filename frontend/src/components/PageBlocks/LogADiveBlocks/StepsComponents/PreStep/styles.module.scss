@@ -48,3 +48,19 @@
   left: 15px;
   color: #FF645A;
 }
+
+@media (max-width: 420px) {
+  .buttonGroup {
+    flex-direction: column;
+    > button {
+      max-width: 420px !important;
+    }
+  }
+
+  .inputWrapper {
+    margin-right: 0 !important;
+    > input::before {
+      width: 100%;
+    }
+  }
+}
