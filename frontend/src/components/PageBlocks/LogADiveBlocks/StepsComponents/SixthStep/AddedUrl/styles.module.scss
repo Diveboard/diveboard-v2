@@ -1,0 +1,17 @@
+.urlItem {
+  display: flex;
+
+  .urlName {
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 22px;
+    color: #000345;
+    margin-right: 10px;
+  }
+
+  .delete {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
