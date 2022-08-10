@@ -48,6 +48,8 @@ export const UseDiveData = () => {
         return state.secondStep;
       case 3:
         return state.thirdStep;
+      case 5:
+        return state.fifthStep;
       case 6:
         return state.sixthStep;
       default:

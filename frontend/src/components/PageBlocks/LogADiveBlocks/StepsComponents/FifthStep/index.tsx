@@ -9,8 +9,8 @@ import { RadioButton } from '../../../../RadioButton';
 import { setStepErrors } from '../../LogDiveHelpers/stepsErrors/setStepErrors';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { StepProps } from '../../types/commonTypes';
-import containerStyle from '../../styles.module.scss';
 import { FifthStepType } from '../../types/stepTypes';
+import containerStyle from '../../styles.module.scss';
 import styles from './style.module.scss';
 
 const buddies: {
