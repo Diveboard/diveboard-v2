@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { StepProps } from '../../types/commonTypes';
 import styles from './styles.module.scss';
 import { Button } from '../../../../Buttons/Button';
@@ -8,47 +8,59 @@ import { DiveObj } from '../../types/file2ObjType';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 
 const PreStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
+  const [fileError, setFileError] = useState(false);
   const { setStepData } = useContext(LogDiveDataContext);
 
   const handleFileInput = async (file: File) => {
-    const parser = new DOMParser();
-    const oDOM = parser.parseFromString(await file.text().then((value) => value), 'text/xml');
-    const json = xml2json(oDOM, ' ');
-    const obj: DiveObj = await JSON.parse(json);
-    const { dive } = obj.uddf.profiledata.repetitiongroup;
-    const firstStepData = {
-      overview: {
-        tripName: '',
-        diveNumber: +dive.divenumber,
-        notes: dive.notes.text,
-      },
-      diveReviews: {},
-      diveActivities: {},
-    };
-    const secondStepData = {
-      parameters: {
-        date: new Date(
-          +dive.date.year,
-          +dive.date.month,
-          +dive.date.day,
-          +dive.time.hour,
-          +dive.time.minute,
-        ),
-        maxDepth: +dive.greatestdepth,
-        safetySpots: dive.samples.waypoint
-          .map((spot) => ({ id: +spot.divetime, depth: +spot.depth, period: +spot.divetime })),
-        time: `${dive.time.hour} : ${dive.time.minute}`,
-        duration: +dive.samples.waypoint[dive.samples.waypoint.length - 1].divetime / 60,
-      },
-      advancedParameters: {
-        surfaceTemp: +dive.airtemperature,
-        bottomTemp: +dive.lowesttemperature,
-      },
-      tanks: [],
-    };
-    await setStepData(1, firstStepData);
-    await setStepData(2, secondStepData);
-    setStep(1);
+    try {
+      if (!file.name.includes('.uddf')) {
+        setFileError(true);
+        return null;
+      }
+      const parser = new DOMParser();
+      const oDOM = parser.parseFromString(await file.text().then((value) => value), 'text/xml');
+      const json = xml2json(oDOM, ' ');
+      const obj: DiveObj = await JSON.parse(json);
+      // eslint-disable-next-line no-unsafe-optional-chaining
+      const { dive } = obj?.uddf?.profiledata?.repetitiongroup;
+      const firstStepData = {
+        overview: {
+          tripName: '',
+          diveNumber: +dive.divenumber,
+          notes: dive.notes.text,
+        },
+        diveReviews: {},
+        diveActivities: {},
+      };
+      const secondStepData = {
+        parameters: {
+          date: new Date(
+            +dive.date.year,
+            +dive.date.month,
+            +dive.date.day,
+            +dive.time.hour,
+            +dive.time.minute,
+          ),
+          maxDepth: +dive.greatestdepth,
+          safetySpots: dive.samples.waypoint
+            .map((spot) => ({ id: +spot.divetime, depth: +spot.depth, period: +spot.divetime })),
+          time: `${dive.time.hour} : ${dive.time.minute}`,
+          duration: +dive.samples.waypoint[dive.samples.waypoint.length - 1].divetime / 60,
+        },
+        advancedParameters: {
+          surfaceTemp: +dive.airtemperature,
+          bottomTemp: +dive.lowesttemperature,
+        },
+        tanks: [],
+      };
+      await setStepData(1, firstStepData);
+      await setStepData(2, secondStepData);
+      setFileError(false);
+      setStep(1);
+    } catch (e) {
+      setFileError(true);
+      console.log(e.message);
+    }
   };
 
   return (
@@ -60,8 +72,15 @@ const PreStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
         or select an export from another software.
       </p>
       <div className={styles.buttonGroup}>
-        {/* @ts-ignore */}
-        <FileInput onChange={(e) => handleFileInput(e.target.files[0])} />
+        <div className={styles.inputWrapper}>
+          <FileInput
+              // @ts-ignore
+            onChange={(e) => handleFileInput(e.target.files[0])}
+            // @ts-ignore
+            accept=".uddf"
+          />
+          {fileError && <span className={styles.fileError}>Invalid file. Use *.uddf files</span>}
+        </div>
         <Button
           backgroundColor="transparent"
           borderRadius={30}
