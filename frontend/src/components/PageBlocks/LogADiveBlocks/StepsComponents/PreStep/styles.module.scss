@@ -35,3 +35,16 @@
     font-weight: 600;
   }
 }
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.fileError {
+  position: absolute;
+  bottom: -10px;
+  left: 15px;
+  color: #FF645A;
+}
