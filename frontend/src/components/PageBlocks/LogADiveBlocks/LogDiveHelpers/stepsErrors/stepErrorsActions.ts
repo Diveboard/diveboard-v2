@@ -1,9 +1,14 @@
 import {
+  FifthStepErrorsActionType,
   FirstStepErrorsActionType,
   SecondStepErrorsActionType,
 } from '../../types/errorsActionsType';
 
-export const firstStepErrorsActions = ({ data, errors, setErrors }: FirstStepErrorsActionType) => {
+export const firstStepErrorsActions = ({
+  data,
+  errors,
+  setErrors,
+}: FirstStepErrorsActionType) => {
   let error = false;
   const newErrors = { ...errors };
   if (!data.diveNumber) {
@@ -28,7 +33,11 @@ export const firstStepErrorsActions = ({ data, errors, setErrors }: FirstStepErr
 };
 
 export const secondStepErrorsActions = (
-  { data, errors, setErrors }: SecondStepErrorsActionType,
+  {
+    data,
+    errors,
+    setErrors,
+  }: SecondStepErrorsActionType,
 ) => {
   let error = false;
   const newErrors = { ...errors };
@@ -65,4 +74,17 @@ export const secondStepErrorsActions = (
 
   setErrors(newErrors);
   return error;
+};
+
+export const fifthStepErrorsActions = (
+  {
+    data,
+    setErrors,
+  }: FifthStepErrorsActionType,
+) => {
+  const mailRegexp = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+  if (!data.match(mailRegexp) && data.length) {
+    setErrors('incorrect email, write correct email or clear this input');
+    return true;
+  }
 };

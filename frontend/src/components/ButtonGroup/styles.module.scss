@@ -1,5 +1,29 @@
-.wrapper{
+.wrapper {
   width: max-content;
+}
+
+.scroll {
+  overflow: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.wrap {
+  display: flex;
+  flex-wrap: wrap;
+
+  > button {
+    margin-bottom: 5px;
+  }
+}
+
+.withImg {
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .btn {
@@ -13,11 +37,11 @@
   border-radius: 30px;
   margin-right: 5px;
 
-  &:hover{
+  &:hover {
     cursor: pointer;
   }
 
-  &:last-child{
+  &:last-child {
     margin-right: 0;
   }
 }

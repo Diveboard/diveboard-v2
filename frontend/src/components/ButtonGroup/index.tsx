@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import { ButtonImage } from './ButtonImage';
 import styles from './styles.module.scss';
 
 type Props = {
   special?: boolean;
   defaultChecked?: string
+  contentBehavior?: 'scroll' | 'wrap'
   buttons: {
     text: string;
     connectedMode: string;
+    imgSrc?: string;
   }[];
   onClick: (buttonName: string) => void;
 };
@@ -17,6 +20,7 @@ export const ButtonGroup = (
     special,
     defaultChecked,
     onClick,
+    contentBehavior,
   }: Props,
 ): JSX.Element => {
   const [mode, setMode] = useState(defaultChecked);
@@ -40,12 +44,30 @@ export const ButtonGroup = (
           onClick(btn.text);
         }}
       >
-        {btn.text}
+        {btn.imgSrc ? (
+          <div className={styles.withImg}>
+            <ButtonImage src={btn.imgSrc} />
+            {btn.text}
+          </div>
+        ) : btn.text}
+
       </button>
     );
   });
+
+  const wrapperStyle = (behavior: 'scroll' | 'wrap' | undefined) => {
+    if (!behavior) {
+      return styles.wrapper;
+    }
+    if (behavior === 'scroll') {
+      return styles.scroll;
+    }
+    if (behavior === 'wrap') {
+      return styles.wrap;
+    }
+  };
   return (
-    <div className={styles.wrapper}>
+    <div className={wrapperStyle(contentBehavior)}>
       {buttonComponents}
     </div>
   );

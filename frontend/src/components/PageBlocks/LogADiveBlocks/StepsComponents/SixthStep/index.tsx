@@ -6,12 +6,12 @@ import { Input } from '../../../../Input/CommonInput';
 import { Icon } from '../../../../Icons/Icon';
 import { FileWithTags } from './FileWithTags';
 import { StepsNavigation } from '../../StepsNavigation';
+import { AddedUrl } from './AddedUrl';
+import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
 import { SixthStepType } from '../../types/stepTypes';
 import { StepProps } from '../../types/commonTypes';
 import stylesContainer from '../../styles.module.scss';
 import styles from './styles.module.scss';
-import { AddedUrl } from './AddedUrl';
-import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
 
 export const SixthStep: FC<StepProps> = ({
   step,

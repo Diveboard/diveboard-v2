@@ -1,6 +1,7 @@
 import {
-  FirstStepType, SecondStepType, SixthStepType, ThirdStepType,
+  FirstStepType, FifthStepType, SecondStepType, SixthStepType, ThirdStepType,
 } from '../types/stepTypes';
+
 import { StepType } from '../types/commonTypes';
 
 export const diveDataActions = {
@@ -23,6 +24,10 @@ export const diveStepDataActions = {
   setThirdStepData: (thirdStepData: ThirdStepType) => ({
     type: 'set-third-step-data',
     payload: { thirdStepData },
+  } as const),
+  setFifthStepData: (fifthStepData: FifthStepType) => ({
+    type: 'set-fifth-step-data',
+    payload: { fifthStepData },
   } as const),
   setSixthStepData: (sixthStepData: SixthStepType) => ({
     type: 'set-sixth-step-data',
