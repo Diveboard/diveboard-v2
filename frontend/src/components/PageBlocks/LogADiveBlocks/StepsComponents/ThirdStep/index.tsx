@@ -8,11 +8,11 @@ import { Input } from '../../../../Input/CommonInput';
 import { Button } from '../../../../Buttons/Button';
 import { Icon } from '../../../../Icons/Icon';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
-import { MarkerType, StepProps } from '../../types/commonTypes';
-import { ThirdStepType } from '../../types/stepTypes';
 import {
   usePointsHandlers,
 } from './thirdStepHelpers';
+import { MarkerType, StepProps } from '../../types/commonTypes';
+import { ThirdStepType } from '../../types/stepTypes';
 import styles from './styles.module.scss';
 
 const mapCoords = {
