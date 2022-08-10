@@ -76,4 +76,12 @@ export type ThirdStepType = {
   }
 };
 
+export type SeventhStepType = {
+  typeOfGear: string;
+  manufacturer: string,
+  model: string;
+  dateAcquired: Date;
+  lastMaintenance: Date;
+};
+
 export type StepsDataType = FirstStepType | SecondStepType | ThirdStepType | FourthStepType;

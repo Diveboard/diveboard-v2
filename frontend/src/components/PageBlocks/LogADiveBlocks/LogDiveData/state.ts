@@ -1,4 +1,6 @@
-import { FirstStepType, SecondStepType, ThirdStepType } from '../types/stepTypes';
+import {
+  FirstStepType, SecondStepType, SeventhStepType, ThirdStepType,
+} from '../types/stepTypes';
 import { StepType } from '../types/commonTypes';
 
 const firstStep: FirstStepType = {
@@ -21,9 +23,18 @@ const thirdStep: ThirdStepType = {
   },
 };
 
+const seventhStep: SeventhStepType = {
+  typeOfGear: undefined,
+  manufacturer: undefined,
+  model: undefined,
+  dateAcquired: undefined,
+  lastMaintenance: undefined,
+};
+
 export const initialDiveDataState = {
   step: 1 as StepType,
   firstStep,
   secondStep,
   thirdStep,
+  seventhStep,
 };
