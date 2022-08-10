@@ -23,15 +23,15 @@ const buddies: {
   imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
 },
 {
-  text: 'Bara',
+  text: 'Barafdgd',
   connectedMode: 'Bara',
   imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
 }, {
-  text: 'Kara',
+  text: 'Karakjsadkjldfs',
   connectedMode: 'Kara',
   imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
 }, {
-  text: 'Nara',
+  text: 'Nar',
   connectedMode: 'Nara',
   imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
 },
@@ -179,6 +179,7 @@ export const FifthStep: FC<StepProps> = ({
                   myBuddies
                 }
                 onClick={setBuddy}
+                contentBehavior="wrap"
               />
             </div>
           )}
