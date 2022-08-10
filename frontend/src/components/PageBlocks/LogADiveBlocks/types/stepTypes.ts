@@ -66,14 +66,18 @@ export type SecondStepType = {
   }[]
 };
 
-export type FourthStepType = {};
-
 export type ThirdStepType = {
   spot: {
     name: string;
     lat: number;
     lng: number;
   }
+};
+export type FourthStepType = {};
+
+export type SixthStepType = {
+  files: { tags: string, file: File }[];
+  mediaUrl: string[];
 };
 
 export type StepsDataType = FirstStepType | SecondStepType | ThirdStepType | FourthStepType;

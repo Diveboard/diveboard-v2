@@ -1,0 +1,13 @@
+.fileItem{
+  margin-top: 20px;
+  margin-bottom: 10px;
+  .fileName{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    >span{
+      margin-left: 10px;
+      color: #000345;
+    }
+  }
+}

@@ -26,6 +26,11 @@ export const diveDataReducer = (
         ...state,
         thirdStep: action.payload.thirdStepData,
       };
+    case 'set-sixth-step-data':
+      return {
+        ...state,
+        sixthStep: action.payload.sixthStepData,
+      };
 
     default:
       throw new Error('invalid action');
