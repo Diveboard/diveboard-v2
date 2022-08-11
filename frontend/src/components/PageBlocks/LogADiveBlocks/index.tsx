@@ -30,7 +30,7 @@ export const LogDiveBlock = () => {
         </span>
       </div>
       {step === 0 && (
-      <PreStep setStep={setStep} />
+        <PreStep setStep={setStep} />
       )}
       {step !== 0 && <StepsIndicator step={step} setStep={setStep} />}
       <FirstStep step={step} setStep={setStep} />
