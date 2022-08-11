@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import { LogDiveDataContext } from './LogDiveData/logDiveContext';
 import { StepsIndicator } from './StepsIndicator';
+import { StepType } from './types/commonTypes';
+import { LogDiveDataContext } from './LogDiveData/logDiveContext';
 import PreStep from './StepsComponents/PreStep';
 import { FirstStep } from './StepsComponents/FirstStep';
 import { SecondStep } from './StepsComponents/SecondStep';
@@ -9,13 +10,12 @@ import { FourthStep } from './StepsComponents/FourthStep';
 import { ThirdStep } from './StepsComponents/ThirdStep';
 import { FifthStep } from './StepsComponents/FifthStep';
 import { SixthStep } from './StepsComponents/SixthStep';
-
-import { EighthStep } from './StepsComponents/EighthStep';
-import { StepType } from './types/commonTypes';
+import { EighthStep } from "./StepsComponents/EighthStep";
+import { NinthStep } from './StepsComponents/NinthStep';
 import styles from './styles.module.scss';
 
 export const LogDiveBlock = () => {
-  const [step, setStep] = useState<StepType>(8);
+  const [step, setStep] = useState<StepType>(9);
   const { setCurrentStep } = useContext(LogDiveDataContext);
 
   useEffect(() => {
@@ -42,6 +42,7 @@ export const LogDiveBlock = () => {
       <SixthStep step={step} setStep={setStep} />
 
       <EighthStep step={step} setStep={setStep} />
+      <NinthStep step={step} setStep={setStep} />
     </div>
   );
 };

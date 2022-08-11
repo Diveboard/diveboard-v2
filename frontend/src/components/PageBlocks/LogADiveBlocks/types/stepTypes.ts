@@ -86,4 +86,13 @@ export type FifthStepType = {
   buddy: string;
 };
 
-export type StepsDataType = FirstStepType | SecondStepType | ThirdStepType | FourthStepType;
+export type NinthStepType = {
+  publishingMode: 'public' | 'private' | 'friends only'
+};
+
+export type StepsDataType =
+  FirstStepType
+  | SecondStepType
+  | ThirdStepType
+  | FourthStepType
+  | NinthStepType;
