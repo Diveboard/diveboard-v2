@@ -26,6 +26,11 @@ export const diveDataReducer = (
         ...state,
         thirdStep: action.payload.thirdStepData,
       };
+    case 'set-fourth-step-data':
+      return {
+        ...state,
+        fourthStep: action.payload.fourthStepData,
+      };
     case 'set-fifth-step-data':
       return {
         ...state,
