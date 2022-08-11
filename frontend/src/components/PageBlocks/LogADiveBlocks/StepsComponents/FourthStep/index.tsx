@@ -21,7 +21,7 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
     speciesArray: [],
   });
 
-  const secondStepData: FourthStepType = {
+  const fourthStepData: FourthStepType = {
     // parameters,
     // advancedParameters,
   };
@@ -167,7 +167,7 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
       <StepsNavigation
         setStep={setStep}
         setStepData={() => {
-          setStepData(4, secondStepData);
+          setStepData(4, fourthStepData);
         }}
       />
     </>

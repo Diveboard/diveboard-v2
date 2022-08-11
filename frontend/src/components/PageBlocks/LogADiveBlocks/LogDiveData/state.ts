@@ -4,7 +4,10 @@ import {
   FirstStepType,
   SecondStepType,
   ThirdStepType,
-  SeventhStepType, EighthStepType, NinthStepType,
+  SeventhStepType,
+  EighthStepType,
+  NinthStepType,
+  FourthStepType,
 } from '../types/stepTypes';
 
 import { StepType } from '../types/commonTypes';
@@ -28,6 +31,8 @@ const thirdStep: ThirdStepType = {
     lng: undefined,
   },
 };
+
+const fourthStep: FourthStepType = {};
 
 const fifthStep: FifthStepType = {
   diveCenter: undefined,
@@ -59,6 +64,7 @@ export const initialDiveDataState = {
   firstStep,
   secondStep,
   thirdStep,
+  fourthStep,
   fifthStep,
   sixthStep,
   seventhStep,
