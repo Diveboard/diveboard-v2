@@ -66,14 +66,28 @@ export type SecondStepType = {
   }[]
 };
 
-export type FourthStepType = {};
-
 export type ThirdStepType = {
   spot: {
     name: string;
     lat: number;
     lng: number;
   }
+};
+export type FourthStepType = {};
+
+export type SixthStepType = {
+  files: { tags: string, file: File }[];
+  mediaUrl: string[];
+};
+
+export type FifthStepType = {
+  diveCenter: string;
+  guideName: string;
+  buddy: string;
+};
+
+export type NinthStepType = {
+  publishingMode: 'public' | 'private' | 'friends only'
 };
 
 export type SeventhStepType = {
@@ -84,4 +98,9 @@ export type SeventhStepType = {
   lastMaintenance: Date;
 };
 
-export type StepsDataType = FirstStepType | SecondStepType | ThirdStepType | FourthStepType;
+export type StepsDataType =
+  FirstStepType
+  | SecondStepType
+  | ThirdStepType
+  | FourthStepType
+  | NinthStepType;
