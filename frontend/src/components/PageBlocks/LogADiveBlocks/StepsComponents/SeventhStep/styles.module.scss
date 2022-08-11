@@ -57,3 +57,12 @@
   font-size: 18px;
   line-height: 20px;
 }
+
+@media (max-width: 420px) {
+  .dateWrapper {
+    & input {
+      width: 100%;
+      max-width: 420px;
+    }
+  }
+}

@@ -1,0 +1,66 @@
+.container {
+  margin: 15px auto 0;
+  width: 100%;
+  max-width: 420px;
+
+  h1 {
+    width: 100%;
+    text-align: center;
+    font-size: 40px;
+    line-height: 48px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  .btnWrapper {
+    margin: 20px 0 50px 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btnText {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 20px;
+    color: #000345;
+  }
+}
+
+.stepsNavWrapper {
+  width: 100%;
+  box-shadow: inset 0 2px 0 rgba(0, 3, 69, 0.05);
+
+  .stepsNav {
+    width: 100%;
+    max-width: 870px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 52px;
+
+    > span {
+      font-weight: 500;
+      font-size: 11px;
+      line-height: 12px;
+      text-align: right;
+      color: #0059DE;
+      text-decoration: underline;
+
+      &:hover {
+        cursor: pointer;
+        opacity: .8;
+      }
+    }
+  }
+}
+
+@media (max-width: 420px) {
+  .stepsNavWrapper {
+    width: 95%;
+    position: absolute;
+    bottom: 55px;
+  }
+}
