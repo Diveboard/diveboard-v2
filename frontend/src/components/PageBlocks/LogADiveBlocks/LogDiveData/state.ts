@@ -1,5 +1,13 @@
 import {
-  SixthStepType,FifthStepType, FirstStepType, SecondStepType, ThirdStepType,
+  SixthStepType,
+  FifthStepType,
+  FirstStepType,
+  SecondStepType,
+  ThirdStepType,
+  SeventhStepType,
+  EighthStepType,
+  NinthStepType,
+  FourthStepType,
 } from '../types/stepTypes';
 
 import { StepType } from '../types/commonTypes';
@@ -24,6 +32,8 @@ const thirdStep: ThirdStepType = {
   },
 };
 
+const fourthStep: FourthStepType = {};
+
 const fifthStep: FifthStepType = {
   diveCenter: undefined,
   guideName: undefined,
@@ -35,11 +45,29 @@ const sixthStep: SixthStepType = {
   mediaUrl: undefined,
 };
 
+const seventhStep: SeventhStepType = {
+  typeOfGear: undefined,
+  manufacturer: undefined,
+  model: undefined,
+  dateAcquired: undefined,
+  lastMaintenance: undefined,
+};
+
+const eighthStep: EighthStepType = {};
+
+const ninthStep: NinthStepType = {
+  publishingMode: undefined,
+};
+
 export const initialDiveDataState = {
   step: 1 as StepType,
   firstStep,
   secondStep,
   thirdStep,
+  fourthStep,
   fifthStep,
   sixthStep,
+  seventhStep,
+  eighthStep,
+  ninthStep,
 };

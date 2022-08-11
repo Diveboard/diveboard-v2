@@ -15,7 +15,7 @@ const Settings:
 InferGetServerSidePropsType<typeof getServerSideProps> = (
   { user, preferences, notifications },
 ) => {
-  const isWidth = useWindowWidth(500, 768);
+  const isWidth = useWindowWidth(500, 769);
 
   return (
     <AuthLayout user={user}>

@@ -10,6 +10,10 @@ import {
   SixthStepType,
   StepsDataType,
   ThirdStepType,
+  SeventhStepType,
+  EighthStepType,
+  NinthStepType,
+  FourthStepType,
 } from '../types/stepTypes';
 
 export const UseDiveData = () => {
@@ -31,10 +35,18 @@ export const UseDiveData = () => {
         return dispatch(diveStepDataActions.setSecondStepData(StepData as SecondStepType));
       case 3:
         return dispatch(diveStepDataActions.setThirdStepData(StepData as ThirdStepType));
+      case 4:
+        return dispatch(diveStepDataActions.setFourthStepData(StepData as FourthStepType));
       case 5:
         return dispatch(diveStepDataActions.setFifthStepData(StepData as FifthStepType));
       case 6:
         return dispatch(diveStepDataActions.setSixthStepData(StepData as SixthStepType));
+      case 7:
+        return dispatch(diveStepDataActions.setSeventhStepData(StepData as SeventhStepType));
+      case 8:
+        return dispatch(diveStepDataActions.setEighthStepData(StepData as EighthStepType));
+      case 9:
+        return dispatch(diveStepDataActions.setNinthStepData(StepData as NinthStepType));
       default:
         throw new Error('incorrect step');
     }
@@ -48,10 +60,18 @@ export const UseDiveData = () => {
         return state.secondStep;
       case 3:
         return state.thirdStep;
+      case 4:
+        return state.fourthStep;
       case 5:
         return state.fifthStep;
       case 6:
         return state.sixthStep;
+      case 7:
+        return state.seventhStep;
+      case 8:
+        return state.eighthStep;
+      case 9:
+        return state.ninthStep;
       default:
         throw new Error('incorrect step');
     }
