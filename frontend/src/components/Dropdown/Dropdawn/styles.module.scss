@@ -49,3 +49,11 @@
   }
 }
 
+@media (max-width: 420px) {
+  .dropdownWrapper {
+    width: 100%;
+    .dropdown {
+      width: 100% !important;
+    }
+  }
+}
