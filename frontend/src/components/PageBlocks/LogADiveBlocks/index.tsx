@@ -42,10 +42,9 @@ export const LogDiveBlock = () => {
       <SecondStep step={step} setStep={setStep} />
       <ThirdStep step={step} setStep={setStep} />
       <FourthStep step={step} setStep={setStep} />
-      <SeventhStep step={step} setStep={setStep} />
       <FifthStep step={step} setStep={setStep} />
       <SixthStep step={step} setStep={setStep} />
-
+      <SeventhStep step={step} setStep={setStep} />
       <EighthStep step={step} setStep={setStep} />
       <NinthStep step={step} setStep={setStep} />
       {step === 10 && <CongratsStep setStep={setStep} />}
