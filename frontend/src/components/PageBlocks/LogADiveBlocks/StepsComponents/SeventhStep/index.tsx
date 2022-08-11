@@ -10,6 +10,7 @@ import { Checkbox } from '../../../../CheckBox';
 import { Button } from '../../../../Buttons/Button';
 import { Icon } from '../../../../Icons/Icon';
 import { SeventhStepType } from '../../types/stepTypes';
+import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
 
 const gears = [
   'BCD',
@@ -43,6 +44,7 @@ const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
   const [saveToLocker, setSaveToLocker] = useState(false);
 
   const { setStepData } = useContext(LogDiveDataContext);
+  const isMobile = useWindowWidth(500, 768);
 
   const secondStepData: SeventhStepType = {
     typeOfGear: gearType,
@@ -104,7 +106,7 @@ const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
           <span className={styles.checkboxLabel}>Save to my locker</span>
         </Checkbox>
         <Button
-          width={181}
+          width={isMobile ? 768 : 181}
           height={48}
           border="none"
           borderRadius={30}
