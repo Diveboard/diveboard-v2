@@ -4,10 +4,13 @@ import { initialDiveDataState } from './state';
 import { diveDataActions, diveStepDataActions } from './actions';
 import { StepType } from '../types/commonTypes';
 import {
+  FifthStepType,
   FirstStepType,
-  SecondStepType, SeventhStepType,
+  SecondStepType,
+  SixthStepType,
   StepsDataType,
   ThirdStepType,
+  SeventhStepType,
 } from '../types/stepTypes';
 
 export const UseDiveData = () => {
@@ -29,6 +32,10 @@ export const UseDiveData = () => {
         return dispatch(diveStepDataActions.setSecondStepData(StepData as SecondStepType));
       case 3:
         return dispatch(diveStepDataActions.setThirdStepData(StepData as ThirdStepType));
+      case 5:
+        return dispatch(diveStepDataActions.setFifthStepData(StepData as FifthStepType));
+      case 6:
+        return dispatch(diveStepDataActions.setSixthStepData(StepData as SixthStepType));
       case 7:
         return dispatch(diveStepDataActions.setSeventhStepData(StepData as SeventhStepType));
       default:
@@ -44,6 +51,10 @@ export const UseDiveData = () => {
         return state.secondStep;
       case 3:
         return state.thirdStep;
+      case 5:
+        return state.fifthStep;
+      case 6:
+        return state.sixthStep;
       case 7:
         return state.seventhStep;
       default:

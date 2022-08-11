@@ -1,0 +1,93 @@
+.sixthStep {
+  margin-top: 30px;
+  padding-bottom: 50px;
+
+  p {
+    margin: 10px 0;
+  }
+
+  .or {
+    margin: 40px 0;
+  }
+
+  .btnText {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    color: #FFFFFF;
+  }
+
+
+  .fileButton {
+    width: 193px;
+    height: 56px;
+    background: #0059DE;
+    border-radius: 30px;
+
+    .file {
+      display: none;
+    }
+
+    .label {
+      width: 100%;
+      height: 100%;
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #FFFFFF;
+      border-radius: 30px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .mediaWrapper {
+    max-width: 570px;
+    position: relative;
+
+
+    .btnWrapper {
+      position: absolute;
+      top: 1px;
+      right: 0;
+      width: 127px;
+
+      .btnContentWrapper {
+        width: 60%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .btnTextBlue {
+          font-weight: 600;
+          font-size: 18px;
+          line-height: 20px;
+          display: flex;
+          align-items: center;
+          color: #000345;
+        }
+      }
+    }
+  }
+}
+
+
+@media (max-width: 768px) {
+  .sixthStep {
+    .fileButton {
+      width: 100%;
+      height: 46px;
+    }
+
+    .mediaWrapper {
+      max-width: 768px;
+    }
+  }
+}

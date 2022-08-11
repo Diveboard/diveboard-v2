@@ -6,9 +6,12 @@ import { LogDiveDataContext } from './LogDiveData/logDiveContext';
 import { FirstStep } from './StepsComponents/FirstStep';
 import { SecondStep } from './StepsComponents/SecondStep';
 import { FourthStep } from './StepsComponents/FourthStep';
-
-import styles from './styles.module.scss';
 import { ThirdStep } from './StepsComponents/ThirdStep';
+import { FifthStep } from './StepsComponents/FifthStep';
+import { SixthStep } from './StepsComponents/SixthStep';
+import { EighthStep } from './StepsComponents/EighthStep';
+import { NinthStep } from './StepsComponents/NinthStep';
+import styles from './styles.module.scss';
 import PreStep from './StepsComponents/PreStep';
 import SeventhStep from './StepsComponents/SeventhStep';
 import CongratsStep from './StepsComponents/CongratsStep';
@@ -32,7 +35,7 @@ export const LogDiveBlock = () => {
       </div>
       )}
       {step === 0 && (
-      <PreStep setStep={setStep} />
+        <PreStep setStep={setStep} />
       )}
       {(step !== 0 && step !== 10) && <StepsIndicator step={step} setStep={setStep} />}
       <FirstStep step={step} setStep={setStep} />
@@ -40,6 +43,11 @@ export const LogDiveBlock = () => {
       <ThirdStep step={step} setStep={setStep} />
       <FourthStep step={step} setStep={setStep} />
       <SeventhStep step={step} setStep={setStep} />
+      <FifthStep step={step} setStep={setStep} />
+      <SixthStep step={step} setStep={setStep} />
+
+      <EighthStep step={step} setStep={setStep} />
+      <NinthStep step={step} setStep={setStep} />
       {step === 10 && <CongratsStep setStep={setStep} />}
     </div>
   );
