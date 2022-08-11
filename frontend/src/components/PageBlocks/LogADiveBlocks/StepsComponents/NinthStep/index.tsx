@@ -68,7 +68,10 @@ export const NinthStep: FC<StepProps> = ({
             border="none"
             backgroundColor="#0059DE"
             onClick={
-              () => { setStepData(9, ninthStepData); }
+              () => {
+                setStepData(9, ninthStepData);
+                setStep(10);
+              }
             }
           >
             <span className={styles.btnText}>

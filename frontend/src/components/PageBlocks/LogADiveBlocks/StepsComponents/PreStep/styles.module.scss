@@ -35,3 +35,32 @@
     font-weight: 600;
   }
 }
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.fileError {
+  position: absolute;
+  bottom: -10px;
+  left: 15px;
+  color: #FF645A;
+}
+
+@media (max-width: 768px) {
+  .buttonGroup {
+    flex-direction: column;
+    > button {
+      max-width: 768px !important;
+    }
+  }
+
+  .inputWrapper {
+    margin-right: 0 !important;
+    > input::before {
+      width: 100%;
+    }
+  }
+}

@@ -90,9 +90,23 @@ export type NinthStepType = {
   publishingMode: 'public' | 'private' | 'friends only'
 };
 
+export type SeventhStepType = {
+  typeOfGear: string;
+  manufacturer: string,
+  model: string;
+  dateAcquired: Date;
+  lastMaintenance: Date;
+};
+
+export type EighthStepType = {};
+
 export type StepsDataType =
   FirstStepType
   | SecondStepType
   | ThirdStepType
   | FourthStepType
+  | FifthStepType
+  | SixthStepType
+  | SeventhStepType
+  | EighthStepType
   | NinthStepType;

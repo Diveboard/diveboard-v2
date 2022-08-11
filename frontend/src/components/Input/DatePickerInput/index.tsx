@@ -6,12 +6,13 @@ import styles from './styles.module.scss';
 type Props = {
   date: Date;
   setDate: (currentDate: Date)=>void
-  error: string;
-  setError: React.Dispatch<React.SetStateAction<string>>;
+  error?: string;
+  setError?: React.Dispatch<React.SetStateAction<string>>;
+  placeholder?: string;
 };
 
 export const DatePickerInput:FC<Props> = ({
-  date, setDate, error, setError,
+  date, setDate, error, setError, placeholder,
 }) => {
   const getDatePickerStyle = (errorValue: string) => {
     if (errorValue) {
@@ -29,7 +30,7 @@ export const DatePickerInput:FC<Props> = ({
           }
           setDate(currentDate);
         }}
-        placeholderText="dd/mm/yyyy"
+        placeholderText={placeholder || 'dd/mm/yyyy'}
         dateFormat="dd/MM/yyyy"
         className={getDatePickerStyle(error)}
         calendarClassName={styles.calender}

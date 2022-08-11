@@ -26,6 +26,11 @@ export const diveDataReducer = (
         ...state,
         thirdStep: action.payload.thirdStepData,
       };
+    case 'set-fourth-step-data':
+      return {
+        ...state,
+        fourthStep: action.payload.fourthStepData,
+      };
     case 'set-fifth-step-data':
       return {
         ...state,
@@ -35,6 +40,21 @@ export const diveDataReducer = (
       return {
         ...state,
         sixthStep: action.payload.sixthStepData,
+      };
+    case 'set-seventh-step-data':
+      return {
+        ...state,
+        seventhStep: action.payload.seventhStepData,
+      };
+    case 'set-eighth-step-data':
+      return {
+        ...state,
+        eighthStep: action.payload.eighthStepData,
+      };
+    case 'set-ninth-step-data':
+      return {
+        ...state,
+        ninthStep: action.payload.ninthStepData,
       };
 
     default:

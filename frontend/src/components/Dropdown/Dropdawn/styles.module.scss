@@ -33,7 +33,27 @@
     border-radius: 15px;
     max-width: 196px;
     width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
     background: #FFFFFF;
+
+    &::-webkit-scrollbar {
+      width: 5px;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 3, 69, 0.2);
+      border-radius: 5px;
+    }
   }
 }
 
+@media (max-width: 420px) {
+  .dropdownWrapper {
+    width: 100%;
+    .dropdown {
+      width: 100% !important;
+    }
+  }
+}
