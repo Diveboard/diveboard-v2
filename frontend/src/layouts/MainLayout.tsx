@@ -8,7 +8,7 @@ import { FooterMobile } from '../components/Footer/MobileFooter';
 import { AuthStatusContext } from './AuthLayout';
 
 export const MainLayout: FC = ({ children }) => {
-  const isWidth = useWindowWidth(500, 768);
+  const isWidth = useWindowWidth(500, 769);
   const { userAuth } = useContext(AuthStatusContext);
   const guestHeader = !isWidth ? <GuestHeader /> : <MobileGuestHeader />;
   const userHeader = !isWidth ? <UserHeader /> : <MobileUserHeader />;
