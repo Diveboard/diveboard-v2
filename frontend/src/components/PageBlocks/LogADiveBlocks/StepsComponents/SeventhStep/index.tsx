@@ -46,7 +46,7 @@ const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
   const { setStepData } = useContext(LogDiveDataContext);
   const isMobile = useWindowWidth(500, 768);
 
-  const secondStepData: SeventhStepType = {
+  const seventhStepData: SeventhStepType = {
     typeOfGear: gearType,
     manufacturer,
     model,
@@ -120,7 +120,7 @@ const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
       <StepsNavigation
         setStep={setStep}
         setStepData={() => {
-          setStepData(7, secondStepData);
+          setStepData(7, seventhStepData);
         }}
       />
     </>

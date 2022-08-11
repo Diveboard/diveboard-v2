@@ -98,9 +98,15 @@ export type SeventhStepType = {
   lastMaintenance: Date;
 };
 
+export type EighthStepType = {};
+
 export type StepsDataType =
   FirstStepType
   | SecondStepType
   | ThirdStepType
   | FourthStepType
+  | FifthStepType
+  | SixthStepType
+  | SeventhStepType
+  | EighthStepType
   | NinthStepType;

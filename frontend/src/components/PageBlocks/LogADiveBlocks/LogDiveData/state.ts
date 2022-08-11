@@ -4,7 +4,7 @@ import {
   FirstStepType,
   SecondStepType,
   ThirdStepType,
-  SeventhStepType,
+  SeventhStepType, EighthStepType, NinthStepType,
 } from '../types/stepTypes';
 
 import { StepType } from '../types/commonTypes';
@@ -48,6 +48,12 @@ const seventhStep: SeventhStepType = {
   lastMaintenance: undefined,
 };
 
+const eighthStep: EighthStepType = {};
+
+const ninthStep: NinthStepType = {
+  publishingMode: undefined,
+};
+
 export const initialDiveDataState = {
   step: 1 as StepType,
   firstStep,
@@ -56,4 +62,6 @@ export const initialDiveDataState = {
   fifthStep,
   sixthStep,
   seventhStep,
+  eighthStep,
+  ninthStep,
 };
