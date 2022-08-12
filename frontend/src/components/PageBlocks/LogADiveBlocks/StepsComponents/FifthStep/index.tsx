@@ -70,6 +70,7 @@ export const FifthStep: FC<StepProps> = ({
   const [address, setAddress] = useState('');
 
   const addressPredictions = usePlacesPredictions(address);
+  console.log(addressPredictions);
 
   const setErrors = () => setStepErrors({
     stepType: 5,
@@ -230,8 +231,8 @@ export const FifthStep: FC<StepProps> = ({
                 height={48}
               />
               <Input
-                value={diveCenter}
-                setValue={setDiveCenter}
+                value={address}
+                setValue={setAddress}
                 placeholder="Dive center address"
                 width={720}
                 height={48}

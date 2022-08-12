@@ -25,10 +25,8 @@ export default function usePlacesPredictions(input: string): string[] {
       if (!autocomplete) {
         autocomplete = new window.google.maps.places.AutocompleteService();
       }
+      getPlacePredictions();
     }
-  }, []);
-  useEffect(() => {
-    (autocomplete && input.length > 2) && getPlacePredictions();
   }, [input]);
 
   return predictions;
