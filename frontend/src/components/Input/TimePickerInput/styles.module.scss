@@ -20,3 +20,10 @@
 .errorText {
   @extend .errorText
 }
+
+
+@media (max-width: 768px) {
+  .timePicker {
+    display: inline;
+  }
+}
