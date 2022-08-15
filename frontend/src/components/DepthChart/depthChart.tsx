@@ -25,7 +25,14 @@ export const DepthChart: FC<Props> = ({ points }): JSX.Element => {
   useEffect(() => {
     const depth = [];
     const diveTime = [];
-    const sortedData = [...points];
+    let sortedData = [...points];
+
+    sortedData = sortedData.map((item) => {
+      if (item.depth === undefined || item.diveTime === undefined) {
+        return { ...item, depth: 0, diveTime: 0 };
+      }
+      return item;
+    });
 
     sortedData.sort((a, b) => a.diveTime - b.diveTime);
 
@@ -49,7 +56,6 @@ export const DepthChart: FC<Props> = ({ points }): JSX.Element => {
       series={data}
       type="area"
       height={width >= 890 ? 423 : width / 2.1}
-      // width={width >= 890 ? 870 : width - 20}
     />
   );
 };

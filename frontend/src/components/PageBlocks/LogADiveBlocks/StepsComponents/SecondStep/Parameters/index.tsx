@@ -7,6 +7,7 @@ import { SecondStepType } from '../../../types/stepTypes';
 import styles from './styles.module.scss';
 import { SecondStepErrors } from '../../../types/errorTypes';
 import { setParams } from '../../../LogDiveHelpers/setParams/setParams';
+import { useWindowWidth } from '../../../../../../hooks/useWindowWidth';
 
 type Props = {
   parameters: SecondStepType['parameters'];
@@ -23,6 +24,8 @@ export const Parameters: FC<Props> = ({
   errors,
   setErrors,
 }) => {
+  const isMobile = useWindowWidth(500, 768);
+
   const params = setParams(
     parameters,
     setParameters,
@@ -87,16 +90,17 @@ export const Parameters: FC<Props> = ({
         />
       </InputLabelWrapper>
 
-      <InputLabelWrapper label="Surface Interval">
+      <InputLabelWrapper label="Surface Interval" full={isMobile}>
         <Input
           type="number"
           value={parameters.surfaceInterval ? parameters.surfaceInterval.toString() : ''}
           setValue={(val) => params('surfaceInterval', +(val as string))}
           height={48}
-          width={165}
+          width={500}
           placeholder="min"
         />
       </InputLabelWrapper>
+
     </div>
   );
 };
