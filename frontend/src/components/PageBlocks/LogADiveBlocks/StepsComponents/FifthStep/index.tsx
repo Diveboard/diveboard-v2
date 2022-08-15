@@ -18,6 +18,7 @@ import { Popup } from '../../../../DiveManager/Popup';
 import { Backdrop } from '../../../../Backdrop';
 import { Button } from '../../../../Buttons/Button';
 import { Checkbox } from '../../../../CheckBox';
+import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
 
 const buddies: {
   text: string;
@@ -48,6 +49,7 @@ export const FifthStep: FC<StepProps> = ({
   setStep,
 }) => {
   const { setStepData } = useContext(LogDiveDataContext);
+  const isMobile = useWindowWidth(500, 769);
 
   const [myBuddies, setMyBuddies] = useState<{
     text: string;
@@ -221,103 +223,152 @@ export const FifthStep: FC<StepProps> = ({
           customStyles={{ width: '100%', maxWidth: '800px', top: '10vh' }}
         >
           <div className={styles.popupContainer}>
-            <h1>Can't find the dive center?</h1>
-            <span>Dive Center & Logbook signing</span>
-            <div className={styles.inputsWrapper}>
-              <Input
-                value={diveCenter}
-                setValue={setDiveCenter}
-                placeholder="Dive Center name"
-                width={720}
-                height={48}
-              />
-              <Input
-                value={address}
-                setValue={setAddress}
-                placeholder="Dive center address"
-                width={720}
-                height={48}
-                iconName="dropdown-arrow"
-                iconPosition="right"
-              />
-              <Input
-                value={url}
-                setValue={setUrl}
-                placeholder="URL"
-                width={720}
-                height={48}
-              />
-              <Input
-                value={centerEmail}
-                setValue={setCenterEmail}
-                placeholder="Email"
-                width={720}
-                height={48}
-              />
-            </div>
-            <div className={styles.btnGroup}>
-              <Button
-                width={202}
-                border="none"
-                backgroundColor="#F4BF00"
-                borderRadius={30}
-                height={48}
-              >
-                Confirm
-              </Button>
-              <Button
-                width={202}
-                border="2px solid #000"
-                backgroundColor="#fff"
-                borderRadius={30}
-                height={48}
-              >
-                Cancel
-              </Button>
-            </div>
-            <div className={styles.popupCheckboxBlock}>
-              <span>Dive Signing:</span>
-              <Checkbox
-                name="request"
-                onChecked={setCheckRequestDC}
-                checked={checkRequestDC}
-              >
-                <label htmlFor="request">Request the dive center to sign this dive</label>
-              </Checkbox>
-            </div>
-            <div className={styles.inputsWrapper}>
-              <span>Guide name:</span>
-              <Input
-                value={guideName}
-                setValue={setGuideName}
-                placeholder="Guide name"
-                width={720}
-                height={48}
-              />
-            </div>
-            <b>Dive buddies: NONE</b>
-            <p>
-              Add your usual dive buddies on the Community section
-              of your logbook to facilitate the search.
-              You may also manually add buddies to this dive by looking for them on
-            </p>
-            <div className={styles.inputsWrapper}>
-              <span>Add diveboard buddy:</span>
-              <Input
-                value={buddyName}
-                setValue={setBuddyName}
-                placeholder="Add diveboard buddy"
-                width={720}
-                height={48}
-              />
-              <Checkbox
-                name="buddy"
-                onChecked={setNotifyBuddy}
-                checked={notifyBuddy}
-              >
-                <label htmlFor="buddy">Notify your buddy</label>
-              </Checkbox>
-            </div>
+            {isMobile ? (
+              <>
+                <h2>Add a Dive Center</h2>
+                <p>Don’t have your dive center at Diveboard? Add it to our database</p>
+                <div className={styles.inputsWrapper}>
+                  <Input
+                    value={diveCenter}
+                    setValue={setDiveCenter}
+                    placeholder="Dive Center name"
+                    width={720}
+                    height={48}
+                  />
+                  <Input
+                    value={address}
+                    setValue={setAddress}
+                    placeholder="Dive center address"
+                    width={720}
+                    height={48}
+                    iconName="dropdown-arrow"
+                    iconPosition="right"
+                  />
+                  <Input
+                    value={url}
+                    setValue={setUrl}
+                    placeholder="URL"
+                    width={720}
+                    height={48}
+                  />
+                  <Input
+                    value={centerEmail}
+                    setValue={setCenterEmail}
+                    placeholder="Email"
+                    width={720}
+                    height={48}
+                  />
+                </div>
+                <Button
+                  border="none"
+                  backgroundColor="#F4BF00"
+                  borderRadius={30}
+                  height={48}
+                >
+                  Add a Dive Center
+                </Button>
+              </>
+            ) : (
+              <>
+                <h1>Can't find the dive center?</h1>
+                <span>Dive Center & Logbook signing</span>
+                <div className={styles.inputsWrapper}>
+                  <Input
+                    value={diveCenter}
+                    setValue={setDiveCenter}
+                    placeholder="Dive Center name"
+                    width={720}
+                    height={48}
+                  />
+                  <Input
+                    value={address}
+                    setValue={setAddress}
+                    placeholder="Dive center address"
+                    width={720}
+                    height={48}
+                    iconName="dropdown-arrow"
+                    iconPosition="right"
+                  />
+                  <Input
+                    value={url}
+                    setValue={setUrl}
+                    placeholder="URL"
+                    width={720}
+                    height={48}
+                  />
+                  <Input
+                    value={centerEmail}
+                    setValue={setCenterEmail}
+                    placeholder="Email"
+                    width={720}
+                    height={48}
+                  />
+                </div>
+                <div className={styles.btnGroup}>
+                  <Button
+                    width={202}
+                    border="none"
+                    backgroundColor="#F4BF00"
+                    borderRadius={30}
+                    height={48}
+                  >
+                    Confirm
+                  </Button>
+                  <Button
+                    width={202}
+                    border="2px solid #000"
+                    backgroundColor="#fff"
+                    borderRadius={30}
+                    height={48}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+                <div className={styles.popupCheckboxBlock}>
+                  <span>Dive Signing:</span>
+                  <Checkbox
+                    name="request"
+                    onChecked={setCheckRequestDC}
+                    checked={checkRequestDC}
+                  >
+                    <label htmlFor="request">Request the dive center to sign this dive</label>
+                  </Checkbox>
+                </div>
+                <div className={styles.inputsWrapper}>
+                  <span>Guide name:</span>
+                  <Input
+                    value={guideName}
+                    setValue={setGuideName}
+                    placeholder="Guide name"
+                    width={720}
+                    height={48}
+                  />
+                </div>
+                <b>Dive buddies: NONE</b>
+                <p>
+                  Add your usual dive buddies on the Community section
+                  of your logbook to facilitate the search.
+                  You may also manually add buddies to this dive by looking for them on
+                </p>
+                <div className={styles.inputsWrapper}>
+                  <span>Add diveboard buddy:</span>
+                  <Input
+                    value={buddyName}
+                    setValue={setBuddyName}
+                    placeholder="Add diveboard buddy"
+                    width={720}
+                    height={48}
+                  />
+                  <Checkbox
+                    name="buddy"
+                    onChecked={setNotifyBuddy}
+                    checked={notifyBuddy}
+                  >
+                    <label htmlFor="buddy">Notify your buddy</label>
+                  </Checkbox>
+                </div>
+              </>
+            )}
           </div>
         </Popup>
       )}
