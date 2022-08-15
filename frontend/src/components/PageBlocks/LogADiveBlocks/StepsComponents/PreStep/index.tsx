@@ -7,7 +7,7 @@ import { xml2json } from '../../../../../utils/xml2json';
 import { DiveObj } from '../../types/file2ObjType';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 
-const PreStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
+export const PreStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
   const [fileError, setFileError] = useState(false);
   const { setStepData } = useContext(LogDiveDataContext);
 
@@ -96,5 +96,3 @@ const PreStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
     </div>
   );
 };
-
-export default PreStep;

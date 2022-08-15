@@ -1,13 +1,23 @@
 .wrapper {
   max-width: max-content;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  min-width: 165px;
+}
 
-  .label {
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 20px;
-    color: #000345;
-    margin-bottom: 4px;
-  }
+.fullSizedContentWrapper {
+  width: 100%;
+}
+
+.halfSizedContentWrapper{
+  width: 50%;
+}
+
+
+.label {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000345;
+  margin-bottom: 4px;
 }

@@ -39,8 +39,8 @@ export const SecondStep: FC<StepProps> = ({
     surfaceInterval: undefined,
     safetySpots: [{
       id: 1,
-      period: 0,
-      depth: 0,
+      period: undefined,
+      depth: undefined,
     }],
   });
 

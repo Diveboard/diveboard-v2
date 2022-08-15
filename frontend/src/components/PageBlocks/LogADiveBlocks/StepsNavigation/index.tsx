@@ -18,12 +18,7 @@ export const StepsNavigation: FC<Props> = ({
   const setPrev = () => {
     if (!setErrors || !setErrors()) {
       setStepData();
-      setStep((prevState) => {
-        if (prevState !== 1) {
-          return prevState - 1 as StepType;
-        }
-        return prevState as StepType;
-      });
+      setStep((prevState) => prevState - 1 as StepType);
     }
   };
 

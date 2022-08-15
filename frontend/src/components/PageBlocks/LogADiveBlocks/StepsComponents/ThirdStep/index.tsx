@@ -14,11 +14,7 @@ import {
 import { MarkerType, StepProps } from '../../types/commonTypes';
 import { ThirdStepType } from '../../types/stepTypes';
 import styles from './styles.module.scss';
-
-const mapCoords = {
-  lat: 40.95,
-  lng: 30.33,
-};
+import { useUserLocation } from '../../../../../hooks/useUserLocation';
 
 const markerPoints = [
   {
@@ -52,22 +48,20 @@ export const ThirdStep: FC<StepProps> = ({
   setStep,
 }) => {
   const { setStepData } = useContext(LogDiveDataContext);
-
-  const [region, setRegion] = useState('');
+  const userLocation = useUserLocation();
+  const [location, setLocation] = useState({
+    lat: 8.379433,
+    lng: 31.16558,
+  });
   const [newSpotName, setNewSpotName] = useState('');
   const [newSpotNameError, setNewSpotNameError] = useState('');
-
-  const [coords, setCoords] = useState<{
-    lat: number,
-    lng: number,
-  }>(mapCoords);
 
   const [markers, setMarkers] = useState<MarkerType[]>(markerPoints);
 
   const [newPoint, setNewPoint] = useState(false);
   const [newPointCoords, setNewPointCoords] = useState({
-    lat: coords.lat,
-    lng: coords.lng,
+    lat: location.lat,
+    lng: location.lng,
   });
 
   const buttons = useMemo(() => markers.map((item) => ({
@@ -86,12 +80,16 @@ export const ThirdStep: FC<StepProps> = ({
   };
 
   useEffect(() => {
-    if (!newPoint) {
-      // get coords // todo
-      // get points
-      setCoords(mapCoords);
-    }
-  }, [region, newPoint]);
+    if (userLocation) setLocation(userLocation);
+  }, [userLocation]);
+
+  // useEffect(() => {
+  //   if (!newPoint) {
+  //     // get coords // todo
+  //     // get points
+  //     setCoords(mapCoords);
+  //   }
+  // }, [region, newPoint]);
 
   const {
     setPointHandler,
@@ -116,12 +114,12 @@ export const ThirdStep: FC<StepProps> = ({
         </h2>
 
         <LogADiveDiveMap
-          coords={coords}
+          location={location}
+          setLocation={setLocation}
           points={markers}
-          zoom={5}
+          zoom={4}
           newPoint={newPoint}
           setNewPoint={setNewPoint}
-          setRegion={setRegion}
           setNewPointCoords={setNewPointCoords}
         />
 

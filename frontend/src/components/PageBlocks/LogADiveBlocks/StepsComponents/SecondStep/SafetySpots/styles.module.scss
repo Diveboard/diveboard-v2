@@ -3,17 +3,28 @@
 .safetySpotsWrapper {
   margin-top: 20px;
 
-  .spot{
+  .spot {
     margin: 10px 0;
     width: 100%;
     display: flex;
     justify-content: space-between;
+
+    .close {
+      margin-left: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 
   .add {
     display: flex;
 
-    >span {
+    > span {
       margin-right: 4px;
     }
   }
