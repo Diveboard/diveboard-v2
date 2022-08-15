@@ -13,12 +13,12 @@ import { StepProps } from '../../types/commonTypes';
 import { FifthStepType } from '../../types/stepTypes';
 import containerStyle from '../../styles.module.scss';
 import styles from './style.module.scss';
-import usePlacesPredictions from '../../../../../hooks/usePlacesPredictions';
 import { Popup } from '../../../../DiveManager/Popup';
 import { Backdrop } from '../../../../Backdrop';
 import { Button } from '../../../../Buttons/Button';
 import { Checkbox } from '../../../../CheckBox';
 import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
+import { SearchPredictions } from '../../../../Dropdown/SarchPredictions';
 
 const buddies: {
   text: string;
@@ -73,9 +73,6 @@ export const FifthStep: FC<StepProps> = ({
   const [address, setAddress] = useState('');
   const [url, setUrl] = useState('');
   const [centerEmail, setCenterEmail] = useState('');
-
-  const addressPredictions = usePlacesPredictions(address);
-  console.log(addressPredictions);
 
   const setErrors = () => setStepErrors({
     stepType: 5,
@@ -235,15 +232,18 @@ export const FifthStep: FC<StepProps> = ({
                     width={720}
                     height={48}
                   />
-                  <Input
-                    value={address}
-                    setValue={setAddress}
-                    placeholder="Dive center address"
-                    width={720}
-                    height={48}
-                    iconName="dropdown-arrow"
-                    iconPosition="right"
-                  />
+                  <div style={{ position: 'relative' }}>
+                    <Input
+                      value={address}
+                      setValue={setAddress}
+                      placeholder="Dive center address"
+                      width={720}
+                      height={48}
+                      iconName="dropdown-arrow"
+                      iconPosition="right"
+                    />
+                    <SearchPredictions region={address} setRegion={setAddress} noMap />
+                  </div>
                   <Input
                     value={url}
                     setValue={setUrl}
@@ -280,15 +280,18 @@ export const FifthStep: FC<StepProps> = ({
                     width={720}
                     height={48}
                   />
-                  <Input
-                    value={address}
-                    setValue={setAddress}
-                    placeholder="Dive center address"
-                    width={720}
-                    height={48}
-                    iconName="dropdown-arrow"
-                    iconPosition="right"
-                  />
+                  <div style={{ position: 'relative' }}>
+                    <Input
+                      value={address}
+                      setValue={setAddress}
+                      placeholder="Dive center address"
+                      width={720}
+                      height={48}
+                      iconName="dropdown-arrow"
+                      iconPosition="right"
+                    />
+                    <SearchPredictions region={address} setRegion={setAddress} noMap />
+                  </div>
                   <Input
                     value={url}
                     setValue={setUrl}
