@@ -67,7 +67,10 @@ export const FifthStep: FC<StepProps> = ({
   const [searchType, setSearchType] = useState('diveboard');
   const [openPopup, setOpenPopup] = useState(false);
   const [checkRequestDC, setCheckRequestDC] = useState(false);
+  const [notifyBuddy, setNotifyBuddy] = useState(false);
   const [address, setAddress] = useState('');
+  const [url, setUrl] = useState('');
+  const [centerEmail, setCenterEmail] = useState('');
 
   const addressPredictions = usePlacesPredictions(address);
   console.log(addressPredictions);
@@ -196,9 +199,7 @@ export const FifthStep: FC<StepProps> = ({
           {searchType === 'diveboard' && (
             <div className={styles.buddiesWrapper}>
               <ButtonGroup
-                buttons={
-                                    myBuddies
-                                }
+                buttons={myBuddies}
                 onClick={setBuddy}
                 contentBehavior="wrap"
               />
@@ -238,15 +239,15 @@ export const FifthStep: FC<StepProps> = ({
                 height={48}
               />
               <Input
-                value={diveCenter}
-                setValue={setDiveCenter}
+                value={url}
+                setValue={setUrl}
                 placeholder="URL"
                 width={720}
                 height={48}
               />
               <Input
-                value={diveCenter}
-                setValue={setDiveCenter}
+                value={centerEmail}
+                setValue={setCenterEmail}
                 placeholder="Email"
                 width={720}
                 height={48}
@@ -285,12 +286,35 @@ export const FifthStep: FC<StepProps> = ({
             <div className={styles.inputsWrapper}>
               <span>Guide name:</span>
               <Input
-                value={diveCenter}
-                setValue={setDiveCenter}
+                value={guideName}
+                setValue={setGuideName}
                 placeholder="Guide name"
                 width={720}
                 height={48}
               />
+            </div>
+            <b>Dive buddies: NONE</b>
+            <p>
+              Add your usual dive buddies on the Community section
+              of your logbook to facilitate the search.
+              You may also manually add buddies to this dive by looking for them on
+            </p>
+            <div className={styles.inputsWrapper}>
+              <span>Add diveboard buddy:</span>
+              <Input
+                value={buddyName}
+                setValue={setBuddyName}
+                placeholder="Add diveboard buddy"
+                width={720}
+                height={48}
+              />
+              <Checkbox
+                name="buddy"
+                onChecked={setNotifyBuddy}
+                checked={notifyBuddy}
+              >
+                <label htmlFor="buddy">Notify your buddy</label>
+              </Checkbox>
             </div>
           </div>
         </Popup>
