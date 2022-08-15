@@ -1,23 +1,23 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import { StepsIndicator } from './StepsIndicator';
-import { StepType } from './types/commonTypes';
-import { LogDiveDataContext } from './LogDiveData/logDiveContext';
+import { PreStep } from './StepsComponents/PreStep';
 import { FirstStep } from './StepsComponents/FirstStep';
 import { SecondStep } from './StepsComponents/SecondStep';
 import { FourthStep } from './StepsComponents/FourthStep';
 import { ThirdStep } from './StepsComponents/ThirdStep';
 import { FifthStep } from './StepsComponents/FifthStep';
 import { SixthStep } from './StepsComponents/SixthStep';
-import { EighthStep } from './StepsComponents/EighthStep';
+import { SeventhStep } from './StepsComponents/SeventhStep';
 import { NinthStep } from './StepsComponents/NinthStep';
+import { EighthStep } from './StepsComponents/EighthStep';
+import { CongratsStep } from './StepsComponents/CongratsStep';
+import { LogDiveDataContext } from './LogDiveData/logDiveContext';
+import { StepType } from './types/commonTypes';
 import styles from './styles.module.scss';
-import PreStep from './StepsComponents/PreStep';
-import SeventhStep from './StepsComponents/SeventhStep';
-import CongratsStep from './StepsComponents/CongratsStep';
 
 export const LogDiveBlock = () => {
-  const [step, setStep] = useState<StepType>(0);
+  const [step, setStep] = useState<StepType>(3);
   const { setCurrentStep } = useContext(LogDiveDataContext);
 
   useEffect(() => {

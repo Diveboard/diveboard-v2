@@ -1,21 +1,18 @@
 import React, {
-  FC, useEffect, useRef,
+  FC, useEffect, useRef, useState,
 } from 'react';
 import GoogleMapReact from 'google-map-react';
-
 import { getMapOptions } from '../../../../../../utils/getMapOptions';
 import { DivePoint } from '../../../../../Point';
 import { SearchInput } from '../../../../../Input/SearchInput';
 import { Button } from '../../../../../Buttons/Button';
 import { Icon } from '../../../../../Icons/Icon';
-
+import { SearchPredictions } from '../../../../../Dropdown/SarchPredictions';
 import styles from './styles.module.scss';
 
 type Props = {
-  coords: {
-    lat: number;
-    lng: number;
-  };
+  location: { lat: number, lng: number };
+  setLocation: React.Dispatch<React.SetStateAction<{ lat: number, lng: number }>>;
   zoom: number;
   points: {
     id: number;
@@ -24,21 +21,22 @@ type Props = {
     lng: number;
     diveName: string;
   }[];
-  setRegion: React.Dispatch<React.SetStateAction<string>>
   newPoint: boolean;
   setNewPoint: React.Dispatch<React.SetStateAction<boolean>>;
   setNewPointCoords: React.Dispatch<React.SetStateAction<{ lat: number, lng: number }>>;
 };
 
 export const LogADiveDiveMap: FC<Props> = ({
-  coords,
+  location,
+  setLocation,
   zoom,
   points,
-  setRegion,
   newPoint,
   setNewPoint,
   setNewPointCoords,
 }) => {
+  const [region, setRegion] = useState('');
+
   const markers = points.map((point) => (
     <DivePoint
       key={point.id}
@@ -54,7 +52,7 @@ export const LogADiveDiveMap: FC<Props> = ({
   const handleApiLoaded = (map, maps) => {
     const marker = new maps.Marker({
       position: {
-        ...coords,
+        ...location,
       },
       draggable: true,
       icon: '/appIcons/new-point.png',
@@ -84,10 +82,14 @@ export const LogADiveDiveMap: FC<Props> = ({
 
   return (
     <div className={styles.mapWrapper}>
+
       <div className={styles.searchWrapper}>
         {!newPoint && (
           <>
+
             <SearchInput setQueryData={setRegion} ms={1000} placeholder="Region" />
+            <SearchPredictions region={region} setRegion={setRegion} setLocation={setLocation} />
+
             <Button
               width={71}
               height={48}
@@ -109,8 +111,8 @@ export const LogADiveDiveMap: FC<Props> = ({
             key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY,
           }
         }
-        defaultCenter={coords}
-        center={coords}
+        defaultCenter={location}
+        center={location}
         defaultZoom={zoom}
         options={getMapOptions}
         onGoogleApiLoaded={({

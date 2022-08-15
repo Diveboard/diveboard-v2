@@ -35,7 +35,7 @@ const gears = [
   'Wet suit',
 ];
 
-const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
+export const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
   const [gearType, setGearType] = useState('');
   const [manufacturer, setManufacturer] = useState('');
   const [model, setModel] = useState('');
@@ -126,5 +126,3 @@ const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
     </>
   );
 };
-
-export default SeventhStep;
