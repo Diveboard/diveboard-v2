@@ -12,7 +12,8 @@ type Props = {
   disabled?: boolean
   height?: number;
   width?: number
-  type?: 'text' | 'number'
+  type?: 'text' | 'number';
+  iconPosition?: 'left' | 'right';
 };
 
 export const Input: FC<Props> = ({
@@ -26,6 +27,7 @@ export const Input: FC<Props> = ({
   height,
   width,
   type,
+  iconPosition,
 }) => {
   const getInputStyle = (errorValue: string) => {
     if (errorValue) {
@@ -35,7 +37,7 @@ export const Input: FC<Props> = ({
   };
 
   const inputStyle = {
-    padding: `16px 16px 16px ${iconName ? '52px' : '16px'}`,
+    padding: `16px 16px 16px ${(iconName && (!iconPosition || iconPosition === 'left')) ? '52px' : '16px'}`,
     height: `${height}px`,
     maxWidth: width ? `${width}px` : '100%',
   };
@@ -59,7 +61,7 @@ export const Input: FC<Props> = ({
         />
 
         {iconName && (
-          <div className={styles.icon}>
+          <div className={styles.icon} style={iconPosition === 'right' && { left: 'unset', right: '16px' }}>
             <Icon iconName={iconName} />
           </div>
         )}

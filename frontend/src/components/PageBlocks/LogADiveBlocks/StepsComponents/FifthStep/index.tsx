@@ -237,6 +237,8 @@ export const FifthStep: FC<StepProps> = ({
                 placeholder="Dive center address"
                 width={720}
                 height={48}
+                iconName="dropdown-arrow"
+                iconPosition="right"
               />
               <Input
                 value={url}
