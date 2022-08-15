@@ -1,6 +1,5 @@
 export type FirstStepErrors = {
   diveNumberError: string;
-  tripNameError: string;
 };
 
 export type SecondStepErrors = {
