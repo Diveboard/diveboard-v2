@@ -6,15 +6,34 @@ import styles from './styles.module.scss';
 type Props = {
   region: string;
   setRegion: React.Dispatch<React.SetStateAction<string>>
-  setLocation: React.Dispatch<React.SetStateAction<{ lat: number, lng: number }>>
+  setLocation?: React.Dispatch<React.SetStateAction<{ lat: number, lng: number }>>
+  noMap?: boolean;
 };
 
-export const SearchPredictions: FC<Props> = ({ region, setRegion, setLocation }) => {
+export const SearchPredictions: FC<Props> = ({
+  region, setRegion, setLocation, noMap,
+}) => {
   const [loading, setLoading] = useState(false);
+  const [clicked, setClicked] = useState(false);
   const [regionPredictions, setRegionPredictions] = useState<{
     description: string;
     place_id: string
   }[]>([]);
+
+  const handleClick = async (item) => {
+    if (noMap) {
+      setRegion(item.description);
+      setRegionPredictions([]);
+      setClicked(true);
+    } else {
+      setRegion('');
+      setRegionPredictions([]);
+      if (setLocation) {
+        const CoordsResp = await getLocation(item.place_id);
+        setLocation(CoordsResp);
+      }
+    }
+  };
 
   const predictionsComponents = regionPredictions
     .map((item) => {
@@ -23,12 +42,7 @@ export const SearchPredictions: FC<Props> = ({ region, setRegion, setLocation })
           <span
             key={item.place_id}
             className={styles.predictionItem}
-            onClick={async () => {
-              const CoordsResp = await getLocation(item.place_id);
-              setRegion('');
-              setRegionPredictions([]);
-              setLocation(CoordsResp);
-            }}
+            onClick={() => handleClick(item)}
           >
             {item.description}
           </span>
@@ -45,7 +59,7 @@ export const SearchPredictions: FC<Props> = ({ region, setRegion, setLocation })
     });
 
   useEffect(() => {
-    if (region) {
+    if (region && !clicked) {
       (async () => {
         setLoading(true);
         setRegionPredictions([]);
@@ -55,6 +69,7 @@ export const SearchPredictions: FC<Props> = ({ region, setRegion, setLocation })
       })();
     } else {
       setRegionPredictions([]);
+      setClicked(false);
     }
   }, [region]);
 
