@@ -5,7 +5,7 @@ import { ContentModeType, PlanType } from '../../../DonateBlocks/donateTypes';
 import { Icon } from '../../../../Icons/Icon';
 import { Button } from '../../../../Buttons/Button';
 
-const CongratsStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
+export const CongratsStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
   const [planMode, setPlanMode] = useState<PlanType>();
   const [contentMode, setContentMode] = useState<ContentModeType>('main');
   console.log(planMode, contentMode);
@@ -93,5 +93,3 @@ const CongratsStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
     </>
   );
 };
-
-export default CongratsStep;

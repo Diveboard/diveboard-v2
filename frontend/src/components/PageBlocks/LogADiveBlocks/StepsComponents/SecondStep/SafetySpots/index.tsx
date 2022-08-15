@@ -53,20 +53,28 @@ export const SafetySpots: FC<Props> = ({
           ...parameters.safetySpots,
           {
             id: incrementId(parameters.safetySpots),
-            // depth: undefined,
-            // period: undefined,
-            depth: 0,
-            period: 0,
+            depth: undefined,
+            period: undefined,
           }],
       },
     );
+  };
+
+  const close = (id: number) => {
+    const newSpots = parameters.safetySpots.filter((spot) => spot.id !== id);
+    setParameters({ ...parameters, safetySpots: newSpots });
+  };
+
+  const getSpotData = (id: number | undefined, par: 'depth' | 'period') => {
+    const empty = findSpot(id)[par] === undefined ? '' : '0';
+    return findSpot(id)[par] ? `${findSpot(id)[par]}` : empty;
   };
 
   const spots = parameters.safetySpots.map((spot) => (
     <div className={styles.spot} key={spot.id}>
       <Input
         type="number"
-        value={findSpot(spot.id).depth ? `${findSpot(spot.id).depth}` : ''}
+        value={getSpotData(spot.id, 'depth')}
         setValue={
           (value) => {
             setDepth(spot.id, value as string);
@@ -81,7 +89,7 @@ export const SafetySpots: FC<Props> = ({
 
       <Input
         type="number"
-        value={findSpot(spot.id).period ? `${findSpot(spot.id).period}` : ''}
+        value={getSpotData(spot.id, 'period')}
         setValue={
           (value) => {
             setPeriod(spot.id, value as string);
@@ -91,6 +99,11 @@ export const SafetySpots: FC<Props> = ({
         width={270}
         placeholder="mins"
       />
+
+      <span className={styles.close} onClick={() => { close(spot.id); }}>
+        <Icon iconName="close" />
+      </span>
+
     </div>
   ));
 

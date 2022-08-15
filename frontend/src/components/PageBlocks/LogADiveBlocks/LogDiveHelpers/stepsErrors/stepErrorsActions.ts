@@ -24,10 +24,6 @@ export const firstStepErrorsActions = ({
     error = true;
   }
 
-  if (data.tripName.length <= 3) {
-    newErrors.tripNameError = 'fill longer trip name';
-    error = true;
-  }
   setErrors(newErrors);
   return error;
 };
