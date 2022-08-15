@@ -1,6 +1,7 @@
-import React, { FC } from 'react';
+import React, { FC, useRef } from 'react';
 import { Properties } from 'csstype';
 import styles from './styles.module.scss';
+import { useOutsideClick } from '../../../hooks/useOutsideClick';
 
 type Props = {
   closePopup: () => void;
@@ -16,10 +17,14 @@ type Props = {
  */
 export const Popup: FC<Props> = ({
   children, closePopup, title, customStyles,
-}) => (
-  <div className={styles.popup} style={customStyles}>
-    <span className={styles.cross} onClick={closePopup} />
-    {title && <div className={styles.title}>{title}</div>}
-    {children}
-  </div>
-);
+}) => {
+  const popupRef = useRef();
+  useOutsideClick(closePopup, popupRef);
+  return (
+    <div className={styles.popup} style={customStyles} ref={popupRef}>
+      <span className={styles.cross} onClick={closePopup} />
+      {title && <div className={styles.title}>{title}</div>}
+      {children}
+    </div>
+  );
+};
