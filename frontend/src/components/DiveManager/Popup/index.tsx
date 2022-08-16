@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import { Properties } from 'csstype';
 import styles from './styles.module.scss';
 import { useOutsideClick } from '../../../hooks/useOutsideClick';
@@ -20,6 +20,13 @@ export const Popup: FC<Props> = ({
 }) => {
   const popupRef = useRef();
   useOutsideClick(closePopup, popupRef);
+  useEffect(() => {
+    const setBodyOverflow = (style: string): string => document.body.style.overflow = style;
+    if (document) {
+      setBodyOverflow('hidden');
+    }
+    return () => setBodyOverflow('auto') as unknown as void;
+  }, []);
   return (
     <div className={styles.popup} style={customStyles} ref={popupRef}>
       <span className={styles.cross} onClick={closePopup} />
