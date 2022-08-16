@@ -16,3 +16,9 @@
     line-height: 20px;
     color: #000345;
 }
+
+@media (max-width: 768px) {
+    .profileInput{
+        width: 100%;
+    }
+}

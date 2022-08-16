@@ -4,7 +4,6 @@
   -moz-box-shadow: 0 5px 20px -15px rgb(0, 62, 89);
   -o-box-shadow: 0 5px 20px -15px rgb(0, 62, 89);
   border-radius: 30px;
-  width: max-content;
   position: relative;
 
   .dropdown {
@@ -49,7 +48,7 @@
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 768px) {
   .dropdownWrapper {
     width: 100%;
     .dropdown {

@@ -42,6 +42,7 @@ export const EditedPreferencesLanguage: FC<Props> = ({
         item={language}
         setItem={setLanguage}
         allItems={['English', 'Italian', 'Spanish', 'German']}
+        width={196}
       />
 
       <MarginWrapper top={10} display="block">

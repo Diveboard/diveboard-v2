@@ -56,8 +56,9 @@ export const Dropdown: FC<Props> = ({
         setOpen(!open);
       }}
       className={styles.dropdownWrapper}
+      style={{ width: '100%', maxWidth: `${width}px` }}
     >
-      <div className={styles.dropdown} style={{ width: `${width}px`, height: `${height}px` }}>
+      <div className={styles.dropdown} style={{ width: '100%', maxWidth: `${width}px`, height: `${height}px` }}>
         <span>{item}</span>
         <Icon iconName="dropdown-arrow" />
       </div>
