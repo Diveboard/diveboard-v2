@@ -40,6 +40,9 @@
   justify-content: center;
   align-items: center;
 
+  position: relative;
+  z-index: 1000;
+
   .pointName {
     font-weight: 500;
     font-size: 14px;

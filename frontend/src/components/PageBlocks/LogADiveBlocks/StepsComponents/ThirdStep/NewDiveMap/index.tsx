@@ -9,6 +9,7 @@ import { Button } from '../../../../../Buttons/Button';
 import { Icon } from '../../../../../Icons/Icon';
 import { SearchPredictions } from '../../../../../Dropdown/SarchPredictions';
 import styles from './styles.module.scss';
+import { useUserLocation } from '../../../../../../hooks/useUserLocation';
 
 type Props = {
   location: { lat: number, lng: number };
@@ -36,7 +37,7 @@ export const LogADiveDiveMap: FC<Props> = ({
   setNewPointCoords,
 }) => {
   const [region, setRegion] = useState('');
-
+  const userLocation = useUserLocation();
   const markers = points.map((point) => (
     <DivePoint
       key={point.id}
@@ -75,6 +76,10 @@ export const LogADiveDiveMap: FC<Props> = ({
   };
 
   useEffect(() => {
+    if (userLocation) setLocation(userLocation);
+  }, [userLocation]);
+
+  useEffect(() => {
     if (setVisible.current) {
       setVisible.current(newPoint);
     }
@@ -97,6 +102,7 @@ export const LogADiveDiveMap: FC<Props> = ({
               borderRadius={30}
               border="none"
               onClick={() => {
+                setLocation(userLocation);
               }}
             >
               <Icon iconName="aim" />
@@ -111,7 +117,7 @@ export const LogADiveDiveMap: FC<Props> = ({
             key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY,
           }
         }
-        defaultCenter={location}
+        defaultCenter={userLocation}
         center={location}
         defaultZoom={zoom}
         options={getMapOptions}
@@ -119,6 +125,10 @@ export const LogADiveDiveMap: FC<Props> = ({
           map,
           maps,
         }) => handleApiLoaded(map, maps)}
+        onChange={(e) => setLocation({
+          lat: e.center.lat,
+          lng: e.center.lng,
+        })}
       >
         {!newPoint && markers}
       </GoogleMapReact>

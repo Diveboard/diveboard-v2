@@ -6,6 +6,7 @@ import { Input } from '../../../../../Input/CommonInput';
 import { MarginWrapper } from '../../../../../MarginWrapper';
 import { SecondStepType } from '../../../types/stepTypes';
 import styles from './styles.module.scss';
+import { useWindowWidth } from '../../../../../../hooks/useWindowWidth';
 
 type Props = {
   parameters: SecondStepType['parameters'];
@@ -16,6 +17,7 @@ export const SafetySpots: FC<Props> = ({
   parameters,
   setParameters,
 }) => {
+  const isMobile = useWindowWidth(500, 768);
   const findSpot = (id: number) => parameters.safetySpots.find((spot) => spot.id === id);
 
   const spotChange = (id: number, value: string, parameter: 'depth' | 'period') => {
@@ -81,7 +83,7 @@ export const SafetySpots: FC<Props> = ({
           }
         }
         height={48}
-        width={270}
+        width={isMobile ? 768 : 270}
         placeholder="m"
       />
 
@@ -96,7 +98,7 @@ export const SafetySpots: FC<Props> = ({
           }
         }
         height={48}
-        width={270}
+        width={isMobile ? 768 : 270}
         placeholder="mins"
       />
 
@@ -109,7 +111,7 @@ export const SafetySpots: FC<Props> = ({
 
   return (
     <div className={styles.safetySpotsWrapper}>
-      <InputLabelWrapper label="Safety spots:">
+      <InputLabelWrapper label="Safety spots:" mode={isMobile ? 'full' : 'common'}>
         {spots}
         <div
           className={styles.add}

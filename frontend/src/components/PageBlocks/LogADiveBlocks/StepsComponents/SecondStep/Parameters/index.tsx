@@ -38,7 +38,7 @@ export const Parameters: FC<Props> = ({
 
   return (
     <div className={styles.parameters}>
-      <InputLabelWrapper label="Time In">
+      <InputLabelWrapper label="Time In" mode={isMobile ? 'half' : 'common'}>
         <TimePickerInput
           setTime={(val) => params('time', val)}
           currentTime={parameters.time}
@@ -49,7 +49,7 @@ export const Parameters: FC<Props> = ({
         />
       </InputLabelWrapper>
 
-      <InputLabelWrapper label="Date">
+      <InputLabelWrapper label="Date" mode={isMobile ? 'half' : 'common'}>
         <DatePickerInput
           date={parameters.date}
           setDate={(val) => params('date', val)}
@@ -60,13 +60,13 @@ export const Parameters: FC<Props> = ({
         />
       </InputLabelWrapper>
 
-      <InputLabelWrapper label="Max depth">
+      <InputLabelWrapper label="Max depth" mode={isMobile ? 'half' : 'common'}>
         <Input
           type="number"
           value={parameters.maxDepth ? parameters.maxDepth.toString() : ''}
           setValue={(val) => params('maxDepth', +(val as string))}
           height={48}
-          width={165}
+          width={isMobile ? 768 : 165}
           placeholder="m"
           error={errors.maxDepthError}
           setError={(val) => {
@@ -75,13 +75,13 @@ export const Parameters: FC<Props> = ({
         />
       </InputLabelWrapper>
 
-      <InputLabelWrapper label="Duration">
+      <InputLabelWrapper label="Duration" mode={isMobile ? 'half' : 'common'}>
         <Input
           type="number"
           value={parameters.duration ? parameters.duration.toString() : ''}
           setValue={(val) => params('duration', +(val as string))}
           height={48}
-          width={165}
+          width={isMobile ? 768 : 165}
           placeholder="min"
           error={errors.durationError}
           setError={(val) => {
@@ -90,13 +90,13 @@ export const Parameters: FC<Props> = ({
         />
       </InputLabelWrapper>
 
-      <InputLabelWrapper label="Surface Interval" full={isMobile}>
+      <InputLabelWrapper label="Surface Interval" mode={isMobile ? 'full' : 'common'}>
         <Input
           type="number"
           value={parameters.surfaceInterval ? parameters.surfaceInterval.toString() : ''}
           setValue={(val) => params('surfaceInterval', +(val as string))}
           height={48}
-          width={500}
+          width={730}
           placeholder="min"
         />
       </InputLabelWrapper>
