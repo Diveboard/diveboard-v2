@@ -19,6 +19,7 @@
     font-size: 14px;
     line-height: 20px;
     color: #0059DE;
+    cursor: pointer;
   }
   .ref2{
     font-weight: 400;
@@ -38,4 +39,111 @@
   }
 }
 
+.popupContainer {
+  max-height: 600px;
+  overflow: auto;
+  margin: 0 60px;
 
+  &::-webkit-scrollbar {
+    width: 5px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 3, 69, 0.2);
+    border-radius: 5px;
+  }
+
+  h1 {
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 48px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  h2 {
+    font-weight: 600;
+    font-size: 21px;
+    line-height: 29px;
+    text-align: center;
+  }
+
+  span {
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  b {
+    display: block;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    margin-top: 24px;
+  }
+
+  p {
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 24px;
+    margin: 24px 0 16px;
+  }
+
+  .inputsWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 10px 0;
+
+    label {
+      font-weight: 300;
+      font-size: 14px;
+      line-height: 20px;
+    }
+  }
+
+  .btnGroup {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin: 24px 0;
+
+    button {
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 20px;
+    }
+  }
+
+  .popupCheckboxBlock {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 24px;
+
+    span {
+      margin-right: 25px;
+    }
+
+    label {
+      font-size: 14px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .popupContainer {
+    margin: 50px 20px;
+
+    p {
+      text-align: center;
+    }
+
+    button {
+      width: 100%;
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 20px;
+    }
+  }
+}
