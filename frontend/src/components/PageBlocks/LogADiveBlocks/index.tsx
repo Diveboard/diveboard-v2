@@ -17,7 +17,7 @@ import { StepType } from './types/commonTypes';
 import styles from './styles.module.scss';
 
 export const LogDiveBlock = () => {
-  const [step, setStep] = useState<StepType>(2);
+  const [step, setStep] = useState<StepType>(0);
   const { setCurrentStep } = useContext(LogDiveDataContext);
 
   useEffect(() => {
