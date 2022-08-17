@@ -61,7 +61,7 @@ export const Input: FC<Props> = ({
         />
 
         {iconName && (
-          <div className={styles.icon} style={iconPosition === 'right' && { left: 'unset', right: '16px' }}>
+          <div className={styles.icon} style={iconPosition === 'right' ? { left: 'unset', right: '16px' } : {}}>
             <Icon iconName={iconName} />
           </div>
         )}

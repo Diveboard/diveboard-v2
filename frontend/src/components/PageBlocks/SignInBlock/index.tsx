@@ -174,10 +174,10 @@ export const SignInBlock: FC = () => {
           >
             {loading && <Loader loading={loading} />}
             {mode === 'login/signup' && (
-              <span className={styles.btnText}>Send Code</span>
+            <span className={styles.btnText}>Send Code</span>
             )}
             {mode === 'signup' && (
-              <span className={styles.btnText}>Register</span>
+            <span className={styles.btnText}>Register</span>
             )}
             {mode === 'login' && <span className={styles.btnText}>Log In</span>}
             {mode === 'community' && <span className={styles.btnText}>Join on Discord</span>}
@@ -186,16 +186,16 @@ export const SignInBlock: FC = () => {
       </div>
 
       {(mode === 'signup' || mode === 'login') && (
-        <MarginWrapper top={20}>
-          <span className={styles.commonText}> Didn’t get a code?</span>
-          <span
-            className={availableCode ? styles.coloredText : styles.disabledText}
-            onClick={authCode}
-          >
-            {'  '}
-            Resend a Code
-          </span>
-        </MarginWrapper>
+      <MarginWrapper top={20}>
+        <span className={styles.commonText}> Didn’t get a code?</span>
+        <span
+          className={availableCode ? styles.coloredText : styles.disabledText}
+          onClick={authCode}
+        >
+          {'  '}
+          Resend a Code
+        </span>
+      </MarginWrapper>
       )}
     </div>
   );
