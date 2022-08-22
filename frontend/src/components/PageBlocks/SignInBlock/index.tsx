@@ -87,6 +87,9 @@ export const SignInBlock: FC = () => {
           email: user.email,
           photoURL: user.photoURL,
           name: user.displayName,
+          country: '',
+          qualifications: [],
+          about: '',
         });
 
         await firestorePublicProfileService.setEmail(user.email, user.uid);

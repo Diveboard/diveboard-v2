@@ -21,13 +21,22 @@ export const usePointsHandlers = (
   setMarkers: React.Dispatch<React.SetStateAction<MarkerType[]>>,
   setNewPoint: React.Dispatch<React.SetStateAction<boolean>>,
   setNewSpotNameError: React.Dispatch<React.SetStateAction<string>>,
+  setNewSpotCountryError: React.Dispatch<React.SetStateAction<string>>,
 ) => ({
   setPointHandler: (value: string) => {
     const point = markers.find((item) => item.diveName === value);
     setChosenPoint(point);
   },
 
-  setNewPointHandler: (newSpotName: string, newPointCoords: { lat: number, lng: number }) => {
+  setNewPointHandler: (
+    newSpotName: string,
+    newSpotCountry: string,
+    newPointCoords: { lat: number, lng: number },
+  ) => {
+    if (!newSpotCountry.length) {
+      setNewSpotCountryError('choose country');
+      return;
+    }
     if (newSpotName.length >= 5) {
       const newMarker = {
         id: markers[markers.length - 1].id + 1,

@@ -5,41 +5,42 @@ import Script from 'next/script';
 import { Input } from '../../../../Input/CommonInput';
 import { StepsNavigation } from '../../StepsNavigation';
 import { MarginWrapper } from '../../../../MarginWrapper';
-import { ButtonGroup } from '../../../../ButtonGroup';
 import { RadioButton } from '../../../../RadioButton';
 import { setStepErrors } from '../../LogDiveHelpers/stepsErrors/setStepErrors';
-import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
-import { StepProps } from '../../types/commonTypes';
-import { FifthStepType } from '../../types/stepTypes';
-import containerStyle from '../../styles.module.scss';
-import styles from './style.module.scss';
 import { Popup } from '../../../../DiveManager/Popup';
 import { Backdrop } from '../../../../Backdrop';
 import { Button } from '../../../../Buttons/Button';
 import { Checkbox } from '../../../../CheckBox';
 import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
 import { SearchPredictions } from '../../../../Dropdown/SarchPredictions';
+import { ButtonGroupMultiple } from '../../../../ButtonGroup/ButtonGroupMultiple';
+import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
+
+import { StepProps } from '../../types/commonTypes';
+import { FifthStepType } from '../../types/stepTypes';
+import containerStyle from '../../styles.module.scss';
+import styles from './style.module.scss';
 
 const buddies: {
   text: string;
-  connectedMode: string;
+  id: string;
   imgSrc?: string;
 }[] = [{
+  id: 'sdkgjsdlkgjsdfl',
   text: 'Sara',
-  connectedMode: 'Sara',
   imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
 },
 {
+  id: 'sdkgjJJJJJJsdlkgjsdfl',
   text: 'Barafdgd',
-  connectedMode: 'Bara',
   imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
 }, {
+  id: 'HHGKsdkgjsdlkgjsdfl',
   text: 'Karakjsadkjldfs',
-  connectedMode: 'Kara',
   imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
 }, {
+  id: 'NBBYIKMNBYsdkgjsdlkgjsdfl',
   text: 'Nar',
-  connectedMode: 'Nara',
   imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
 },
 ];
@@ -53,9 +54,9 @@ export const FifthStep: FC<StepProps> = ({
 
   const [myBuddies, setMyBuddies] = useState<{
     text: string;
-    connectedMode: string;
+    id: string;
     imgSrc?: string;
-  }[]>([{ text: '', connectedMode: '', imgSrc: '' }]);
+  }[]>([]);
 
   const [diveCenter, setDiveCenter] = useState('');
   const [guideName, setGuideName] = useState('');
@@ -64,7 +65,8 @@ export const FifthStep: FC<StepProps> = ({
   const [buddyEmail, setBuddyEmail] = useState('');
   const [buddyEmailError, setBuddyEmailError] = useState('');
 
-  const [buddy, setBuddy] = useState('');
+  const [mode, setMode] = useState<string[]>([]);
+  const [selectedBuddies, setSelectedBuddies] = useState<{ id: string, name: string }[]>([]);
 
   const [searchType, setSearchType] = useState('diveboard');
   const [openPopup, setOpenPopup] = useState(false);
@@ -81,10 +83,27 @@ export const FifthStep: FC<StepProps> = ({
     setErrors: setBuddyEmailError,
   });
 
+  const clickBuddyHandler = (clickedBuddy: {
+    text: string;
+    id: string;
+    imgSrc?: string;
+  }) => {
+    setSelectedBuddies((prev) => {
+      const b = prev.find((item) => item.id === clickedBuddy.id);
+      if (b) {
+        return prev.filter((item) => item.id !== clickedBuddy.id);
+      }
+      return [...prev, {
+        id: clickedBuddy.id,
+        name: clickedBuddy.text,
+      }];
+    });
+  };
+  console.log({ selectedBuddies });
   const fifthStepData: FifthStepType = {
     diveCenter,
     guideName,
-    buddy: searchType === 'diveboard' ? buddy : buddyName,
+    buddies: selectedBuddies,
   };
 
   useEffect(() => {
@@ -170,7 +189,6 @@ export const FifthStep: FC<StepProps> = ({
               onCheck={setSearchType}
             />
           </div>
-
           <h3>
             Add a Diveboard Buddy
           </h3>
@@ -182,25 +200,54 @@ export const FifthStep: FC<StepProps> = ({
             height={48}
           />
           {searchType === 'name/email' && (
-            <MarginWrapper top={10} display="block">
-              <Input
-                value={buddyEmail}
-                setValue={setBuddyEmail}
-                error={buddyEmailError}
-                setError={setBuddyEmailError}
-                placeholder="Email"
-                width={570}
-                height={48}
-              />
-            </MarginWrapper>
+            <>
+              <MarginWrapper top={10} display="block">
+                <Input
+                  value={buddyEmail}
+                  setValue={setBuddyEmail}
+                  error={buddyEmailError}
+                  setError={setBuddyEmailError}
+                  placeholder="Email"
+                  width={570}
+                  height={48}
+                />
+              </MarginWrapper>
+              <MarginWrapper top={20} display="block">
+                <Button
+                  width={200}
+                  height={54}
+                  border="none"
+                  backgroundColor="#FDC90D"
+                  borderRadius={30}
+                  onClick={() => {
+                    setMyBuddies(
+                      (prevState) => [...prevState,
+                        {
+                          text: buddyName,
+                          id: '',
+                          imgSrc: '',
+                        }],
+                    );
+                    setSearchType('diveboard');
+                  }}
+                >
+                  <span className={styles.addBuddyText}>
+                    Add buddy
+                  </span>
+                </Button>
+              </MarginWrapper>
+            </>
+
           )}
 
           {searchType === 'diveboard' && (
             <div className={styles.buddiesWrapper}>
-              <ButtonGroup
-                buttons={myBuddies}
-                onClick={setBuddy}
-                contentBehavior="wrap"
+
+              <ButtonGroupMultiple
+                items={myBuddies}
+                onClick={clickBuddyHandler}
+                mode={mode}
+                setMode={setMode}
               />
             </div>
           )}
@@ -217,7 +264,11 @@ export const FifthStep: FC<StepProps> = ({
       {openPopup && (
         <Popup
           closePopup={() => setOpenPopup(false)}
-          customStyles={{ width: '100%', maxWidth: '800px', top: '10vh' }}
+          customStyles={{
+            width: '100%',
+            maxWidth: '800px',
+            top: '10vh',
+          }}
         >
           <div className={styles.popupContainer}>
             {isMobile ? (
