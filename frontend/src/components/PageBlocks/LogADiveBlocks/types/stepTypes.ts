@@ -22,7 +22,7 @@ export type FirstStepType =
       nightDive: boolean,
       deepDive: boolean,
       drift: boolean,
-      wrech: boolean,
+      wreck: boolean,
       cave: boolean,
       reef: boolean,
       photo: boolean,
@@ -68,6 +68,7 @@ export type SecondStepType = {
 
 export type ThirdStepType = {
   spot: {
+    country: string;
     name: string;
     lat: number;
     lng: number;
@@ -75,19 +76,15 @@ export type ThirdStepType = {
 };
 export type FourthStepType = {};
 
-export type SixthStepType = {
-  files: { tags: string, file: File }[];
-  mediaUrl: string[];
-};
-
 export type FifthStepType = {
   diveCenter: string;
   guideName: string;
-  buddy: string;
+  buddies: { id: string, name: string }[];
 };
 
-export type NinthStepType = {
-  publishingMode: 'public' | 'private' | 'friends only'
+export type SixthStepType = {
+  files: { tags: string, file: File }[];
+  mediaUrl: string[];
 };
 
 export type SeventhStepType = {
@@ -99,6 +96,10 @@ export type SeventhStepType = {
 };
 
 export type EighthStepType = {};
+
+export type NinthStepType = {
+  publishingMode: 'public' | 'private' | 'friends only'
+};
 
 export type StepsDataType =
   FirstStepType
