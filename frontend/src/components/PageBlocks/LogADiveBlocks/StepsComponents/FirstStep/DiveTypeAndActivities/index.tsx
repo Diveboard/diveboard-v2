@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { Checkbox } from '../../../../../CheckBox';
 import { Input } from '../../../../../Input/CommonInput';
-import { FirstStepType } from '../../../types/stepTypes';
 import { setParams } from '../../../LogDiveHelpers/setParams/setParams';
+import { FirstStepType } from '../../../types/stepTypes';
 import styles from './styles.module.scss';
 
 type Props = {
@@ -83,13 +83,13 @@ export const DiveActivities: FC<Props> = (
           </Checkbox>
 
           <Checkbox
-            name="wrech"
+            name="wreck"
             onChecked={(val) => {
-              params('wrech', val as boolean);
+              params('wreck', val as boolean);
             }}
-            checked={diveActivities.wrech}
+            checked={diveActivities.wreck}
           >
-            Wrech
+            Wreck
           </Checkbox>
         </div>
 
