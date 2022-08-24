@@ -53,7 +53,7 @@ export const FirstStep: FC<StepProps> = ({
     nightDive: false,
     drift: false,
     deepDive: false,
-    wrech: false,
+    wreck: false,
     cave: false,
     reef: false,
     photo: false,

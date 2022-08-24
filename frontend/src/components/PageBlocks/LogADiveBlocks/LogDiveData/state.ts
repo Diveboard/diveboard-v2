@@ -26,6 +26,7 @@ const secondStep: SecondStepType = {
 
 const thirdStep: ThirdStepType = {
   spot: {
+    country: undefined,
     name: undefined,
     lat: undefined,
     lng: undefined,
@@ -37,7 +38,7 @@ const fourthStep: FourthStepType = {};
 const fifthStep: FifthStepType = {
   diveCenter: undefined,
   guideName: undefined,
-  buddy: undefined,
+  buddies: undefined,
 };
 
 const sixthStep: SixthStepType = {

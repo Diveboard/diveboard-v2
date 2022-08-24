@@ -36,6 +36,14 @@ export type SetTankParametersType = {
   }
 };
 
+// type Spot = ThirdStepType['spot'];
+export type Buddy = {
+  id?: string,
+  name: string,
+  email?: string,
+  imgSrc?: string,
+};
+
 export type MarkerType = {
   id: number,
   divesCount: number,

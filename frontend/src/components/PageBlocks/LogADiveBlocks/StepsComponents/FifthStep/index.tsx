@@ -1,48 +1,22 @@
 import React, {
-  FC, useContext, useEffect, useState,
+  FC, useContext, useState,
 } from 'react';
 import Script from 'next/script';
 import { Input } from '../../../../Input/CommonInput';
 import { StepsNavigation } from '../../StepsNavigation';
 import { MarginWrapper } from '../../../../MarginWrapper';
-import { ButtonGroup } from '../../../../ButtonGroup';
-import { RadioButton } from '../../../../RadioButton';
-import { setStepErrors } from '../../LogDiveHelpers/stepsErrors/setStepErrors';
+import { Popup } from '../../../../DiveManager/Popup';
+import { Backdrop } from '../../../../Backdrop';
+import { SearchAndAddBuddies } from './SearchAndAddBuddies';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
+import { Checkbox } from '../../../../CheckBox';
+import { SearchPredictions } from '../../../../Dropdown/SarchPredictions';
+import { Button } from '../../../../Buttons/Button';
+import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
 import { StepProps } from '../../types/commonTypes';
 import { FifthStepType } from '../../types/stepTypes';
 import containerStyle from '../../styles.module.scss';
 import styles from './style.module.scss';
-import { Popup } from '../../../../DiveManager/Popup';
-import { Backdrop } from '../../../../Backdrop';
-import { Button } from '../../../../Buttons/Button';
-import { Checkbox } from '../../../../CheckBox';
-import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
-import { SearchPredictions } from '../../../../Dropdown/SarchPredictions';
-
-const buddies: {
-  text: string;
-  connectedMode: string;
-  imgSrc?: string;
-}[] = [{
-  text: 'Sara',
-  connectedMode: 'Sara',
-  imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
-},
-{
-  text: 'Barafdgd',
-  connectedMode: 'Bara',
-  imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
-}, {
-  text: 'Karakjsadkjldfs',
-  connectedMode: 'Kara',
-  imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
-}, {
-  text: 'Nar',
-  connectedMode: 'Nara',
-  imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
-},
-];
 
 export const FifthStep: FC<StepProps> = ({
   step,
@@ -51,45 +25,28 @@ export const FifthStep: FC<StepProps> = ({
   const { setStepData } = useContext(LogDiveDataContext);
   const isMobile = useWindowWidth(500, 769);
 
-  const [myBuddies, setMyBuddies] = useState<{
-    text: string;
-    connectedMode: string;
-    imgSrc?: string;
-  }[]>([{ text: '', connectedMode: '', imgSrc: '' }]);
-
   const [diveCenter, setDiveCenter] = useState('');
   const [guideName, setGuideName] = useState('');
 
-  const [buddyName, setBuddyName] = useState('');
-  const [buddyEmail, setBuddyEmail] = useState('');
-  const [buddyEmailError, setBuddyEmailError] = useState('');
+  const [selectedBuddies, setSelectedBuddies] = useState<{
+    id?: string,
+    name: string,
+    email?: string,
+    image?:string,
+  }[]>([]);
 
-  const [buddy, setBuddy] = useState('');
-
-  const [searchType, setSearchType] = useState('diveboard');
   const [openPopup, setOpenPopup] = useState(false);
   const [checkRequestDC, setCheckRequestDC] = useState(false);
-  const [notifyBuddy, setNotifyBuddy] = useState(false);
+  // const [notifyBuddy, setNotifyBuddy] = useState(false);
   const [address, setAddress] = useState('');
   const [url, setUrl] = useState('');
   const [centerEmail, setCenterEmail] = useState('');
 
-  const setErrors = () => setStepErrors({
-    stepType: 5,
-    data: buddyEmail,
-    errors: buddyEmailError,
-    setErrors: setBuddyEmailError,
-  });
-
   const fifthStepData: FifthStepType = {
     diveCenter,
     guideName,
-    buddy: searchType === 'diveboard' ? buddy : buddyName,
+    buddies: selectedBuddies,
   };
-
-  useEffect(() => {
-    setMyBuddies(buddies);
-  }, []);
 
   if (step !== 5) {
     return null;
@@ -153,63 +110,15 @@ export const FifthStep: FC<StepProps> = ({
             You may also manually add buddies to this dive by looking for them on :
           </p>
 
-          <h3>
-            Or search and add buddies from :
-          </h3>
-          <div className={styles.checkBoxWrapper}>
-            <RadioButton
-              name="diveboard"
-              label="DiveBoard"
-              checked={searchType}
-              onCheck={setSearchType}
-            />
-            <RadioButton
-              name="name/email"
-              label="Name/Email"
-              checked={searchType}
-              onCheck={setSearchType}
-            />
-          </div>
-
-          <h3>
-            Add a Diveboard Buddy
-          </h3>
-          <Input
-            value={buddyName}
-            setValue={setBuddyName}
-            placeholder="Name"
-            width={570}
-            height={48}
+          <SearchAndAddBuddies
+            selectedBuddies={selectedBuddies}
+            setSelectedBuddies={setSelectedBuddies}
           />
-          {searchType === 'name/email' && (
-            <MarginWrapper top={10} display="block">
-              <Input
-                value={buddyEmail}
-                setValue={setBuddyEmail}
-                error={buddyEmailError}
-                setError={setBuddyEmailError}
-                placeholder="Email"
-                width={570}
-                height={48}
-              />
-            </MarginWrapper>
-          )}
-
-          {searchType === 'diveboard' && (
-            <div className={styles.buddiesWrapper}>
-              <ButtonGroup
-                buttons={myBuddies}
-                onClick={setBuddy}
-                contentBehavior="wrap"
-              />
-            </div>
-          )}
 
         </div>
       </div>
       <StepsNavigation
         setStep={setStep}
-        setErrors={setErrors}
         setStepData={() => {
           setStepData(5, fifthStepData);
         }}
@@ -217,7 +126,11 @@ export const FifthStep: FC<StepProps> = ({
       {openPopup && (
         <Popup
           closePopup={() => setOpenPopup(false)}
-          customStyles={{ width: '100%', maxWidth: '800px', top: '10vh' }}
+          customStyles={{
+            width: '100%',
+            maxWidth: '800px',
+            top: '10vh',
+          }}
         >
           <div className={styles.popupContainer}>
             {isMobile ? (
@@ -337,39 +250,39 @@ export const FifthStep: FC<StepProps> = ({
                     <label htmlFor="request">Request the dive center to sign this dive</label>
                   </Checkbox>
                 </div>
-                <div className={styles.inputsWrapper}>
-                  <span>Guide name:</span>
-                  <Input
-                    value={guideName}
-                    setValue={setGuideName}
-                    placeholder="Guide name"
-                    width={720}
-                    height={48}
-                  />
-                </div>
-                <b>Dive buddies: NONE</b>
-                <p>
-                  Add your usual dive buddies on the Community section
-                  of your logbook to facilitate the search.
-                  You may also manually add buddies to this dive by looking for them on
-                </p>
-                <div className={styles.inputsWrapper}>
-                  <span>Add diveboard buddy:</span>
-                  <Input
-                    value={buddyName}
-                    setValue={setBuddyName}
-                    placeholder="Add diveboard buddy"
-                    width={720}
-                    height={48}
-                  />
-                  <Checkbox
-                    name="buddy"
-                    onChecked={setNotifyBuddy}
-                    checked={notifyBuddy}
-                  >
-                    <label htmlFor="buddy">Notify your buddy</label>
-                  </Checkbox>
-                </div>
+                {/* <div className={styles.inputsWrapper}> */}
+                {/*   <span>Guide name:</span> */}
+                {/*   <Input */}
+                {/*     value={guideName} */}
+                {/*     setValue={setGuideName} */}
+                {/*     placeholder="Guide name" */}
+                {/*     width={720} */}
+                {/*     height={48} */}
+                {/*   /> */}
+                {/* </div> */}
+                {/* <b>Dive buddies: NONE</b> */}
+                {/* <p> */}
+                {/*   Add your usual dive buddies on the Community section */}
+                {/*   of your logbook to facilitate the search. */}
+                {/*   You may also manually add buddies to this dive by looking for them on */}
+                {/* </p> */}
+                {/* <div className={styles.inputsWrapper}> */}
+                {/*   <span>Add diveboard buddy:</span> */}
+                {/*   <Input */}
+                {/*     value={buddyName} */}
+                {/*     setValue={setBuddyName} */}
+                {/*     placeholder="Add diveboard buddy" */}
+                {/*     width={720} */}
+                {/*     height={48} */}
+                {/*   /> */}
+                {/*   <Checkbox */}
+                {/*     name="buddy" */}
+                {/*     onChecked={setNotifyBuddy} */}
+                {/*     checked={notifyBuddy} */}
+                {/*   > */}
+                {/*     <label htmlFor="buddy">Notify your buddy</label> */}
+                {/*   </Checkbox> */}
+                {/* </div> */}
               </>
             )}
           </div>
