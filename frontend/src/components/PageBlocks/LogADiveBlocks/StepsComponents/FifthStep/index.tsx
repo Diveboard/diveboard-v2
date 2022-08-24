@@ -61,6 +61,8 @@ export const FifthStep: FC<StepProps> = ({
   const [diveCenter, setDiveCenter] = useState('');
   const [guideName, setGuideName] = useState('');
 
+  const [searchedBuddyName, setSearchedBuddyName] = useState('');
+
   const [buddyName, setBuddyName] = useState('');
   const [buddyNameError, setBuddyNameError] = useState('');
   const [buddyEmail, setBuddyEmail] = useState('');
@@ -99,6 +101,29 @@ export const FifthStep: FC<StepProps> = ({
         name: clickedBuddy.text,
       }];
     });
+  };
+
+  const addBuddyHandler = () => {
+    if (buddyName) {
+      const duplicate = myBuddies.find((item) => item.text === buddyName);
+      if (!duplicate) {
+        setMyBuddies(
+          (prevState) => [...prevState,
+            {
+              text: buddyName,
+              id: '',
+              imgSrc: '',
+            }],
+        );
+        setSelectedBuddies([...selectedBuddies, { id: '', name: buddyName }]);
+        setMode([...mode, buddyName]);
+        setSearchType('diveboard');
+      } else {
+        setBuddyNameError('you have already added buddy with those name ');
+      }
+    } else {
+      setSearchType('diveboard');
+    }
   };
 
   const fifthStepData: FifthStepType = {
@@ -193,17 +218,29 @@ export const FifthStep: FC<StepProps> = ({
           <h3>
             Add a Diveboard Buddy
           </h3>
+          {searchType === 'diveboard' && (
           <Input
-            value={buddyName}
-            setValue={setBuddyName}
+            value={searchedBuddyName}
+            setValue={setSearchedBuddyName}
             error={buddyNameError}
             setError={setBuddyNameError}
             placeholder="Name"
             width={570}
             height={48}
           />
+          )}
+
           {searchType === 'name/email' && (
             <>
+              <Input
+                value={buddyName}
+                setValue={setBuddyName}
+                error={buddyNameError}
+                setError={setBuddyNameError}
+                placeholder="New Buddy Name"
+                width={570}
+                height={48}
+              />
               <MarginWrapper top={10} display="block">
                 <Input
                   value={buddyEmail}
@@ -222,21 +259,7 @@ export const FifthStep: FC<StepProps> = ({
                   border="none"
                   backgroundColor="#FDC90D"
                   borderRadius={30}
-                  onClick={() => {
-                    if (buddyName) {
-                      setMyBuddies(
-                        (prevState) => [...prevState,
-                          {
-                            text: buddyName,
-                            id: '',
-                            imgSrc: '',
-                          }],
-                      );
-                      setSearchType('diveboard');
-                    } else {
-                      setBuddyNameError('fill name');
-                    }
-                  }}
+                  onClick={addBuddyHandler}
                 >
                   <span className={styles.addBuddyText}>
                     Add buddy
