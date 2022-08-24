@@ -13,8 +13,8 @@ export type FirstStepType =
       overReview: ScoreType,
       diveDifficulty: ScoreType,
       marineLifeQuality: ScoreType,
-      wreck: boolean,
-      bigFish: boolean,
+      wreck?: ScoreType,
+      bigFish?: ScoreType,
     },
     diveActivities: {
       recreational: boolean,

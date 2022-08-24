@@ -5,10 +5,11 @@
     margin-top: 16px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    flex-wrap: wrap;
 
     > div {
       margin-bottom: 3px;
+      margin-right: 25px;
     }
   }
 
