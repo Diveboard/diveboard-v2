@@ -79,7 +79,7 @@ export type FourthStepType = {};
 export type FifthStepType = {
   diveCenter: string;
   guideName: string;
-  buddies: { id: string, name: string }[];
+  buddies: { id?: string, name: string, email?:string }[];
 };
 
 export type SixthStepType = {
