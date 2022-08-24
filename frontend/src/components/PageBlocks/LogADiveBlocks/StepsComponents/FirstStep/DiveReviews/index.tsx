@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { ScoreRating } from './ScoreRating';
 import { ScoreType } from '../../../types/commonTypes';
 import styles from './styles.module.scss';
@@ -22,6 +22,9 @@ export const DiveReviews: FC<Props> = (
     diveReviews,
     setDiveReviews,
   );
+
+  const [isWreck, setIsWreck] = useState(false);
+  const [isBigFish, setIsBigFish] = useState(false);
 
   return (
     <div className={styles.diveReviews}>
@@ -51,24 +54,43 @@ export const DiveReviews: FC<Props> = (
             (val) => params('marineLifeQuality', val as ScoreType)
           }
         />
+        {isWreck && (
+        <ScoreRating
+          scoreName="Wreck:"
+          score={diveReviews.wreck}
+          setScore={
+            (val) => params('wreck', val as ScoreType)
+          }
+        />
+        )}
+        {isBigFish && (
+        <ScoreRating
+          scoreName="Big Fish:"
+          score={diveReviews.bigFish}
+          setScore={
+            (val) => params('bigFish', val as ScoreType)
+          }
+        />
+        )}
+
       </div>
 
       <div className={styles.checkBoxesWrapper}>
         <Checkbox
           name="wreck"
           onChecked={
-            (val) => params('wreck', val as boolean)
+            (val) => setIsWreck(val)
           }
-          checked={diveReviews.wreck}
+          checked={isWreck}
         >
           Wreck
         </Checkbox>
 
         <Checkbox
           name="big fish"
-          checked={diveReviews.bigFish}
+          checked={isBigFish}
           onChecked={
-            (val) => params('bigFish', val as boolean)
+            (val) => setIsBigFish(val)
           }
         >
           Big fish
