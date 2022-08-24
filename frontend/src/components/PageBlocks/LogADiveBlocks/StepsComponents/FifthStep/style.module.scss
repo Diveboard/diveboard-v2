@@ -21,20 +21,43 @@
     color: #0059DE;
     cursor: pointer;
   }
-  .ref2{
+
+  .ref2 {
     font-weight: 400;
     font-size: 16px;
     line-height: 24px;
     color: #0059DE;
   }
 
-  .checkBoxWrapper{
+  .checkBoxWrapper {
     display: flex;
     justify-content: space-between;
     width: 250px;
   }
 
-  .buddiesWrapper{
+  .selectedBuddiesWrapper {
+    display: flex;
+    flex-direction: column;
+
+    .selectedItem {
+      display: flex;
+      align-items: center;
+
+      .close {
+        width: 16px;
+        height: 16px;
+        margin-left: 10px;
+      }
+    }
+  }
+
+  .addBuddyText {
+    font-weight: 600;
+    font-size: 16px;
+    color: #000345;
+  }
+
+  .buddiesWrapper {
     margin-top: 26px;
   }
 }

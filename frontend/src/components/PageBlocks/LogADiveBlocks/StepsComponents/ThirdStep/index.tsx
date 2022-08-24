@@ -11,10 +11,11 @@ import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import {
   usePointsHandlers,
 } from './thirdStepHelpers';
+import { useUserLocation } from '../../../../../hooks/useUserLocation';
+import { SearchPredictions } from '../../../../Dropdown/SarchPredictions';
 import { MarkerType, StepProps } from '../../types/commonTypes';
 import { ThirdStepType } from '../../types/stepTypes';
 import styles from './styles.module.scss';
-import { useUserLocation } from '../../../../../hooks/useUserLocation';
 
 const markerPoints = [
   {
@@ -55,6 +56,8 @@ export const ThirdStep: FC<StepProps> = ({
   });
   const [newSpotName, setNewSpotName] = useState('');
   const [newSpotNameError, setNewSpotNameError] = useState('');
+  const [newSpotCountry, setNewSpotCountry] = useState('');
+  const [newSpotCountryError, setNewSpotCountryError] = useState('');
 
   const [markers, setMarkers] = useState<MarkerType[]>(markerPoints);
 
@@ -74,6 +77,7 @@ export const ThirdStep: FC<StepProps> = ({
   const thirdStepData: ThirdStepType = {
     spot: chosenPoint && {
       name: chosenPoint.diveName,
+      country: newSpotCountry,
       lng: chosenPoint.lng,
       lat: chosenPoint.lat,
     },
@@ -100,6 +104,7 @@ export const ThirdStep: FC<StepProps> = ({
     setMarkers,
     setNewPoint,
     setNewSpotNameError,
+    setNewSpotCountryError,
   );
 
   if (step !== 3) {
@@ -151,6 +156,19 @@ export const ThirdStep: FC<StepProps> = ({
                 error={newSpotNameError}
                 setError={setNewSpotNameError}
               />
+              <div className={styles.countryInputWrapper}>
+                <Input
+                  value={newSpotCountry}
+                  setValue={setNewSpotCountry}
+                  placeholder="Country"
+                  height={48}
+                  width={720}
+                  error={newSpotCountryError}
+                  setError={setNewSpotCountryError}
+                />
+                <SearchPredictions region={newSpotCountry} setRegion={setNewSpotCountry} noMap />
+              </div>
+
             </div>
             <span className={styles.explanationText}>
               Drag the on
@@ -167,7 +185,7 @@ export const ThirdStep: FC<StepProps> = ({
                 backgroundColor="#F4BF00"
                 border="none"
                 onClick={() => {
-                  setNewPointHandler(newSpotName, newPointCoords);
+                  setNewPointHandler(newSpotName, newSpotCountry, newPointCoords);
                 }}
               >
                 <span className={styles.saveBtn}>Save</span>
@@ -185,6 +203,5 @@ export const ThirdStep: FC<StepProps> = ({
         }}
       />
     </>
-
   );
 };
