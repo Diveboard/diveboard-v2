@@ -62,6 +62,7 @@ export const FifthStep: FC<StepProps> = ({
   const [guideName, setGuideName] = useState('');
 
   const [buddyName, setBuddyName] = useState('');
+  const [buddyNameError, setBuddyNameError] = useState('');
   const [buddyEmail, setBuddyEmail] = useState('');
   const [buddyEmailError, setBuddyEmailError] = useState('');
 
@@ -99,7 +100,7 @@ export const FifthStep: FC<StepProps> = ({
       }];
     });
   };
-  console.log({ selectedBuddies });
+
   const fifthStepData: FifthStepType = {
     diveCenter,
     guideName,
@@ -195,6 +196,8 @@ export const FifthStep: FC<StepProps> = ({
           <Input
             value={buddyName}
             setValue={setBuddyName}
+            error={buddyNameError}
+            setError={setBuddyNameError}
             placeholder="Name"
             width={570}
             height={48}
@@ -220,15 +223,19 @@ export const FifthStep: FC<StepProps> = ({
                   backgroundColor="#FDC90D"
                   borderRadius={30}
                   onClick={() => {
-                    setMyBuddies(
-                      (prevState) => [...prevState,
-                        {
-                          text: buddyName,
-                          id: '',
-                          imgSrc: '',
-                        }],
-                    );
-                    setSearchType('diveboard');
+                    if (buddyName) {
+                      setMyBuddies(
+                        (prevState) => [...prevState,
+                          {
+                            text: buddyName,
+                            id: '',
+                            imgSrc: '',
+                          }],
+                      );
+                      setSearchType('diveboard');
+                    } else {
+                      setBuddyNameError('fill name');
+                    }
                   }}
                 >
                   <span className={styles.addBuddyText}>
