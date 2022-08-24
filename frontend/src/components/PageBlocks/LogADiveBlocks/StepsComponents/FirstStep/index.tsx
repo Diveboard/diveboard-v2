@@ -41,8 +41,8 @@ export const FirstStep: FC<StepProps> = ({
     overReview: 5,
     diveDifficulty: 5,
     marineLifeQuality: 5,
-    wreck: false,
-    bigFish: false,
+    wreck: undefined,
+    bigFish: undefined,
   });
 
   // dive activities
