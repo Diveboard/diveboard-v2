@@ -5,7 +5,8 @@ import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { StepProps } from '../../types/commonTypes';
 import { FourthStepType } from '../../types/stepTypes';
 import { SpeciesList } from './SpeciesList';
-import { mySpecies, speciesListData } from './DUMMY_DATA_FOURTH_STEP';
+import { mySpecies } from './DUMMY_DATA_FOURTH_STEP';
+import speciesListData from '../../../../../../public/species/species.json';
 import { SpeciesCardList } from './SpeciesCardList';
 import { Search } from './SearchBlock';
 
@@ -27,7 +28,7 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
   };
 
   const radioButtonChange = (event: React.FormEvent<HTMLInputElement>) => {
-    // chouse which method
+    // chose which method
     // if something change console.log('click');
     // if need value use next line
     (event.target as HTMLInputElement).value;
