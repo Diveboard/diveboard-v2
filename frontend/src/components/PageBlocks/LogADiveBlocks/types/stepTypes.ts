@@ -1,4 +1,4 @@
-import { ScoreType } from './commonTypes';
+import { GearsVariantsType, ScoreType } from './commonTypes';
 
 export type FirstStepType =
   {
@@ -88,11 +88,14 @@ export type SixthStepType = {
 };
 
 export type SeventhStepType = {
-  typeOfGear: string;
-  manufacturer: string,
-  model: string;
-  dateAcquired: Date;
-  lastMaintenance: Date;
+  gears: {
+    id: number
+    typeOfGear: GearsVariantsType;
+    manufacturer: string,
+    model: string;
+    dateAcquired: Date;
+    lastMaintenance: Date; }[]
+
 };
 
 export type EighthStepType = {};
