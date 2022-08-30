@@ -10,6 +10,7 @@ import { Icon } from '../../../../../Icons/Icon';
 import { SearchPredictions } from '../../../../../Dropdown/SarchPredictions';
 import styles from './styles.module.scss';
 import { useUserLocation } from '../../../../../../hooks/useUserLocation';
+import { checkGeolocationAccess } from '../../../../../../utils/checkGeolocationAccess';
 
 type Props = {
   location: { lat: number, lng: number };
@@ -102,7 +103,11 @@ export const LogADiveDiveMap: FC<Props> = ({
               borderRadius={30}
               border="none"
               onClick={() => {
-                setLocation(userLocation);
+                if (userLocation) {
+                  setLocation(userLocation);
+                } else {
+                  checkGeolocationAccess();
+                }
               }}
             >
               <Icon iconName="aim" />
