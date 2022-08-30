@@ -11,6 +11,7 @@ type Props = {
 
 export const FileWithTags: FC<Props> = ({ file, setFile }) => {
   const isMobile = useWindowWidth(500, 768);
+
   const setFileHandler = (value: string) => {
     setFile((files) => {
       const newFiles = [...files];
@@ -23,8 +24,15 @@ export const FileWithTags: FC<Props> = ({ file, setFile }) => {
     });
   };
 
+  const deleteFile = () => {
+    setFile((files) => files.filter((item) => item.file.lastModified !== file.file.lastModified));
+  };
+
   return (
     <div className={styles.fileItem}>
+      <span onClick={deleteFile} className={styles.delete}>
+        <Icon iconName="close" width={12} height={12} />
+      </span>
       <div className={styles.fileName}>
         <Icon iconName="file" />
         <span>{file.file.name}</span>
@@ -36,6 +44,7 @@ export const FileWithTags: FC<Props> = ({ file, setFile }) => {
         width={isMobile ? 768 : 570}
         height={isMobile ? 46 : 56}
       />
+
     </div>
   );
 };

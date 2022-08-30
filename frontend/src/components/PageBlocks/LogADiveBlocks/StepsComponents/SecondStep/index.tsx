@@ -140,6 +140,7 @@ export const SecondStep: FC<StepProps> = ({
               borderRadius={30}
               width={305}
               height={48}
+              disable
             >
               <span className={styles.primaryButton}>
                 Import from Dive Computer

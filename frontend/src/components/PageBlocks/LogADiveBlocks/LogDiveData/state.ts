@@ -47,11 +47,7 @@ const sixthStep: SixthStepType = {
 };
 
 const seventhStep: SeventhStepType = {
-  typeOfGear: undefined,
-  manufacturer: undefined,
-  model: undefined,
-  dateAcquired: undefined,
-  lastMaintenance: undefined,
+  gears: undefined,
 };
 
 const eighthStep: EighthStepType = {};
