@@ -84,7 +84,9 @@ export const ThirdStep: FC<StepProps> = ({
   };
 
   useEffect(() => {
-    if (userLocation) setLocation(userLocation);
+    if (userLocation) {
+      setLocation(userLocation);
+    }
   }, [userLocation]);
 
   // useEffect(() => {
