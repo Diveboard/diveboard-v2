@@ -124,7 +124,7 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
         <div className={styles.container}>
           <div className={styles.title}>Species</div>
           <div className={styles.description}>
-            Search and add marine species to yuor dive
+            Search and add marine species to your dive
           </div>
           <Search />
           <div className={styles.radioButtonWrapper} onChange={radioButtonChange}>

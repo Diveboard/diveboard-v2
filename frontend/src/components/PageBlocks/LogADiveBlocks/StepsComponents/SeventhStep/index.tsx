@@ -1,57 +1,66 @@
 import React, { FC, useContext, useState } from 'react';
-import { StepProps } from '../../types/commonTypes';
+
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
-import styles from './styles.module.scss';
 import { StepsNavigation } from '../../StepsNavigation';
-import { Dropdown } from '../../../../Dropdown/Dropdawn';
-import { Input } from '../../../../Input/CommonInput';
-import { DatePickerInput } from '../../../../Input/DatePickerInput';
 import { Checkbox } from '../../../../CheckBox';
 import { Button } from '../../../../Buttons/Button';
 import { Icon } from '../../../../Icons/Icon';
-import { SeventhStepType } from '../../types/stepTypes';
 import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
-
-const gears = [
-  'BCD',
-  'Boots',
-  'Camera',
-  'Compass',
-  'Computer',
-  'Cylinder',
-  'Dive skin',
-  'Dry Suit',
-  'Fins',
-  'Gloves',
-  'Hood',
-  'Knife',
-  'Lift Bag',
-  'Light',
-  'Mask',
-  'Other',
-  'Rebreather',
-  'Regulator',
-  'Scooter',
-  'Wet suit',
-];
+import { getGearsActions } from '../../LogDiveHelpers/getGearsActions';
+import { incrementId } from '../../LogDiveHelpers/incrementId';
+import { GearForm } from './GearForm';
+import { StepProps } from '../../types/commonTypes';
+import { SeventhStepType } from '../../types/stepTypes';
+import styles from './styles.module.scss';
 
 export const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
-  const [gearType, setGearType] = useState('');
-  const [manufacturer, setManufacturer] = useState('');
-  const [model, setModel] = useState('');
-  const [dateAcquired, setDateAcquired] = useState<Date>();
-  const [lastMaintenance, setLastMaintenance] = useState<Date>();
-  const [saveToLocker, setSaveToLocker] = useState(false);
-
-  const { setStepData } = useContext(LogDiveDataContext);
   const isMobile = useWindowWidth(500, 768);
 
+  const [gearItems, setGearItems] = useState<SeventhStepType['gears']>([{
+    id: 1,
+    typeOfGear: '',
+    manufacturer: '',
+    model: '',
+    dateAcquired: undefined,
+    lastMaintenance: undefined,
+  }]);
+
+  const [saveToLocker, setSaveToLocker] = useState(false);
+  const { setStepData } = useContext(LogDiveDataContext);
+
+  const actions = getGearsActions(gearItems, setGearItems);
+
+  const GearsFormsComponent = gearItems.map(({
+    id, typeOfGear, lastMaintenance, manufacturer, model, dateAcquired,
+  }) => {
+    const parameters = actions(id);
+    return (
+      <GearForm
+        typeOfGear={typeOfGear}
+        setGearParameters={parameters.setGearParameters}
+        id={id}
+        lastMaintenance={lastMaintenance}
+        model={model}
+        dateAcquired={dateAcquired}
+        manufacturer={manufacturer}
+      />
+    );
+  });
+
+  const add = () => {
+    setGearItems([...gearItems, {
+      id: incrementId(gearItems),
+      lastMaintenance: undefined,
+      dateAcquired: undefined,
+      model: '',
+      typeOfGear: '',
+      manufacturer: '',
+
+    }]);
+  };
+
   const seventhStepData: SeventhStepType = {
-    typeOfGear: gearType,
-    manufacturer,
-    model,
-    dateAcquired,
-    lastMaintenance,
+    gears: gearItems,
   };
 
   if (step !== 7) return null;
@@ -61,43 +70,7 @@ export const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
       <div className={styles.container}>
         <h2>Gear</h2>
         <p>Track the gear that you used.</p>
-        <div className={styles.inputsWrapper}>
-          <Dropdown
-            item="Type of gear"
-            setItem={setGearType}
-            allItems={gears}
-            height={48}
-            width={420}
-          />
-          <Input
-            type="text"
-            value={manufacturer}
-            height={48}
-            width={420}
-            placeholder="Manufacturer"
-            setValue={setManufacturer}
-          />
-          <Input
-            type="text"
-            value={model}
-            height={48}
-            width={420}
-            placeholder="Model"
-            setValue={setModel}
-          />
-          <div className={styles.dateWrapper}>
-            <DatePickerInput
-              date={dateAcquired}
-              setDate={(val) => setDateAcquired(val)}
-              placeholder="Date Acquired"
-            />
-            <DatePickerInput
-              date={lastMaintenance}
-              setDate={(val) => setLastMaintenance(val)}
-              placeholder="Last Maintenance"
-            />
-          </div>
-        </div>
+        {GearsFormsComponent}
         <Checkbox
           name="locker"
           onChecked={setSaveToLocker}
@@ -112,6 +85,7 @@ export const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
           borderRadius={30}
           backgroundColor="#0059DE"
           marginTop={14}
+          onClick={add}
         >
           <Icon iconName="plus-circle-white" />
           <span className={styles.buttonLabel}>Add new</span>
