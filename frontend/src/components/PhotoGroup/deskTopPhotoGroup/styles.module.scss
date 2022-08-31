@@ -1,0 +1,27 @@
+.photoWrapper {
+  margin: 26px 0;
+  display: flex;
+  justify-content: space-between;
+
+  .column {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-right: 30px;
+    justify-content: space-between;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .photoWrapper {
+    .column {
+      margin-right: 20px;
+    }
+  }
+}
+
+

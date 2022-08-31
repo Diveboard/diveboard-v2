@@ -1,0 +1,159 @@
+.button {
+  font-family: 'Prompt', sans-serif;
+  min-width: 81px;
+  height: 26px;
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 10px;
+  text-align: center;
+  color: #000345;
+  background: #f0f6ff;
+  border: 1px solid rgba(0, 3, 69, 0.1);
+  box-shadow: 0px 0px 8px rgba(0, 62, 89, 0.1);
+  border-radius: 40px;
+  transition: all 0.3s;
+}
+
+.kebab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  &:hover {
+    background: #fdc90d;
+  }
+}
+
+.popup {
+  height: 48px;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000345;
+  background: #fdc90d;
+  border-radius: 30px;
+  padding: 14px 0;
+
+  &__small {
+    width: 183px;
+  }
+  &__big {
+    width: 300px;
+  }
+}
+
+.no__border {
+  display: none;
+  width: 24px;
+  align-items: center;
+  border: none;
+  box-shadow: none;
+  background: none;
+  padding: 0;
+  border-radius: unset;
+}
+
+.backButton {
+  min-width: unset;
+  width: 30px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0px 0px 8px rgba(0, 62, 89, 0.1);
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.search {
+  width: 159px;
+  height: 48px;
+  background: #fdc90d;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 0px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 6;
+}
+.saves {
+  width: 92px;
+  padding-left: 10px;
+  padding-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0px 0px 8px rgba(0, 62, 89, 0.1);
+  font-weight: 400;
+  font-size: 10px;
+  color: #000345;
+  opacity: 0.8;
+  line-height: 20px;
+
+  span {
+    margin-right: 4px;
+  }
+}
+
+.more {
+  min-width: unset;
+  height: unset;
+  border: none;
+  background: none;
+  box-shadow: none;
+  color: #0059de;
+  font-size: inherit;
+  margin: 0;
+  padding: 0;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 12px;
+  color: #0059de;
+}
+
+.bigYellowButton {
+  width: 228px;
+  height: 56px;
+  background: #fdc90d;
+  font-weight: 600;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000345;
+  span {
+    margin-left: 15px;
+  }
+}
+
+@media (max-width: 767px) {
+  .kebab {
+    display: none;
+  }
+
+  .no__border {
+    display: flex;
+  }
+
+  .search {
+    width: unset;
+    padding: 0 23px;
+
+    span {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .bigYellowButton {
+    width: 100%;
+  }
+}

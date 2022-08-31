@@ -1,0 +1,23 @@
+.editedImgWrapper {
+  .imgUploadWrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .fileInputWrapper {
+      .fileInput{
+        display: none;
+      }
+      .label {
+        margin-left: 20px;
+        font-weight: 300;
+        font-size: 16px;
+        line-height: 22px;
+        text-decoration-line: underline;
+        color: #074EE8;
+        cursor: pointer;
+      }
+    }
+  }
+}
+

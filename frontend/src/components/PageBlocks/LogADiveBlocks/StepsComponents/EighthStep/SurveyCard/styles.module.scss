@@ -1,0 +1,81 @@
+.surveyCard {
+  width: 100%;
+  max-width: 420px;
+  //height: 140px;
+  box-shadow: 0 8px 15px rgba(0, 62, 89, 0.06);
+  border-radius: 15px;
+  display: flex;
+  color: #000345;
+
+  .img {
+    border-radius: 15px 0 0 15px;
+  }
+
+  .contentWrapper {
+    padding: 10px 10px 18px 15px;
+    position: relative;
+    width: 100%;
+    max-width: 326px;
+
+    .icon {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      transform: rotate(180deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+
+      &:hover{
+        cursor: pointer;
+      }
+    }
+
+    .content {
+      width: 100%;
+      max-width: 265px;
+
+      .surveyType {
+        display: block;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 10px;
+        line-height: 12px;
+        color: #0059DE;
+      }
+
+      .title {
+        margin-top: 3px;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 24px;
+      }
+
+      .description {
+        margin-top: 3px;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 10px;
+        line-height: 12px;
+        opacity: 0.6;
+      }
+
+      .contribution {
+        margin-top: 3px;
+        font-weight: 300;
+        font-size: 14px;
+        line-height: 20px;
+
+        .contributionId {
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+
+
+}

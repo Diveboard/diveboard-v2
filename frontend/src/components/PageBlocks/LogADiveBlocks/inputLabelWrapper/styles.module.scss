@@ -1,0 +1,23 @@
+.wrapper {
+  max-width: max-content;
+  width: 100%;
+  min-width: 165px;
+}
+
+.fullSizedContentWrapper {
+  width: 100%;
+}
+
+.halfSizedContentWrapper{
+  width: 48%;
+}
+
+
+.label {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000345;
+  margin-bottom: 4px;
+}

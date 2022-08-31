@@ -1,0 +1,18 @@
+.fileItem{
+  margin-top: 20px;
+  margin-bottom: 10px;
+  .delete {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .fileName{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    >span{
+      margin-left: 10px;
+      color: #000345;
+    }
+  }
+}

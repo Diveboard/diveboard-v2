@@ -1,0 +1,40 @@
+.item {
+  border-bottom: 1px solid rgba(0, 3, 69, 0.05);
+  padding: 20px 0 10px 0;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+    .mutedTitle {
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 22px;
+      color: #767676;
+    }
+
+    .title {
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 21px;
+      color: #111111;
+    }
+
+    .edit {
+      font-weight: 500;
+      font-size: 11px;
+      line-height: 12px;
+      color: #0059DE;
+    }
+
+    .click{
+      &:hover{
+        cursor: pointer;
+      }
+    }
+
+
+  }
+}

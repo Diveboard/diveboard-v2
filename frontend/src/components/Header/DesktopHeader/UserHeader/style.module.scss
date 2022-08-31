@@ -1,0 +1,64 @@
+@import "../../../../../styles/colors";
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 0 75px;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 5px 20px rgba(0, 24, 85, 0.1);
+  background-color: #FFFFFF;
+
+  .leftGroup {
+    width: 530px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .walletLink {
+      display: flex;
+      align-items: center;
+
+      span {
+        margin-left: 12px;
+      }
+    }
+  }
+
+  .rightGroup {
+    margin-left: 20px;
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.btnText {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+}
+
+.filled {
+  background-color: #FFFFFF;
+}
+
+
+@media (max-width: 1024px) {
+  .header {
+    padding: 0 25px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 800px) {
+  .header {
+    padding: 0 10px;
+  }
+}

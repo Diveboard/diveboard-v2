@@ -1,0 +1,53 @@
+.tank {
+  margin: 10px 0;
+  width: 100%;
+  background: #F0F6FF;
+  padding: 44px 28px 25px 28px;
+  border-radius: 30px;
+
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+
+    >div{
+      margin-bottom: 20px;
+    }
+
+
+    .labelWrapper {
+      display: flex;
+      align-items: center;
+    }
+
+    .label {
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 24px;
+      color: #000345;
+      margin-right: 10px;
+    }
+
+    > div {
+      margin-right: 10px;
+    }
+  }
+}
+
+.contentWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  .buttonWrapper {
+    width: 149px;
+    height: 48px;
+
+    .removeButtonText {
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 20px;
+      color: #000345;
+    }
+  }
+}

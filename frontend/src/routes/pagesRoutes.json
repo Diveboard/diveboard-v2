@@ -1,0 +1,19 @@
+{
+  "mainPageRoute": "/",
+  "mainPageGuest": "/main/home-guest",
+  "mainPageUser": "/main/home-user",
+  "authPageRout": "/auth",
+  "explorePageRout": "/explore",
+  "walletPageRout": "/wallet",
+  "donatePageRoute": "/donate",
+  "aboutPageRout": "/about-us",
+  "diveManagerPageRout": "/dive-manager",
+  "favouritesPageRout": "/favourites",
+  "feedsPageRout": "/feed",
+  "galleryPageRout": "/gallery",
+  "shopPageRout": "/shop",
+  "supportPageRout": "/support",
+  "settingsPageRout": "/settings",
+  "logDivePageRout": "/log-dive",
+  "profilePageRout": "/logbook"
+}

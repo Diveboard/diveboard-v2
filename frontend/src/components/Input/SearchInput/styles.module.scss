@@ -1,0 +1,30 @@
+.searchInputWrapper {
+  position: relative;
+  width: 100%;
+
+  > div > input {
+    padding-left: 60px !important;
+  }
+
+  .pointsIcon {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-40%);
+  }
+
+  .searchButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 80px;
+    background: #FDC90D;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+}

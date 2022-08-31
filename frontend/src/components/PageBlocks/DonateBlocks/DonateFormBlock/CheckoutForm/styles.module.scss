@@ -1,0 +1,97 @@
+.wrapper {
+  margin-bottom: 130px;
+  max-width: 420px;
+  width: 100%;
+}
+
+.btnText {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000345;
+}
+
+.elements {
+  margin: 20px 0;
+}
+
+.elements ::placeholder {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000345;
+  opacity: 0.5;
+}
+
+.btnDonate {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 20px;
+  color: #000345;
+}
+
+.elementNumber {
+  border: 1px solid rgba(0, 3, 69, 0.2);
+  box-sizing: border-box;
+  box-shadow: 0 5px 20px -15px rgba(0, 62, 89, 0.13);
+  border-radius: 25px;
+  padding: 15px 20px;
+  height: 48px;
+}
+
+.block {
+  margin: 10px 0 10px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.smallInputWrapper{
+  width: 100%;
+  &:last-child{
+    margin-left: 20px;
+  }
+}
+
+.blockElement {
+  width: 100%;
+  height: 48px;
+  box-sizing: border-box;
+  border: 1px solid rgba(0, 3, 69, 0.2);
+  box-shadow: 0 5px 20px -15px rgba(0, 62, 89, 0.13);
+  border-radius: 25px;
+  padding: 15px 0 20px 20px;
+}
+
+.label {
+  margin-left: 20px;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #000345;
+  opacity: 0.6;
+}
+
+.checkboxText {
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000345;
+}
+
+.checkbox {
+  margin-bottom: 24px;
+}
+
+.errorTextForm {
+  display: block;
+  margin-top: 3px;
+  margin-left: 15px;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #FF645A;
+}
+
+.errorInput{
+  border: 1px solid #FF645A;
+}

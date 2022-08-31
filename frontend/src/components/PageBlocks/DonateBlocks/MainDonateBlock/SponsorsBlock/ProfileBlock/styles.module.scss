@@ -1,0 +1,48 @@
+.block {
+  margin-top: 13px;
+  display: flex;
+}
+
+.imgWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.userData {
+  width: 245px;
+  margin-left: 12px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.userData h4 {
+  margin: 0;
+  align-self: stretch;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000345;
+}
+.userData p {
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #000345;
+  opacity: 0.6;
+}
+
+.follow {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.follow span {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #0059DE;
+  padding-right: 7px;
+}

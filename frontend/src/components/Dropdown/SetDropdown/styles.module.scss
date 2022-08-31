@@ -1,0 +1,25 @@
+.itemsWrapper {
+  position: absolute;
+  top: -4px;
+  left: 103%;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  width: 244px;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  background-color: #ffffff;
+}
+
+@media (max-width: 1344px) {
+  .itemsWrapper {
+    left: 101%;
+  }
+}
+
+@media (max-width: 1320px) {
+  .itemsWrapper {
+    right: 13%;
+    left: unset;
+  }
+}

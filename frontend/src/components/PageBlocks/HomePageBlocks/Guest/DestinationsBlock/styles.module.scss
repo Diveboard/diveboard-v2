@@ -1,0 +1,55 @@
+.destinationBlock {
+  padding: 0 75px;
+
+  .title {
+    margin-top: 130px;
+    font-weight: 600;
+    font-size: 55px;
+    line-height: 70px;
+    color: #000345;
+  }
+
+  .cardWrapper {
+    margin-top: 45px;
+    padding-bottom: 26px;
+    display: flex;
+    justify-content: space-between;
+
+    > div {
+      margin-right: 10px;
+      margin-bottom: 10px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 780px) {
+  .destinationBlock {
+    padding: 0 10px;
+
+    .title {
+      margin-top: 74px;
+      font-size: 24px;
+    }
+
+    .cardWrapper {
+      margin-top: 26px;
+      overflow-x: scroll;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      > div {
+        margin-right: 15px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

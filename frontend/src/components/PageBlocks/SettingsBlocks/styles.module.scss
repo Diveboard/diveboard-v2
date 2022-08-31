@@ -1,0 +1,19 @@
+.wrapper {
+  margin-top: 80px;
+  display: flex;
+  justify-content: center;
+  padding: 30px 10px 0 10px;
+
+  .content {
+    width: 100%;
+    max-width: 870px;
+
+    .title {
+      margin-bottom: 10px;
+      font-weight: 600;
+      font-size: 40px;
+      line-height: 48px;
+      color: #000345;
+    }
+  }
+}

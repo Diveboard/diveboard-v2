@@ -1,0 +1,133 @@
+.card {
+  width: 100%;
+  max-width: 420px;
+  min-width: 300px;
+  height: 380px;
+  background: #FFFFFF;
+  box-shadow: 0 25px 40px -15px rgba(0, 62, 89, 0.12);
+  border-radius: 20px;
+
+  .imgWrapper {
+    position: relative;
+    height: 283px;
+
+    .img {
+      border-radius: 20px 20px 0 0;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+
+
+  .cardFooter {
+    height: 97px;
+    padding: 15px 25px 10px 20px;
+
+    .destinationName {
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 24px;
+      color: #000345;
+    }
+
+    .footerInnerWrapper {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .countryWrapper {
+        width: 90px;
+        height: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .country {
+          font-weight: 300;
+          font-size: 14px;
+          line-height: 20px;
+          color: #000345;
+        }
+      }
+
+      .ratingWrapper {
+        width: 145px;
+        height: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+
+        .dives {
+          font-weight: 500;
+          font-size: 14px;
+          text-align: right;
+          color: #000345;
+          opacity: 0.6;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1440px) {
+  .card {
+    max-width: 300px;
+    min-width: 220px;
+    height: 330px;
+
+    .imgWrapper {
+      height: 245px;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .card {
+    max-width: 220px;
+    min-width: 170px;
+    height: 339px;
+
+    .imgWrapper {
+      height: 230px;
+    }
+
+    .cardFooter {
+      height: 109px;
+
+      .destinationName {
+        font-size: 16px;
+        line-height: 21px;
+      }
+
+      .footerInnerWrapper {
+        height: 60%;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    min-width: 300px;
+    height: 380px;
+
+    .imgWrapper {
+      height: 300px;
+    }
+
+    .cardFooter {
+      height: max-content;
+
+      .footerInnerWrapper {
+        flex-direction: row;
+
+        align-items: flex-start;
+      }
+    }
+  }
+}

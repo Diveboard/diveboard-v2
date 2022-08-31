@@ -1,0 +1,23 @@
+.textArea{
+  display: block;
+  resize: none;
+  max-width: 570px;
+  width: 100%;
+  border-radius: 30px;
+
+  box-shadow: 0 5px 20px -15px rgb(0, 62, 89);
+  -webkit-box-shadow: 0 5px 20px -15px rgb(0, 62, 89);
+  -moz-box-shadow: 0 5px 20px -15px rgb(0, 62, 89);
+  -o-box-shadow: 0 5px 20px -15px rgb(0, 62, 89);
+
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 3, 69, 0.2);
+  box-sizing: border-box;
+
+
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000345;
+  outline: none;
+}

@@ -1,0 +1,66 @@
+.container {
+  margin: 15px auto 0;
+  width: 100%;
+  max-width: 870px;
+
+  h2 {
+    font-size: 20px;
+    line-height: 24px;
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 600;
+  }
+
+  > p {
+    margin: 10px 0 30px;
+  }
+}
+
+.buttonGroup {
+  display: flex;
+  margin-bottom: 30px;
+
+  > :first-child {
+    margin-right: 30px;
+    color: white;
+  }
+
+  > button > span {
+    font-size: 18px;
+    line-height: 20px;
+    font-weight: 600;
+  }
+}
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.fileError {
+  position: absolute;
+  bottom: -10px;
+  left: 15px;
+  color: #FF645A;
+}
+
+@media (max-width: 768px) {
+  .buttonGroup {
+    flex-direction: column;
+    > button {
+      max-width: 768px !important;
+    }
+  }
+
+  .inputWrapper {
+    margin-right: 0 !important;
+    > input::before {
+      width: 100%;
+    }
+  }
+}

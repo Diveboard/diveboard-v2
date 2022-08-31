@@ -1,0 +1,65 @@
+.diveWrapper {
+  min-height: calc(100vh - 238px);
+  padding: 90px 10px 10px;
+
+  .header {
+    @extend .container;
+    padding: 30px 0 15px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+      font-weight: 600;
+      font-size: 40px;
+      line-height: 48px;
+      color: #000345;
+    }
+
+    span {
+      font-weight: 500;
+      font-size: 11px;
+      line-height: 12px;
+      text-align: right;
+      color: #0059DE;
+      text-decoration: underline;
+
+      &:hover {
+        cursor: pointer;
+        opacity: .8;
+      }
+    }
+  }
+
+  h2 {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+    color: #111111;
+  }
+}
+
+.container {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 870px;
+}
+
+
+@media (max-width: 768px) {
+  .diveWrapper {
+    padding: 50px 10px 70px;
+
+    .header {
+      h1 {
+        font-size: 21px;
+        line-height: 29px;
+      }
+    }
+
+    h2 {
+      font-size: 16px;
+      line-height: 21px;
+    }
+  }
+}

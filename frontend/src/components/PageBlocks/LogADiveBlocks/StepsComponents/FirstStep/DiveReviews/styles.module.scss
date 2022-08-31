@@ -1,0 +1,38 @@
+.diveReviews {
+  margin-top: 20px;
+
+  .scoreWrapper {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    > div {
+      margin-bottom: 3px;
+      margin-right: 25px;
+    }
+  }
+
+  .checkBoxesWrapper {
+    margin-top: 16px;
+    display: flex;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 20px;
+    color: #000345;
+
+    > div {
+      margin-right: 30px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .diveReviews {
+
+    .scoreWrapper {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}
