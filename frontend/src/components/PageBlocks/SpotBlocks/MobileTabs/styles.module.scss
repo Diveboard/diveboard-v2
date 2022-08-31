@@ -1,0 +1,28 @@
+.tabsPanel {
+  height: 49px;
+  background: #FFFFFF;
+  box-shadow: inset 0px -2px 0px rgba(0, 3, 69, 0.05);
+  display: flex;
+
+
+  .panelItem {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .activePanel {
+    font-weight: 600;
+    color: #0059DE;
+    box-shadow: inset 0px -2px 0px #074EE8;
+  }
+
+  .notActivePanel {
+    font-weight: 400;
+    color: #000345;
+  }
+}

@@ -1,0 +1,18 @@
+.viewMore {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  color: #0059DE;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .viewMore {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}

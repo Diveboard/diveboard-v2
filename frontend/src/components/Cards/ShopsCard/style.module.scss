@@ -1,0 +1,89 @@
+.shopCard {
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 8px 15px rgba(0, 62, 89, 0.06);
+  border-radius: 15px;
+  position: relative;
+
+  .imgWrapper {
+    position: relative;
+    height: 224px;
+
+    .img {
+      border-radius: 15px 15px 0 0;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+
+  .favourite {
+    padding: 3px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    width: 26px;
+    height: 26px;
+
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 8px rgba(0, 62, 89, 0.1);
+    border-radius: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .footer {
+    padding: 11px 15px;
+    color: #000345;
+    display: flex;
+    flex-direction: column;
+
+    .diveName {
+      margin-top: 3px;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 21px;
+    }
+
+    .data {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      line-height: 20px;
+      color: #000345;
+
+      .left {
+        font-weight: 300;
+        display: flex;
+        align-items: center;
+
+        > span {
+          margin-left: 8px;
+        }
+      }
+
+      .right {
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        opacity: 0.6;
+
+        > span {
+          margin-left: 5px;
+        }
+
+        .count {
+          font-weight: 300;
+        }
+      }
+    }
+
+
+  }
+}
+
+
