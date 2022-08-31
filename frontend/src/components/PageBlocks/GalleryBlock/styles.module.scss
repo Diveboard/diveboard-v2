@@ -49,9 +49,31 @@
   }
 }
 
-.column {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  position: relative;
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 63px 10px 56px;
+
+    h1 {
+      margin-bottom: 16px;
+    }
+  }
+
+  .imageGrid {
+    -webkit-column-count: 1;
+    -webkit-column-gap:   10px;
+    -moz-column-count:    1;
+    -moz-column-gap:      10px;
+    column-count:         1;
+    column-gap:           10px;
+    margin-top: 16px;
+  }
+
+  .sortBar {
+    flex-direction: column-reverse;
+    align-items: start;
+
+    >:first-child {
+      margin-top: 10px;
+    }
+  }
 }

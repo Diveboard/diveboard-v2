@@ -1,0 +1,70 @@
+.mask {
+  background-color: rgba(0, 0, 0, 0.8);
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  margin-left: -75px;
+  z-index: 5;
+}
+
+.outerWrapper {
+  background-color: transparent;
+  margin: 120px auto 0;
+  display: flex;
+  flex-direction: column;
+  max-width: fit-content;
+  max-height: 60vh;
+}
+
+.headerNav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.btnsGroup {
+  display: flex;
+  flex-direction: row;
+}
+
+.innerWrapper {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  position: relative;
+
+  img {
+    width: 100%;
+    border-radius: 20px;
+  }
+}
+
+.footerNav {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  color: white;
+  margin-top: 30px;
+
+  >a {
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .mask {
+    margin-left: -10px;
+    padding: 0 10px;
+  }
+
+  .outerWrapper {
+    margin: 90px auto 0;
+  }
+
+  .innerWrapper {
+    img {
+      max-height: 50vh;
+    }
+  }
+}
