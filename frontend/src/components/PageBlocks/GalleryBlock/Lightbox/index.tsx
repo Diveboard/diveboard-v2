@@ -24,8 +24,6 @@ export const Lightbox: FC<Props> = ({
   handleNextSlide,
   handlePrevSlide,
 }) => {
-  console.log('test');
-
   const ref = useRef();
 
   useOutsideClick(onClose, ref);
@@ -33,7 +31,15 @@ export const Lightbox: FC<Props> = ({
   if (!open) return null;
 
   return (
-    <div className={styles.mask}>
+    <div
+      className={styles.mask}
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+      onTouchStart={(e) => {
+        e.stopPropagation();
+      }}
+    >
       <div>
         <div className={styles.outerWrapper} ref={ref}>
           <div className={styles.headerNav}>
