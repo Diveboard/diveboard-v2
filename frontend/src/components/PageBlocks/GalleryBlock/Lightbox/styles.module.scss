@@ -40,6 +40,55 @@
   }
 }
 
+.imgData {
+  width: 100%;
+  position: absolute;
+  bottom: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+}
+
+.avatar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.date {
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+}
+
+.place {
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 21px;
+}
+
+.camera {
+  color: #fff;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.imgDataText {
+  display: flex;
+  flex-direction: column;
+}
+
+.authorName {
+  color: #fff;
+  margin-left: 14px;
+}
+
 .footerNav {
   display: flex;
   flex-direction: row;
@@ -66,5 +115,16 @@
     img {
       max-height: 50vh;
     }
+  }
+
+  .headerNav {
+    margin-bottom: 15px;
+  }
+
+  .imgData {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0;
+    bottom: -120px;
   }
 }

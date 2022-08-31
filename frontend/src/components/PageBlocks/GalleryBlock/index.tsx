@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import { ButtonGroup } from '../../ButtonGroup';
 import { buttons } from '../../DiveManager/diveData';
@@ -108,6 +108,11 @@ export const GalleryBlock = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [openLightbox, setOpenLightbox] = useState(false);
   const [imageIndex, setImageIndex] = useState<number>(null);
+
+  useEffect(() => {
+    document.body.style.overflow = 'overlay';
+  }, []);
+
   return (
     <div className={styles.wrapper}>
       <h1>Gallery</h1>
@@ -147,7 +152,7 @@ export const GalleryBlock = () => {
         onClose={() => {
           setOpenLightbox(false);
         }}
-        handleNextSlide={() => (imageIndex < photos.length
+        handleNextSlide={() => (imageIndex < photos.length - 1
           ? setImageIndex((idx) => idx + 1)
           : setOpenLightbox(false))}
         handlePrevSlide={() => (imageIndex > 0
