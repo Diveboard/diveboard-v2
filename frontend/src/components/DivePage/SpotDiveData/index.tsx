@@ -63,7 +63,16 @@ export const SpotDiveData: FC<Props> = ({
     setShowComment(false);
   };
 
-  const shareButtonHandler = () => {};
+
+  const shareButtonHandler = async () => {
+    const data = {
+      title: 'DiveBoard',
+      url: location.href,
+      text: 'Share your dive',
+    };
+    if (navigator.canShare(data)) await navigator.share(data);
+  };
+
 
   const savesButtonHandler = () => {
     isOnSaves ? setCountSaves((prev) => prev - 1) : setCountSaves((prev) => prev + 1);

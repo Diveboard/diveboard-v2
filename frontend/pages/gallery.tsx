@@ -3,11 +3,13 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
+import { GalleryBlock } from '../src/components/PageBlocks/GalleryBlock';
+
 
 const Gallery: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
     <MainLayout>
-      Favourites
+      <GalleryBlock />
     </MainLayout>
   </AuthLayout>
 );

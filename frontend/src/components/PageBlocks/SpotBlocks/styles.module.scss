@@ -1,0 +1,53 @@
+.spotBlock {
+  padding: 128px 75px 50px 75px;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+
+    .left {
+      display: flex;
+      align-items: center;
+    }
+
+
+  }
+
+  h1, h2 {
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 48px;
+    color: #000345;
+  }
+
+  h1 {
+    margin-left: 26px;
+  }
+}
+
+@media (max-width: 1240px) {
+  .spotBlock {
+    padding: 128px 35px 50px 35px;
+  }
+}
+
+@media (max-width: 768px) {
+  .spotBlock {
+    padding: 0 0 70px 0;
+
+    .wrapper {
+      padding: 10px;
+    }
+
+    h1{
+      font-size: 21px;
+      line-height: 29px;
+      text-align: center;
+      margin-left: 0;
+    }
+  }
+}
+
+
