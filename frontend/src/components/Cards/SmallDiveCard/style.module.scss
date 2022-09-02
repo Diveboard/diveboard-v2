@@ -1,0 +1,78 @@
+.diveCard {
+  max-width: 420px;
+  min-width: 340px;
+  width: 100%;
+  box-shadow: 0 8px 15px rgba(0, 62, 89, 0.06);
+  border-radius: 15px;
+  display: flex;
+
+  .imgWrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+
+    .img {
+      border-radius: 15px 0 0 15px;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+
+
+  .footer {
+    padding: 11px 15px;
+    color: #000345;
+    display: flex;
+    flex-direction: column;
+
+    .date {
+      font-style: italic;
+      font-weight: 400;
+      font-size: 10px;
+      line-height: 12px;
+      opacity: 0.6;
+    }
+
+    .diveName {
+      margin-top: 3px;
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 24px;
+    }
+
+    .dataWrapper {
+      margin-top: 10px;
+      display: flex;
+
+      .dataItem {
+        margin-right: 12px;
+        display: flex;
+        align-items: center;
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        > span {
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 0.670vw;
+          margin-left: 7px;
+        }
+      }
+    }
+  }
+}
+
+
+@media (max-width: 1440px) {
+  .diveCard {
+    max-width: 320px;
+}}
+
+
+@media (max-width: 500px) {
+  .diveCard {
+    max-width: 500px;
+  }
+}

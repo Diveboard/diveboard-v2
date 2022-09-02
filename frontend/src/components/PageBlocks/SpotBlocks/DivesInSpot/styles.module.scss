@@ -1,0 +1,30 @@
+.divesInSpot {
+  margin-top: 75px;
+
+  .divesInSpotWrapper {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+
+    > div {
+      margin-bottom: 30px;
+      margin-right: 10px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .divesInSpot {
+    margin-top: 0;
+
+    .divesInSpotWrapper {
+      margin-top: 5px;
+
+      > div {
+        margin-bottom: 10px;
+        margin-right: 5px;
+      }
+    }
+  }
+}
+

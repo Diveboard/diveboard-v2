@@ -7,7 +7,6 @@ export const MobilePhotoGroup:FC<PhotoGroupProps> = ({ photos }) => {
   const photosElements = photos.map((photo) => (
     <div key={photo.imgScr}>
       <PhotoCard
-        key={photo.imgScr}
         imgSrc={photo.imgScr}
         favourites={photo.favorites}
         size="mobileScroll"

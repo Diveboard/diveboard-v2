@@ -1,0 +1,76 @@
+.mobileSpotHeader {
+  .wrapper {
+    position: relative;
+
+    .header {
+      margin-top: 10px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+
+      .right {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .pictureCount {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      width: 49px;
+      height: 19px;
+      background: rgba(0, 3, 69, 0.7);
+      border-radius: 3px;
+      font-weight: 400;
+      font-size: 10px;
+      line-height: 12px;
+      color: #FFFFFF;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
+.slide {
+
+  position: relative;
+  height: 300px;
+
+  .author {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-weight: 300;
+    font-size: 11px;
+    line-height: 12px;
+    color: #FFFFFF;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .slide {
+    height: 400px;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .slide {
+    height: 300px;
+  }
+}
+
+
+@media (max-width: 360px) {
+  .slide {
+    height: 200px;
+  }
+}
