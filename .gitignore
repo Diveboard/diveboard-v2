@@ -105,3 +105,7 @@ dist
 
 .idea
 
+.gitsecret/keys/random_seed
+!*.secret
+frontend/diveboard-org-firebase-adminsdk-zqzeb-4d4b96ce53.json
+frontend/.env
