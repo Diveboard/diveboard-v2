@@ -1,5 +1,5 @@
 import React from 'react';
-import { DiveCard2 } from '../../../Cards/DiveCard2';
+import { SmallDiveCard2 } from '../../../Cards/SmallDiveCard';
 import styles from './styles.module.scss';
 import viewMoreStyles from '../viewMore.module.scss';
 import { useWindowWidth } from '../../../../hooks/useWindowWidth';
@@ -10,7 +10,7 @@ export const DivesInSpot = () => {
     <div className={styles.divesInSpot}>
       {!isMobile && <h2>Dives</h2>}
       <div className={styles.divesInSpotWrapper}>
-        <DiveCard2
+        <SmallDiveCard2
           diverName="John Snow"
           imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
           date={new Date('11.04.2001')}
@@ -18,7 +18,7 @@ export const DivesInSpot = () => {
           deepness={10}
           diversCount={2}
         />
-        <DiveCard2
+        <SmallDiveCard2
           diverName="John Snow"
           imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
           date={new Date('11.04.2001')}
@@ -26,7 +26,7 @@ export const DivesInSpot = () => {
           deepness={10}
           diversCount={2}
         />
-        <DiveCard2
+        <SmallDiveCard2
           diverName="John Snow"
           imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
           date={new Date('11.04.2001')}
@@ -34,7 +34,7 @@ export const DivesInSpot = () => {
           deepness={10}
           diversCount={2}
         />
-        <DiveCard2
+        <SmallDiveCard2
           diverName="John Snow"
           imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
           date={new Date('11.04.2001')}
@@ -42,7 +42,7 @@ export const DivesInSpot = () => {
           deepness={10}
           diversCount={2}
         />
-        <DiveCard2
+        <SmallDiveCard2
           diverName="John Snow"
           imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
           date={new Date('11.04.2001')}
@@ -50,7 +50,7 @@ export const DivesInSpot = () => {
           deepness={10}
           diversCount={2}
         />
-        <DiveCard2
+        <SmallDiveCard2
           diverName="John Snow"
           imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
           date={new Date('11.04.2001')}
@@ -58,7 +58,7 @@ export const DivesInSpot = () => {
           deepness={10}
           diversCount={2}
         />
-        <DiveCard2
+        <SmallDiveCard2
           diverName="John Snow"
           imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
           date={new Date('11.04.2001')}
@@ -66,7 +66,7 @@ export const DivesInSpot = () => {
           deepness={10}
           diversCount={2}
         />
-        <DiveCard2
+        <SmallDiveCard2
           diverName="John Snow"
           imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
           date={new Date('11.04.2001')}

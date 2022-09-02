@@ -68,7 +68,11 @@
 @media (max-width: 1440px) {
   .diveCard {
     max-width: 320px;
-
 }}
 
 
+@media (max-width: 500px) {
+  .diveCard {
+    max-width: 500px;
+  }
+}

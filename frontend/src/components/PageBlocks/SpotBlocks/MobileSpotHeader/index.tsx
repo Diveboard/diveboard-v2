@@ -61,7 +61,7 @@ export const MobileSpotHeader: FC<Props> = ({
           </div>
         </div>
         <div className={styles.pictureCount}>
-          <span>{currentSlideData.slideNumber}</span>
+          <span>{currentSlideData.slideNumber + 1}</span>
           /
           <span>{images.length}</span>
         </div>
