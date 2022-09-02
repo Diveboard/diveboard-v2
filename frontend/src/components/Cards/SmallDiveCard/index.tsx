@@ -13,7 +13,7 @@ type Props = {
   diversCount: number;
 };
 
-export const SmallDiveCard2: FC<Props> = ({
+export const SmallDiveCard: FC<Props> = ({
   imgSrc,
   date,
   diveTime,
