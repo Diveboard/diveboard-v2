@@ -63,6 +63,7 @@ export const SpotDiveData: FC<Props> = ({
     setShowComment(false);
   };
 
+
   const shareButtonHandler = async () => {
     const data = {
       title: 'DiveBoard',
@@ -71,6 +72,7 @@ export const SpotDiveData: FC<Props> = ({
     };
     if (navigator.canShare(data)) await navigator.share(data);
   };
+
 
   const savesButtonHandler = () => {
     isOnSaves ? setCountSaves((prev) => prev - 1) : setCountSaves((prev) => prev + 1);

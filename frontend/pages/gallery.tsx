@@ -5,6 +5,7 @@ import { AuthLayout } from '../src/layouts/AuthLayout';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 import { GalleryBlock } from '../src/components/PageBlocks/GalleryBlock';
 
+
 const Gallery: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
     <MainLayout>

@@ -55,6 +55,7 @@ export const PhotoCard: FC<Props> = ({
           alt="photo"
         />
       )}
+
       <span className={styles.favouritesBlock}>
         <span>{favourites}</span>
         <span>Saves</span>
