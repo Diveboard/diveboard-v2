@@ -1,0 +1,61 @@
+.wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+}
+
+.map {
+  width: 70vw;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 33vw;
+  max-height: 78.6vh;
+  overflow: auto;
+  margin-top: 80px;
+  padding: 30px 35px 0 75px;
+
+  input {
+    width: 100% !important;
+    padding-left: 50px !important;
+  }
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 3, 69, 0.2);
+    border-radius: 5px;
+  }
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 16px 0 14px;
+
+  >span {
+    width: 100%;
+    text-align: center;
+    border-bottom: 2px solid rgba(0, 3, 69, 0.05);
+    line-height: 49px;
+  }
+
+  .active {
+    color: #0059DE;
+    border-bottom: 2px solid #0059DE;
+  }
+}
+
+.tab {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
