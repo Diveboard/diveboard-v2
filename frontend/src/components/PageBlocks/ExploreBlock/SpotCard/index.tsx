@@ -7,18 +7,22 @@ type Props = {
   region: string
   name: string
   depth: string
+  imgSrc: string
+  favorite: boolean
 };
 
 const SpotCard: FC<Props> = ({
   name,
   depth,
   region,
+  imgSrc,
+  favorite,
 }) => {
   console.log('test');
   return (
     <div className={styles.wrapper}>
       <Image
-        src="/TEST_IMG_THEN_DELETE/egypt.png"
+        src={imgSrc}
         layout="fixed"
         width={94}
         height={94}
@@ -28,7 +32,7 @@ const SpotCard: FC<Props> = ({
         <div className={styles.region}>
           <Icon iconName="Egypt" size={16} />
           {region}
-          <div className={styles.favIcon}><Icon iconName="heart" size={16} /></div>
+          <div className={styles.favIcon}><Icon iconName={favorite ? 'heart filled in' : 'heart'} size={16} /></div>
         </div>
         <span className={styles.name}>{name}</span>
         <div className={styles.depth}>

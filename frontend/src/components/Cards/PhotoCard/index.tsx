@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
-import { Icon, imageLoader } from '../../Icons/Icon';
+import { imageLoader } from '../../Icons/Icon';
 import styles from './styles.module.scss';
+import FavoritesBlock from './FavoritesBlock';
 
 type Props = {
   imgSrc: string;
@@ -56,15 +57,7 @@ export const PhotoCard: FC<Props> = ({
         />
       )}
 
-      <span className={styles.favouritesBlock}>
-        <span>{favourites}</span>
-        <span>Saves</span>
-
-        <Icon
-          iconName={addedToFavourite ? 'heart filled in' : 'heart'}
-          size={16}
-        />
-      </span>
+      <FavoritesBlock isFavorite={addedToFavourite} count={favourites} />
       {authorName && (
       <span className={styles.author}>
         added by:

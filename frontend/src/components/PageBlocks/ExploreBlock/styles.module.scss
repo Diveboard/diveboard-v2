@@ -59,3 +59,31 @@
   flex-direction: column;
   gap: 10px;
 }
+
+.regionTitle {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+
+  h1 {
+    max-width: 70%;
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 48px;
+    color: #000345;
+  }
+}
+
+.subtitle {
+  &:first-child {
+    margin-right: 5px;
+  }
+}
+
+.stats {
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000345;
+}

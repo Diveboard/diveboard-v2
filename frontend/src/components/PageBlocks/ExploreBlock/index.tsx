@@ -3,6 +3,8 @@ import styles from './styles.module.scss';
 import { DivesMap } from '../ProfileBlocks/DivesMap';
 import { SearchAnimatedInput } from '../../Input/SearchAnimatedInput';
 import SpotCard from './SpotCard';
+import { ShopCard } from '../../Cards/ShopsCard';
+import FavoritesBlock from '../../Cards/PhotoCard/FavoritesBlock';
 
 const mapCoords = {
   lat: 40.95,
@@ -41,10 +43,24 @@ const fakeSpot = {
   region: 'Egypt, Sharm El Shaikh',
   spotName: 'Shark and Yolana Reef',
   depth: '24 m',
+  imgSrc: '/TEST_IMG_THEN_DELETE/egypt.png',
+  favorite: false,
 };
 
 // @ts-ignore
 const fakeSpots: typeof fakeSpot[] = Array.from({ length: 10 }).fill(fakeSpot);
+
+const fakeShop = {
+  imgSrc: '/TEST_IMG_THEN_DELETE/fish.jpg',
+  addedToFavourite: false,
+  shopName: 'Dive Africa Sharm',
+  place: 'Egypt, Sharm El Shaikh',
+  score: 2.5,
+  scoredCount: 112,
+};
+
+// @ts-ignore
+const fakeShops: typeof fakeShop[] = Array.from({ length: 10 }).fill(fakeShop);
 
 const tabs = ['Spots', 'Shops', 'Region'];
 
@@ -80,8 +96,31 @@ const ExploreBlock = () => {
               region={spot.region}
               name={spot.spotName}
               depth={spot.depth}
+              imgSrc={spot.imgSrc}
+              favorite={spot.favorite}
             />
           ))}
+          {activeTab === 'Shops' && fakeShops.map((shop, index) => (
+            <ShopCard
+                /* eslint-disable-next-line react/no-array-index-key */
+              key={index}
+              addedToFavourite={shop.addedToFavourite}
+              imgSrc={shop.imgSrc}
+              place={shop.place}
+              score={shop.score}
+              scoredCount={shop.scoredCount}
+              shopName={shop.shopName}
+            />
+          ))}
+          {activeTab === 'Region' && (
+          <>
+            <div className={styles.regionTitle}>
+              <h1>Sharm El Shaikh</h1>
+              <FavoritesBlock isFavorite={false} count={112} />
+            </div>
+            <div className={styles.subtitle} />
+          </>
+          )}
         </div>
       </div>
       <div className={styles.map}>
