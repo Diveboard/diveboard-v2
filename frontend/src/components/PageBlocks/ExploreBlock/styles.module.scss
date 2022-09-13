@@ -115,6 +115,16 @@
   border-radius: 10px;
 }
 
+.chosenSpot {
+  position: absolute;
+  bottom: 97px;
+  width: 95%;
+  height: 94px;
+  background: white;
+  margin: 10px;
+  border-radius: 15px;
+}
+
 @media (max-width: 768px) {
   .wrapper {
     flex-direction: column-reverse;

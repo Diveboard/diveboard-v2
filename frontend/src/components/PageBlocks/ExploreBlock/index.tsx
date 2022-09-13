@@ -113,14 +113,15 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [touchStartY, setTouchStartY] = useState(null);
+  const [chosenSpot, setChosenSpot] = useState(null);
 
-  const handleSidebar = (e) => {
+  const handleSidebar = (e): void => {
+    setChosenSpot(null);
     const yTouch = e.changedTouches[0].screenY;
     const sidebar = document.getElementById('sidebar');
     const navbar = document.getElementById('navbar');
     const map = document.getElementById('map');
     const input = document.getElementById('mapInput');
-    console.log(touchStartY);
 
     if (touchStartY > yTouch) { // swipe up
       if (touchStartY > window.innerHeight - 100) {
@@ -156,6 +157,16 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     }
   };
 
+  const handleChoseSpot = (index: number): void => {
+    const sidebar = document.getElementById('sidebar');
+    const navbar = document.getElementById('navbar');
+    navbar.style.visibility = 'hidden';
+    sidebar.style.top = 'unset';
+    sidebar.style.bottom = '0';
+    sidebar.style.maxHeight = '60px';
+    setChosenSpot(index);
+  };
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.sidebar} id="sidebar" onTouchEnd={handleSidebar}>
@@ -188,19 +199,23 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
         </div>
         <div className={styles.tab}>
           {activeTab === 'Spots' && fakeSpots.map((spot, index) => (
-            <SpotCard
-                /* eslint-disable-next-line react/no-array-index-key */
+            <a
+                  /* eslint-disable-next-line react/no-array-index-key */
               key={index}
-              region={spot.region}
-              name={spot.spotName}
-              depth={spot.depth}
-              imgSrc={spot.imgSrc}
-              favorite={spot.favorite}
-            />
+              onClick={() => handleChoseSpot(index)}
+            >
+              <SpotCard
+                region={spot.region}
+                name={spot.spotName}
+                depth={spot.depth}
+                imgSrc={spot.imgSrc}
+                favorite={spot.favorite}
+              />
+            </a>
           ))}
           {activeTab === 'Shops' && fakeShops.map((shop, index) => (
             <ShopCard
-                /* eslint-disable-next-line react/no-array-index-key */
+                  /* eslint-disable-next-line react/no-array-index-key */
               key={index}
               addedToFavourite={shop.addedToFavourite}
               imgSrc={shop.imgSrc}
@@ -267,6 +282,17 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
           setSearchQuery={setSearchQuery}
           isMobile={isMobile}
         />
+        {typeof chosenSpot === 'number' && (
+        <div className={styles.chosenSpot}>
+          <SpotCard
+            region={fakeSpots[chosenSpot].region}
+            name={fakeSpots[chosenSpot].spotName}
+            depth={fakeSpots[chosenSpot].depth}
+            imgSrc={fakeSpots[chosenSpot].imgSrc}
+            favorite={fakeSpots[chosenSpot].favorite}
+          />
+        </div>
+        )}
       </div>
     </div>
   );
