@@ -100,3 +100,58 @@
     color: #000000;
   }
 }
+
+.mobDashWrapper {
+  width: 95%;
+  position: fixed;
+  height: 10px;
+}
+
+.mobDash {
+  width: 20vw;
+  height: 4px;
+  margin: 0 auto;
+  background: rgba(0, 3, 69, 0.2);;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column-reverse;
+    margin: 0;
+  }
+
+  .map {
+    width: 100vw;
+  }
+
+  .sidebar {
+    max-height: 50vh;
+    display: block;
+    width: 100vw;
+    margin: 0;
+    padding: 0 10px 60px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    position: absolute;
+    top: 48%;
+    z-index: 3;
+    background: white;
+    transition: top .5s .5s ease-in-out, max-height .5s .5s ease-in-out, bottom .5s .5s ease-in-out;
+  }
+
+  .tabs {
+    margin: 0 0 10px;
+    padding-top: 10px;
+    width: 95%;
+    position: fixed;
+    background: white;
+    z-index: 10;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+
+  .tab {
+    padding-top: 70px;
+  }
+}

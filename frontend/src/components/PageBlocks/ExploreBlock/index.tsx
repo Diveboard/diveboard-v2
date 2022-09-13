@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import styles from './styles.module.scss';
-import { DivesMap } from '../ProfileBlocks/DivesMap';
 import { SearchAnimatedInput } from '../../Input/SearchAnimatedInput';
 import SpotCard from './SpotCard';
 import { ShopCard } from '../../Cards/ShopsCard';
 import FavoritesBlock from '../../Cards/PhotoCard/FavoritesBlock';
 import { Icon } from '../../Icons/Icon';
+import { ExploreMap } from './ExploreMap';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -109,19 +109,72 @@ const series = [
   },
 ];
 
-const ExploreBlock = () => {
+const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  console.log(fakeSpots);
+  const [touchStartY, setTouchStartY] = useState(null);
+
+  const handleSidebar = (e) => {
+    const yTouch = e.changedTouches[0].screenY;
+    const sidebar = document.getElementById('sidebar');
+    const navbar = document.getElementById('navbar');
+    const map = document.getElementById('map');
+    const input = document.getElementById('mapInput');
+    console.log(touchStartY);
+
+    if (touchStartY > yTouch) { // swipe up
+      if (touchStartY > window.innerHeight - 100) {
+        sidebar.style.top = '48%';
+        sidebar.style.maxHeight = '50vh';
+        navbar.style.visibility = 'visible';
+        map.style.visibility = 'visible';
+        input.style.visibility = 'visible';
+        return;
+      }
+      sidebar.style.top = '76px';
+      sidebar.style.maxHeight = '88vh';
+      navbar.style.display = 'flex';
+      navbar.style.visibility = 'visible';
+      map.style.visibility = 'hidden';
+      input.style.visibility = 'visible';
+    }
+    if (touchStartY < yTouch) { // swipe down
+      if (touchStartY < window.innerHeight / 2) {
+        sidebar.style.top = '48%';
+        sidebar.style.maxHeight = '50vh';
+        navbar.style.visibility = 'visible';
+        map.style.visibility = 'visible';
+        input.style.visibility = 'visible';
+        return;
+      }
+      sidebar.style.top = 'unset';
+      sidebar.style.bottom = '0';
+      sidebar.style.maxHeight = '60px';
+      navbar.style.visibility = 'hidden';
+      map.style.visibility = 'visible';
+      input.style.visibility = 'visible';
+    }
+  };
+
   return (
     <div className={styles.wrapper}>
-      <div className={styles.sidebar}>
+      <div className={styles.sidebar} id="sidebar" onTouchEnd={handleSidebar}>
+        {!isMobile && (
         <SearchAnimatedInput
           value={searchQuery}
           setValue={setSearchQuery}
           withBackArrow
         />
+        )}
         <div className={styles.tabs}>
+          {isMobile && (
+          <div
+            className={styles.mobDashWrapper}
+            onTouchStart={(e) => setTouchStartY(e.touches[0].screenY)}
+          >
+            <div className={styles.mobDash} />
+          </div>
+          )}
           {tabs.map((tab, index) => (
             <span
                 /* eslint-disable-next-line react/no-array-index-key */
@@ -205,8 +258,15 @@ const ExploreBlock = () => {
           )}
         </div>
       </div>
-      <div className={styles.map}>
-        <DivesMap coords={mapCoords} zoom={7} points={markerPoints} />
+      <div className={styles.map} id="map">
+        <ExploreMap
+          coords={mapCoords}
+          zoom={7}
+          points={markerPoints}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          isMobile={isMobile}
+        />
       </div>
     </div>
   );

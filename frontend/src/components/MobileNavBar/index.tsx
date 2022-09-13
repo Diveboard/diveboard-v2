@@ -8,7 +8,7 @@ type Props = {
 };
 
 export const MobileNavBar: FC<Props> = ({ loggedIn }) => (
-  <nav className={styles.navbar}>
+  <nav className={styles.navbar} id="navbar">
     {loggedIn && (
     <NavItem
       activeIconName="feed-mobile-colored"
