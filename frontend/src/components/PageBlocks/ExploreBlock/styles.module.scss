@@ -140,14 +140,14 @@
     display: block;
     width: 100vw;
     margin: 0;
-    padding: 0 10px 60px;
+    padding: 0 10px 50px;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     position: absolute;
     top: 48%;
     z-index: 3;
     background: white;
-    transition: top .5s .5s ease-in-out, max-height .5s .5s ease-in-out, bottom .5s .5s ease-in-out;
+    transition: top .5s ease-in-out, max-height .5s ease-in-out, bottom .5s ease-in-out;
   }
 
   .tabs {

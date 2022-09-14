@@ -123,17 +123,23 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     const map = document.getElementById('map');
     const input = document.getElementById('mapInput');
 
+    const centerSidebar = () => {
+      sidebar.style.top = '48%';
+      sidebar.style.maxHeight = '50vh';
+      sidebar.style.bottom = 'unset';
+      navbar.style.visibility = 'visible';
+      map.style.visibility = 'visible';
+      input.style.visibility = 'visible';
+    };
+
     if (touchStartY > yTouch) { // swipe up
       if (touchStartY > window.innerHeight - 100) {
-        sidebar.style.top = '48%';
-        sidebar.style.maxHeight = '50vh';
-        navbar.style.visibility = 'visible';
-        map.style.visibility = 'visible';
-        input.style.visibility = 'visible';
+        centerSidebar();
         return;
       }
       sidebar.style.top = '76px';
       sidebar.style.maxHeight = '88vh';
+      sidebar.style.bottom = 'unset';
       navbar.style.display = 'flex';
       navbar.style.visibility = 'visible';
       map.style.visibility = 'hidden';
@@ -141,11 +147,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     }
     if (touchStartY < yTouch) { // swipe down
       if (touchStartY < window.innerHeight / 2) {
-        sidebar.style.top = '48%';
-        sidebar.style.maxHeight = '50vh';
-        navbar.style.visibility = 'visible';
-        map.style.visibility = 'visible';
-        input.style.visibility = 'visible';
+        centerSidebar();
         return;
       }
       sidebar.style.top = 'unset';
