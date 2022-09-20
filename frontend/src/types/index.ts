@@ -61,3 +61,8 @@ type SpeciesType = {
     maxLng: number,
   }
 };
+
+export type Coords = {
+  lat: number;
+  lng: number;
+};

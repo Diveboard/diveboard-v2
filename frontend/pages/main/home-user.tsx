@@ -3,16 +3,22 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { MainLayout } from '../../src/layouts/MainLayout';
 import { AuthLayout } from '../../src/layouts/AuthLayout';
 import { firebaseAdmin } from '../../src/firebase/firebaseAdmin';
-import {
-  firestoreCommentsService,
-} from '../../src/firebase/firestore/firestoreServices/sirestoreCommentsService';
+import { getAllSpecies, getLocalSpecies } from '../../src/servicies/getSpecies';
 
 const HomeUser: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => {
   console.log({ user });
-  useEffect(() => {
-    firestoreCommentsService.getComments('user_id_1', 'dive_id_1').then((data) => {
-      console.log({ data });
+
+  const getSpecies = async () => {
+    const n = await getLocalSpecies({
+      lat: -19,
+      lng: 146,
     });
+    console.log(n);
+    const all = await getAllSpecies();
+    console.log({ all });
+  };
+  useEffect(() => {
+    getSpecies();
   }, []);
   return (
     <AuthLayout user={user}>
