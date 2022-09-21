@@ -17,7 +17,7 @@ To start dev server on [localhost](http://localhost:3000/)
 
 **Build**
 
-`npm run duild`
+`npm run build`
 
 **Start production server**
 
