@@ -150,7 +150,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
         centerSidebar();
         return;
       }
-      sidebar.style.top = 'unset';
+      sidebar.style.top = 'calc(100% - 60px)';
       sidebar.style.bottom = '0';
       sidebar.style.maxHeight = '60px';
       navbar.style.visibility = 'hidden';
