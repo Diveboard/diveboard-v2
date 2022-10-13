@@ -13,7 +13,7 @@ import {
   SeventhStepType,
   EighthStepType,
   NinthStepType,
-  FourthStepType,
+  FourthStepType, AllStepsDataType,
 } from '../types/stepTypes';
 
 export const UseDiveData = () => {
@@ -77,10 +77,13 @@ export const UseDiveData = () => {
     }
   };
 
+  const getAllStepsData = (): AllStepsDataType => state;
+
   return {
     setCurrentStep,
     getCurrentStep,
     setStepData,
     getStepData,
+    getAllStepsData,
   };
 };

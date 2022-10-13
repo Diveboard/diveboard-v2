@@ -158,4 +158,25 @@ export const firestoreSpeciesServices = {
   //     throw new Error('get all species eolcname error');
   //   }
   // },
+
+  getNewLocal: async (coords: Coords) => {
+    try {
+      const docRef = collection(db, 'A_Test_species');
+      const q = query(
+        docRef,
+        where('coords', 'array-contains', coords),
+      );
+      const querySnapshot = await getDocs(q);
+      const species = [];
+      querySnapshot.forEach((doc) => {
+        const fishesData = doc.data();
+        species.push(fishesData);
+      });
+
+      return species;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error(' error');
+    }
+  },
 };

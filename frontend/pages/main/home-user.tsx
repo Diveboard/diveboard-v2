@@ -1,41 +1,24 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { MainLayout } from '../../src/layouts/MainLayout';
 import { AuthLayout } from '../../src/layouts/AuthLayout';
 import { firebaseAdmin } from '../../src/firebase/firebaseAdmin';
-import { getAllSpecies, getLocalSpecies } from '../../src/servicies/getSpecies';
 
-const HomeUser: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => {
-  console.log({ user });
-
-  const getSpecies = async () => {
-    const n = await getLocalSpecies({
-      lat: -19,
-      lng: 146,
-    });
-    console.log(n);
-    const all = await getAllSpecies();
-    console.log({ all });
-  };
-  useEffect(() => {
-    getSpecies();
-  }, []);
-  return (
-    <AuthLayout user={user}>
-      <MainLayout>
-        <div style={{
-          height: '80vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        >
-          USER
-        </div>
-      </MainLayout>
-    </AuthLayout>
-  );
-};
+const HomeUser: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
+  <AuthLayout user={user}>
+    <MainLayout>
+      <div style={{
+        height: '80vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      >
+        USER
+      </div>
+    </MainLayout>
+  </AuthLayout>
+);
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {

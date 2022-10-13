@@ -33,7 +33,9 @@ const thirdStep: ThirdStepType = {
   },
 };
 
-const fourthStep: FourthStepType = {};
+const fourthStep: FourthStepType = {
+  species: [],
+};
 
 const fifthStep: FifthStepType = {
   diveCenter: undefined,

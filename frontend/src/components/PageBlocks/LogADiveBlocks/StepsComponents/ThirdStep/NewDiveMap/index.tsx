@@ -8,14 +8,15 @@ import { SearchInput } from '../../../../../Input/SearchInput';
 import { Button } from '../../../../../Buttons/Button';
 import { Icon } from '../../../../../Icons/Icon';
 import { SearchPredictions } from '../../../../../Dropdown/SarchPredictions';
-import styles from './styles.module.scss';
 import { useUserLocation } from '../../../../../../hooks/useUserLocation';
 import { checkGeolocationAccess } from '../../../../../../utils/checkGeolocationAccess';
+import styles from './styles.module.scss';
 
 type Props = {
   location: { lat: number, lng: number };
   setLocation: React.Dispatch<React.SetStateAction<{ lat: number, lng: number }>>;
   zoom: number;
+  setZoom: React.Dispatch<React.SetStateAction<number>>;
   points: {
     id: number;
     divesCount: number;
@@ -32,6 +33,7 @@ export const LogADiveDiveMap: FC<Props> = ({
   location,
   setLocation,
   zoom,
+  setZoom,
   points,
   newPoint,
   setNewPoint,
@@ -39,6 +41,7 @@ export const LogADiveDiveMap: FC<Props> = ({
 }) => {
   const [region, setRegion] = useState('');
   const userLocation = useUserLocation();
+
   const markers = points.map((point) => (
     <DivePoint
       key={point.id}
@@ -50,6 +53,10 @@ export const LogADiveDiveMap: FC<Props> = ({
   ));
 
   const setVisible = useRef<(visible: boolean) => void>();
+  const setNewPositionMarker = useRef<(coords: {
+    lat: number,
+    lng: number,
+  }) => void>();
 
   const handleApiLoaded = (map, maps) => {
     const marker = new maps.Marker({
@@ -74,6 +81,9 @@ export const LogADiveDiveMap: FC<Props> = ({
     marker.setMap(map);
     marker.setVisible(false);
     setVisible.current = (visible: boolean) => marker.setVisible(visible);
+    setNewPositionMarker.current = (coords) => {
+      marker.setPosition(coords);
+    };
   };
 
   useEffect(() => {
@@ -83,6 +93,7 @@ export const LogADiveDiveMap: FC<Props> = ({
   useEffect(() => {
     if (setVisible.current) {
       setVisible.current(newPoint);
+      setNewPositionMarker.current(location);
     }
   }, [newPoint]);
 
@@ -125,15 +136,20 @@ export const LogADiveDiveMap: FC<Props> = ({
         defaultCenter={userLocation}
         center={location}
         defaultZoom={zoom}
+        // @ts-ignore
         options={getMapOptions}
         onGoogleApiLoaded={({
           map,
           maps,
         }) => handleApiLoaded(map, maps)}
-        onChange={(e) => setLocation({
-          lat: e.center.lat,
-          lng: e.center.lng,
-        })}
+        onChange={(e) => {
+          console.log({ e });
+          setLocation({
+            lat: e.center.lat,
+            lng: e.center.lng,
+          });
+        }}
+
       >
         {!newPoint && markers}
       </GoogleMapReact>

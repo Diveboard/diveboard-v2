@@ -1,4 +1,5 @@
-import { GearsVariantsType, ScoreType } from './commonTypes';
+import { GearsVariantsType, SafetySpot, ScoreType } from './commonTypes';
+import { initialDiveDataState } from '../LogDiveData/state';
 
 export type FirstStepType =
   {
@@ -16,6 +17,7 @@ export type FirstStepType =
       wreck?: ScoreType,
       bigFish?: ScoreType,
     },
+
     diveActivities: {
       recreational: boolean,
       training: boolean,
@@ -38,12 +40,9 @@ export type SecondStepType = {
     maxDepth: number;
     duration: number;
     surfaceInterval: number;
-    safetySpots: {
-      id: number;
-      depth: number;
-      period: number;
-    }[]
+    safetySpots: SafetySpot[]
   }
+
   advancedParameters: {
     surfaceTemp: number;
     bottomTemp: number;
@@ -74,7 +73,9 @@ export type ThirdStepType = {
     lng: number;
   }
 };
-export type FourthStepType = {};
+export type FourthStepType = {
+  species: string[]
+};
 
 export type FifthStepType = {
   diveCenter: string;
@@ -95,7 +96,6 @@ export type SeventhStepType = {
     model: string;
     dateAcquired: Date;
     lastMaintenance: Date; }[]
-
 };
 
 export type EighthStepType = {};
@@ -114,3 +114,5 @@ export type StepsDataType =
   | SeventhStepType
   | EighthStepType
   | NinthStepType;
+
+export type AllStepsDataType = typeof initialDiveDataState;

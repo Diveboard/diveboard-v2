@@ -12,10 +12,13 @@ import {
   usePointsHandlers,
 } from './thirdStepHelpers';
 import { useUserLocation } from '../../../../../hooks/useUserLocation';
-import { SearchPredictions } from '../../../../Dropdown/SarchPredictions';
 import { MarkerType, StepProps } from '../../types/commonTypes';
 import { ThirdStepType } from '../../types/stepTypes';
 import styles from './styles.module.scss';
+import {
+  firestoreGeoDataService,
+} from '../../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
+import { SearchedItems } from '../../../../Dropdown/SearchedItems';
 
 const markerPoints = [
   {
@@ -42,7 +45,20 @@ const markerPoints = [
     lat: 34.95,
     lng: 34.33,
     diveName: 'some super point',
-  }];
+  }, {
+    id: 5,
+    divesCount: 1,
+    lat: 47.092,
+    lng: 18.5205015,
+    diveName: 'northeast',
+  }, {
+    id: 6,
+    divesCount: 2,
+    lat: 35.4929201,
+    lng: 6.6267201,
+    diveName: 'southwest',
+  },
+];
 
 export const ThirdStep: FC<StepProps> = ({
   step,
@@ -51,11 +67,12 @@ export const ThirdStep: FC<StepProps> = ({
   const { setStepData } = useContext(LogDiveDataContext);
   const userLocation = useUserLocation();
   const [location, setLocation] = useState({
-    lat: 8.379433,
-    lng: 31.16558,
+    lat: 41.5,
+    lng: 30.33,
   });
   const [newSpotName, setNewSpotName] = useState('');
   const [newSpotNameError, setNewSpotNameError] = useState('');
+
   const [newSpotCountry, setNewSpotCountry] = useState('');
   const [newSpotCountryError, setNewSpotCountryError] = useState('');
 
@@ -66,6 +83,17 @@ export const ThirdStep: FC<StepProps> = ({
     lat: location.lat,
     lng: location.lng,
   });
+
+  const [zoom, setZoom] = useState(5);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const res = await getGeoDataByCoords(newPointCoords);
+  //     console.log('GEO RES', res);
+  //     // const loc = await getLocation('ChIJ9f-dgJ14AHARMp45pd8HMhs');
+  //     // console.log('GEO Loc', loc);
+  //   })();
+  // }, [newPointCoords]);
 
   const buttons = useMemo(() => markers.map((item) => ({
     connectedMode: item.diveName,
@@ -124,7 +152,8 @@ export const ThirdStep: FC<StepProps> = ({
           location={location}
           setLocation={setLocation}
           points={markers}
-          zoom={4}
+          zoom={zoom}
+          setZoom={setZoom}
           newPoint={newPoint}
           setNewPoint={setNewPoint}
           setNewPointCoords={setNewPointCoords}
@@ -168,7 +197,12 @@ export const ThirdStep: FC<StepProps> = ({
                   error={newSpotCountryError}
                   setError={setNewSpotCountryError}
                 />
-                <SearchPredictions region={newSpotCountry} setRegion={setNewSpotCountry} noMap />
+
+                <SearchedItems
+                  value={newSpotCountry}
+                  setValue={setNewSpotCountry}
+                  onSearchHandler={firestoreGeoDataService.getCountries}
+                />
               </div>
 
             </div>

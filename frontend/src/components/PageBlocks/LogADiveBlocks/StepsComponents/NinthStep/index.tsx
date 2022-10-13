@@ -1,21 +1,34 @@
-import React, { FC, useContext, useState } from 'react';
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react';
 
 import { ButtonGroup } from '../../../../ButtonGroup';
 import { Button } from '../../../../Buttons/Button';
 import { DisabledNext } from '../../StepsNavigation/DisabledNext';
 import { MarginWrapper } from '../../../../MarginWrapper';
 import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
+import { convertAllStepsData } from '../../LogDiveHelpers/convertAllStepsData';
+
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { StepProps } from '../../types/commonTypes';
 import { NinthStepType } from '../../types/stepTypes';
 import containerStyle from '../../styles.module.scss';
 import styles from './styles.module.scss';
+import {
+  firestoreDivesService,
+} from '../../../../../firebase/firestore/firestoreServices/firestoreDivesService';
+import { AuthStatusContext } from '../../../../../layouts/AuthLayout';
 
 export const NinthStep: FC<StepProps> = ({
   step,
   setStep,
 }) => {
-  const { setStepData } = useContext(LogDiveDataContext);
+  const { userAuth } = useContext(AuthStatusContext);
+  const {
+    setStepData,
+    getAllStepsData,
+  } = useContext(LogDiveDataContext);
+  const allStepsData = getAllStepsData();
   const isMobile = useWindowWidth(500, 768);
   const [publishingMode, setPublishingMode] = useState('public');
   const publishingModes = [{
@@ -33,9 +46,19 @@ export const NinthStep: FC<StepProps> = ({
     publishingMode: publishingMode as NinthStepType['publishingMode'],
   };
 
+  useEffect(() => {
+    setStepData(9, ninthStepData);
+  }, [publishingMode]);
+
   if (step !== 9) {
     return null;
   }
+
+  const publishStepsData = async () => {
+    const data = convertAllStepsData(allStepsData);
+    console.log({ data });
+    await firestoreDivesService.setDiveData(data, userAuth.uid);
+  };
 
   return (
     <>
@@ -67,14 +90,11 @@ export const NinthStep: FC<StepProps> = ({
             borderRadius={30}
             border="none"
             backgroundColor="#0059DE"
-            onClick={
-              () => {
-                setStepData(9, ninthStepData);
-                setStep(10);
-              }
-            }
           >
-            <span className={styles.btnText}>
+            <span
+              className={styles.btnText}
+              onClick={publishStepsData}
+            >
               Publish
             </span>
           </Button>
