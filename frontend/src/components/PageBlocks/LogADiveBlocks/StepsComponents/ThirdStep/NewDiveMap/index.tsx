@@ -144,6 +144,7 @@ export const LogADiveDiveMap: FC<Props> = ({
         }) => handleApiLoaded(map, maps)}
         onChange={(e) => {
           console.log({ e });
+          setZoom(e.zoom);
           setLocation({
             lat: e.center.lat,
             lng: e.center.lng,

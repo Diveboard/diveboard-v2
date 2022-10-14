@@ -2,6 +2,7 @@ import {
   collection, getDocs, query, orderBy, startAt, limit,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
+import { Coords } from '../../../types';
 
 export const firestoreGeoDataService = {
 
@@ -33,12 +34,47 @@ export const firestoreGeoDataService = {
       return countries;
     } catch (e) {
       console.log(e.message);
-      throw new Error('get countries areas error');
+      throw new Error('get countries suggestion error');
     }
   },
 
-  getGeonames: () => {},
+  getCountryByCoordinates: async (coordinates: Coords) => {
+    try {
+      const docRef = collection(db, 'countries');
+      const q = query(
+        docRef,
+      );
+      const querySnapshot = await getDocs(q);
 
-  getGeonamesCoordinates: () => {},
+      const countries = [];
+
+      querySnapshot.forEach((doc) => {
+        const {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          nesw_bounds,
+          cname,
+        } = doc.data();
+        const bounds: { northeast: Coords, southwest: Coords } = JSON.parse(nesw_bounds);
+        // console.log(bounds);
+
+        if (bounds?.northeast.lat >= coordinates.lat
+          && bounds?.southwest.lat <= coordinates.lat
+          && bounds?.northeast.lng >= coordinates.lng
+          && bounds?.southwest.lng <= coordinates.lat) {
+          countries.push(cname);
+        }
+      });
+      return countries;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error('get countries by coordinates error');
+    }
+  },
+
+  getGeonames: () => {
+  },
+
+  getGeonamesCoordinates: () => {
+  },
 
 };

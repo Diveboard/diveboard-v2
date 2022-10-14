@@ -1,63 +1,92 @@
 import React from 'react';
-import { MarkerType } from '../../types/commonTypes';
+import { SpotType } from '../../../../../firebase/firestore/models';
+import {
+  firestoreSpotsService,
+} from '../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
+import { Coords } from '../../../../../types';
 
-const hasNewPointChanged = (
-  currentMarkers: MarkerType[],
-  currentNewMarker: MarkerType,
-) => currentMarkers[currentMarkers.length - 1].diveName !== currentNewMarker.diveName
-  && currentMarkers[currentMarkers.length - 1].lat !== currentNewMarker.lat
-  && currentMarkers[currentMarkers.length - 1].lng !== currentNewMarker.lng;
-
-const hasNewPointCoordsChanged = (
-  currentMarkers: MarkerType[],
-  currentNewMarker: MarkerType,
-) => currentMarkers[currentMarkers.length - 1].diveName === currentNewMarker.diveName
-  && currentMarkers[currentMarkers.length - 1].lat !== currentNewMarker.lat
-  && currentMarkers[currentMarkers.length - 1].lng !== currentNewMarker.lng;
-
-export const usePointsHandlers = (
-  markers: MarkerType[],
-  setChosenPoint: React.Dispatch<React.SetStateAction<MarkerType>>,
-  setMarkers: React.Dispatch<React.SetStateAction<MarkerType[]>>,
-  setNewPoint: React.Dispatch<React.SetStateAction<boolean>>,
+export const createNewSpotHandler = (
   setNewSpotNameError: React.Dispatch<React.SetStateAction<string>>,
   setNewSpotCountryError: React.Dispatch<React.SetStateAction<string>>,
+  setNewSpotRegionError: React.Dispatch<React.SetStateAction<string>>,
+  setNewSpotLocationError: React.Dispatch<React.SetStateAction<string>>,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  setCreateSpotMode: React.Dispatch<React.SetStateAction<boolean>>,
+) => async (newSpotData: SpotType) => {
+  let error = false;
+  const {
+    name,
+    location: {
+      country,
+      region,
+      location,
+    },
+  } = newSpotData;
+  if (name.length < 3) {
+    error = true;
+    setNewSpotNameError('fill spot name more than 3 letters');
+  }
+  if (!country.length) {
+    error = true;
+    setNewSpotCountryError('fill spot country');
+  }
+  if (!region.length) {
+    error = true;
+    setNewSpotRegionError('fill spot region');
+  }
+  if (!location.length) {
+    error = true;
+    setNewSpotLocationError('fill spot location');
+  }
+
+  if (!error) {
+    setLoading(true);
+    await firestoreSpotsService.setNewSpot(newSpotData);
+    setLoading(false);
+    setCreateSpotMode(false);
+  }
+};
+
+export const createNewSpotData = (
+  name: string,
+  country: string,
+  region: string,
+  location: string,
+  coords: Coords,
+  zoom: number,
 ) => ({
-  setPointHandler: (value: string) => {
-    const point = markers.find((item) => item.diveName === value);
-    setChosenPoint(point);
+  oldId: null,
+  name,
+  location: {
+    lat: coords.lat,
+    lng: coords.lng,
+    zoom,
+    location,
+    region,
+    country,
   },
-
-  setNewPointHandler: (
-    newSpotName: string,
-    newSpotCountry: string,
-    newPointCoords: { lat: number, lng: number },
-  ) => {
-    if (!newSpotCountry.length) {
-      setNewSpotCountryError('choose country');
-      return;
-    }
-    if (newSpotName.length >= 5) {
-      const newMarker = {
-        id: markers[markers.length - 1].id + 1,
-        divesCount: 1,
-        lat: newPointCoords.lat,
-        lng: newPointCoords.lng,
-        diveName: newSpotName,
-      };
-
-      if (hasNewPointChanged(markers, newMarker)) {
-        setMarkers([...markers, newMarker]);
-        setChosenPoint(newMarker);
-      } else if (hasNewPointCoordsChanged(markers, newMarker)) {
-        const newMarkers = [...markers];
-        newMarkers[newMarkers.length - 1] = newMarker;
-        setMarkers([...newMarkers]);
-        setChosenPoint(newMarker);
-      }
-      setNewPoint(false);
-    } else {
-      setNewSpotNameError('fill spot name, please');
-    }
+  bestPictures: [],
+  description: '',
+  dives: [],
+  score: 0,
+  shops: [],
+  species: [],
+  stats: {
+    averageDepth: {
+      imperial: 0,
+      metric: 0,
+    },
+    visibility: '',
+    averageCurrent: '',
+    averageTemperatureOnSurface: {
+      imperial: 0,
+      metric: 0,
+    },
+    averageTemperatureOnBottom: {
+      imperial: 0,
+      metric: 0,
+    },
+    divesLogged: 0,
+    divers: 0,
   },
 });

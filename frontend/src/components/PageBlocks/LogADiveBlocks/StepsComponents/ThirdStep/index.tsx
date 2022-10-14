@@ -9,7 +9,8 @@ import { Button } from '../../../../Buttons/Button';
 import { Icon } from '../../../../Icons/Icon';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import {
-  usePointsHandlers,
+  createNewSpotData,
+  createNewSpotHandler,
 } from './thirdStepHelpers';
 import { useUserLocation } from '../../../../../hooks/useUserLocation';
 import { MarkerType, StepProps } from '../../types/commonTypes';
@@ -19,6 +20,8 @@ import {
   firestoreGeoDataService,
 } from '../../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
 import { SearchedItems } from '../../../../Dropdown/SearchedItems';
+
+import { Loader } from '../../../../Loader';
 
 const markerPoints = [
   {
@@ -48,14 +51,14 @@ const markerPoints = [
   }, {
     id: 5,
     divesCount: 1,
-    lat: 47.092,
-    lng: 18.5205015,
+    lat: 60.9492599249929,
+    lng: -3.882438943562335,
     diveName: 'northeast',
   }, {
     id: 6,
     divesCount: 2,
-    lat: 35.4929201,
-    lng: 6.6267201,
+    lat: 51.91554124927487,
+    lng: -21.349982931437665,
     diveName: 'southwest',
   },
 ];
@@ -76,16 +79,23 @@ export const ThirdStep: FC<StepProps> = ({
   const [newSpotCountry, setNewSpotCountry] = useState('');
   const [newSpotCountryError, setNewSpotCountryError] = useState('');
 
+  const [newSpotRegion, setNewSpotRegion] = useState('');
+  const [newSpotRegionError, setNewSpotRegionError] = useState('');
+
+  const [newSpotLocation, setNewSpotLocation] = useState('');
+  const [newSpotLocationError, setNewSpotLocationError] = useState('');
+
   const [markers, setMarkers] = useState<MarkerType[]>(markerPoints);
 
-  const [newPoint, setNewPoint] = useState(false);
+  const [createSpotMode, setCreateSpotMode] = useState(false);
   const [newPointCoords, setNewPointCoords] = useState({
     lat: location.lat,
     lng: location.lng,
   });
 
   const [zoom, setZoom] = useState(5);
-
+  const [loading, setLoading] = useState(false);
+  console.log({ zoom });
   // useEffect(() => {
   //   (async () => {
   //     const res = await getGeoDataByCoords(newPointCoords);
@@ -100,15 +110,10 @@ export const ThirdStep: FC<StepProps> = ({
     text: item.diveName,
   })), [markers]);
 
-  const [chosenPoint, setChosenPoint] = useState<MarkerType>();
+  const [chosenPointId, setChosenPointId] = useState<string>(null);
 
   const thirdStepData: ThirdStepType = {
-    spot: chosenPoint && {
-      name: chosenPoint.diveName,
-      country: newSpotCountry,
-      lng: chosenPoint.lng,
-      lat: chosenPoint.lat,
-    },
+    spotId: '',
   };
 
   useEffect(() => {
@@ -118,6 +123,13 @@ export const ThirdStep: FC<StepProps> = ({
   }, [userLocation]);
 
   // useEffect(() => {
+  //   (async () => {
+  //     const res = await firestoreGeoDataService.getCountryByCoordinates(newPointCoords);
+  //     console.log('coontries', { res });
+  //   })();
+  // }, [newPointCoords]);
+
+  // useEffect(() => {
   //   if (!newPoint) {
   //     // get coords // todo
   //     // get points
@@ -125,16 +137,13 @@ export const ThirdStep: FC<StepProps> = ({
   //   }
   // }, [region, newPoint]);
 
-  const {
-    setPointHandler,
-    setNewPointHandler,
-  } = usePointsHandlers(
-    markers,
-    setChosenPoint,
-    setMarkers,
-    setNewPoint,
+  const newSpotHandler = createNewSpotHandler(
     setNewSpotNameError,
     setNewSpotCountryError,
+    setNewSpotRegionError,
+    setNewSpotLocationError,
+    setLoading,
+    setCreateSpotMode,
   );
 
   if (step !== 3) {
@@ -154,24 +163,25 @@ export const ThirdStep: FC<StepProps> = ({
           points={markers}
           zoom={zoom}
           setZoom={setZoom}
-          newPoint={newPoint}
-          setNewPoint={setNewPoint}
+          newPoint={createSpotMode}
+          setNewPoint={setCreateSpotMode}
           setNewPointCoords={setNewPointCoords}
         />
 
-        {!newPoint && (
+        {!createSpotMode && (
           <div className={styles.pointsBtnGroup}>
             <ButtonGroup
               buttons={
                 buttons
               }
-              onClick={setPointHandler}
+              onClick={() => {
+              }}
               defaultChecked={newSpotName}
             />
           </div>
         )}
 
-        {newPoint && (
+        {createSpotMode && (
           <div className={styles.newSpotGroup}>
             <h2>
               New Spot
@@ -204,6 +214,40 @@ export const ThirdStep: FC<StepProps> = ({
                   onSearchHandler={firestoreGeoDataService.getCountries}
                 />
               </div>
+              <div className={styles.countryInputWrapper}>
+                <Input
+                  value={newSpotRegion}
+                  setValue={setNewSpotRegion}
+                  placeholder="Region"
+                  height={48}
+                  width={720}
+                  error={newSpotRegionError}
+                  setError={setNewSpotRegionError}
+                />
+
+                {/* <SearchedItems */}
+                {/*   value={newSpotRegion} */}
+                {/*   setValue={setNewSpotRegion} */}
+                {/*   onSearchHandler={firestoreGeoDataService.getCountries} */}
+                {/* /> */}
+              </div>
+              <div className={styles.countryInputWrapper}>
+                <Input
+                  value={newSpotLocation}
+                  setValue={setNewSpotLocation}
+                  placeholder="Location"
+                  height={48}
+                  width={720}
+                  error={newSpotLocationError}
+                  setError={setNewSpotLocationError}
+                />
+
+                {/* <SearchedItems */}
+                {/*   value={newSpotCountry} */}
+                {/*   setValue={setNewSpotCountry} */}
+                {/*   onSearchHandler={firestoreGeoDataService.getCountries} */}
+                {/* /> */}
+              </div>
 
             </div>
             <span className={styles.explanationText}>
@@ -220,10 +264,24 @@ export const ThirdStep: FC<StepProps> = ({
                 borderRadius={30}
                 backgroundColor="#F4BF00"
                 border="none"
-                onClick={() => {
-                  setNewPointHandler(newSpotName, newSpotCountry, newPointCoords);
+                onClick={async () => {
+                  await newSpotHandler(
+                    createNewSpotData(
+                      newSpotName,
+                      newSpotCountry,
+                      newSpotRegion,
+                      newSpotLocation,
+                      newPointCoords,
+                      zoom,
+                    ),
+                  );
+                  setNewSpotName('');
+                  setNewSpotCountry('');
+                  setNewSpotRegion('');
+                  setNewSpotLocation('');
                 }}
               >
+                <Loader loading={loading} />
                 <span className={styles.saveBtn}>Save</span>
 
               </Button>

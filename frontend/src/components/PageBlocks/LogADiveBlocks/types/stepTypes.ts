@@ -66,12 +66,7 @@ export type SecondStepType = {
 };
 
 export type ThirdStepType = {
-  spot: {
-    country: string;
-    name: string;
-    lat: number;
-    lng: number;
-  }
+  spotId: string
 };
 export type FourthStepType = {
   species: string[]
