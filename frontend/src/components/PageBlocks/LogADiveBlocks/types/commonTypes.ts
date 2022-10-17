@@ -80,11 +80,12 @@ export type Buddy = {
 };
 
 export type MarkerType = {
-  id: number,
-  divesCount: number,
+  id: string,
+  name: string,
+  divesLogged: number,
+  zoom: number,
   lat: number,
   lng: number,
-  diveName: string
 };
 
 export type SafetySpot = {

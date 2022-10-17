@@ -1,5 +1,5 @@
 import React, {
-  FC, useContext, useEffect, useMemo, useState,
+  FC, useContext, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { LogADiveDiveMap } from './NewDiveMap';
 import { StepsNavigation } from '../../StepsNavigation';
@@ -8,10 +8,7 @@ import { Input } from '../../../../Input/CommonInput';
 import { Button } from '../../../../Buttons/Button';
 import { Icon } from '../../../../Icons/Icon';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
-import {
-  createNewSpotData,
-  createNewSpotHandler,
-} from './thirdStepHelpers';
+import { createNewSpotData, createNewSpotHandler } from './thirdStepHelpers';
 import { useUserLocation } from '../../../../../hooks/useUserLocation';
 import { MarkerType, StepProps } from '../../types/commonTypes';
 import { ThirdStepType } from '../../types/stepTypes';
@@ -22,46 +19,6 @@ import {
 import { SearchedItems } from '../../../../Dropdown/SearchedItems';
 
 import { Loader } from '../../../../Loader';
-
-const markerPoints = [
-  {
-    id: 1,
-    divesCount: 234,
-    lat: 41.5,
-    lng: 30.33,
-    diveName: 'Aloha',
-  }, {
-    id: 2,
-    divesCount: 2,
-    lat: 41.95,
-    lng: 29.33,
-    diveName: 'Shark',
-  }, {
-    id: 3,
-    divesCount: 17,
-    lat: 42.95,
-    lng: 21.33,
-    diveName: 'Super',
-  }, {
-    id: 4,
-    divesCount: 5,
-    lat: 34.95,
-    lng: 34.33,
-    diveName: 'some super point',
-  }, {
-    id: 5,
-    divesCount: 1,
-    lat: 60.9492599249929,
-    lng: -3.882438943562335,
-    diveName: 'northeast',
-  }, {
-    id: 6,
-    divesCount: 2,
-    lat: 51.91554124927487,
-    lng: -21.349982931437665,
-    diveName: 'southwest',
-  },
-];
 
 export const ThirdStep: FC<StepProps> = ({
   step,
@@ -85,7 +42,7 @@ export const ThirdStep: FC<StepProps> = ({
   const [newSpotLocation, setNewSpotLocation] = useState('');
   const [newSpotLocationError, setNewSpotLocationError] = useState('');
 
-  const [markers, setMarkers] = useState<MarkerType[]>(markerPoints);
+  const [markers, setMarkers] = useState<MarkerType[]>([]);
 
   const [createSpotMode, setCreateSpotMode] = useState(false);
   const [newPointCoords, setNewPointCoords] = useState({
@@ -95,25 +52,18 @@ export const ThirdStep: FC<StepProps> = ({
 
   const [zoom, setZoom] = useState(5);
   const [loading, setLoading] = useState(false);
-  console.log({ zoom });
-  // useEffect(() => {
-  //   (async () => {
-  //     const res = await getGeoDataByCoords(newPointCoords);
-  //     console.log('GEO RES', res);
-  //     // const loc = await getLocation('ChIJ9f-dgJ14AHARMp45pd8HMhs');
-  //     // console.log('GEO Loc', loc);
-  //   })();
-  // }, [newPointCoords]);
-
-  const buttons = useMemo(() => markers.map((item) => ({
-    connectedMode: item.diveName,
-    text: item.diveName,
-  })), [markers]);
 
   const [chosenPointId, setChosenPointId] = useState<string>(null);
 
+  const createdNewSpotId = useRef<string>();
+
+  const buttons = useMemo(() => markers.map((item) => ({
+    connectedMode: item.name,
+    text: item.name,
+  })), [markers]);
+
   const thirdStepData: ThirdStepType = {
-    spotId: '',
+    spotId: chosenPointId,
   };
 
   useEffect(() => {
@@ -122,20 +72,14 @@ export const ThirdStep: FC<StepProps> = ({
     }
   }, [userLocation]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const res = await firestoreGeoDataService.getCountryByCoordinates(newPointCoords);
-  //     console.log('coontries', { res });
-  //   })();
-  // }, [newPointCoords]);
-
-  // useEffect(() => {
-  //   if (!newPoint) {
-  //     // get coords // todo
-  //     // get points
-  //     setCoords(mapCoords);
-  //   }
-  // }, [region, newPoint]);
+  useEffect(() => {
+    if (!createSpotMode && newSpotName && markers.length) {
+      const spotId = markers.find((item) => item.name === newSpotName);
+      if (spotId) {
+        setChosenPointId(spotId.id);
+      }
+    }
+  }, [createSpotMode, step, markers]);
 
   const newSpotHandler = createNewSpotHandler(
     setNewSpotNameError,
@@ -160,12 +104,14 @@ export const ThirdStep: FC<StepProps> = ({
         <LogADiveDiveMap
           location={location}
           setLocation={setLocation}
-          points={markers}
+          markers={markers}
+          setMarkers={setMarkers}
           zoom={zoom}
           setZoom={setZoom}
           newPoint={createSpotMode}
           setNewPoint={setCreateSpotMode}
           setNewPointCoords={setNewPointCoords}
+          createdNewSpotId={createdNewSpotId.current}
         />
 
         {!createSpotMode && (
@@ -174,7 +120,9 @@ export const ThirdStep: FC<StepProps> = ({
               buttons={
                 buttons
               }
-              onClick={() => {
+              onClick={(buttonName) => {
+                const spotId = markers.find((item) => item.name === buttonName);
+                setChosenPointId(spotId.id);
               }}
               defaultChecked={newSpotName}
             />
@@ -265,7 +213,7 @@ export const ThirdStep: FC<StepProps> = ({
                 backgroundColor="#F4BF00"
                 border="none"
                 onClick={async () => {
-                  await newSpotHandler(
+                  createdNewSpotId.current = await newSpotHandler(
                     createNewSpotData(
                       newSpotName,
                       newSpotCountry,
@@ -275,7 +223,7 @@ export const ThirdStep: FC<StepProps> = ({
                       zoom,
                     ),
                   );
-                  setNewSpotName('');
+                  // setNewSpotName('');
                   setNewSpotCountry('');
                   setNewSpotRegion('');
                   setNewSpotLocation('');

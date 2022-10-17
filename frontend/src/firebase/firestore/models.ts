@@ -164,10 +164,10 @@ export type SpotType = {
   name: string;
   description: string;
   score: number;
+  lat: number;
+  lng: number;
+  zoom: number;
   location: {
-    lat: number;
-    lng: number;
-    zoom: number;
     location: string; // name
     country: string; // name
     region: string; // name
@@ -199,8 +199,8 @@ export type SpotType = {
       imperial: number;
       metric: number;
     };
-    divesLogged: number;
     divers: number;
+    divesLogged: number;
   };
 };
 

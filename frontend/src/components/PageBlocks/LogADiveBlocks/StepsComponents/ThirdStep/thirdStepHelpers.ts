@@ -41,10 +41,12 @@ export const createNewSpotHandler = (
 
   if (!error) {
     setLoading(true);
-    await firestoreSpotsService.setNewSpot(newSpotData);
+    const newSpotId = await firestoreSpotsService.setNewSpot(newSpotData);
     setLoading(false);
     setCreateSpotMode(false);
+    return newSpotId;
   }
+  return null;
 };
 
 export const createNewSpotData = (
@@ -57,10 +59,10 @@ export const createNewSpotData = (
 ) => ({
   oldId: null,
   name,
+  lat: coords.lat,
+  lng: coords.lng,
+  zoom,
   location: {
-    lat: coords.lat,
-    lng: coords.lng,
-    zoom,
     location,
     region,
     country,

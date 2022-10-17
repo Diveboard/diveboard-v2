@@ -22,9 +22,7 @@ export const SearchedItems: FC<Props> = ({
   const [open, setOpen] = useState(false);
   const clickedValue = useRef(false);
 
-  const debouncedValue = useDebounced(value, 1000);
-
-  // console.log(debouncedValue);
+  const debouncedValue = useDebounced(value, 500);
 
   useEffect(() => {
     if (debouncedValue && !clickedValue.current) {
@@ -42,7 +40,6 @@ export const SearchedItems: FC<Props> = ({
       (async () => {
         setLoading(true);
         const res = await onSearchHandler(debouncedValue);
-        console.log({ res });
         if (res.length !== 0) {
           setItems(res);
         }
@@ -50,8 +47,6 @@ export const SearchedItems: FC<Props> = ({
       })();
     }
   }, [debouncedValue]);
-
-  console.log({ items });
 
   if (!open) {
     return null;
