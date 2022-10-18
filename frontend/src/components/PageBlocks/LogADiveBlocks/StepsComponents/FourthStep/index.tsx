@@ -23,8 +23,7 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
   });
 
   const fourthStepData: FourthStepType = {
-    // parameters,
-    // advancedParameters,
+    species: [],
   };
 
   const radioButtonChange = (event: React.FormEvent<HTMLInputElement>) => {

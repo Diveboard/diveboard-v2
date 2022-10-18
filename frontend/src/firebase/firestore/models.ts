@@ -93,7 +93,7 @@ export type DiveType = {
   oldId: number | null
   unitSystem: 'metric' | 'imperia';
   saves: number;
-  spot: { id: string }
+  spotId: string | null;
 }
 & SeventhStepType
 & NinthStepType;

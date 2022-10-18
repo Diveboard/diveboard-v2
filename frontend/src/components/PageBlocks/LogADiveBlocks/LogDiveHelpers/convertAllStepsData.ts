@@ -18,7 +18,7 @@ export const convertAllStepsData = (stepsData: AllStepsDataType, draft: boolean 
     gears: stepsData.seventhStep.gears,
     publishingMode: stepsData.ninthStep.publishingMode,
     species: ['species1', 'species2'], // stepsData.fourthStep.species,
-    spot: stepsData.thirdStep.spot,
+    spotId: stepsData.thirdStep.spotId,
     tanks: stepsData.secondStep.tanks,
     oldId: null,
     unitSystem: 'metric',

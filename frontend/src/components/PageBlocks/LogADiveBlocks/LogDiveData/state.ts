@@ -25,12 +25,7 @@ const secondStep: SecondStepType = {
 };
 
 const thirdStep: ThirdStepType = {
-  spot: {
-    country: undefined,
-    name: undefined,
-    lat: undefined,
-    lng: undefined,
-  },
+  spotId: null,
 };
 
 const fourthStep: FourthStepType = {

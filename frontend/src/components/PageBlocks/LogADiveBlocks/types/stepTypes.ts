@@ -66,7 +66,7 @@ export type SecondStepType = {
 };
 
 export type ThirdStepType = {
-  spotId: string
+  spotId: string | null
 };
 export type FourthStepType = {
   species: string[]
