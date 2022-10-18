@@ -17,7 +17,6 @@ import {
   firestoreGeoDataService,
 } from '../../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
 import { SearchedItems } from '../../../../Dropdown/SearchedItems';
-
 import { Loader } from '../../../../Loader';
 
 export const ThirdStep: FC<StepProps> = ({

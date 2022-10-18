@@ -4,11 +4,12 @@ import {
 import { db } from '../firebaseFirestore';
 import { SpotType } from '../models';
 import { Coords } from '../../../types';
+import { firestorePaths } from '../firestorePaths';
 
 export const firestoreSpotsService = {
   setNewSpot: async (newSpot: SpotType) => {
     try {
-      const res = await addDoc(collection(db, 'test-spots'), newSpot);
+      const res = await addDoc(collection(db, firestorePaths.spots.path), newSpot);
       return res.id;
     } catch (e) {
       throw new Error('set new spot error');
@@ -19,7 +20,7 @@ export const firestoreSpotsService = {
     sw: Coords;
   }) => {
     try {
-      const docRef = collection(db, 'test-spots');
+      const docRef = collection(db, firestorePaths.spots.path);
       const q = query(
         docRef,
         where('lat', '>', bounds.sw.lat),
@@ -57,7 +58,7 @@ export const firestoreSpotsService = {
 
   deleteSpot: async (id: string) => {
     try {
-      await deleteDoc(doc(db, 'test-spots', id));
+      await deleteDoc(doc(db, firestorePaths.spots.path, id));
     } catch (e) {
       throw new Error('delete spot error');
     }
