@@ -130,10 +130,14 @@ export const ThirdStep: FC<StepProps> = ({
 
         {createSpotMode && (
           <div className={styles.newSpotGroup}>
+            <span className={styles.backButton} onClick={() => { setCreateSpotMode(false); }}>
+              <Icon iconName="left-arrow" />
+              back
+            </span>
+
             <h2>
               New Spot
             </h2>
-
             <div className={styles.newSpotInputWrapper}>
               <Input
                 value={newSpotName}
@@ -172,11 +176,11 @@ export const ThirdStep: FC<StepProps> = ({
                   setError={setNewSpotRegionError}
                 />
 
-                {/* <SearchedItems */}
-                {/*   value={newSpotRegion} */}
-                {/*   setValue={setNewSpotRegion} */}
-                {/*   onSearchHandler={firestoreGeoDataService.getCountries} */}
-                {/* /> */}
+                <SearchedItems
+                  value={newSpotRegion}
+                  setValue={setNewSpotRegion}
+                  onSearchHandler={firestoreGeoDataService.getRegions}
+                />
               </div>
               <div className={styles.countryInputWrapper}>
                 <Input
@@ -189,11 +193,11 @@ export const ThirdStep: FC<StepProps> = ({
                   setError={setNewSpotLocationError}
                 />
 
-                {/* <SearchedItems */}
-                {/*   value={newSpotCountry} */}
-                {/*   setValue={setNewSpotCountry} */}
-                {/*   onSearchHandler={firestoreGeoDataService.getCountries} */}
-                {/* /> */}
+                <SearchedItems
+                  value={newSpotLocation}
+                  setValue={setNewSpotLocation}
+                  onSearchHandler={firestoreGeoDataService.getGeonamesPredictions}
+                />
               </div>
 
             </div>

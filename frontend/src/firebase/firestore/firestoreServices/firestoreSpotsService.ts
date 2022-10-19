@@ -27,7 +27,6 @@ export const firestoreSpotsService = {
         where('lat', '<', bounds.ne.lat),
       );
       const querySnapshot = await getDocs(q);
-
       const spots = [];
       querySnapshot.forEach((document) => {
         const {
@@ -38,7 +37,6 @@ export const firestoreSpotsService = {
           zoom,
         } = document.data();
         const { id } = document;
-
         if (lng > bounds.sw.lng && lng < bounds.ne.lng) {
           spots.push({
             id,

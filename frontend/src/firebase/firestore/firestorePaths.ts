@@ -21,6 +21,15 @@ const shopsPath = shopsSegment;
 // Countries
 const countriesSegment = 'countries';
 const countriesPath = countriesSegment;
+// Geonemes core
+const geonamesSegment = 'geonames_cores';
+const geonamesPath = geonamesSegment;
+// Regions
+const regionsSegment = 'regions';
+const regionsPath = regionsSegment;
+// Feature code
+const featureCodeSegment = 'geonames_featurecodes';
+const featureCodePath = featureCodeSegment;
 
 export const firestorePaths = {
   users: {
@@ -44,4 +53,16 @@ export const firestorePaths = {
   },
   shops: { path: shopsPath, segment: shopsSegment },
   countries: { path: countriesPath, segment: countriesSegment },
+  geonames: {
+    path: geonamesPath,
+    segment: geonamesSegment,
+  },
+  regions: {
+    path: regionsPath,
+    segment: regionsSegment,
+  },
+  featureCode: {
+    path: featureCodePath,
+    segment: featureCodeSegment,
+  },
 } as const;

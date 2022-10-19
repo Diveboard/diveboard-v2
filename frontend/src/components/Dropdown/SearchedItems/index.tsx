@@ -1,14 +1,14 @@
 import React, {
   FC, useEffect, useRef, useState,
 } from 'react';
-import SearchDropdownPanel from './SearchDropdownPanel';
+import { SearchDropdownPanel } from './SearchDropdownPanel';
 import { useDebounced } from '../../../hooks/useDebounced';
 
 type Props = {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
-  onSearchHandler: (value: string) => Promise<string[]>;
-  onSearchedItemClicked?: (itemName: string) => void;
+  onSearchHandler: (value: string) => Promise<{ id: string | number, name: string }[]>;
+  onSearchedItemClicked?: (item: { id: string | number, name: string }) => void;
 };
 
 export const SearchedItems: FC<Props> = ({
@@ -17,7 +17,7 @@ export const SearchedItems: FC<Props> = ({
   setValue,
   onSearchedItemClicked,
 }) => {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<{ id:string | number, name:string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const clickedValue = useRef(false);
@@ -55,13 +55,13 @@ export const SearchedItems: FC<Props> = ({
   return (
     <SearchDropdownPanel
       loading={loading}
-      onItemClick={(itemName) => {
+      onItemClick={(item) => {
         clickedValue.current = true;
-        setOpen(false);
-        setValue(itemName);
         setItems([]);
+        setOpen(false);
+        setValue(item.name);
         if (onSearchedItemClicked) {
-          onSearchedItemClicked(itemName);
+          onSearchedItemClicked(item);
         }
       }}
       items={items}

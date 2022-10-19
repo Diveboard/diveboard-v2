@@ -7,15 +7,18 @@ import { DivePoint } from '../../../../../Point';
 import { SearchInput } from '../../../../../Input/SearchInput';
 import { Button } from '../../../../../Buttons/Button';
 import { Icon } from '../../../../../Icons/Icon';
-import { SearchPredictions } from '../../../../../Dropdown/SarchPredictions';
 import { useUserLocation } from '../../../../../../hooks/useUserLocation';
 import { checkGeolocationAccess } from '../../../../../../utils/checkGeolocationAccess';
+import { SearchedItems } from '../../../../../Dropdown/SearchedItems';
 import { MarkerType } from '../../../types/commonTypes';
 import {
   firestoreSpotsService,
 } from '../../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
 import { Coords } from '../../../../../../types';
 import styles from './styles.module.scss';
+import {
+  firestoreGeoDataService,
+} from '../../../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
 
 type Props = {
   location: { lat: number, lng: number };
@@ -137,9 +140,18 @@ export const LogADiveDiveMap: FC<Props> = ({
         {!newPoint && (
           <>
 
-            <SearchInput setQueryData={setRegion} ms={1000} placeholder="Region" />
-            <SearchPredictions region={region} setRegion={setRegion} setLocation={setLocation} />
-
+            <SearchInput setQueryData={setRegion} ms={500} placeholder="Region" />
+            <SearchedItems
+              value={region}
+              setValue={setRegion}
+              onSearchHandler={firestoreGeoDataService.getGeonamesPredictions}
+              onSearchedItemClicked={async (item) => {
+                const coords = await firestoreGeoDataService
+                  .getGeonamesCoordsById(item.id as string);
+                setLocation(coords);
+                setRegion('');
+              }}
+            />
             <Button
               width={71}
               height={48}

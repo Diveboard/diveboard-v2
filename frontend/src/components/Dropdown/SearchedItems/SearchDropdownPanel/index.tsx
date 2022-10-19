@@ -4,8 +4,8 @@ import { Loader } from '../../../Loader';
 
 type Props = {
   loading: boolean;
-  items: string[];
-  onItemClick: (itemName: string) => void;
+  items: { id:string | number, name: string }[];
+  onItemClick: (itemName: { id:string | number, name: string }) => void;
 };
 
 export const SearchDropdownPanel: FC<Props> = ({
@@ -14,28 +14,29 @@ export const SearchDropdownPanel: FC<Props> = ({
   onItemClick,
 }) => {
   const itemsComponents = items.map((item) => {
-    if (item === 'no results') {
+    if (item.name === 'no results') {
       return (
         <span
-          key={item}
+          key={item.id}
           className={styles.predictionItem}
         >
-          {item}
+          {item.name}
         </span>
       );
     }
     return (
       <span
-        key={item}
+        key={item.id}
         className={styles.predictionItem}
         onClick={() => {
           onItemClick(item);
         }}
       >
-        {item}
+        {item.name}
       </span>
     );
   });
+
   return (
     <div>
       {(!!items.length || loading) && (
@@ -51,5 +52,3 @@ export const SearchDropdownPanel: FC<Props> = ({
     </div>
   );
 };
-
-export default SearchDropdownPanel;
