@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ButtonImage } from './ButtonImage';
 import styles from './styles.module.scss';
 
@@ -24,6 +24,10 @@ export const ButtonGroup = (
   }: Props,
 ): JSX.Element => {
   const [mode, setMode] = useState(defaultChecked);
+
+  useEffect(() => {
+    setMode(defaultChecked);
+  }, [defaultChecked]);
 
   const buttonComponents = buttons.map((btn) => {
     let btnStyle;

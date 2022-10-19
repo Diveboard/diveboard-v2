@@ -4,20 +4,12 @@ import React, {
 import { LogADiveDiveMap } from './NewDiveMap';
 import { StepsNavigation } from '../../StepsNavigation';
 import { ButtonGroup } from '../../../../ButtonGroup';
-import { Input } from '../../../../Input/CommonInput';
-import { Button } from '../../../../Buttons/Button';
-import { Icon } from '../../../../Icons/Icon';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
-import { createNewSpotData, createNewSpotHandler } from './thirdStepHelpers';
 import { useUserLocation } from '../../../../../hooks/useUserLocation';
 import { MarkerType, StepProps } from '../../types/commonTypes';
 import { ThirdStepType } from '../../types/stepTypes';
+import { CreateNewSpot } from './CreateNewSpot';
 import styles from './styles.module.scss';
-import {
-  firestoreGeoDataService,
-} from '../../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
-import { SearchedItems } from '../../../../Dropdown/SearchedItems';
-import { Loader } from '../../../../Loader';
 
 export const ThirdStep: FC<StepProps> = ({
   step,
@@ -30,16 +22,6 @@ export const ThirdStep: FC<StepProps> = ({
     lng: 30.33,
   });
   const [newSpotName, setNewSpotName] = useState('');
-  const [newSpotNameError, setNewSpotNameError] = useState('');
-
-  const [newSpotCountry, setNewSpotCountry] = useState('');
-  const [newSpotCountryError, setNewSpotCountryError] = useState('');
-
-  const [newSpotRegion, setNewSpotRegion] = useState('');
-  const [newSpotRegionError, setNewSpotRegionError] = useState('');
-
-  const [newSpotLocation, setNewSpotLocation] = useState('');
-  const [newSpotLocationError, setNewSpotLocationError] = useState('');
 
   const [markers, setMarkers] = useState<MarkerType[]>([]);
 
@@ -50,9 +32,9 @@ export const ThirdStep: FC<StepProps> = ({
   });
 
   const [zoom, setZoom] = useState(5);
-  const [loading, setLoading] = useState(false);
 
   const [chosenPointId, setChosenPointId] = useState<string>(null);
+  const [clickedPoint, setClickedPoint] = useState('');
 
   const createdNewSpotId = useRef<string>();
 
@@ -80,15 +62,6 @@ export const ThirdStep: FC<StepProps> = ({
     }
   }, [createSpotMode, step, markers]);
 
-  const newSpotHandler = createNewSpotHandler(
-    setNewSpotNameError,
-    setNewSpotCountryError,
-    setNewSpotRegionError,
-    setNewSpotLocationError,
-    setLoading,
-    setCreateSpotMode,
-  );
-
   if (step !== 3) {
     return null;
   }
@@ -111,6 +84,8 @@ export const ThirdStep: FC<StepProps> = ({
           setNewPoint={setCreateSpotMode}
           setNewPointCoords={setNewPointCoords}
           createdNewSpotId={createdNewSpotId.current}
+          setChosenPointId={setChosenPointId}
+          setButton={setClickedPoint}
         />
 
         {!createSpotMode && (
@@ -123,122 +98,20 @@ export const ThirdStep: FC<StepProps> = ({
                 const spotId = markers.find((item) => item.name === buttonName);
                 setChosenPointId(spotId.id);
               }}
-              defaultChecked={newSpotName}
+              defaultChecked={newSpotName || clickedPoint}
             />
           </div>
         )}
 
         {createSpotMode && (
-          <div className={styles.newSpotGroup}>
-            <span className={styles.backButton} onClick={() => { setCreateSpotMode(false); }}>
-              <Icon iconName="left-arrow" />
-              back
-            </span>
-
-            <h2>
-              New Spot
-            </h2>
-            <div className={styles.newSpotInputWrapper}>
-              <Input
-                value={newSpotName}
-                setValue={setNewSpotName}
-                placeholder="Spot Name"
-                height={48}
-                width={720}
-                error={newSpotNameError}
-                setError={setNewSpotNameError}
-              />
-              <div className={styles.countryInputWrapper}>
-                <Input
-                  value={newSpotCountry}
-                  setValue={setNewSpotCountry}
-                  placeholder="Country"
-                  height={48}
-                  width={720}
-                  error={newSpotCountryError}
-                  setError={setNewSpotCountryError}
-                />
-
-                <SearchedItems
-                  value={newSpotCountry}
-                  setValue={setNewSpotCountry}
-                  onSearchHandler={firestoreGeoDataService.getCountries}
-                />
-              </div>
-              <div className={styles.countryInputWrapper}>
-                <Input
-                  value={newSpotRegion}
-                  setValue={setNewSpotRegion}
-                  placeholder="Region"
-                  height={48}
-                  width={720}
-                  error={newSpotRegionError}
-                  setError={setNewSpotRegionError}
-                />
-
-                <SearchedItems
-                  value={newSpotRegion}
-                  setValue={setNewSpotRegion}
-                  onSearchHandler={firestoreGeoDataService.getRegions}
-                />
-              </div>
-              <div className={styles.countryInputWrapper}>
-                <Input
-                  value={newSpotLocation}
-                  setValue={setNewSpotLocation}
-                  placeholder="Location"
-                  height={48}
-                  width={720}
-                  error={newSpotLocationError}
-                  setError={setNewSpotLocationError}
-                />
-
-                <SearchedItems
-                  value={newSpotLocation}
-                  setValue={setNewSpotLocation}
-                  onSearchHandler={firestoreGeoDataService.getGeonamesPredictions}
-                />
-              </div>
-
-            </div>
-            <span className={styles.explanationText}>
-              Drag the on
-              {' '}
-              <Icon iconName="new-point" size={24} />
-              {' '}
-              the map to the right location.
-            </span>
-            <div className={styles.buttonWrapper}>
-              <Button
-                width={250}
-                height={56}
-                borderRadius={30}
-                backgroundColor="#F4BF00"
-                border="none"
-                onClick={async () => {
-                  createdNewSpotId.current = await newSpotHandler(
-                    createNewSpotData(
-                      newSpotName,
-                      newSpotCountry,
-                      newSpotRegion,
-                      newSpotLocation,
-                      newPointCoords,
-                      zoom,
-                    ),
-                  );
-                  // setNewSpotName('');
-                  setNewSpotCountry('');
-                  setNewSpotRegion('');
-                  setNewSpotLocation('');
-                }}
-              >
-                <Loader loading={loading} />
-                <span className={styles.saveBtn}>Save</span>
-
-              </Button>
-            </div>
-
-          </div>
+          <CreateNewSpot
+            setNewSpotName={setNewSpotName}
+            newSpotName={newSpotName}
+            createdNewSpotId={createdNewSpotId}
+            setCreateSpotMode={setCreateSpotMode}
+            newPointCoords={newPointCoords}
+            zoom={zoom}
+          />
         )}
       </div>
       <StepsNavigation
