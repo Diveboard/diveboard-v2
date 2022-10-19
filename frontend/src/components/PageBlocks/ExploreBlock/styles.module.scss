@@ -1,0 +1,173 @@
+.wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+}
+
+.map {
+  width: 70vw;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 33vw;
+  max-height: 78.6vh;
+  overflow: auto;
+  margin-top: 80px;
+  padding: 30px 35px 20px 75px;
+
+  input {
+    width: 100% !important;
+    padding-left: 50px !important;
+  }
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 3, 69, 0.2);
+    border-radius: 5px;
+  }
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 16px 0 14px;
+
+  >span {
+    width: 100%;
+    text-align: center;
+    border-bottom: 2px solid rgba(0, 3, 69, 0.05);
+    line-height: 49px;
+  }
+
+  .active {
+    color: #0059DE;
+    border-bottom: 2px solid #0059DE;
+  }
+}
+
+.tab {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.regionTitle {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+
+  h1 {
+    max-width: 70%;
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 48px;
+    color: #000345;
+  }
+}
+
+.subtitle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 11px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000345;
+}
+
+.stats {
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 20px;
+  color: #000345;
+  margin-bottom: 36px;
+
+  >b {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #000000;
+  }
+}
+
+.mobDashWrapper {
+  width: 95%;
+  position: fixed;
+  height: 10px;
+}
+
+.mobDash {
+  width: 20vw;
+  height: 4px;
+  margin: 0 auto;
+  background: rgba(0, 3, 69, 0.2);;
+  border-radius: 10px;
+}
+
+.chosenSpot {
+  position: absolute;
+  bottom: 97px;
+  width: 95%;
+  height: 94px;
+  background: white;
+  margin: 10px;
+  border-radius: 15px;
+}
+
+@media (max-width: 1280px) {
+  .sidebar {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column-reverse;
+    margin: 0;
+  }
+
+  .map {
+    width: 100vw;
+  }
+
+  .sidebar {
+    max-height: 50vh;
+    display: block;
+    width: 100vw;
+    margin: 0;
+    padding: 0 10px 50px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    position: absolute;
+    top: 48%;
+    z-index: 3;
+    background: white;
+    transition: top .5s ease-in-out, max-height .5s ease-in-out, bottom .5s ease-in-out;
+  }
+
+  .tabs {
+    margin: 0 0 10px;
+    padding-top: 10px;
+    width: 95%;
+    position: fixed;
+    background: white;
+    z-index: 10;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+
+  .tab {
+    padding-top: 70px;
+  }
+}
