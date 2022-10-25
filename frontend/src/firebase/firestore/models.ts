@@ -31,6 +31,7 @@ export type NotificationsType = {
 };
 
 export type SpeciesType = {
+  id: string
   cname: { name: string, language: string }[];
   sname: string;
   category: string;
@@ -38,6 +39,8 @@ export type SpeciesType = {
   old_eolsnames_id: number;
   imgSrc: string
 };
+
+export type SpeciesTypeWithoutId = Omit<SpeciesType, 'id'>;
 
 // export type DiveType = {
 //   draft: boolean;

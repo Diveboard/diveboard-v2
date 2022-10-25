@@ -1,5 +1,5 @@
 import {
-  addDoc, collection, deleteDoc, doc, getDocs, query, where,
+  addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, where,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { SpotType } from '../models';
@@ -7,6 +7,21 @@ import { Coords } from '../../../types';
 import { firestorePaths } from '../firestorePaths';
 
 export const firestoreSpotsService = {
+  getSpotCoordsById: async (spotId:string) => {
+    try {
+      const docRef = doc(db, firestorePaths.spots.path, spotId);
+      const docSnap = await getDoc(docRef);
+      const { lat, lng } = docSnap.data();
+      return {
+        lat,
+        lng,
+      };
+    } catch (e) {
+      console.log(e);
+      throw new Error('get spot by id error');
+    }
+  },
+
   setNewSpot: async (newSpot: SpotType) => {
     try {
       const res = await addDoc(collection(db, firestorePaths.spots.path), newSpot);
@@ -15,6 +30,7 @@ export const firestoreSpotsService = {
       throw new Error('set new spot error');
     }
   },
+
   getAllSpotsInMapViewport: async (bounds: {
     ne: Coords;
     sw: Coords;

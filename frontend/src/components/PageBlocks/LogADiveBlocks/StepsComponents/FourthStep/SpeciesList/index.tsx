@@ -1,54 +1,77 @@
 import React, { FC } from 'react';
 
-import { SpeciesListItem } from './SpeciesListItem';
-
+import { SelectedSpecies } from '../SelectedSpecies';
+import { SpeciesCategory } from '../SpeciesCategory';
+import { SpeciesType } from '../../../../../../firebase/firestore/models';
 import styles from './styles.module.scss';
 
-type Species = {
-  id: string;
-  sname: string;
-  cnames: string[];
-  preferred_name: string;
-  picture: string;
-  bio: string;
-  url: string;
-  rank: string;
-};
-
 type Props = {
-  speciesListData: {
-    [key: string]: Species[];
-  };
-  selectedSpecies: Species[];
-  mySpecies: Species[];
-  onClick: (type: string) => void;
+  currentSpeciesMode: string;
+  setCurrentSpeciesMode: React.Dispatch<React.SetStateAction<string>>;
+  mySpecies: SpeciesType[];
+  queriedSpecies: SpeciesType[];
+  searchedSpecies: SpeciesType[];
+  selectedSpecies: SpeciesType[]
+  setSelectedSpecies: React.Dispatch<React.SetStateAction<SpeciesType[]>>
 };
 
 export const SpeciesList: FC<Props> = ({
-  speciesListData,
-  selectedSpecies,
+  currentSpeciesMode,
+  setCurrentSpeciesMode,
   mySpecies,
-  onClick,
-}) => (
-  <div className={styles.wrapper}>
-    <SpeciesListItem
-      speciesType="selected"
-      numberSpecies={selectedSpecies.length}
-      icon
-      onClick={onClick}
+  queriedSpecies,
+  searchedSpecies,
+  selectedSpecies,
+  setSelectedSpecies,
+
+}) => {
+  const categories = queriedSpecies.map((item) => item.category);
+  const categoriesSet = new Set(categories);
+  const categoriesArray = Array.from(categoriesSet);
+  const categoriesGrouped = categoriesArray.map((item : string) => ({
+    category: item,
+    categorySpecies: queriedSpecies.filter((species) => species.category === item),
+  }));
+
+  const categoriesComponents = categoriesGrouped.map((item) => (
+    <SpeciesCategory
+      key={item.category}
+      title={item.category}
+      currentMode={currentSpeciesMode}
+      setCurrentMode={setCurrentSpeciesMode}
+      speciesList={item.categorySpecies}
+      selectedSpeciesList={selectedSpecies}
+      setSelectedSpeciesList={setSelectedSpecies}
     />
-    <SpeciesListItem
-      speciesType="my species"
-      numberSpecies={mySpecies.length}
-      onClick={onClick}
-    />
-    {Object.entries(speciesListData).map(([key, value]) => (
-      <SpeciesListItem
-        key={key}
-        speciesType={key}
-        numberSpecies={value.length}
-        onClick={onClick}
+  ));
+
+  return (
+    <div className={styles.wrapper}>
+      <SelectedSpecies
+        currentMode={currentSpeciesMode}
+        setCurrentMode={setCurrentSpeciesMode}
+        speciesList={selectedSpecies}
+        setSpeciesList={setSelectedSpecies}
       />
-    ))}
-  </div>
-);
+      <SpeciesCategory
+        title="my species"
+        currentMode={currentSpeciesMode}
+        setCurrentMode={setCurrentSpeciesMode}
+        speciesList={mySpecies}
+        selectedSpeciesList={selectedSpecies}
+        setSelectedSpeciesList={setSelectedSpecies}
+      />
+      {!!searchedSpecies.length && (
+      <SpeciesCategory
+        title="search results"
+        currentMode={currentSpeciesMode}
+        setCurrentMode={setCurrentSpeciesMode}
+        speciesList={searchedSpecies}
+        selectedSpeciesList={selectedSpecies}
+        setSelectedSpeciesList={setSelectedSpecies}
+      />
+      )}
+      {categoriesComponents}
+    </div>
+  );
+};

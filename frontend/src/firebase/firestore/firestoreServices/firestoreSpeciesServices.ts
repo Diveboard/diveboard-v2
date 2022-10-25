@@ -2,181 +2,61 @@ import {
   where, query, collection, getDocs,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
-import { SpeciesAreaType } from '../models';
+import { SpeciesType, SpeciesTypeWithoutId } from '../models';
 import { Coords } from '../../../types';
+import { firestorePaths } from '../firestorePaths';
+import { getSpeciesBoundsArrays } from '../../../utils/getSpeciesBoundsArrays';
 
 export const firestoreSpeciesServices = {
-  getAreas: async (coords: { lat: number, lng: number }) => {
+
+  getLocalSpecies: async (coords: Coords) => {
+    const boundsArrays = getSpeciesBoundsArrays(coords);
+    const fishes: SpeciesType[] = [];
+
     try {
-      const docRef = collection(db, 'areas');
-      const q = query(
-        docRef,
-        where('maxLat', '>=', coords.lat),
-      );
-      const querySnapshot = await getDocs(q);
+      const docRef = collection(db, firestorePaths.species.path);
 
-      // console.log('docs', querySnapshot.docs);
-      let area = null;
-      querySnapshot.forEach((doc) => {
-        const areaData = doc.data() as SpeciesAreaType;
-        if (areaData.minLat <= coords.lat
-          && areaData.maxLng >= coords.lng
-          && areaData.minLng <= coords.lng) {
-          area = areaData;
-        }
-      });
-      return area;
-    } catch (e) {
-      console.log(e.message);
-      throw new Error('get species areas error');
-    }
-  },
+      for (let i = 0; i < boundsArrays.length; i++) {
+        const q = query(
+          docRef,
+          where('coords', 'array-contains-any', boundsArrays[i]),
+        );
+        // eslint-disable-next-line no-await-in-loop
+        const querySnapshot = await getDocs(q);
 
-  getAreaCategories: async (id: number) => {
-    try {
-      const docRef = collection(db, 'area_categories');
-      const q = query(
-        docRef,
-        where('area_id', '==', id),
-      );
-
-      const querySnapshot = await getDocs(q);
-      const categories = [];
-      querySnapshot.forEach((doc) => {
-        const categoriesData = doc.data();
-        categories.push(categoriesData);
-      });
-
-      return categories;
-    } catch (e) {
-      console.log(e.message);
-      throw new Error('get species area categories error');
-    }
-  },
-
-  getFishFrequencies: async (coords: Coords) => {
-    try {
-      const docRef = collection(db, ' fish_frequencies');
-      const q = query(
-        docRef,
-        where('lat', '==', Math.round(coords.lat)),
-        where('lng', '==', Math.round(coords.lng)),
-      );
-      const querySnapshot = await getDocs(q);
-      const fishes = [];
-      querySnapshot.forEach((doc) => {
-        const fishesData = doc.data();
-        fishes.push(fishesData);
-      });
+        querySnapshot.forEach((doc) => {
+          const fishesData = doc.data() as SpeciesTypeWithoutId;
+          if (!fishes.find((species) => species.id === doc.id)) { // check duplicates
+            fishes.push({ id: doc.id, ...fishesData });
+          }
+        });
+      }
 
       return fishes;
     } catch (e) {
       console.log(e.message);
-      throw new Error('get species fish frequencies error');
+      throw new Error('get local species  error');
     }
   },
+  getAllSpecies: async () => {
+    const fishes:SpeciesType[] = [];
 
-  getEolSNames: async (gbifIds: number[]) => {
     try {
-      const docRef = collection(db, 'eolsnames');
-      const q = query(
-        docRef,
-        where('gbif_id', 'in', gbifIds),
-      );
-      const querySnapshot = await getDocs(q);
-      const eolsnames = [];
-      querySnapshot.forEach((doc) => {
-        const fishesData = doc.data();
-        eolsnames.push(fishesData);
-      });
-
-      return eolsnames;
-    } catch (e) {
-      console.log(e.message);
-      throw new Error('get species eolsname error');
-    }
-  },
-
-  getEolCNames: async (eolCnamesId: number[], language: string = 'en') => {
-    try {
-      const docRef = collection(db, 'eolcnames');
-      const q = query(
-        docRef,
-        where('eolsname_id', 'in', eolCnamesId),
-        where('language', '==', language),
-      );
-      const querySnapshot = await getDocs(q);
-      const eolcnames = [];
-      querySnapshot.forEach((doc) => {
-        const fishesData = doc.data();
-        eolcnames.push(fishesData);
-      });
-
-      return eolcnames;
-    } catch (e) {
-      console.log(e.message);
-      throw new Error('get species eolcname error');
-    }
-  },
-
-  getAllSNames: async () => {
-    try {
-      const docRef = collection(db, 'eolsnames');
+      const docRef = collection(db, firestorePaths.species.path);
       const q = query(
         docRef,
       );
       const querySnapshot = await getDocs(q);
-      const eolsnames = [];
-      querySnapshot.forEach((doc) => {
-        const fishesData = doc.data();
-        eolsnames.push(fishesData);
-      });
 
-      return eolsnames;
+      querySnapshot.forEach((doc) => {
+        const fishesData = doc.data() as SpeciesTypeWithoutId;
+        fishes.push({ id: doc.id, ...fishesData });
+      });
+      return fishes;
     } catch (e) {
       console.log(e.message);
-      throw new Error('get all species eolsname error');
+      throw new Error('get local species  error');
     }
   },
 
-  // getAllCNames: async (language: string = 'en') => {
-  //   try {
-  //     const docRef = collection(db, 'eolcnames');
-  //     const q = query(
-  //       docRef,
-  //       where('language', '==', language),
-  //     );
-  //     const querySnapshot = await getDocs(q);
-  //     const eolcnames = [];
-  //     querySnapshot.forEach((doc) => {
-  //       const fishesData = doc.data();
-  //       eolcnames.push(fishesData);
-  //     });
-  //     return eolcnames;
-  //   } catch (e) {
-  //     console.log(e.message);
-  //     throw new Error('get all species eolcname error');
-  //   }
-  // },
-
-  getNewLocal: async (coords: Coords) => {
-    try {
-      const docRef = collection(db, 'A_Test_species');
-      const q = query(
-        docRef,
-        where('coords', 'array-contains', coords),
-      );
-      const querySnapshot = await getDocs(q);
-      const species = [];
-      querySnapshot.forEach((doc) => {
-        const fishesData = doc.data();
-        species.push(fishesData);
-      });
-
-      return species;
-    } catch (e) {
-      console.log(e.message);
-      throw new Error(' error');
-    }
-  },
 };

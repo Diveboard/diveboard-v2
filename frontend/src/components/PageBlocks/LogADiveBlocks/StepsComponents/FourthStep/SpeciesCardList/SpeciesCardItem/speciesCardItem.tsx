@@ -4,25 +4,17 @@ import Image from 'next/image';
 import { Icon, imageLoader } from '../../../../../../Icons/Icon';
 
 import styles from './speciesCardItem.module.scss';
+import { SpeciesType } from '../../../../../../../firebase/firestore/models';
 
 type Props = {
-  species: {
-    id: string;
-    sname: string;
-    cnames: string[];
-    preferred_name: string;
-    picture: string;
-    bio: string;
-    url: string;
-    rank: string;
-  };
+  species: SpeciesType;
   selectedSpeciesHandler: (speciesId: string) => void;
   check?: boolean
 };
 
 export const SpeciesCardItem: FC<Props> = ({
   species: {
-    id, picture, preferred_name, sname,
+    id, sname, cname, imgSrc,
   }, selectedSpeciesHandler, check,
 }) => {
   const [isErrorImg, setErrorImg] = useState(false);
@@ -34,12 +26,11 @@ export const SpeciesCardItem: FC<Props> = ({
   };
 
   const definedSrc = () => {
-    if (picture.length === 0 || isErrorImg) {
+    if (imgSrc.length === 0 || isErrorImg) {
       return '/images/default-species.svg';
     }
-    return picture;
+    return imgSrc;
   };
-
   return (
     <div className={styles.wrapper}>
       <div className={styles.subwrapper}>
@@ -57,7 +48,7 @@ export const SpeciesCardItem: FC<Props> = ({
         </div>
 
         <div className={styles.titleWrapper}>
-          <div className={styles.title}>{preferred_name}</div>
+          <div className={styles.title}>{cname[0].name}</div>
           <div className={styles.description}>{sname}</div>
         </div>
       </div>

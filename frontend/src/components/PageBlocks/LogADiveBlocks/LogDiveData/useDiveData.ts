@@ -13,7 +13,8 @@ import {
   SeventhStepType,
   EighthStepType,
   NinthStepType,
-  FourthStepType, AllStepsDataType,
+  FourthStepType,
+  AllStepsDataType,
 } from '../types/stepTypes';
 
 export const UseDiveData = () => {

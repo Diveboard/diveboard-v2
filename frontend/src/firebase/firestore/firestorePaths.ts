@@ -30,6 +30,9 @@ const regionsPath = regionsSegment;
 // Feature code
 const featureCodeSegment = 'geonames_featurecodes';
 const featureCodePath = featureCodeSegment;
+// Species
+const speciesSegment = 'test-species';
+const speciesPath = speciesSegment;
 
 export const firestorePaths = {
   users: {
@@ -64,5 +67,9 @@ export const firestorePaths = {
   featureCode: {
     path: featureCodePath,
     segment: featureCodeSegment,
+  },
+  species: {
+    path: speciesPath,
+    segment: speciesSegment,
   },
 } as const;
