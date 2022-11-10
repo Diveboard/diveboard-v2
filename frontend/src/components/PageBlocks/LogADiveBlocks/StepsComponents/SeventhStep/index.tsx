@@ -36,6 +36,7 @@ export const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
     const parameters = actions(id);
     return (
       <GearForm
+        key={id}
         typeOfGear={typeOfGear}
         setGearParameters={parameters.setGearParameters}
         id={id}
@@ -55,12 +56,12 @@ export const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
       model: '',
       typeOfGear: '',
       manufacturer: '',
-
     }]);
   };
 
   const seventhStepData: SeventhStepType = {
     gears: gearItems,
+    save: saveToLocker,
   };
 
   if (step !== 7) return null;

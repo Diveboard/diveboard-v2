@@ -1,4 +1,6 @@
-import { GearsVariantsType, SafetySpot, ScoreType } from './commonTypes';
+import {
+  Buddy, GearsVariantsType, SafetySpot, ScoreType,
+} from './commonTypes';
 import { initialDiveDataState } from '../LogDiveData/state';
 
 export type FirstStepType =
@@ -75,7 +77,7 @@ export type FourthStepType = {
 export type FifthStepType = {
   diveCenter: string;
   guideName: string;
-  buddies: { id?: string, name: string, email?:string }[];
+  buddies: Buddy[];
 };
 
 export type SixthStepType = {
@@ -90,10 +92,16 @@ export type SeventhStepType = {
     manufacturer: string,
     model: string;
     dateAcquired: Date;
-    lastMaintenance: Date; }[]
+    lastMaintenance: Date;
+  }[]
+  save: boolean;
 };
 
-export type EighthStepType = {};
+export type EighthStepType = {
+  surveyName: string
+  surveyId: string;
+  date: Date;
+}[];
 
 export type NinthStepType = {
   publishingMode: 'public' | 'private' | 'friends only'

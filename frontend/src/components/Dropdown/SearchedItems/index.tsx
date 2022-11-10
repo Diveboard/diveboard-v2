@@ -9,6 +9,7 @@ type Props = {
   setValue: React.Dispatch<React.SetStateAction<string>>;
   onSearchHandler: (value: string) => Promise<{ id: string | number, name: string }[]>;
   onSearchedItemClicked?: (item: { id: string | number, name: string }) => void;
+  focus?: boolean;
 };
 
 export const SearchedItems: FC<Props> = ({
@@ -16,6 +17,7 @@ export const SearchedItems: FC<Props> = ({
   onSearchHandler,
   setValue,
   onSearchedItemClicked,
+  focus = true,
 }) => {
   const [items, setItems] = useState<{ id:string | number, name:string }[]>([]);
   const [loading, setLoading] = useState(false);
@@ -36,7 +38,7 @@ export const SearchedItems: FC<Props> = ({
   }, [debouncedValue]);
 
   useEffect(() => {
-    if (debouncedValue.length >= 2) {
+    if (debouncedValue.length >= 2 && focus) {
       (async () => {
         setLoading(true);
         const res = await onSearchHandler(debouncedValue);

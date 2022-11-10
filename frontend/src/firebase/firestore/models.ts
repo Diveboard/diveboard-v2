@@ -1,9 +1,10 @@
-import { Coords } from '../../types';
+import { Coords, DanSurveyType } from '../../types';
 import {
   FifthStepType,
   FirstStepType, NinthStepType,
   SecondStepType, SeventhStepType,
 } from '../../components/PageBlocks/LogADiveBlocks/types/stepTypes';
+import { ScoreType } from '../../components/PageBlocks/LogADiveBlocks/types/commonTypes';
 
 export type PersonalInfoType = {
   email: null | string;
@@ -42,43 +43,6 @@ export type SpeciesType = {
 
 export type SpeciesTypeWithoutId = Omit<SpeciesType, 'id'>;
 
-// export type DiveType = {
-//   draft: boolean;
-//   name: string;
-//   spot: {
-//     name: string;
-//     lat: number;
-//     lng: number;
-//   }
-//   dive_number: number;
-//   date: Date;
-//   max_depth: number;
-//   duration: number;
-//   water: 'salt' | 'fresh';
-//   surface_temp: number;
-//   bottom_temp: number;
-//   dive_type: string[];
-//   water_visibility: 'bad' | 'average' | 'good' | 'excellent';
-//   about: string;
-//   gears: {
-//     gear_items: GearType[],
-//     weights: number
-//   }
-//   species: string[] // id
-//   comments: {
-//     user_id: string;
-//     date: Date;
-//     text: string
-//   }[]
-//   tanks: TankType[];
-//   safety_spots: SafetySpot[];
-//   dive_reviews: DiveReviews;
-//   surface_interval: number;
-//   current: 'none' | 'light' | 'medium' | ' strong' | 'extreme';
-//   altitude: number;
-//   buddies: string[] // id/email
-// };
-
 type DiveActivities = Capitalize<keyof Omit<FirstStepType['diveActivities'], 'other'>>[] | string[];
 
 export type DiveType = {
@@ -100,67 +64,6 @@ export type DiveType = {
 }
 & SeventhStepType
 & NinthStepType;
-
-// const dive: DiveType = {
-//   buddies: [],
-//   danSend: false,
-//   diveActivities: ['xv', 'DeepDive', 'DeepDive', 'DeepDive'],
-//   diveCenter: {
-//     id: '0',
-//     guideId: '0',
-//   },
-//   diveData: {
-//     surfaceInterval: 0,
-//     current: 'light',
-//     altitude: 0,
-//     safetySpots: [{
-//       id: 0,
-//       depth: 0,
-//       period: 0,
-//     }],
-//     date: new Date(),
-//     bottomTemp: 0,
-//     surfaceTemp: 0,
-//     duration: 0,
-//     time: '',
-//     maxDepth: 0,
-//     waterType: 'salt',
-//     waterVisibility: 'bad',
-//     weights: 10,
-//   },
-//   aboutDive: {
-//     tripName: 'some name',
-//     diveNumber: 0,
-//     diveDifficulty: 1,
-//     marineLifeQuality: 1,
-//     notes: '',
-//     overReview: 1,
-//     wreck: 1,
-//     bigFish: 1,
-//   },
-//   draft: false,
-//   externalImgsUrls: ['https://some-picture-url.com'],
-//   gears: [],
-//   publishingMode: 'private',
-//   species: ['ljj'],
-//   spot: {
-//     country: '',
-//     lat: 0,
-//     lng: 0,
-//     name: '',
-//   },
-//   tanks: [{
-//     id: 0,
-//     size: 'cuft',
-//     pressureMeasures: 'bar',
-//     pressureStart: 0,
-//     mixture: 'air',
-//     pressureEnd: 0,
-//     material: 'steel',
-//     cylinder: '1x',
-//     volume: 0,
-//   }],
-// };
 
 export type SpotType = {
   oldId: number | null;
@@ -246,3 +149,106 @@ export type SpeciesAreaType = {
   updated_at: Date;
   url_name: string;
 };
+
+export type ShopUserReview = {
+  userId: string;
+  reviewText: string;
+  boatAndEquipment: ScoreType;
+  guidingAndSafety: ScoreType;
+  service:ScoreType;
+  liked: string[] // users id that liked this review
+};
+
+export type ShopLatestNews = {
+  title: string;
+  pictures: {
+    imgSrc: string;
+    usersSaved: string[] // users id
+  }[]
+  description: string;
+};
+
+export type Comment =
+{
+  userId: string;
+  commentText: string;
+  liked: string[] // users id
+};
+
+export type ShopType = {
+  owner: string // user id;
+  name: string;
+  description: string;
+  city: string;
+  country: string;
+  score: string;
+  crewMembers:({ id: string, name: string } | { name: string })[] // ids of registered users or name
+  affiliations: string;
+  languages: string[];
+  spots: string[]; // spots id
+  coords: Coords;
+  address: string;
+  email: string;
+  website: string;
+  phone: string;
+  reviews:{
+    boatAndEquipment: ScoreType;
+    guidingAndSafety: ScoreType;
+    service:ScoreType;
+  }
+  dives: string[];// dives id
+};
+
+export type SurveyDataDANType = {
+  beforeDive: {
+    divePlan: 'none' | 'table' | 'computer' | 'another diver' | '';
+    tablesUsed: 'PADI' | 'NAUI' | 'BSAC' | 'Beuhlman' | 'US NAVY' | 'CSIEMD' | 'CSMD' | 'COMEX' | 'MN90' | ' Other' | 'none' | '';
+    rest: 'rested' | 'tired' | 'exhausted' | '';
+    drinks: number;
+    exercise: 'none' | 'light' | 'moderate' | 'severe' | 'exhausting' | '';
+    medication: string;
+  }
+  afterDive:{
+    feelSymptoms: 'yes' | 'no' | '';
+    comments: string;
+    exposeToAltitude:'none' | 'commercial aircraft' | 'unpressurized aircraft' | 'medevac aircraft' | 'group transportation' | 'helicopter' | '';
+    hoursBeforeExposeAltitude: number;
+    dateOfFlight: Date;
+    totalHoursOfExpose: number;
+    altitudeOfExpose: number;
+    treatedInHyperbaricChamber: 'yes' | 'no' | '';
+  }
+
+  identification:{
+    DANProjectDiveExplorationID: string ;
+    DANMemberID: string ;
+    familyName: string;
+    givenName: string;
+    middleName: string;
+    suffix: string;
+    prefix: string;
+    alias: string;
+    degree: string;
+    mothersMaidenName: string;
+    sex: 'male' | 'female' | 'other' | '';
+    birth: Date;
+    birthplaceCity: string;
+    birthplaceRegion: string;
+    birthplaceCountry: string;
+  }
+  divingExperience:{
+    license: string ;
+    issueAgency: string;
+    firstDateOfCertification: Date;
+    level: 'student' | 'basic' | 'advanced/speciality' | 'rescue' | 'dive master' | 'instructor' | 'technical/cave/deep diving' | 'scientific' | 'commercial' | 'military' | ''
+    numberOfDivesInYear: number;
+    numberOfDivesInFiveYears: number;
+  }
+  medicalCondition:{
+    weight: { value:number, measures: 'kg' | 'lb' };
+    height: { value:number, measures: 'cm' | 'in' };
+    conditions: string;
+    medications: string;
+    cigarettes: 'yes' | 'no' | '';
+  }
+} & DanSurveyType['duringDive'] & DanSurveyType['contactInfo'];

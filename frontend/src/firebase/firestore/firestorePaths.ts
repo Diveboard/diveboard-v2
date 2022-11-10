@@ -16,8 +16,11 @@ const extraPath = `${divesPath}/${extraSegment}`;
 const spotsSegment = 'test-spots';// 'spots'
 const spotsPath = spotsSegment;
 // Shops
-const shopsSegment = 'shops';
+const shopsSegment = 'test-shops';
 const shopsPath = shopsSegment;
+// Guides
+const guidesSegment = 'guides';
+const guidesPath = `${shopsSegment}/guides`;
 // Countries
 const countriesSegment = 'countries';
 const countriesPath = countriesSegment;
@@ -33,6 +36,12 @@ const featureCodePath = featureCodeSegment;
 // Species
 const speciesSegment = 'test-species';
 const speciesPath = speciesSegment;
+
+// Surveys
+const surveysSegment = 'test-surveys';
+const surveysPath = surveysSegment;
+const DANSegment = 'DAN';
+const DANPath = `${surveysPath}/${DANSegment}`;
 
 export const firestorePaths = {
   users: {
@@ -54,7 +63,14 @@ export const firestorePaths = {
     path: spotsPath,
     segment: spotsSegment,
   },
-  shops: { path: shopsPath, segment: shopsSegment },
+  shops: {
+    path: shopsPath,
+    segment: shopsSegment,
+    guides: {
+      path: guidesPath,
+      segment: guidesSegment,
+    },
+  },
   countries: { path: countriesPath, segment: countriesSegment },
   geonames: {
     path: geonamesPath,
@@ -71,5 +87,13 @@ export const firestorePaths = {
   species: {
     path: speciesPath,
     segment: speciesSegment,
+  },
+  surveys: {
+    path: surveysPath,
+    segment: surveysSegment,
+    DAN: {
+      path: DANPath,
+      segment: DANSegment,
+    },
   },
 } as const;

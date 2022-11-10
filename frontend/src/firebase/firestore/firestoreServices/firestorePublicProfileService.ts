@@ -1,8 +1,18 @@
 import {
-  doc, setDoc, updateDoc, arrayUnion, arrayRemove, getDoc,
+  doc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  getDoc,
+  collection,
+  query,
+  getDocs,
+  orderBy, startAt,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { firestorePaths } from '../firestorePaths';
+import { UserType } from '../../../types';
 
 export const firestorePublicProfileService = {
   setEmail: async (email: string, userId: string) => {
@@ -67,13 +77,36 @@ export const firestorePublicProfileService = {
     }
   },
 
-  getUserData: async (userId: string) => {
+  getUserById: async (userId: string) => {
     try {
       const docRef = doc(db, firestorePaths.users.path, userId);
       const docSnap = await getDoc(docRef);
-      return docSnap.data();
+      return docSnap.data() as UserType | undefined;
     } catch (e) {
       throw new Error('get user data error');
+    }
+  },
+
+  getUserPredictionsByName: async (predictionName: string) => {
+    const users:Omit<UserType, 'about' | 'country' | 'qualifications' | 'email'>[] = [];
+
+    try {
+      const docRef = collection(db, firestorePaths.users.path);
+      const q = query(
+        docRef,
+        orderBy('name'),
+        startAt(predictionName.trim()),
+      );
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((document) => {
+        const { name, photoURL } = document.data() as Omit<UserType, 'uid'>;
+        users.push({ uid: document.id, name, photoURL });
+      });
+      return users;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error('get users by name predictions  error');
     }
   },
 

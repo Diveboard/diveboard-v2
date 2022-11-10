@@ -227,7 +227,7 @@ export const firestoreGeoDataService = {
     }
   },
 
-  getGeonamesCoordinates: () => {
+  getCountriesWithPhoneCodes: () => {
   },
 
 };

@@ -16,9 +16,9 @@ export const DatePickerInput:FC<Props> = ({
 }) => {
   const getDatePickerStyle = (errorValue: string) => {
     if (errorValue) {
-      return `${styles.datePicker} ${styles.error}`;
+      return `${styles.datePicker} ${styles.error} ${{ width: '500px' }}`;
     }
-    return styles.datePicker;
+    return `${styles.datePicker} ${{ width: '500px' }}`;
   };
   return (
     <>

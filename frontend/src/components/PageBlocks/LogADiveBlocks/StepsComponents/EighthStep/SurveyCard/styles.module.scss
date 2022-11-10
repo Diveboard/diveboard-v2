@@ -1,11 +1,14 @@
 .surveyCard {
   width: 100%;
   max-width: 420px;
-  //height: 140px;
   box-shadow: 0 8px 15px rgba(0, 62, 89, 0.06);
   border-radius: 15px;
   display: flex;
   color: #000345;
+
+  &:hover{
+    box-shadow: 0 8px 15px rgba(0, 62, 89, 0.2);
+  }
 
   .img {
     border-radius: 15px 0 0 15px;
@@ -76,6 +79,4 @@
       }
     }
   }
-
-
 }

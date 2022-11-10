@@ -1,0 +1,97 @@
+.survey {
+  margin-top: 57px;
+
+  .progressBlock {
+    position: sticky;
+    top: 90px;
+    padding: 10px;
+    background: rgba(127, 183, 249, 0.6);
+    border-radius: 10px;
+    z-index: 10;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+
+    .title {
+      margin-left: 30px;
+
+      .general {
+        font-style: italic;
+        font-weight: 400;
+        font-size: 10px;
+        line-height: 12px;
+        color: #0059DE;
+      }
+
+      h1 {
+        font-weight: 600;
+        font-size: 32px;
+        line-height: 50px;
+        color: #111111;
+      }
+
+      .contributors {
+        font-weight: 300;
+        font-size: 14px;
+        line-height: 20px;
+        color: #000345;
+
+        .count {
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .descriptionWrapper {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+
+    .description {
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 24px;
+      color: #111111;
+      max-width: 571px;
+
+      p {
+        margin-bottom: 20px;
+      }
+
+      a {
+        font-weight: 600;
+        color: #0059DE;
+      }
+
+      .bold {
+        font-weight: 600;
+      }
+    }
+
+    .surveyLogo {
+      margin-top: 27px;
+    }
+
+  }
+
+  .cardWrapper {
+    margin-top: 30px;
+  }
+
+  .formWrapper {
+    margin-top: 64px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .survey {
+    .progressBlock {
+      top: 60px;
+      padding: 5px 10px;
+    }
+  }
+}

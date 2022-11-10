@@ -73,11 +73,8 @@ export type SetGearParametersType = {
 
 // type Spot = ThirdStepType['spot'];
 export type Buddy = {
-  id?: string,
-  name: string,
-  email?: string,
-  imgSrc?: string,
-};
+  id: string
+} | { name: string, email?: string };
 
 export type MarkerType = {
   id: string,

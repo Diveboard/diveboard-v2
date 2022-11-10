@@ -38,6 +38,7 @@ export const firestoreSpeciesServices = {
       throw new Error('get local species  error');
     }
   },
+
   getAllSpecies: async () => {
     const fishes:SpeciesType[] = [];
 
