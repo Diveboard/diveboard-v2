@@ -44,7 +44,7 @@ export const FifthStep: FC<StepProps> = ({
   const [diveCenter, setDiveCenter] = useState('');
   const [guideName, setGuideName] = useState('');
 
-  // const [selectedDiveCenter, setSelectedDivecenter] = useState('');
+  // const [selectedDiveCenter, setSelectedDiveCenter] = useState('');
   // const [selectedGuide, setSelectedGuide] = useState('');
 
   const [selectedBuddies, setSelectedBuddies] = useState<BuddyItemType[]>([]);
