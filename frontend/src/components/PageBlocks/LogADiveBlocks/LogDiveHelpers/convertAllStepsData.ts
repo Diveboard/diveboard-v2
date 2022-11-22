@@ -4,6 +4,7 @@ import {
   convertDiveActivities,
   convertToDiveActivities,
 } from './convertDiveActivities';
+import { convertTimestampDate } from '../../../../utils/convertTimestampDate';
 
 export const convertAllStepsData = (
   stepsData: AllStepsDataType,
@@ -36,8 +37,6 @@ export const convertAllStepsData = (
   unitSystem: 'metric',
   saves: 0,
 });
-
-const convertTimestampDate = (time) => new Date(time.seconds * 1000 + time.nanoseconds / 1000000);
 
 export const convertToStepsData = (data: DiveType) => ({
   firstStep: {

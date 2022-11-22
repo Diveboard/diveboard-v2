@@ -11,7 +11,7 @@ const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
 }) => (
   <AuthLayout user={user}>
     <MainLayout>
-      <DiveManagerBlock />
+      <DiveManagerBlock userId={user.uid} />
     </MainLayout>
   </AuthLayout>
 );

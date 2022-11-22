@@ -22,6 +22,18 @@ export const firestoreSpotsService = {
     }
   },
 
+  getSpotById: async (spotId:string) => {
+    try {
+      const docRef = doc(db, firestorePaths.spots.path, spotId);
+      const docSnap = await getDoc(docRef);
+      const { location } = docSnap.data();
+      return `${location.location}, ${location.country}, ${location.region}`;
+    } catch (e) {
+      console.log(e);
+      throw new Error('get spot by id error');
+    }
+  },
+
   setNewSpot: async (newSpot: SpotType) => {
     try {
       const res = await addDoc(collection(db, firestorePaths.spots.path), newSpot);

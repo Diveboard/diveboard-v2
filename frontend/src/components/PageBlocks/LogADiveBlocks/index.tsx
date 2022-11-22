@@ -24,6 +24,7 @@ type Props = {
 
 export const LogDiveBlock = ({ diveId, userId }: Props) => {
   const [step, setStep] = useState<StepType>(0);
+  const [error, setError] = useState('');
   const [isLoading, setLoading] = useState<boolean>(true);
   const { setCurrentStep, setData } = useContext(LogDiveDataContext);
 
@@ -36,9 +37,13 @@ export const LogDiveBlock = ({ diveId, userId }: Props) => {
       (async () => {
         setLoading(true);
         const dive = await firestoreDivesService.getDiveData(userId, diveId);
-        // @ts-ignore
-        setData(dive);
-        setStep(1);
+        if (!dive) {
+          setError('Dive is not found');
+        } else {
+          // @ts-ignore
+          setData(dive);
+          setStep(1);
+        }
         setLoading(false);
       })();
     } else {
@@ -49,28 +54,36 @@ export const LogDiveBlock = ({ diveId, userId }: Props) => {
   return (
     <div className={styles.diveWrapper}>
       <Loader loading={isLoading} />
-      {step !== 10 && (
+      {error ? (
         <div className={styles.header}>
-          <h1>{diveId ? `Dive ${diveId}` : 'New Dive'}</h1>
-          <span>SAVE DRAFT</span>
+          <h1>Dive is not found</h1>
         </div>
-      )}
-      {!isLoading && (
+      ) : (
         <>
-          {step === 0 && <PreStep setStep={setStep} />}
-          {step !== 0 && step !== 10 && (
-            <StepsIndicator step={step} setStep={setStep} />
+          {step !== 10 && (
+          <div className={styles.header}>
+            <h1>{diveId ? `Dive ${diveId}` : 'New Dive'}</h1>
+            <span>SAVE DRAFT</span>
+          </div>
           )}
-          <FirstStep step={step} setStep={setStep} />
-          <SecondStep step={step} setStep={setStep} />
-          <ThirdStep step={step} setStep={setStep} />
-          <FourthStep step={step} setStep={setStep} />
-          <FifthStep step={step} setStep={setStep} />
-          <SixthStep step={step} setStep={setStep} />
-          <SeventhStep step={step} setStep={setStep} />
-          <EighthStep step={step} setStep={setStep} />
-          <NinthStep step={step} setStep={setStep} diveId={diveId} />
-          {step === 10 && <CongratsStep setStep={setStep} />}
+          {!isLoading && (
+          <>
+            {step === 0 && <PreStep setStep={setStep} />}
+            {step !== 0 && step !== 10 && (
+            <StepsIndicator step={step} setStep={setStep} />
+            )}
+            <FirstStep step={step} setStep={setStep} />
+            <SecondStep step={step} setStep={setStep} />
+            <ThirdStep step={step} setStep={setStep} />
+            <FourthStep step={step} setStep={setStep} />
+            <FifthStep step={step} setStep={setStep} />
+            <SixthStep step={step} setStep={setStep} />
+            <SeventhStep step={step} setStep={setStep} />
+            <EighthStep step={step} setStep={setStep} />
+            <NinthStep step={step} setStep={setStep} diveId={diveId} />
+            {step === 10 && <CongratsStep setStep={setStep} />}
+          </>
+          )}
         </>
       )}
     </div>

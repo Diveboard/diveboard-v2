@@ -76,7 +76,7 @@ export const FifthStep: FC<StepProps> = ({
       (async () => {
         const buddies = await firestoreBuddiesService.getBuddiesByIds(
           // @ts-ignore
-          data.buddies.map((i) => i.id),
+          data.buddies?.map((i) => i.id),
         );
         setSelectedBuddies(buddies);
         // TODO: Add dive center

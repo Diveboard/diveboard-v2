@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+import { useRouter } from 'next/router';
 import { ButtonGroup } from '../ButtonGroup';
 import KebabButton from '../Buttons/KebabButton';
 import { Checkbox } from '../CheckBox';
@@ -14,15 +15,20 @@ import { Paste } from '../Icons/IconSVGComponents/Paste';
 import { Print } from '../Icons/IconSVGComponents/Print';
 import { Unpublish } from '../Icons/IconSVGComponents/Unpublish';
 import { CopyProperty } from '../Icons/IconSVGComponents/CopyProperty';
-import { DUMMY_DATA, buttons } from './diveData';
+import { buttons } from './diveData';
 import { PopupCopy } from './Popup/PopupCopy';
 import { PopupDelete } from './Popup/PopupDelete';
 import { PopupUnpublish } from './Popup/PopupUnpublish';
 import { Popup } from './Popup';
 import { Backdrop } from '../Backdrop';
 import styles from './styles.module.scss';
+import { firestoreDivesService } from '../../firebase/firestore/firestoreServices/firestoreDivesService';
+import { Loader } from '../Loader';
 
-const DiveManager = () => {
+type Props = {
+  userId: string;
+};
+const DiveManager = ({ userId }: Props) => {
   const [checkboxItem, setCheckboxItem] = useState(false);
   const [isChangeSelectAll, setChangeSelectAll] = useState(false);
   const [isShowSettings, setShowSettings] = useState(false);
@@ -32,6 +38,12 @@ const DiveManager = () => {
   const dropdownButton = useRef(null); // button block
   const dropdownKebab = useRef(null); // kebab block
   const [isBackdrop, setBackdrop] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [dives, setDives] = useState([]);
+  const [sortType, setSortType] = useState('recent');
+
+  const router = useRouter();
 
   const titleCopy = 'Select Properties to Copy';
   const titleUnpublish = 'This Dive will not be visible for other users and will be saved as a draft';
@@ -54,7 +66,16 @@ const DiveManager = () => {
       id: 3,
       title: 'Edit Dive',
       svgItem: <EditDive />,
-      onClick: () => {}, // TODO change
+      onClick: () => {
+        document.body.style.overflow = 'unset';
+        const diveForEdit = dives.filter((i) => i.checked);
+        if (diveForEdit.length !== 1) {
+          // eslint-disable-next-line no-alert
+          alert('Choose one item for edit');
+        } else {
+          router.push(`/dive/${diveForEdit[0].dive.id}`);
+        }
+      },
     },
     {
       id: 4,
@@ -115,7 +136,29 @@ const DiveManager = () => {
     closePopup();
   };
 
-  const deleteButtonHandler = () => {
+  const fetchDives = async () => {
+    if (userId) {
+      setLoading(true);
+      const data = await firestoreDivesService.getDivesByUserId(userId);
+      if (!Array.isArray(data) || data.length === 0) {
+        setError('No dives');
+      } else {
+        setDives(data.map((item) => ({ dive: item, checked: false })));
+      }
+      setLoading(false);
+    }
+  };
+
+  const deleteButtonHandler = async () => {
+    document.body.style.overflow = 'unset';
+    const diveForDelete = dives.filter((i) => i.checked);
+    if (diveForDelete.length !== 1) {
+      // eslint-disable-next-line no-alert
+      alert('Choose one item for edit');
+    } else {
+      await firestoreDivesService.deleteDiveData(userId, diveForDelete[0].dive.id);
+      await fetchDives();
+    }
     closePopup();
   };
 
@@ -139,10 +182,35 @@ const DiveManager = () => {
     return () => document.removeEventListener('keydown', handleEscapeKey);
   }, []);
 
-  const renderDives = () => DUMMY_DATA.map((itm) => (
+  useEffect(() => {
+    fetchDives();
+  }, [userId]);
+
+  // eslint-disable-next-line array-callback-return
+  const sortDives = (divesData) => divesData.sort((a, b) => {
+    if (sortType === 'recent') {
+      // @ts-ignore
+      return new Date(b.dive.date) - new Date(a.dive.date);
+    }
+    if (sortType === 'oldest') {
+      // @ts-ignore
+      return new Date(a.dive.date) - new Date(b.dive.date);
+    }
+  });
+  const renderDives = sortDives(dives).map((itm) => (
     <DiveItem
-      key={itm.id}
-      itm={itm}
+      key={itm.dive.id}
+      itm={itm.dive}
+      checked={itm.checked}
+      setChecked={(val) => {
+        const newDives = dives.map((i) => {
+          if (i.dive.id === itm.dive.id) {
+            i.checked = val;
+          }
+          return i;
+        });
+        setDives(newDives);
+      }}
       isSelectAll={checkboxItem}
       changeIsSelectAll={changeSelectAllHandler}
       isChange={isChangeSelectAll}
@@ -159,59 +227,71 @@ const DiveManager = () => {
           </KebabButton>
         </div>
       </div>
-      {isShowPopupCopy && (
-        <Popup closePopup={closePopup} title={titleCopy}>
-          <PopupCopy copyButtonHandler={copyButtonHandler} />
-        </Popup>
-      )}
-      {isShowPopupUnpublish && (
-        <Popup closePopup={closePopup} title={titleUnpublish}>
-          <PopupUnpublish
-            unpublishButtonHandler={unpublishButtonHandler}
-            popupTextHandler={closePopup}
-          />
-        </Popup>
-      )}
-      {isShowPopupDelete && (
-        <Popup closePopup={closePopup} title={titleDeleted}>
-          <PopupDelete deleteButtonHandler={deleteButtonHandler} popupTextHandler={closePopup} />
-        </Popup>
-      )}
-      {DUMMY_DATA.length === 0 ? (
-        <NoDive />
-      ) : (
-        <>
-          <div className={styles.wrapper__buttons}>
-            <ButtonGroup buttons={buttons} onClick={() => {}} />
-
-            <div ref={dropdownButton}>
-              <KebabButton className="kebab" onClick={kebabButtonHandler}>
-                Settings
-                <Icon iconName="kebab" width={16} height={16} />
-              </KebabButton>
-            </div>
-            {isShowSettings && (
-              <SetDropdown
-                dropdownList={dropdownList}
-                dropdownButtons={[dropdownButton, dropdownKebab]}
-                hideDropdown={hideDropdown}
-                showBackdrop={backdropHandler}
-              />
+      { isLoading ? <Loader loading={isLoading} />
+        : (
+          <>
+            {isShowPopupCopy && (
+            <Popup closePopup={closePopup} title={titleCopy}>
+              <PopupCopy copyButtonHandler={copyButtonHandler} />
+            </Popup>
             )}
-            <div className={styles.checkbox__mobile}>
-              <Checkbox name="name" className="column" checked={checkboxItem} onChecked={checkboxHandler}>
-                Select All
-              </Checkbox>
-            </div>
-          </div>
-          <div className={styles.checkbox}>
-            <Checkbox name="name" className="column" checked={checkboxItem} onChecked={checkboxHandler}>
-              Select All
-            </Checkbox>
-          </div>
-          <div className={styles.divelist}>{renderDives()}</div>
-        </>
-      )}
+            {isShowPopupUnpublish && (
+            <Popup closePopup={closePopup} title={titleUnpublish}>
+              <PopupUnpublish
+                unpublishButtonHandler={unpublishButtonHandler}
+                popupTextHandler={closePopup}
+              />
+            </Popup>
+            )}
+            {isShowPopupDelete && (
+            <Popup closePopup={closePopup} title={titleDeleted}>
+              <PopupDelete
+                deleteButtonHandler={deleteButtonHandler}
+                popupTextHandler={closePopup}
+              />
+            </Popup>
+            )}
+            {error ? (
+              <NoDive />
+            ) : (
+              <>
+                <div className={styles.wrapper__buttons}>
+                  <ButtonGroup
+                    buttons={buttons}
+                    onClick={(val) => setSortType(val)}
+                    defaultChecked={sortType}
+                  />
+
+                  <div ref={dropdownButton}>
+                    <KebabButton className="kebab" onClick={kebabButtonHandler}>
+                      Settings
+                      <Icon iconName="kebab" width={16} height={16} />
+                    </KebabButton>
+                  </div>
+                  {isShowSettings && (
+                  <SetDropdown
+                    dropdownList={dropdownList}
+                    dropdownButtons={[dropdownButton, dropdownKebab]}
+                    hideDropdown={hideDropdown}
+                    showBackdrop={backdropHandler}
+                  />
+                  )}
+                  <div className={styles.checkbox__mobile}>
+                    <Checkbox name="name" className="column" checked={checkboxItem} onChecked={checkboxHandler}>
+                      Select All
+                    </Checkbox>
+                  </div>
+                </div>
+                <div className={styles.checkbox}>
+                  <Checkbox name="name" className="column" checked={checkboxItem} onChecked={checkboxHandler}>
+                    Select All
+                  </Checkbox>
+                </div>
+                <div className={styles.divelist}>{renderDives}</div>
+              </>
+            )}
+          </>
+        ) }
       {isBackdrop && <Backdrop />}
     </section>
   );
