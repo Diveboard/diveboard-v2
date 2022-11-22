@@ -10,6 +10,7 @@ export const firestoreDivesService = {
   setDiveData: async (diveData: DiveType, userId: string) => {
     try {
       const ref = doc(collection(db, `Test_Dives/${userId}`, 'userDives'));
+      // TODO: Set to spot dive Id
       await setDoc(ref, { ...diveData }, { merge: true });
     } catch (e) {
       console.log({ e });
@@ -50,7 +51,7 @@ export const firestoreDivesService = {
       });
       for (const dive of dives) {
         // eslint-disable-next-line no-await-in-loop
-        dive.spot = await firestoreSpotsService.getSpotById(dive.spotId);
+        dive.spot = await firestoreSpotsService.getSpotNameById(dive.spotId);
       }
       return dives;
     } catch (e) {

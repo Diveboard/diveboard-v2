@@ -10,12 +10,13 @@ import { MarkerType, StepProps } from '../../types/commonTypes';
 import { ThirdStepType } from '../../types/stepTypes';
 import { CreateNewSpot } from './CreateNewSpot';
 import styles from './styles.module.scss';
+import { firestoreSpotsService } from '../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
 
 export const ThirdStep: FC<StepProps> = ({
   step,
   setStep,
 }) => {
-  const { setStepData } = useContext(LogDiveDataContext);
+  const { setStepData, getStepData } = useContext(LogDiveDataContext);
   const userLocation = useUserLocation();
   const [location, setLocation] = useState({
     lat: 41.5,
@@ -54,9 +55,6 @@ export const ThirdStep: FC<StepProps> = ({
   }, [userLocation]);
 
   useEffect(() => {
-    // const data = getStepData(3) as ThirdStepType;
-    // console.log(data.spotId);
-
     if (!createSpotMode && newSpotName && markers.length) {
       const spotId = markers.find((item) => item.name === newSpotName);
       if (spotId) {
@@ -65,23 +63,23 @@ export const ThirdStep: FC<StepProps> = ({
     }
   }, [createSpotMode, step, markers]);
 
+  useEffect(() => {
+    const { spotId } = getStepData(3) as ThirdStepType;
+    (async () => {
+      if (spotId) {
+        const spot = await firestoreSpotsService.getSpotById(
+          spotId,
+        );
+        setChosenPointId(spotId);
+        setLocation({ lat: spot.lat, lng: spot.lng });
+        setClickedPoint(spot.name);
+      }
+    })();
+  }, [step]);
+
   if (step !== 3) {
     return null;
   }
-
-  // // TODO: Add default spot
-  // useEffect(() => {
-  //   const { spotId } = getStepData(3) as ThirdStepType;
-  //   console.log(spotId);
-  //   // (async () => {
-  //   //   if (spotId) {
-  //   //     const spotCoords = await firestoreSpotsService.getSpotCoordsById(
-  //   //       spotId,
-  //   //     );
-  //   //     setChosenPointId(spotId);
-  //   //   }
-  //   // })();
-  // }, [step]);
 
   return (
     <>
