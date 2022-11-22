@@ -54,6 +54,9 @@ export const ThirdStep: FC<StepProps> = ({
   }, [userLocation]);
 
   useEffect(() => {
+    // const data = getStepData(3) as ThirdStepType;
+    // console.log(data.spotId);
+
     if (!createSpotMode && newSpotName && markers.length) {
       const spotId = markers.find((item) => item.name === newSpotName);
       if (spotId) {
@@ -66,12 +69,24 @@ export const ThirdStep: FC<StepProps> = ({
     return null;
   }
 
+  // // TODO: Add default spot
+  // useEffect(() => {
+  //   const { spotId } = getStepData(3) as ThirdStepType;
+  //   console.log(spotId);
+  //   // (async () => {
+  //   //   if (spotId) {
+  //   //     const spotCoords = await firestoreSpotsService.getSpotCoordsById(
+  //   //       spotId,
+  //   //     );
+  //   //     setChosenPointId(spotId);
+  //   //   }
+  //   // })();
+  // }, [step]);
+
   return (
     <>
       <div className={styles.thirdStep}>
-        <h2>
-          Dive Site
-        </h2>
+        <h2>Dive Site</h2>
 
         <LogADiveDiveMap
           location={location}
@@ -91,9 +106,7 @@ export const ThirdStep: FC<StepProps> = ({
         {!createSpotMode && (
           <div className={styles.pointsBtnGroup}>
             <ButtonGroup
-              buttons={
-                buttons
-              }
+              buttons={buttons}
               onClick={(buttonName) => {
                 const spotId = markers.find((item) => item.name === buttonName);
                 setChosenPointId(spotId.id);

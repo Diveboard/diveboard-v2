@@ -5,7 +5,6 @@ import { db } from '../firebaseFirestore';
 import { DiveType } from '../models';
 
 export const firestoreDivesService = {
-
   setDiveData: async (diveData: DiveType, userId: string) => {
     try {
       const ref = doc(collection(db, `Test_Dives/${userId}`, 'userDives'));
@@ -17,8 +16,8 @@ export const firestoreDivesService = {
   },
 
   getDiveData: async (
-    userId: string = '0HmlinuLc5Q6OyRywFWdiod6Ikt1',
-    diveId: string = 'ltHsoQGOzHj7a0Eiuucu',
+    userId: string,
+    diveId: string,
   ) => {
     try {
       const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveId);
@@ -29,7 +28,23 @@ export const firestoreDivesService = {
       throw new Error('get dive data error');
     }
   },
-  getDiveFeild: async (userId: string = '0HmlinuLc5Q6OyRywFWdiod6Ikt1') => {
+
+  updateDiveData: async (
+    userId: string,
+    diveId: string,
+    dive: DiveType,
+  ) => {
+    try {
+      const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveId);
+      await setDoc(docRef, { ...dive }, { merge: false });
+      return true;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error('update dive data error');
+    }
+  },
+
+  getDiveField: async (userId: string = '0HmlinuLc5Q6OyRywFWdiod6Ikt1') => {
     const docRef = doc(db, 'Test_Dives', userId);
     const docSnap = await getDoc(docRef);
     console.log(docSnap.data());

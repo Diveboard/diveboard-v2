@@ -85,6 +85,7 @@ export const useFormSubmit = (formData: DanSurveyType) => {
       setLoading(true);
       const danData = transformFormData(formData);
       const surveyId = await firestoreSurveysService.setSurveyData('DAN', danData as unknown as SurveyDataDANType);
+      // @ts-ignore
       setSurvey((prevState) => [...prevState, { surveyId, surveyName: 'DAN', date: new Date() }]);
       setSurveyMode('');
       setLoading(false);

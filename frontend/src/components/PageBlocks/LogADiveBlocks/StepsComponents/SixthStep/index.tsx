@@ -1,4 +1,6 @@
-import React, { FC, useContext, useState } from 'react';
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react';
 
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { Button } from '../../../../Buttons/Button';
@@ -13,23 +15,23 @@ import { StepProps } from '../../types/commonTypes';
 import stylesContainer from '../../styles.module.scss';
 import styles from './styles.module.scss';
 
-export const SixthStep: FC<StepProps> = ({
-  step,
-  setStep,
-}) => {
-  const { setStepData } = useContext(LogDiveDataContext);
+export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
+  const { setStepData, getStepData } = useContext(LogDiveDataContext);
   const isMobile = useWindowWidth(500, 768);
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
   const [mediaUrl, setMediaUrl] = useState<string[]>([]);
-  const [files, setFiles] = useState<{ tags: string, file: File }[]>([]);
+  const [files, setFiles] = useState<{ tags: string; file: File }[]>([]);
 
   const checkFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
-    setFiles([...files, {
-      tags: '',
-      file,
-    }]);
+    setFiles([
+      ...files,
+      {
+        tags: '',
+        file,
+      },
+    ]);
   };
 
   const addUrlHandler = () => {
@@ -47,9 +49,9 @@ export const SixthStep: FC<StepProps> = ({
     }
   };
 
-  const filesComponents = files.map(
-    (item) => (<FileWithTags key={item.file.lastModified} file={item} setFile={setFiles} />),
-  );
+  const filesComponents = files.map((item) => (
+    <FileWithTags key={item.file.lastModified} file={item} setFile={setFiles} />
+  ));
 
   const urlsComponent = mediaUrl.map((item) => (
     <AddedUrl key={item} url={item} setMediaUrl={setMediaUrl} />
@@ -59,6 +61,14 @@ export const SixthStep: FC<StepProps> = ({
     files,
     mediaUrl,
   };
+
+  useEffect(() => {
+    const data = getStepData(6) as SixthStepType;
+    // TODO: Add files
+    if (data.mediaUrl) {
+      setMediaUrl(data.mediaUrl);
+    }
+  }, [step]);
 
   if (step !== 6) {
     return null;
@@ -71,9 +81,7 @@ export const SixthStep: FC<StepProps> = ({
           <h2>Pictures and Videos</h2>
           <p>Upload media from your local device</p>
 
-          <div>
-            {filesComponents}
-          </div>
+          <div>{filesComponents}</div>
 
           <div className={styles.fileButton}>
             <label className={styles.label} htmlFor="file-manager">
@@ -129,6 +137,5 @@ export const SixthStep: FC<StepProps> = ({
         }}
       />
     </>
-
   );
 };

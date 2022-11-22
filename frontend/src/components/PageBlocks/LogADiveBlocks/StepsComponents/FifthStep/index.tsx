@@ -1,5 +1,5 @@
 import React, {
-  FC, useContext, useState,
+  FC, useContext, useEffect, useState,
 } from 'react';
 import Script from 'next/script';
 import { Input } from '../../../../Input/CommonInput';
@@ -25,6 +25,7 @@ import {
 import {
   firestoreGuidesService,
 } from '../../../../../firebase/firestore/firestoreServices/firestoreGuidesService';
+import { firestoreBuddiesService } from '../../../../../firebase/firestore/firestoreServices/firestoreBuddiesService';
 
 export type BuddyItemType = {
   id: string;
@@ -37,7 +38,7 @@ export const FifthStep: FC<StepProps> = ({
   setStep,
 }) => {
   const {
-    setStepData,
+    setStepData, getStepData,
   } = useContext(LogDiveDataContext);
   const isMobile = useWindowWidth(500, 769);
 
@@ -68,6 +69,21 @@ export const FifthStep: FC<StepProps> = ({
       return item;
     }),
   };
+
+  useEffect(() => {
+    const data = getStepData(5) as FifthStepType;
+    if (Object.values(data).every((item) => !!item)) {
+      (async () => {
+        const buddies = await firestoreBuddiesService.getBuddiesByIds(
+          // @ts-ignore
+          data.buddies.map((i) => i.id),
+        );
+        setSelectedBuddies(buddies);
+        // TODO: Add dive center
+        // TODO: Add guide
+      })();
+    }
+  }, [step]);
 
   if (step !== 5) {
     return null;

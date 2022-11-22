@@ -7,8 +7,7 @@ import { Icon } from '../../../../../Icons/Icon';
 import { GearType, SetGearParametersType } from '../../../types/commonTypes';
 import styles from '../styles.module.scss';
 
-type Props = GearType
-& SetGearParametersType;
+type Props = GearType & SetGearParametersType;
 
 const gears = [
   'BCD',
@@ -33,8 +32,13 @@ const gears = [
   'Wet suit',
 ];
 
-export const GearForm:FC<Props> = ({
-  typeOfGear, dateAcquired, lastMaintenance, model, manufacturer, setGearParameters,
+export const GearForm: FC<Props> = ({
+  typeOfGear,
+  dateAcquired,
+  lastMaintenance,
+  model,
+  manufacturer,
+  setGearParameters,
 }) => {
   const {
     setManufacturer,

@@ -7,29 +7,23 @@ import styles from './styles.module.scss';
 
 type Props = {
   diveActivities: Omit<FirstStepType['diveActivities'], 'other'>;
-  setDiveActivities: React.Dispatch<React.SetStateAction<Omit<FirstStepType['diveActivities'], 'other'>>>;
+  setDiveActivities: React.Dispatch<
+    React.SetStateAction<Omit<FirstStepType['diveActivities'], 'other'>>
+  >;
   other: string;
   setOther: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export const DiveActivities: FC<Props> = (
-  {
-    diveActivities,
-    setDiveActivities,
-    other,
-    setOther,
-  },
-) => {
-  const params = setParams(
-    diveActivities,
-    setDiveActivities,
-  );
-
+export const DiveActivities: FC<Props> = ({
+  diveActivities,
+  setDiveActivities,
+  other,
+  setOther,
+}) => {
+  const params = setParams(diveActivities, setDiveActivities);
   return (
     <div className={styles.diveActivities}>
-      <h2>
-        Dive type and activities:
-      </h2>
+      <h2>Dive type and activities:</h2>
       <div className={styles.wrapper}>
         <div className={styles.left}>
           <Checkbox

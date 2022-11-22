@@ -14,33 +14,36 @@ import { StepProps } from '../../types/commonTypes';
 import { NinthStepType } from '../../types/stepTypes';
 import containerStyle from '../../styles.module.scss';
 import styles from './styles.module.scss';
-import {
-  firestoreDivesService,
-} from '../../../../../firebase/firestore/firestoreServices/firestoreDivesService';
+import { firestoreDivesService } from '../../../../../firebase/firestore/firestoreServices/firestoreDivesService';
 import { AuthStatusContext } from '../../../../../layouts/AuthLayout';
+import { Loader } from '../../../../Loader';
 
-export const NinthStep: FC<StepProps> = ({
+export const NinthStep: FC<StepProps & { diveId?: string }> = ({
   step,
   setStep,
+  diveId,
 }) => {
   const { userAuth } = useContext(AuthStatusContext);
-  const {
-    setStepData,
-    getAllStepsData,
-  } = useContext(LogDiveDataContext);
+  const { getStepData, setStepData, getAllStepsData } = useContext(LogDiveDataContext);
+
+  const publishingModes = [
+    {
+      text: 'Public',
+      connectedMode: 'public',
+    },
+    {
+      text: 'Private',
+      connectedMode: 'private',
+    },
+    {
+      text: 'Friends Only',
+      connectedMode: 'friends only',
+    },
+  ];
   const allStepsData = getAllStepsData();
   const isMobile = useWindowWidth(500, 768);
   const [publishingMode, setPublishingMode] = useState('public');
-  const publishingModes = [{
-    text: 'Public',
-    connectedMode: 'public',
-  }, {
-    text: 'Private',
-    connectedMode: 'private',
-  }, {
-    text: 'Friends Only',
-    connectedMode: 'friends only',
-  }];
+  const [isLoading, setLoading] = useState(false);
 
   const ninthStepData: NinthStepType = {
     publishingMode: publishingMode as NinthStepType['publishingMode'],
@@ -50,37 +53,48 @@ export const NinthStep: FC<StepProps> = ({
     setStepData(9, ninthStepData);
   }, [publishingMode]);
 
+  useEffect(() => {
+    const data = getStepData(9) as NinthStepType;
+    if (data.publishingMode) {
+      setPublishingMode(data.publishingMode);
+    }
+  }, [step]);
+
   if (step !== 9) {
     return null;
   }
 
   const publishStepsData = async () => {
     const data = convertAllStepsData(allStepsData);
-    console.log({ data });
-    await firestoreDivesService.setDiveData(data, userAuth.uid);
+    setLoading(true);
+    if (diveId) {
+      // @ts-ignore
+      await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data);
+    } else {
+      // @ts-ignore
+      await firestoreDivesService.setDiveData(data, userAuth.uid);
+    }
+    setLoading(false);
+    setStep(10);
   };
 
   return (
     <>
       <div className={containerStyle.container}>
         <div className={styles.ninthStep}>
-          <h2>
-            Save and done!
-          </h2>
+          <Loader loading={isLoading} />
+
+          <h2>Save and done!</h2>
           <MarginWrapper top={10}>
-            <span className={styles.privacy}>
-              Privacy
-            </span>
+            <span className={styles.privacy}>Privacy</span>
           </MarginWrapper>
 
           <MarginWrapper top={30} bottom={20} display="block">
             <ButtonGroup
-              buttons={
-                publishingModes
-              }
+              buttons={publishingModes}
               onClick={setPublishingMode}
               contentBehavior="wrap"
-              defaultChecked="public"
+              defaultChecked={publishingMode}
             />
           </MarginWrapper>
 
@@ -90,16 +104,13 @@ export const NinthStep: FC<StepProps> = ({
             borderRadius={30}
             border="none"
             backgroundColor="#0059DE"
+            disable={isLoading}
           >
-            <span
-              className={styles.btnText}
-              onClick={publishStepsData}
-            >
+            <span className={styles.btnText} onClick={publishStepsData}>
               Publish
             </span>
           </Button>
         </div>
-
       </div>
 
       <DisabledNext setStep={setStep} />

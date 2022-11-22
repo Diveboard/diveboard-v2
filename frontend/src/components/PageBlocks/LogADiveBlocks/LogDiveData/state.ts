@@ -45,8 +45,10 @@ const sixthStep: SixthStepType = {
 
 const seventhStep: SeventhStepType = {
   gears: undefined,
+  save: false,
 };
 
+// @ts-ignore
 const eighthStep: EighthStepType = {};
 
 const ninthStep: NinthStepType = {

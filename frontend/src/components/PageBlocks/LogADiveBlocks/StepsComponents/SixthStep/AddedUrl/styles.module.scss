@@ -7,6 +7,10 @@
     line-height: 22px;
     color: #000345;
     margin-right: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 500px;
   }
 
   .delete {

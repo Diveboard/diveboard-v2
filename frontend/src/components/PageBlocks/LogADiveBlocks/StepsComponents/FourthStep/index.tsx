@@ -7,12 +7,8 @@ import { SpeciesList } from './SpeciesList';
 import { Loader } from '../../../../Loader';
 import { StepsNavigation } from '../../StepsNavigation';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
-import {
-  firestoreSpeciesServices,
-} from '../../../../../firebase/firestore/firestoreServices/firestoreSpeciesServices';
-import {
-  firestoreSpotsService,
-} from '../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
+import { firestoreSpeciesServices } from '../../../../../firebase/firestore/firestoreServices/firestoreSpeciesServices';
+import { firestoreSpotsService } from '../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
 import { SpeciesType } from '../../../../../firebase/firestore/models';
 import { StepProps } from '../../types/commonTypes';
 import { FourthStepType, ThirdStepType } from '../../types/stepTypes';
@@ -27,7 +23,9 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
   const [searchValue, setSearchValue] = useState('');
   const [searchedSpecies, setSearchedSpecies] = useState<SpeciesType[]>([]);
   const [queriedAllSpecies, setQueriedAllSpecies] = useState<SpeciesType[]>([]);
-  const [queriedLocalSpecies, setQueriedLocalSpecies] = useState<SpeciesType[]>([]);
+  const [queriedLocalSpecies, setQueriedLocalSpecies] = useState<SpeciesType[]>(
+    [],
+  );
   const [mySpecies, setMySpecies] = useState<SpeciesType[]>([]);
   const [selectedSpecies, setSelectedSpecies] = useState<SpeciesType[]>([]);
 
@@ -49,7 +47,6 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
     setSearchedSpecies(searched);
     setSearchValue('');
   };
-
   useEffect(() => {
     (async () => {
       const species = await firestoreSpeciesServices.getAllSpecies();
@@ -60,12 +57,27 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
   }, []);
 
   useEffect(() => {
+    (async () => {
+      const data = getStepData(4) as FourthStepType;
+      if (data.species) {
+        setSelectedSpecies(
+          queriedAllSpecies.filter((fish) => data.species.some((s) => s === fish.id)),
+        );
+      }
+    })();
+  }, [step, queriedAllSpecies]);
+
+  useEffect(() => {
     if (spotId) {
       (async () => {
         setSpeciesMode('local');
         setLoading(true);
-        const spotCoords = await firestoreSpotsService.getSpotCoordsById(spotId);
-        const species = await firestoreSpeciesServices.getLocalSpecies(spotCoords);
+        const spotCoords = await firestoreSpotsService.getSpotCoordsById(
+          spotId,
+        );
+        const species = await firestoreSpeciesServices.getLocalSpecies(
+          spotCoords,
+        );
         setQueriedLocalSpecies(species);
         setLoading(false);
       })();
@@ -102,7 +114,9 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
               onChange={() => {
                 if (!spotId) {
                   // eslint-disable-next-line no-alert
-                  alert("you can't choose local species because you didn't choose spot location");
+                  alert(
+                    "you can't choose local species because you didn't choose spot location",
+                  );
                 } else {
                   setSpeciesMode('local');
                   setCurrentSpeciesMode('');
@@ -128,15 +142,17 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
 
           <Loader loading={loading} />
           {!loading && (
-          <SpeciesList
-            currentSpeciesMode={currentSpeciesMode}
-            setCurrentSpeciesMode={setCurrentSpeciesMode}
-            mySpecies={mySpecies}
-            queriedSpecies={speciesMode === 'all' ? queriedAllSpecies : queriedLocalSpecies}
-            searchedSpecies={searchedSpecies}
-            selectedSpecies={selectedSpecies}
-            setSelectedSpecies={setSelectedSpecies}
-          />
+            <SpeciesList
+              currentSpeciesMode={currentSpeciesMode}
+              setCurrentSpeciesMode={setCurrentSpeciesMode}
+              mySpecies={mySpecies}
+              queriedSpecies={
+                speciesMode === 'all' ? queriedAllSpecies : queriedLocalSpecies
+              }
+              searchedSpecies={searchedSpecies}
+              selectedSpecies={selectedSpecies}
+              setSelectedSpecies={setSelectedSpecies}
+            />
           )}
 
           <div className={styles.sponsored}>

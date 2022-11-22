@@ -40,13 +40,11 @@ export const firestoreSpeciesServices = {
   },
 
   getAllSpecies: async () => {
-    const fishes:SpeciesType[] = [];
+    const fishes: SpeciesType[] = [];
 
     try {
       const docRef = collection(db, firestorePaths.species.path);
-      const q = query(
-        docRef,
-      );
+      const q = query(docRef);
       const querySnapshot = await getDocs(q);
 
       querySnapshot.forEach((doc) => {
@@ -59,5 +57,4 @@ export const firestoreSpeciesServices = {
       throw new Error('get local species  error');
     }
   },
-
 };

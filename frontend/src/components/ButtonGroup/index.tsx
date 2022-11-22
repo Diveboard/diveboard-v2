@@ -4,8 +4,8 @@ import styles from './styles.module.scss';
 
 type Props = {
   special?: boolean;
-  defaultChecked?: string
-  contentBehavior?: 'scroll' | 'wrap'
+  defaultChecked?: string;
+  contentBehavior?: 'scroll' | 'wrap';
   buttons: {
     text: string;
     connectedMode: string;
@@ -14,15 +14,13 @@ type Props = {
   onClick: (buttonName: string) => void;
 };
 
-export const ButtonGroup = (
-  {
-    buttons,
-    special,
-    defaultChecked,
-    onClick,
-    contentBehavior,
-  }: Props,
-): JSX.Element => {
+export const ButtonGroup = ({
+  buttons,
+  special,
+  defaultChecked,
+  onClick,
+  contentBehavior,
+}: Props): JSX.Element => {
   const [mode, setMode] = useState(defaultChecked);
 
   useEffect(() => {
@@ -45,7 +43,7 @@ export const ButtonGroup = (
         className={btnStyle}
         onClick={() => {
           setMode(btn.connectedMode);
-          onClick(btn.text);
+          onClick(btn.connectedMode);
         }}
       >
         {btn.imgSrc ? (
@@ -53,8 +51,9 @@ export const ButtonGroup = (
             <ButtonImage src={btn.imgSrc} />
             {btn.text}
           </div>
-        ) : btn.text}
-
+        ) : (
+          btn.text
+        )}
       </button>
     );
   });
@@ -71,8 +70,6 @@ export const ButtonGroup = (
     }
   };
   return (
-    <div className={wrapperStyle(contentBehavior)}>
-      {buttonComponents}
-    </div>
+    <div className={wrapperStyle(contentBehavior)}>{buttonComponents}</div>
   );
 };
