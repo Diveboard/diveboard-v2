@@ -1,5 +1,5 @@
 import {
-  collection, deleteDoc, doc, getDoc, getDocs, query, setDoc,
+  collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { DiveType } from '../models';
@@ -64,6 +64,26 @@ export const firestoreDivesService = {
       console.log(e.message);
       throw new Error('get dive data error');
     }
+  },
+
+  getUserSpeciesInDives: async (
+    userId: string,
+  ) => {
+    const docRef = collection(db, `Test_Dives/${userId}/userDives`);
+    const q = query(
+      docRef,
+      where('species', '!=', []),
+      // where('draft', '==', false),
+    );
+    const querySnapshot = await getDocs(q);
+    let speciesArray = [];
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    querySnapshot.forEach((doc) => {
+      const { species } = doc.data();
+      speciesArray = [...speciesArray, ...species];
+    });
+    // @ts-ignore
+    return [...new Set(speciesArray)];
   },
 
   getDiveData: async (

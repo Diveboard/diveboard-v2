@@ -93,7 +93,7 @@ export const LogDiveBlock = ({ diveId, userId }: Props) => {
             <FirstStep step={step} setStep={setStep} />
             <SecondStep step={step} setStep={setStep} />
             <ThirdStep step={step} setStep={setStep} />
-            <FourthStep step={step} setStep={setStep} />
+            <FourthStep step={step} setStep={setStep} userId={userId} />
             <FifthStep step={step} setStep={setStep} />
             <SixthStep step={step} setStep={setStep} />
             <SeventhStep step={step} setStep={setStep} />

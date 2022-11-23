@@ -14,7 +14,7 @@ import { StepProps } from '../../types/commonTypes';
 import { FourthStepType, ThirdStepType } from '../../types/stepTypes';
 import styles from './styles.module.scss';
 
-export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
+export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, userId }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
 
   const [speciesMode, setSpeciesMode] = useState<'local' | 'all'>('all');
@@ -50,9 +50,9 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
   useEffect(() => {
     (async () => {
       const species = await firestoreSpeciesServices.getAllSpecies();
+      const data = await firestoreSpeciesServices.getMySpecies(userId);
+      setMySpecies(data);
       setQueriedAllSpecies(species);
-      // todo my species
-      setMySpecies([]);
     })();
   }, []);
 

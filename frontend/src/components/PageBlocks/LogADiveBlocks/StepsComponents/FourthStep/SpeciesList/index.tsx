@@ -23,7 +23,6 @@ export const SpeciesList: FC<Props> = ({
   searchedSpecies,
   selectedSpecies,
   setSelectedSpecies,
-
 }) => {
   const categories = queriedSpecies.map((item) => item.category);
   const categoriesSet = new Set(categories);
