@@ -10,9 +10,13 @@ export const firestoreDivesService = {
   setDiveData: async (diveData: DiveType, userId: string) => {
     try {
       const ref = doc(collection(db, `Test_Dives/${userId}`, 'userDives'));
-      // TODO: Set to spot dive Id
-      // const spot = await firestoreSpotsService.getSpotById(diveData.spotId);
       await setDoc(ref, { ...diveData }, { merge: true });
+      if (diveData.spotId) {
+        const spot = await firestoreSpotsService.getSpotById(diveData.spotId);
+        const newSpot = { ...spot };
+        newSpot.dives.push(ref.id);
+        await firestoreSpotsService.updateSpotById(diveData.spotId, newSpot);
+      }
     } catch (e) {
       console.log({ e });
       throw new Error('set  dive data error');

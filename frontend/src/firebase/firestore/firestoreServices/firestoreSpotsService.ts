@@ -1,5 +1,5 @@
 import {
-  addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, where,
+  addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { SpotType } from '../models';
@@ -7,7 +7,7 @@ import { Coords } from '../../../types';
 import { firestorePaths } from '../firestorePaths';
 
 export const firestoreSpotsService = {
-  getSpotCoordsById: async (spotId:string) => {
+  getSpotCoordsById: async (spotId: string) => {
     try {
       const docRef = doc(db, firestorePaths.spots.path, spotId);
       const docSnap = await getDoc(docRef);
@@ -22,7 +22,18 @@ export const firestoreSpotsService = {
     }
   },
 
-  getSpotById: async (spotId:string) => {
+  updateSpotById: async (spotId: string, data: { [p: string]: any }) => {
+    try {
+      const docRef = doc(db, firestorePaths.spots.path, spotId);
+      await setDoc(docRef, { ...data }, { merge: true });
+      return true;
+    } catch (e) {
+      console.log(e);
+      throw new Error('get spot by id error');
+    }
+  },
+
+  getSpotById: async (spotId: string) => {
     try {
       const docRef = doc(db, firestorePaths.spots.path, spotId);
       const docSnap = await getDoc(docRef);
@@ -33,7 +44,7 @@ export const firestoreSpotsService = {
     }
   },
 
-  getSpotNameById: async (spotId:string) => {
+  getSpotNameById: async (spotId: string) => {
     try {
       const docRef = doc(db, firestorePaths.spots.path, spotId);
       const docSnap = await getDoc(docRef);
