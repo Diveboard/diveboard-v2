@@ -76,6 +76,9 @@ export const DiveItem: FC<Props> = ({
   };
 
   const parseDate = (isoDate: Date): string => {
+    if (!isoDate) {
+      return '';
+    }
     const newDate = new Date(isoDate);
     return `${month[newDate.getMonth() - 1]} ${newDate.getDate()}, ${newDate.getFullYear()}`;
   };

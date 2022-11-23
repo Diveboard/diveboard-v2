@@ -9,7 +9,6 @@ import { firestoreSpotsService } from './firestoreSpotsService';
 export const firestoreDivesService = {
   setDiveData: async (diveData: DiveType, userId: string) => {
     try {
-      console.log(diveData);
       const ref = doc(collection(db, `Test_Dives/${userId}`, 'userDives'));
       // TODO: Set to spot dive Id
       // const spot = await firestoreSpotsService.getSpotById(diveData.spotId);
@@ -36,24 +35,25 @@ export const firestoreDivesService = {
         const data = doc.data();
         const dive = {
           id: doc.id,
-          number: data.aboutDive.diveNumber,
+          draft: data.draft,
+          number: data.aboutDive?.diveNumber,
           spotId: data.spotId,
-          date: convertTimestampDate(data.diveData.date).toISOString(),
-          divetime: data.diveData.duration,
-          depth: data.diveData.maxDepth,
+          date: data.diveData.date ? convertTimestampDate(data.diveData.date).toISOString() : null,
+          divetime: data.diveData?.duration,
+          depth: data.diveData?.maxDepth,
           diversCount: data.buddies.length,
-          trip: data.aboutDive.tripName,
-          diveShop: data.diveCenter.id,
-          water: data.diveData.waterType,
-          visibility: data.diveData.waterVisibility,
-          altitude: data.diveData.altitude,
-          featuredGear: data.gears?.map((gear) => gear.typeOfGear).toString(),
+          trip: data.aboutDive?.tripName,
+          diveShop: data.diveCenter?.id,
+          water: data.diveData?.waterType,
+          visibility: data.diveData?.waterVisibility,
+          altitude: data.diveData?.altitude,
+          featuredGear: data.gears?.map((gear) => gear?.typeOfGear)?.toString(),
         };
         dives.push(dive);
       });
       for (const dive of dives) {
         // eslint-disable-next-line no-await-in-loop
-        dive.spot = await firestoreSpotsService.getSpotNameById(dive.spotId);
+        dive.spot = dive.spotId ? await firestoreSpotsService.getSpotNameById(dive.spotId) : null;
       }
       return dives;
     } catch (e) {

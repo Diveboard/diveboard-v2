@@ -186,17 +186,21 @@ const DiveManager = ({ userId }: Props) => {
     fetchDives();
   }, [userId]);
 
-  // eslint-disable-next-line array-callback-return
-  const sortDives = (divesData) => divesData.sort((a, b) => {
+  const sortDives = (divesData) => {
     if (sortType === 'recent') {
       // @ts-ignore
-      return new Date(b.dive.date) - new Date(a.dive.date);
+      return divesData.sort((a, b) => new Date(b.dive.date) - new Date(a.dive.date));
     }
     if (sortType === 'oldest') {
       // @ts-ignore
-      return new Date(a.dive.date) - new Date(b.dive.date);
+      return divesData.sort((a, b) => new Date(a.dive.date) - new Date(b.dive.date));
     }
-  });
+    if (sortType === 'drafts') {
+      return divesData.filter((dive) => dive.dive.draft);
+    }
+    return divesData;
+  };
+
   const renderDives = sortDives(dives).map((itm) => (
     <DiveItem
       key={itm.dive.id}

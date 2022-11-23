@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { StepsIndicator } from './StepsIndicator';
 import { PreStep } from './StepsComponents/PreStep';
 import { FirstStep } from './StepsComponents/FirstStep';
@@ -16,17 +17,20 @@ import { StepType } from './types/commonTypes';
 import styles from './styles.module.scss';
 import { firestoreDivesService } from '../../../firebase/firestore/firestoreServices/firestoreDivesService';
 import { Loader } from '../../Loader';
+import { convertAllStepsData } from './LogDiveHelpers/convertAllStepsData';
 
 type Props = {
   diveId?: string;
-  userId?: string;
+  userId: string;
 };
 
 export const LogDiveBlock = ({ diveId, userId }: Props) => {
   const [step, setStep] = useState<StepType>(0);
   const [error, setError] = useState('');
   const [isLoading, setLoading] = useState<boolean>(true);
-  const { setCurrentStep, setData } = useContext(LogDiveDataContext);
+  const { setCurrentStep, setData, getAllStepsData } = useContext(LogDiveDataContext);
+
+  const router = useRouter();
 
   useEffect(() => {
     setCurrentStep(step);
@@ -51,6 +55,20 @@ export const LogDiveBlock = ({ diveId, userId }: Props) => {
     }
   }, [diveId, userId]);
 
+  const saveDraft = async () => {
+    const allStepsData = getAllStepsData();
+    const data = convertAllStepsData(allStepsData, true);
+    setLoading(true);
+    if (diveId) {
+      // @ts-ignore
+      await firestoreDivesService.updateDiveData(userId, diveId, data);
+    } else {
+      // @ts-ignore
+      await firestoreDivesService.setDiveData(data, userId);
+    }
+    router.push('/dive-manager');
+  };
+
   return (
     <div className={styles.diveWrapper}>
       <Loader loading={isLoading} />
@@ -63,7 +81,7 @@ export const LogDiveBlock = ({ diveId, userId }: Props) => {
           {step !== 10 && (
           <div className={styles.header}>
             <h1>{diveId ? `Dive ${diveId}` : 'New Dive'}</h1>
-            <span>SAVE DRAFT</span>
+            <span onClick={saveDraft}>SAVE DRAFT</span>
           </div>
           )}
           {!isLoading && (
