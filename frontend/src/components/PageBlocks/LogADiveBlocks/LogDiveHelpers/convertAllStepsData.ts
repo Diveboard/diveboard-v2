@@ -5,38 +5,59 @@ import {
   convertToDiveActivities,
 } from './convertDiveActivities';
 import { convertTimestampDate } from '../../../../utils/convertTimestampDate';
+import { SafetySpot } from '../types/commonTypes';
 
 export const convertAllStepsData = (
   stepsData: AllStepsDataType,
   draft: boolean = false,
-) => ({
-  buddies: stepsData.fifthStep.buddies,
-  danSend: false,
-  diveActivities: convertDiveActivities(stepsData.firstStep.diveActivities),
-  // TODO: Implement dive center logic
-  diveCenter: {
-    id: '0',
-    guide: '0',
-  },
-  diveData: {
-    ...stepsData.secondStep.parameters,
-    ...stepsData.secondStep.advancedParameters,
-  },
-  aboutDive: {
-    ...stepsData.firstStep.overview,
-    ...stepsData.firstStep.diveReviews,
-  },
-  draft,
-  externalImgsUrls: stepsData.sixthStep.mediaUrl,
-  gears: stepsData.seventhStep.gears,
-  publishingMode: stepsData.ninthStep.publishingMode,
-  species: stepsData.fourthStep.species,
-  spotId: stepsData.thirdStep.spotId,
-  tanks: stepsData.secondStep.tanks,
-  oldId: null,
-  unitSystem: 'metric',
-  saves: 0,
-});
+) => {
+  const replaceUndefinedToNull = (obj) => {
+    const newObj = { ...obj };
+    Object.entries(newObj).forEach(([key, val]) => {
+      if (val === undefined) {
+        newObj[key] = null;
+      }
+    });
+    return newObj;
+  };
+
+  // eslint-disable-next-line array-callback-return
+  const checkSafetySpots = (safetySpots: Array<SafetySpot>) => safetySpots.filter((spot) => {
+    if (spot.depth && spot.period) {
+      return spot;
+    }
+  });
+
+  return {
+    buddies: stepsData.fifthStep.buddies || [],
+    danSend: false,
+    diveActivities: convertDiveActivities(stepsData.firstStep.diveActivities),
+    // TODO: Implement dive center logic
+    diveCenter: {
+      id: '0',
+      guide: '0',
+    },
+    diveData: {
+      ...replaceUndefinedToNull(stepsData.secondStep.parameters),
+      ...replaceUndefinedToNull(stepsData.secondStep.advancedParameters),
+      safetySpots: checkSafetySpots(stepsData.secondStep.parameters.safetySpots),
+    },
+    aboutDive: {
+      ...stepsData.firstStep.overview,
+      ...replaceUndefinedToNull(stepsData.firstStep.diveReviews),
+    },
+    draft,
+    externalImgsUrls: stepsData.sixthStep.mediaUrl || [],
+    gears: stepsData.seventhStep.gears.map((gear) => replaceUndefinedToNull(gear)) || [],
+    publishingMode: stepsData.ninthStep.publishingMode,
+    species: stepsData.fourthStep.species || [],
+    spotId: stepsData.thirdStep.spotId,
+    tanks: stepsData.secondStep.tanks.map((tank) => replaceUndefinedToNull(tank)) || [],
+    oldId: null,
+    unitSystem: 'metric',
+    saves: 0,
+  };
+};
 
 export const convertToStepsData = (data: DiveType) => ({
   firstStep: {
@@ -96,8 +117,8 @@ export const convertToStepsData = (data: DiveType) => ({
   seventhStep: {
     gears: data.gears.map((gear) => ({
       ...gear,
-      dateAcquired: convertTimestampDate(gear.dateAcquired),
-      lastMaintenance: convertTimestampDate(gear.lastMaintenance),
+      dateAcquired: gear.dateAcquired ? convertTimestampDate(gear.dateAcquired) : null,
+      lastMaintenance: gear.lastMaintenance ? convertTimestampDate(gear.lastMaintenance) : null,
     })),
     save: true,
   },

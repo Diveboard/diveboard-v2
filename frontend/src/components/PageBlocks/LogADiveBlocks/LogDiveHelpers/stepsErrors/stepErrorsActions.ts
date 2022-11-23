@@ -1,7 +1,7 @@
 import {
   FifthStepErrorsActionType,
   FirstStepErrorsActionType,
-  SecondStepErrorsActionType,
+  SecondStepErrorsActionType, ThirdStepErrorsActionType,
 } from '../../types/errorsActionsType';
 
 export const firstStepErrorsActions = ({
@@ -12,7 +12,12 @@ export const firstStepErrorsActions = ({
   let error = false;
   const newErrors = { ...errors };
   if (!data.diveNumber) {
-    newErrors.diveNumberError = 'fill dive number';
+    newErrors.diveNumberError = 'Dive number is required';
+    error = true;
+  }
+
+  if (!data.tripName) {
+    newErrors.tripNameError = 'Trip name is required';
     error = true;
   }
 
@@ -21,6 +26,24 @@ export const firstStepErrorsActions = ({
 
   if (notNaN || notInteger) {
     newErrors.diveNumberError = 'fill correct number of a dive';
+    error = true;
+  }
+
+  setErrors(newErrors);
+  return error;
+};
+
+export const thirdStepErrorsActions = (
+  {
+    data,
+    errors,
+    setErrors,
+  }: ThirdStepErrorsActionType,
+) => {
+  let error = false;
+  const newErrors = { ...errors };
+  if (!data) {
+    newErrors.spotError = 'Spot is required';
     error = true;
   }
 
@@ -38,7 +61,7 @@ export const secondStepErrorsActions = (
   let error = false;
   const newErrors = { ...errors };
 
-  if (!data.time.length) {
+  if (!data.time?.length) {
     newErrors.timeError = 'fill time of dive';
     error = true;
   }

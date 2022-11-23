@@ -1,6 +1,10 @@
-import React, { FC } from 'react';
+import React, {
+  FC, useContext, useEffect, useReducer, useState,
+} from 'react';
 import { StepType } from '../types/commonTypes';
 import styles from './styles.module.scss';
+import { LogDiveDataContext } from '../LogDiveData/logDiveContext';
+import { FirstStepType, SecondStepType, ThirdStepType } from '../types/stepTypes';
 
 type Props = {
   step: StepType
@@ -8,12 +12,17 @@ type Props = {
 };
 type StepItemProps = Props & {
   currentStep: StepType
+  stepAvailable: number;
 };
 
-const StepItem: FC<StepItemProps> = ({ currentStep, step, setStep }) => (
+const StepItem: FC<StepItemProps> = ({
+  currentStep, step, setStep, stepAvailable,
+}) => (
   <span
     onClick={() => {
-      setStep(currentStep);
+      if (currentStep <= stepAvailable) {
+        setStep(currentStep);
+      }
     }}
     className={`${styles.indicatorItem} 
         ${step >= currentStep ? styles.active : styles.notActive}`}
@@ -23,16 +32,40 @@ const StepItem: FC<StepItemProps> = ({ currentStep, step, setStep }) => (
 export const StepsIndicator: FC<Props> = ({
   step,
   setStep,
-}) => (
-  <div className={styles.indicatorWrapper}>
-    <StepItem currentStep={1} step={step} setStep={setStep} />
-    <StepItem currentStep={2} step={step} setStep={setStep} />
-    <StepItem currentStep={3} step={step} setStep={setStep} />
-    <StepItem currentStep={4} step={step} setStep={setStep} />
-    <StepItem currentStep={5} step={step} setStep={setStep} />
-    <StepItem currentStep={6} step={step} setStep={setStep} />
-    <StepItem currentStep={7} step={step} setStep={setStep} />
-    <StepItem currentStep={8} step={step} setStep={setStep} />
-    <StepItem currentStep={9} step={step} setStep={setStep} />
-  </div>
-);
+}) => {
+  const steps = Array.from({ length: 9 }, (_, i) => i + 1);
+  const {
+    getStepData,
+  } = useContext(LogDiveDataContext);
+
+  const [stepAvailable, setStepAvailable] = useState(0);
+  const { overview } = getStepData(1) as FirstStepType;
+  const { parameters } = getStepData(2) as SecondStepType;
+  const { spotId } = getStepData(3) as ThirdStepType;
+
+  useEffect(() => {
+    if (overview?.diveNumber && overview?.tripName) {
+      setStepAvailable(2);
+      if (parameters?.date && parameters?.maxDepth && parameters?.time && parameters?.duration) {
+        setStepAvailable(3);
+        if (spotId) {
+          setStepAvailable(9);
+        }
+      }
+    }
+  }, [overview, parameters, spotId]);
+
+  return (
+    <div className={styles.indicatorWrapper}>
+      {steps.map((item) => (
+        <StepItem
+          key={item}
+          currentStep={item as StepType}
+          step={step}
+          setStep={setStep}
+          stepAvailable={stepAvailable}
+        />
+      ))}
+    </div>
+  );
+};

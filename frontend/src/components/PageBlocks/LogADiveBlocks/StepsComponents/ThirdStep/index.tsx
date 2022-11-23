@@ -11,6 +11,8 @@ import { ThirdStepType } from '../../types/stepTypes';
 import { CreateNewSpot } from './CreateNewSpot';
 import styles from './styles.module.scss';
 import { firestoreSpotsService } from '../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
+import { setStepErrors } from '../../LogDiveHelpers/stepsErrors/setStepErrors';
+import { ThirdStepErrors } from '../../types/errorTypes';
 
 export const ThirdStep: FC<StepProps> = ({
   step,
@@ -77,6 +79,17 @@ export const ThirdStep: FC<StepProps> = ({
     })();
   }, [step]);
 
+  const [spotError, setSpotError] = useState<ThirdStepErrors>({
+    spotError: '',
+  });
+
+  const setErrors = () => setStepErrors({
+    stepType: 3,
+    data: chosenPointId,
+    errors: spotError,
+    setErrors: setSpotError,
+  });
+
   if (step !== 3) {
     return null;
   }
@@ -100,7 +113,7 @@ export const ThirdStep: FC<StepProps> = ({
           setChosenPointId={setChosenPointId}
           setButton={setClickedPoint}
         />
-
+        {spotError.spotError && <span className="error-text">Choose spot</span>}
         {!createSpotMode && (
           <div className={styles.pointsBtnGroup}>
             <ButtonGroup
@@ -108,6 +121,7 @@ export const ThirdStep: FC<StepProps> = ({
               onClick={(buttonName) => {
                 const spotId = markers.find((item) => item.name === buttonName);
                 setChosenPointId(spotId.id);
+                setSpotError({ spotError: '' });
               }}
               defaultChecked={newSpotName || clickedPoint}
             />
@@ -127,6 +141,7 @@ export const ThirdStep: FC<StepProps> = ({
       </div>
       <StepsNavigation
         setStep={setStep}
+        setErrors={setErrors}
         setStepData={() => {
           setStepData(3, thirdStepData);
         }}

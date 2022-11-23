@@ -24,6 +24,7 @@ export const FirstStep: FC<StepProps> = ({ step, setStep }) => {
 
   const [overviewErrors, setOverviewErrors] = useState<FirstStepErrors>({
     diveNumberError: '',
+    tripNameError: '',
   });
 
   const setErrors = () => setStepErrors({

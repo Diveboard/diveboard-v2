@@ -9,8 +9,10 @@ import { firestoreSpotsService } from './firestoreSpotsService';
 export const firestoreDivesService = {
   setDiveData: async (diveData: DiveType, userId: string) => {
     try {
+      console.log(diveData);
       const ref = doc(collection(db, `Test_Dives/${userId}`, 'userDives'));
       // TODO: Set to spot dive Id
+      // const spot = await firestoreSpotsService.getSpotById(diveData.spotId);
       await setDoc(ref, { ...diveData }, { merge: true });
     } catch (e) {
       console.log({ e });

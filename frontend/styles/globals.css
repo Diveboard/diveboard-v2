@@ -38,4 +38,6 @@ a {
   max-width: 1940px;
 }
 
-
+.error-text {
+  color: #FF645A;
+}
