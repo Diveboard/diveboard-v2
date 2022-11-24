@@ -87,7 +87,7 @@ const DiveManager = ({ userId }: Props) => {
           // eslint-disable-next-line no-alert
           alert('Choose one item for edit');
         } else {
-          router.push(`/dive/${diveForEdit[0].dive.id}`);
+          router.push(`edit-dive/${diveForEdit[0].dive.id}`);
         }
       },
     },
