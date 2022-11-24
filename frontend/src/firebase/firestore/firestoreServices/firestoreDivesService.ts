@@ -30,7 +30,7 @@ export const firestoreDivesService = {
         // eslint-disable-next-line no-await-in-loop
         const docSnap = await getDoc(docRef);
         // eslint-disable-next-line no-await-in-loop
-        await setDoc(docRef, { ...docSnap.data(), draft: true }, { merge: false });
+        await setDoc(docRef, { ...docSnap.data(), draft: true }, { merge: true });
       }
     } catch (e) {
       console.log({ e });
