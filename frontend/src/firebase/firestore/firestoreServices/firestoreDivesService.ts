@@ -5,6 +5,7 @@ import { db } from '../firebaseFirestore';
 import { DiveType } from '../models';
 import { convertTimestampDate } from '../../../utils/convertTimestampDate';
 import { firestoreSpotsService } from './firestoreSpotsService';
+import { PropertiesType } from '../../../types';
 
 export const firestoreDivesService = {
   setDiveData: async (diveData: DiveType, userId: string) => {
@@ -23,6 +24,21 @@ export const firestoreDivesService = {
     }
   },
 
+  unpublishDives: async (userId: string, diveIds: Array<string>) => {
+    try {
+      for (let i = 0; i < diveIds.length; i++) {
+        const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveIds[i]);
+        // eslint-disable-next-line no-await-in-loop
+        const docSnap = await getDoc(docRef);
+        // eslint-disable-next-line no-await-in-loop
+        await setDoc(docRef, { ...docSnap.data(), draft: true }, { merge: true });
+      }
+    } catch (e) {
+      console.log({ e });
+      throw new Error('unpublish dive data error');
+    }
+  },
+
   getDivesByUserId: async (
     userId: string,
   ) => {
@@ -38,20 +54,9 @@ export const firestoreDivesService = {
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         const dive = {
+          ...data,
           id: doc.id,
-          draft: data.draft,
-          number: data.aboutDive?.diveNumber,
-          spotId: data.spotId,
-          date: data.diveData.date ? convertTimestampDate(data.diveData.date).toISOString() : null,
-          divetime: data.diveData?.duration,
-          depth: data.diveData?.maxDepth,
-          diversCount: data.buddies.length,
-          trip: data.aboutDive?.tripName,
-          diveShop: data.diveCenter?.id,
-          water: data.diveData?.waterType,
-          visibility: data.diveData?.waterVisibility,
-          altitude: data.diveData?.altitude,
-          featuredGear: data.gears?.map((gear) => gear?.typeOfGear)?.toString(),
+          date: data.diveData.date ? convertTimestampDate(data.diveData.date) : null,
         };
         dives.push(dive);
       });
@@ -66,6 +71,70 @@ export const firestoreDivesService = {
     }
   },
 
+  updateDiveProperties: async (
+    userId: string,
+    copyFromDive: DiveType,
+    copyToDiveIds: Array<string>,
+    properties: PropertiesType,
+  ) => {
+    try {
+      for (let i = 0; i < copyToDiveIds.length; i++) {
+        const docRef = doc(db, `Test_Dives/${userId}/userDives`, copyToDiveIds[i]);
+        // eslint-disable-next-line no-await-in-loop
+        const docSnap = await getDoc(docRef);
+        const newProperties = {
+          ...docSnap.data(),
+        };
+        if (properties.Buddies && copyFromDive.buddies?.length) {
+          newProperties.buddies = copyFromDive.buddies;
+        }
+        if (properties.Spot && copyFromDive.spotId) {
+          newProperties.spotId = copyFromDive.spotId;
+        }
+        if (properties['Tanks user'] && copyFromDive.tanks?.length) {
+          newProperties.tanks = copyFromDive.tanks;
+        }
+        if (properties.Visibility && copyFromDive.diveData?.waterVisibility) {
+          newProperties.diveData.waterVisibility = copyFromDive.diveData.waterVisibility;
+        }
+        if (properties['Gear used'] && copyFromDive.gears?.length) {
+          newProperties.gears = copyFromDive.gears;
+        }
+        if (properties.Guide && copyFromDive.diveCenter?.guide) {
+          newProperties.diveCenter.guide = copyFromDive.diveCenter.guide;
+        }
+        if (properties['Dive Shop'] && copyFromDive.diveCenter?.id) {
+          newProperties.diveCenter.id = copyFromDive.diveCenter.id;
+        }
+        if (properties['Dive type'] && copyFromDive.diveActivities?.length) {
+          newProperties.diveActivities = copyFromDive.diveActivities;
+        }
+        if (properties.Ratings) {
+          if (copyFromDive.aboutDive?.diveDifficulty) {
+            newProperties.aboutDive.diveDifficulty = copyFromDive.aboutDive.diveDifficulty;
+          }
+          if (copyFromDive.aboutDive?.bigFish) {
+            newProperties.aboutDive.diveDifficulty = copyFromDive.aboutDive.bigFish;
+          }
+          if (copyFromDive.aboutDive?.marineLifeQuality) {
+            newProperties.aboutDive.diveDifficulty = copyFromDive.aboutDive.marineLifeQuality;
+          }
+          if (copyFromDive.aboutDive?.wreck) {
+            newProperties.aboutDive.diveDifficulty = copyFromDive.aboutDive.wreck;
+          }
+          if (copyFromDive.aboutDive?.overReview) {
+            newProperties.aboutDive.diveDifficulty = copyFromDive.aboutDive.overReview;
+          }
+        }
+        // eslint-disable-next-line no-await-in-loop
+        await setDoc(docRef, { ...newProperties }, { merge: true });
+      }
+    } catch (e) {
+      console.log(e.message);
+      throw new Error('update dive properties error');
+    }
+  },
+
   getUserSpeciesInDives: async (
     userId: string,
   ) => {
@@ -73,7 +142,6 @@ export const firestoreDivesService = {
     const q = query(
       docRef,
       where('species', '!=', []),
-      // where('draft', '==', false),
     );
     const querySnapshot = await getDocs(q);
     let speciesArray = [];
@@ -112,6 +180,22 @@ export const firestoreDivesService = {
     } catch (e) {
       console.log(e.message);
       throw new Error('update dive data error');
+    }
+  },
+
+  deleteDives: async (
+    userId: string,
+    diveIds: Array<string>,
+  ) => {
+    try {
+      for (let i = 0; i < diveIds.length; i++) {
+        const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveIds[i]);
+        // eslint-disable-next-line no-await-in-loop
+        await deleteDoc(docRef);
+      }
+    } catch (e) {
+      console.log(e.message);
+      throw new Error('delete dive data error');
     }
   },
 

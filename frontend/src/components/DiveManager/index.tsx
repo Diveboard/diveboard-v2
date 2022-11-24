@@ -33,6 +33,7 @@ const DiveManager = ({ userId }: Props) => {
   const [isChangeSelectAll, setChangeSelectAll] = useState(false);
   const [isShowSettings, setShowSettings] = useState(false);
   const [isShowPopupCopy, setShowPopupCopy] = useState(false);
+  const [copiestData, setCopiestData] = useState(undefined);
   const [isShowPopupUnpublish, setShowPopupUnpublish] = useState(false);
   const [isShowPopupDelete, setShowPopupDelete] = useState(false);
   const dropdownButton = useRef(null); // button block
@@ -48,6 +49,19 @@ const DiveManager = ({ userId }: Props) => {
   const titleCopy = 'Select Properties to Copy';
   const titleUnpublish = 'This Dive will not be visible for other users and will be saved as a draft';
   const titleDeleted = 'This dive will be deleted';
+
+  const fetchDives = async () => {
+    if (userId) {
+      setLoading(true);
+      const data = await firestoreDivesService.getDivesByUserId(userId);
+      if (!Array.isArray(data) || data.length === 0) {
+        setError('No dives');
+      } else {
+        setDives(data.map((item) => ({ dive: item, checked: false })));
+      }
+      setLoading(false);
+    }
+  };
 
   const dropdownList = [
     {
@@ -87,7 +101,15 @@ const DiveManager = ({ userId }: Props) => {
       id: 5,
       title: 'Paste properties',
       svgItem: <Paste />,
-      onClick: () => {}, // TODO change
+      onClick: async () => {
+        await firestoreDivesService.updateDiveProperties(
+          userId,
+          copiestData.dive,
+          dives.filter((i) => i.checked).map((item) => item.dive.id),
+          copiestData.values,
+        );
+        await fetchDives();
+      },
     },
     {
       id: 6,
@@ -132,38 +154,41 @@ const DiveManager = ({ userId }: Props) => {
     setChangeSelectAll(true); // checkbox "Select All" was click
   };
 
-  const copyButtonHandler = () => {
-    closePopup();
-  };
-
-  const fetchDives = async () => {
-    if (userId) {
-      setLoading(true);
-      const data = await firestoreDivesService.getDivesByUserId(userId);
-      if (!Array.isArray(data) || data.length === 0) {
-        setError('No dives');
-      } else {
-        setDives(data.map((item) => ({ dive: item, checked: false })));
-      }
-      setLoading(false);
+  const copyButtonHandler = (values) => {
+    const divesForCopy = dives.filter((i) => i.checked);
+    if (divesForCopy.length !== 1) {
+      // eslint-disable-next-line no-alert
+      alert('Choose one dive');
+    } else {
+      const selectedDive = divesForCopy[0].dive;
+      setCopiestData({ dive: selectedDive, values });
     }
+    closePopup();
   };
 
   const deleteButtonHandler = async () => {
     document.body.style.overflow = 'unset';
-    const diveForDelete = dives.filter((i) => i.checked);
-    if (diveForDelete.length !== 1) {
-      // eslint-disable-next-line no-alert
-      alert('Choose one item for edit');
-    } else {
-      await firestoreDivesService.deleteDiveData(userId, diveForDelete[0].dive.id);
+    const divesIds = dives.filter((i) => i.checked).map((item) => item.dive.id);
+    if (divesIds.length >= 1) {
+      await firestoreDivesService.deleteDives(userId, divesIds);
+      closePopup();
       await fetchDives();
+    } else {
+      // eslint-disable-next-line no-alert
+      alert('Choose at least one dive');
     }
-    closePopup();
   };
 
-  const unpublishButtonHandler = () => {
-    closePopup();
+  const unpublishButtonHandler = async () => {
+    const diveIds = dives.filter((item) => item.checked).map((i) => i.dive.id);
+    if (diveIds.length >= 1) {
+      await firestoreDivesService.unpublishDives(userId, diveIds);
+      closePopup();
+      await fetchDives();
+    } else {
+      // eslint-disable-next-line no-alert
+      alert('Choose at least one dive');
+    }
   };
 
   const backdropHandler = (val: boolean) => {

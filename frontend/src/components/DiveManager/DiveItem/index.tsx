@@ -6,26 +6,10 @@ import DiveInfo from '../DiveInfo';
 
 import styles from './styles.module.scss';
 import { month } from '../../../utils/date';
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-type diveType = {
-  id: number;
-  number: number;
-  date: Date;
-  spot: string;
-  divetime: number;
-  depth: number;
-  diversCount: number;
-  trip: string;
-  diveShop: string;
-  water: string;
-  visibility: string;
-  altitude: number;
-  featuredGear: string;
-};
+import { DiveType } from '../../../firebase/firestore/models';
 
 type Props = {
-  itm: diveType;
+  itm: DiveType & { spot: string, date: Date | null };
   isSelectAll: boolean;
   checked: boolean;
   setChecked: (val: boolean) => void;
@@ -41,21 +25,6 @@ export const DiveItem: FC<Props> = ({
   changeIsSelectAll,
   isChange,
 }) => {
-  const {
-    number,
-    date,
-    spot,
-    divetime,
-    depth,
-    diversCount,
-    trip,
-    diveShop,
-    water,
-    visibility,
-    altitude,
-    featuredGear,
-  } = itm;
-  // const [checkboxItem, setCheckboxItem] = useState(false);
   const [isShow, setShow] = useState(true);
 
   useEffect(() => {
@@ -94,12 +63,12 @@ export const DiveItem: FC<Props> = ({
       <div className={styles.info}>
         <div className={styles.number}>
           #
-          {number}
+          {itm.aboutDive.diveNumber}
         </div>
-        <div className={styles.date}>{parseDate(date)}</div>
+        <div className={styles.date}>{parseDate(itm.date)}</div>
       </div>
       <div className={styles.subwrapper}>
-        <div className={styles.spot}>{spot}</div>
+        <div className={styles.spot}>{itm.spot}</div>
         <Checkbox
           name="name"
           className="column"
@@ -109,9 +78,9 @@ export const DiveItem: FC<Props> = ({
       </div>
       <div className={styles.infowrapper}>
         <DiveInfo
-          diveTime={divetime}
-          deepness={depth}
-          diversCount={diversCount}
+          diveTime={itm.diveData.duration}
+          deepness={itm.diveData.maxDepth}
+          diversCount={itm.buddies?.length}
         />
 
         {isShow && (
@@ -136,32 +105,32 @@ export const DiveItem: FC<Props> = ({
             <li>
               Trip:
               {' '}
-              <span>{trip}</span>
+              <span>{itm.aboutDive?.tripName}</span>
             </li>
             <li>
               Dive shop:
               {' '}
-              <span>{diveShop}</span>
+              <span>{itm.diveCenter?.id}</span>
             </li>
             <li>
               Water:
               {' '}
-              <span>{water}</span>
+              <span>{itm.diveData?.waterType}</span>
             </li>
             <li>
               Visibility:
               {' '}
-              <span>{visibility}</span>
+              <span>{itm.diveData?.waterVisibility}</span>
             </li>
             <li>
               Altitude:
               {' '}
-              <span>{altitude}</span>
+              <span>{itm.diveData?.altitude}</span>
             </li>
             <li>
               Featured gear:
               {' '}
-              <span>{featuredGear}</span>
+              <span>{itm.gears?.map((gear) => gear?.typeOfGear)?.toString()}</span>
             </li>
           </ul>
           <span className={styles.switch} onClick={showHandler}>

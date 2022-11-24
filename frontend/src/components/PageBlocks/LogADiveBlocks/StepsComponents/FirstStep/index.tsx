@@ -64,7 +64,7 @@ export const FirstStep: FC<StepProps> = ({ step, setStep }) => {
   const firstStepData: FirstStepType = {
     overview: { ...overview, diveNumber: +overview.diveNumber },
     diveReviews,
-    diveActivities: { ...diveActivities, other: other.split(',') },
+    diveActivities: { ...diveActivities, other: other?.split(',') },
   };
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export const FirstStep: FC<StepProps> = ({ step, setStep }) => {
       setOverview(data.overview);
       setDiveReviews(data.diveReviews);
       setDiveActivities(data.diveActivities);
-      setOther(data.diveActivities.other.toString());
+      setOther(data.diveActivities?.other?.toString());
     }
   }, [step]);
 
