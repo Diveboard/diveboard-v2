@@ -23,6 +23,21 @@ export const firestoreDivesService = {
     }
   },
 
+  unpublishDives: async (userId: string, diveIds: Array<string>) => {
+    try {
+      for (let i = 0; i < diveIds.length; i++) {
+        const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveIds[i]);
+        // eslint-disable-next-line no-await-in-loop
+        const docSnap = await getDoc(docRef);
+        // eslint-disable-next-line no-await-in-loop
+        await setDoc(docRef, { ...docSnap.data(), draft: true }, { merge: false });
+      }
+    } catch (e) {
+      console.log({ e });
+      throw new Error('unpublish dive data error');
+    }
+  },
+
   getDivesByUserId: async (
     userId: string,
   ) => {
@@ -112,6 +127,22 @@ export const firestoreDivesService = {
     } catch (e) {
       console.log(e.message);
       throw new Error('update dive data error');
+    }
+  },
+
+  deleteDives: async (
+    userId: string,
+    diveIds: Array<string>,
+  ) => {
+    try {
+      for (let i = 0; i < diveIds.length; i++) {
+        const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveIds[i]);
+        // eslint-disable-next-line no-await-in-loop
+        await deleteDoc(docRef);
+      }
+    } catch (e) {
+      console.log(e.message);
+      throw new Error('delete dive data error');
     }
   },
 

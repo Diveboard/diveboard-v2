@@ -151,19 +151,27 @@ const DiveManager = ({ userId }: Props) => {
 
   const deleteButtonHandler = async () => {
     document.body.style.overflow = 'unset';
-    const diveForDelete = dives.filter((i) => i.checked);
-    if (diveForDelete.length !== 1) {
-      // eslint-disable-next-line no-alert
-      alert('Choose one item for edit');
-    } else {
-      await firestoreDivesService.deleteDiveData(userId, diveForDelete[0].dive.id);
+    const divesIds = dives.filter((i) => i.checked).map((item) => item.dive.id);
+    if (divesIds.length >= 1) {
+      await firestoreDivesService.deleteDives(userId, divesIds);
+      closePopup();
       await fetchDives();
+    } else {
+      // eslint-disable-next-line no-alert
+      alert('Choose at least one dive');
     }
-    closePopup();
   };
 
-  const unpublishButtonHandler = () => {
-    closePopup();
+  const unpublishButtonHandler = async () => {
+    const diveIds = dives.filter((item) => item.checked).map((i) => i.dive.id);
+    if (diveIds.length >= 1) {
+      await firestoreDivesService.unpublishDives(userId, diveIds);
+      closePopup();
+      await fetchDives();
+    } else {
+      // eslint-disable-next-line no-alert
+      alert('Choose at least one dive');
+    }
   };
 
   const backdropHandler = (val: boolean) => {
