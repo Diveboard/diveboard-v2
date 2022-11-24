@@ -12,7 +12,7 @@ import { useWindowWidth } from '../../../../../../hooks/useWindowWidth';
 type Props = {
   parameters: SecondStepType['parameters'];
   setParameters: React.Dispatch<
-    React.SetStateAction<SecondStepType['parameters']>
+  React.SetStateAction<SecondStepType['parameters']>
   >;
   errors: SecondStepErrors;
   setErrors: React.Dispatch<React.SetStateAction<SecondStepErrors>>;

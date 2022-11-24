@@ -28,6 +28,14 @@ export const PhoneInput: FC<Props> = ({
   const i = 0;
   const [countryValue, setCountryValue] = useState('');
 
+  console.log({
+    setError,
+    placeholder,
+    height,
+    width,
+    i,
+  });
+
   useEffect(() => {
     if (countryValue && value) {
       setValue('');
@@ -50,20 +58,15 @@ export const PhoneInput: FC<Props> = ({
         value={value}
         onChange={setValue}
         className={!error ? styles.phone : `${styles.phone} ${styles.error}`}
-        countrySelectComponent={
-          (data) => {
-            console.log();
-            return (
-              <div className={styles.wrapper}>
-                <FlagIco country={data.value || countryValue} />
-                <CountryDropDown
-                  items={data.options}
-                  setItem={setCountryValue}
-                />
-              </div>
-            );
-          }
-        }
+        countrySelectComponent={(data) => (
+          <div className={styles.wrapper}>
+            <FlagIco country={data.value || countryValue} />
+            <CountryDropDown
+              items={data.options}
+              setItem={setCountryValue}
+            />
+          </div>
+        )}
       />
       {error && <span className={styles.errorText}>{error}</span>}
     </>

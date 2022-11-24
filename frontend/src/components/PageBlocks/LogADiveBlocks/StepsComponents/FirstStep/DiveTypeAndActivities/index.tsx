@@ -8,7 +8,7 @@ import styles from './styles.module.scss';
 type Props = {
   diveActivities: Omit<FirstStepType['diveActivities'], 'other'>;
   setDiveActivities: React.Dispatch<
-    React.SetStateAction<Omit<FirstStepType['diveActivities'], 'other'>>
+  React.SetStateAction<Omit<FirstStepType['diveActivities'], 'other'>>
   >;
   other: string;
   setOther: React.Dispatch<React.SetStateAction<string>>;

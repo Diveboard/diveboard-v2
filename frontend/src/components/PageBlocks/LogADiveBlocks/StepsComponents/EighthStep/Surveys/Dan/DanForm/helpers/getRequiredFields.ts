@@ -1,6 +1,6 @@
-import { DanSurveyType } from '../../../../../../types/stepTypes';
+// import { DanSurveyType } from '../../../../../../types/stepTypes';
 
-export const getRequiredFields = (data: DanSurveyType) => {
+export const getRequiredFields = (data: any) => {
   const {
     beforeDive: { divePlan },
     duringDive: {

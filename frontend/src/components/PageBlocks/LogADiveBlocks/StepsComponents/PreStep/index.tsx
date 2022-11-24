@@ -6,6 +6,7 @@ import FileInput from '../../../../Input/FileInput';
 import { xml2json } from '../../../../../utils/xml2json';
 import { DiveObj } from '../../types/file2ObjType';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
+import { FirstStepType, SecondStepType } from '../../types/stepTypes';
 
 export const PreStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
   const [fileError, setFileError] = useState(false);
@@ -53,8 +54,8 @@ export const PreStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
         },
         tanks: [],
       };
-      await setStepData(1, firstStepData);
-      await setStepData(2, secondStepData);
+      await setStepData(1, firstStepData as FirstStepType);
+      await setStepData(2, secondStepData as SecondStepType);
       setFileError(false);
       setStep(1);
     } catch (e) {

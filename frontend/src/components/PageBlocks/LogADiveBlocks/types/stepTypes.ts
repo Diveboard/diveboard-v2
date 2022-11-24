@@ -1,4 +1,6 @@
-import { Buddy, GearsVariantsType, SafetySpot, ScoreType } from './commonTypes';
+import {
+  Buddy, GearsVariantsType, SafetySpot, ScoreType,
+} from './commonTypes';
 import { initialDiveDataState } from '../LogDiveData/state';
 
 export type FirstStepType = {

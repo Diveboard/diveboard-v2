@@ -1,5 +1,5 @@
 import React, {
-  FC, useContext, useEffect, useReducer, useState,
+  FC, useContext, useEffect, useState,
 } from 'react';
 import { StepType } from '../types/commonTypes';
 import styles from './styles.module.scss';
