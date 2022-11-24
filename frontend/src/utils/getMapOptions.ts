@@ -1,4 +1,4 @@
-type Maps = typeof google.maps;
+import { Maps } from 'google-map-react';
 
 export const getMapOptions = (maps: Maps) => (
   {
