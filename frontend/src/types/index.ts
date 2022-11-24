@@ -144,3 +144,16 @@ export type DanSurveyType = {
     cigarettes: 'yes' | 'no' | '';
   }
 };
+
+export type PropertiesType = {
+  'Tanks user': boolean,
+  'Water Type': boolean,
+  'Dive type': boolean,
+  Visibility: boolean,
+  Ratings: boolean,
+  Spot: boolean,
+  'Dive Shop': boolean,
+  'Gear used': boolean,
+  Buddies: boolean,
+  Guide: boolean,
+};

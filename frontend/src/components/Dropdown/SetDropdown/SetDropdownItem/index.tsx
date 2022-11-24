@@ -20,7 +20,7 @@ export const SetDropdownItem: FC<Props> = ({
   const handleClick = () => {
     onClick(true);
     hideDropdown(false);
-    if (title !== 'Edit Dive') {
+    if (title !== 'Edit Dive' && title !== 'Paste properties') {
       showBackdrop(true);
       document.body.style.overflow = 'hidden';
     }
