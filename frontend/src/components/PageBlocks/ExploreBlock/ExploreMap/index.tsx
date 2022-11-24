@@ -1,5 +1,5 @@
 import React, { FC, SetStateAction } from 'react';
-import GoogleMapReact from 'google-map-react';
+import GoogleMapReact, { Maps } from 'google-map-react';
 import { getMapOptions } from '../../../../utils/getMapOptions';
 import { DivePoint } from '../../../Point';
 import styles from './styles.module.scss';
@@ -57,6 +57,7 @@ export const ExploreMap: FC<Props> = ({
       </div>
       )}
       <GoogleMapReact
+        // @ts-ignore
         id="map"
         yesIWantToUseGoogleMapApiInternals
         bootstrapURLKeys={
@@ -67,7 +68,7 @@ export const ExploreMap: FC<Props> = ({
         defaultCenter={coords}
         center={{ lat: coords.lat - 1, lng: coords.lng }}
         defaultZoom={zoom}
-        options={getMapOptions}
+        options={(maps: Maps) => getMapOptions(maps)}
         onGoogleApiLoaded={({
           map,
           maps,
