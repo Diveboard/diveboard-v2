@@ -5,6 +5,8 @@ import { ProfileImage } from '../SettingsItemContent/NotEditedContent/ProfileIma
 import { EditedProfileImage } from '../SettingsItemContent/EditedContent/EditedProfileImage';
 import { EditedProfileName } from '../SettingsItemContent/EditedContent/EditedProfileName';
 import { EditedProfileEmail } from '../SettingsItemContent/EditedContent/EditedProfileEmail';
+import { EditedProfileCountry } from '../SettingsItemContent/EditedContent/EditedProfileCountry';
+import { EditedProfileAbout } from '../SettingsItemContent/EditedContent/EditedProfileAbout';
 import { AuthStatusContext } from '../../../../layouts/AuthLayout';
 import { NetworkStatusContext } from '../../../../layouts/NetworkStatus';
 import coverStyles from './styles.module.scss';
@@ -20,6 +22,8 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
       photoURL,
       name,
       email,
+      country,
+      about,
     },
   } = useContext(AuthStatusContext);
 
@@ -53,6 +57,24 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
         >
           <span className={styles.primaryItemContent}>{email}</span>
           <EditedProfileEmail />
+        </SettingsItem>
+
+        <SettingsItem
+          title="Country"
+          titleBlock="Personal Info"
+          titleMuted
+        >
+          <span className={styles.primaryItemContent}>{country}</span>
+          <EditedProfileCountry />
+        </SettingsItem>
+
+        <SettingsItem
+          title="About"
+          titleBlock="Personal Info"
+          titleMuted
+        >
+          <span className={styles.primaryItemContent}>{about}</span>
+          <EditedProfileAbout />
         </SettingsItem>
       </SettingsGroup>
       <div className={`${coverStyles.opacityCover} ${!isOffline && coverStyles.hidden}`}>

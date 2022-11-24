@@ -1,4 +1,6 @@
-import React, { FC, useContext, useState } from 'react';
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react';
 
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { StepsNavigation } from '../../StepsNavigation';
@@ -15,52 +17,73 @@ import styles from './styles.module.scss';
 
 export const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
   const isMobile = useWindowWidth(500, 768);
+  const { getStepData, setStepData } = useContext(LogDiveDataContext);
 
-  const [gearItems, setGearItems] = useState<SeventhStepType['gears']>([{
-    id: 1,
-    typeOfGear: '',
-    manufacturer: '',
-    model: '',
-    dateAcquired: undefined,
-    lastMaintenance: undefined,
-  }]);
+  const [gearItems, setGearItems] = useState<SeventhStepType['gears']>([
+    {
+      id: 1,
+      typeOfGear: '',
+      manufacturer: '',
+      model: '',
+      dateAcquired: undefined,
+      lastMaintenance: undefined,
+    },
+  ]);
 
   const [saveToLocker, setSaveToLocker] = useState(false);
-  const { setStepData } = useContext(LogDiveDataContext);
 
   const actions = getGearsActions(gearItems, setGearItems);
 
-  const GearsFormsComponent = gearItems.map(({
-    id, typeOfGear, lastMaintenance, manufacturer, model, dateAcquired,
-  }) => {
-    const parameters = actions(id);
-    return (
-      <GearForm
-        typeOfGear={typeOfGear}
-        setGearParameters={parameters.setGearParameters}
-        id={id}
-        lastMaintenance={lastMaintenance}
-        model={model}
-        dateAcquired={dateAcquired}
-        manufacturer={manufacturer}
-      />
-    );
-  });
+  useEffect(() => {
+    const data = getStepData(7) as SeventhStepType;
+    if (data.gears?.length) {
+      setGearItems(data.gears);
+      setSaveToLocker(data.save);
+    }
+  }, [step]);
+
+  const GearsFormsComponent = gearItems.map(
+    ({
+      id,
+      typeOfGear,
+      lastMaintenance,
+      manufacturer,
+      model,
+      dateAcquired,
+    }) => {
+      const parameters = actions(id);
+      return (
+        <GearForm
+          key={id}
+          typeOfGear={typeOfGear}
+          setGearParameters={parameters.setGearParameters}
+          id={id}
+          lastMaintenance={lastMaintenance}
+          model={model}
+          dateAcquired={dateAcquired}
+          manufacturer={manufacturer}
+        />
+      );
+    },
+  );
 
   const add = () => {
-    setGearItems([...gearItems, {
-      id: incrementId(gearItems),
-      lastMaintenance: undefined,
-      dateAcquired: undefined,
-      model: '',
-      typeOfGear: '',
-      manufacturer: '',
-
-    }]);
+    setGearItems([
+      ...gearItems,
+      {
+        id: incrementId(gearItems),
+        lastMaintenance: undefined,
+        dateAcquired: undefined,
+        model: '',
+        typeOfGear: '',
+        manufacturer: '',
+      },
+    ]);
   };
 
   const seventhStepData: SeventhStepType = {
     gears: gearItems,
+    save: saveToLocker,
   };
 
   if (step !== 7) return null;

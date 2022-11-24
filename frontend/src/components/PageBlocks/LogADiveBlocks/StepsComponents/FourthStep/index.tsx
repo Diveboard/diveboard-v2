@@ -1,117 +1,91 @@
-import React, { FC, useContext, useState } from 'react';
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react';
 
+import { Search } from './SearchBlock';
+import { SpeciesList } from './SpeciesList';
+import { Loader } from '../../../../Loader';
 import { StepsNavigation } from '../../StepsNavigation';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
+import { firestoreSpeciesServices } from '../../../../../firebase/firestore/firestoreServices/firestoreSpeciesServices';
+import { firestoreSpotsService } from '../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
+import { SpeciesType } from '../../../../../firebase/firestore/models';
 import { StepProps } from '../../types/commonTypes';
-import { FourthStepType } from '../../types/stepTypes';
-import { SpeciesList } from './SpeciesList';
-import { mySpecies } from './DUMMY_DATA_FOURTH_STEP';
-import speciesListData from '../../../../../../public/species/species.json';
-import { SpeciesCardList } from './SpeciesCardList';
-import { Search } from './SearchBlock';
-
+import { FourthStepType, ThirdStepType } from '../../types/stepTypes';
 import styles from './styles.module.scss';
 
-export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
-  const { setStepData } = useContext(LogDiveDataContext);
-  const [isTypeChosen, setTypeChosen] = useState(false);
-  const [isTypeSelected, setTypeSelected] = useState(false);
-  const [selectedSpecies, setSelectedSpecies] = useState([]);
-  const [renderedSpeciesList, setRenderedSpeciesList] = useState({
-    selectedSection: '',
-    speciesArray: [],
-  });
+export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, userId }) => {
+  const { setStepData, getStepData } = useContext(LogDiveDataContext);
+
+  const [speciesMode, setSpeciesMode] = useState<'local' | 'all'>('all');
+  const [currentSpeciesMode, setCurrentSpeciesMode] = useState('');
+
+  const [searchValue, setSearchValue] = useState('');
+  const [searchedSpecies, setSearchedSpecies] = useState<SpeciesType[]>([]);
+  const [queriedAllSpecies, setQueriedAllSpecies] = useState<SpeciesType[]>([]);
+  const [queriedLocalSpecies, setQueriedLocalSpecies] = useState<SpeciesType[]>(
+    [],
+  );
+  const [mySpecies, setMySpecies] = useState<SpeciesType[]>([]);
+  const [selectedSpecies, setSelectedSpecies] = useState<SpeciesType[]>([]);
+
+  const [loading, setLoading] = useState(false);
+
+  const { spotId } = getStepData(3) as ThirdStepType;
+
+  const onSearchHandler = async (val: string) => {
+    setCurrentSpeciesMode('');
+    const searched = queriedAllSpecies.filter((item) => {
+      let matchSpecies = false;
+      item.cname.forEach((cname) => {
+        matchSpecies = cname.name.toLowerCase().includes(val.toLowerCase(), 0);
+      });
+      matchSpecies = item.sname.toLowerCase().includes(val.toLowerCase(), 0);
+      matchSpecies = item.category.toLowerCase().includes(val.toLowerCase(), 0);
+      return matchSpecies;
+    });
+    setSearchedSpecies(searched);
+    setSearchValue('');
+  };
+  useEffect(() => {
+    (async () => {
+      const species = await firestoreSpeciesServices.getAllSpecies();
+      const data = await firestoreSpeciesServices.getMySpecies(userId);
+      setMySpecies(data);
+      setQueriedAllSpecies(species);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const data = getStepData(4) as FourthStepType;
+      if (data.species) {
+        setSelectedSpecies(
+          queriedAllSpecies.filter((fish) => data.species.some((s) => s === fish.id)),
+        );
+      }
+    })();
+  }, [step, queriedAllSpecies]);
+
+  useEffect(() => {
+    if (spotId) {
+      (async () => {
+        setSpeciesMode('local');
+        setLoading(true);
+        const spotCoords = await firestoreSpotsService.getSpotCoordsById(
+          spotId,
+        );
+        const species = await firestoreSpeciesServices.getLocalSpecies(
+          spotCoords,
+        );
+        setQueriedLocalSpecies(species);
+        setLoading(false);
+      })();
+    }
+  }, [spotId]);
 
   const fourthStepData: FourthStepType = {
-    // parameters,
-    // advancedParameters,
-  };
-
-  const radioButtonChange = (event: React.FormEvent<HTMLInputElement>) => {
-    // chose which method
-    // if something change console.log('click');
-    // if need value use next line
-    (event.target as HTMLInputElement).value;
-  };
-
-  // search by the clicked section
-  const prepareSpeciesList = (type: string) => {
-    let resultType = '';
-    let resultArray = [];
-
-    if (type === 'my species') {
-      resultType = 'my species';
-      resultArray = mySpecies;
-    } else if (type === 'selected') {
-      resultType = 'selected';
-      resultArray = selectedSpecies;
-    } else {
-      Object.entries(speciesListData).forEach(([key, value]) => {
-        if (key === type) {
-          resultType = type;
-          resultArray = value;
-        }
-      });
-    }
-
-    setRenderedSpeciesList((prevRenderedSpeciesList) => ({
-      ...prevRenderedSpeciesList,
-      selectedSection: resultType,
-      speciesArray: resultArray,
-    }));
-  };
-
-  const typeSelectionHandler = (type: string) => {
-    prepareSpeciesList(type);
-    setTypeChosen(true);
-    if (type === 'selected') {
-      setTypeSelected(true);
-    } else {
-      setTypeSelected(false);
-    }
-  };
-
-  const backButtonHandler = () => {
-    setTypeChosen(false);
-  };
-
-  /**
-   * actions when the "plus" or "done" is pressed.
-   * If species is already in the SELECTED, it is added. If not, it is deleted from SELECTED.
-   * @param speciesId id clicked card
-   */
-  const selectedSpeciesHandler = (speciesId: string) => {
-    const existingSelectedSpeciesIndex = selectedSpecies.findIndex(
-      (itm) => itm.id === speciesId,
-    );
-
-    //  if the species is not in the array then index = -1
-    if (existingSelectedSpeciesIndex === -1) {
-      Object.values(speciesListData).forEach((itms) => itms.forEach((itm) => {
-        if (itm.id === speciesId) {
-          setSelectedSpecies((prevSelected) => [...prevSelected, itm]);
-        }
-      }));
-      mySpecies.forEach((itm) => {
-        if (itm.id === speciesId) {
-          setSelectedSpecies((prevSelected) => [...prevSelected, itm]);
-        }
-      });
-    } else {
-      // if species alredy in array then delete
-      const updateSelectedSpecies = selectedSpecies.filter(
-        (item) => item.id !== speciesId,
-      );
-      setSelectedSpecies(updateSelectedSpecies);
-
-      if (isTypeSelected) {
-        // if type SELECTED chosen rerender species list
-        setRenderedSpeciesList({
-          ...renderedSpeciesList,
-          speciesArray: updateSelectedSpecies,
-        });
-      }
-    }
+    species: selectedSpecies.map((item) => item.id),
   };
 
   if (step !== 4) {
@@ -126,34 +100,61 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
           <div className={styles.description}>
             Search and add marine species to your dive
           </div>
-          <Search />
-          <div className={styles.radioButtonWrapper} onChange={radioButtonChange}>
+          <Search
+            value={searchValue}
+            setValue={setSearchValue}
+            onClick={onSearchHandler}
+          />
+          <div className={styles.radioButtonWrapper}>
             <input
               type="radio"
-              value="local"
+              value={speciesMode}
               name="Location species"
               id="local species"
-              defaultChecked
+              onChange={() => {
+                if (!spotId) {
+                  // eslint-disable-next-line no-alert
+                  alert(
+                    "you can't choose local species because you didn't choose spot location",
+                  );
+                } else {
+                  setSpeciesMode('local');
+                  setCurrentSpeciesMode('');
+                }
+              }}
+              checked={speciesMode === 'local'}
             />
             <label htmlFor="local species">Local species</label>
-            <input type="radio" value="all" name="Location species" id="all species" />
+
+            <input
+              type="radio"
+              value={speciesMode}
+              name="Location species"
+              id="all species"
+              onChange={() => {
+                setSpeciesMode('all');
+                setCurrentSpeciesMode('');
+              }}
+              checked={speciesMode === 'all'}
+            />
             <label htmlFor="all species">All</label>
           </div>
-          {(!isTypeChosen || (selectedSpecies.length === 0 && isTypeSelected)) ? (
+
+          <Loader loading={loading} />
+          {!loading && (
             <SpeciesList
-              onClick={typeSelectionHandler}
+              currentSpeciesMode={currentSpeciesMode}
+              setCurrentSpeciesMode={setCurrentSpeciesMode}
               mySpecies={mySpecies}
+              queriedSpecies={
+                speciesMode === 'all' ? queriedAllSpecies : queriedLocalSpecies
+              }
+              searchedSpecies={searchedSpecies}
               selectedSpecies={selectedSpecies}
-              speciesListData={speciesListData}
-            />
-          ) : (
-            <SpeciesCardList
-              selectedSpecies={selectedSpecies}
-              renderedSpeciesList={renderedSpeciesList}
-              backButtonHandler={backButtonHandler}
-              selectedSpeciesHandler={selectedSpeciesHandler}
+              setSelectedSpecies={setSelectedSpecies}
             />
           )}
+
           <div className={styles.sponsored}>
             Data provided through
             {' '}

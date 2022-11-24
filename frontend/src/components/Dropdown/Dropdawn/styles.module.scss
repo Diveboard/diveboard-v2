@@ -51,8 +51,24 @@
 @media (max-width: 768px) {
   .dropdownWrapper {
     width: 100%;
+
     .dropdown {
       width: 100% !important;
     }
   }
+}
+
+
+.error {
+  border: 1px solid #FF645A;
+}
+
+.errorTextForm {
+  display: block;
+  margin-top: 3px;
+  margin-left: 15px;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  color: #FF645A;
 }

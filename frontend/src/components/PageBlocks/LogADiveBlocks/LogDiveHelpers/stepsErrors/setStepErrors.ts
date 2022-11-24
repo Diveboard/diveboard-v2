@@ -3,6 +3,7 @@ import {
   fifthStepErrorsActions,
   firstStepErrorsActions,
   secondStepErrorsActions,
+  thirdStepErrorsActions,
 } from './stepErrorsActions';
 
 export const setStepErrors = (
@@ -13,6 +14,8 @@ export const setStepErrors = (
       return firstStepErrorsActions(errorsAction);
     case 2:
       return secondStepErrorsActions(errorsAction);
+    case 3:
+      return thirdStepErrorsActions(errorsAction);
     case 5:
       return fifthStepErrorsActions(errorsAction);
 

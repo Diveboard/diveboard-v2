@@ -1,35 +1,36 @@
-import { GearsVariantsType, ScoreType } from './commonTypes';
+import {
+  Buddy, GearsVariantsType, SafetySpot, ScoreType,
+} from './commonTypes';
+import { initialDiveDataState } from '../LogDiveData/state';
 
-export type FirstStepType =
-  {
-    overview:
-    {
-      diveNumber: number,
-      notes: string,
-      tripName: string,
-    },
-    diveReviews:
-    {
-      overReview: ScoreType,
-      diveDifficulty: ScoreType,
-      marineLifeQuality: ScoreType,
-      wreck?: ScoreType,
-      bigFish?: ScoreType,
-    },
-    diveActivities: {
-      recreational: boolean,
-      training: boolean,
-      nightDive: boolean,
-      deepDive: boolean,
-      drift: boolean,
-      wreck: boolean,
-      cave: boolean,
-      reef: boolean,
-      photo: boolean,
-      research: boolean,
-      other: string[],
-    }
+export type FirstStepType = {
+  overview: {
+    diveNumber: number;
+    notes: string;
+    tripName: string;
   };
+  diveReviews: {
+    overReview: ScoreType;
+    diveDifficulty: ScoreType;
+    marineLifeQuality: ScoreType;
+    wreck?: ScoreType;
+    bigFish?: ScoreType;
+  };
+
+  diveActivities: {
+    recreational: boolean;
+    training: boolean;
+    nightDive: boolean;
+    deepDive: boolean;
+    drift: boolean;
+    wreck: boolean;
+    cave: boolean;
+    reef: boolean;
+    photo: boolean;
+    research: boolean;
+    other: string[];
+  };
+};
 
 export type SecondStepType = {
   parameters: {
@@ -38,12 +39,9 @@ export type SecondStepType = {
     maxDepth: number;
     duration: number;
     surfaceInterval: number;
-    safetySpots: {
-      id: number;
-      depth: number;
-      period: number;
-    }[]
-  }
+    safetySpots: SafetySpot[];
+  };
+
   advancedParameters: {
     surfaceTemp: number;
     bottomTemp: number;
@@ -52,7 +50,7 @@ export type SecondStepType = {
     current: 'none' | 'light' | 'medium' | ' strong' | 'extreme';
     altitude: number;
     waterType: 'salt' | 'fresh';
-  }
+  };
   tanks: {
     id: number;
     cylinder: '1x' | '2x';
@@ -63,49 +61,53 @@ export type SecondStepType = {
     pressureStart: number;
     pressureEnd: number;
     pressureMeasures: 'bar' | 'psi';
-  }[]
+  }[];
 };
 
 export type ThirdStepType = {
-  spot: {
-    country: string;
-    name: string;
-    lat: number;
-    lng: number;
-  }
+  spotId: string | null;
 };
-export type FourthStepType = {};
+export type FourthStepType = {
+  species: string[];
+};
 
 export type FifthStepType = {
   diveCenter: string;
   guideName: string;
-  buddies: { id?: string, name: string, email?:string }[];
+  buddies: Buddy[];
 };
 
 export type SixthStepType = {
-  files: { tags: string, file: File }[];
+  files: { tags: string; file: File }[];
   mediaUrl: string[];
 };
 
 export type SeventhStepType = {
   gears: {
-    id: number
+    id: number;
     typeOfGear: GearsVariantsType;
-    manufacturer: string,
+    manufacturer: string;
     model: string;
     dateAcquired: Date;
-    lastMaintenance: Date; }[]
-
+    lastMaintenance: Date;
+  }[];
+  save: boolean;
 };
 
-export type EighthStepType = {};
+export type EighthStepType = {
+  surveyName: string;
+  surveyId: string;
+  date: Date;
+}[];
+
+export type PublishingMode = 'public' | 'private' | 'friends only';
 
 export type NinthStepType = {
-  publishingMode: 'public' | 'private' | 'friends only'
+  publishingMode: PublishingMode;
 };
 
 export type StepsDataType =
-  FirstStepType
+  | FirstStepType
   | SecondStepType
   | ThirdStepType
   | FourthStepType
@@ -114,3 +116,5 @@ export type StepsDataType =
   | SeventhStepType
   | EighthStepType
   | NinthStepType;
+
+export type AllStepsDataType = typeof initialDiveDataState;

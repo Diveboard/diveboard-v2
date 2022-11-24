@@ -68,6 +68,7 @@ export const DivesMap: FC<Props> = ({
           defaultCenter={coords}
           center={coords}
           defaultZoom={zoom}
+          // @ts-ignore
           options={getMapOptions}
           onGoogleApiLoaded={({
             map,

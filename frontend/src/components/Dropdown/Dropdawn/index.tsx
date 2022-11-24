@@ -12,6 +12,7 @@ type Props = {
   allItems: string[];
   width?: number
   height?: number;
+  error?: string;
 };
 
 export const Dropdown: FC<Props> = ({
@@ -20,6 +21,7 @@ export const Dropdown: FC<Props> = ({
   allItems,
   width,
   height,
+  error,
 }) => {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState(allItems);
@@ -50,24 +52,29 @@ export const Dropdown: FC<Props> = ({
     ));
 
   return (
-    <div
-      ref={dropdownRef}
-      onClick={(): void => {
-        setOpen(!open);
-      }}
-      className={styles.dropdownWrapper}
-      style={{ width: '100%', maxWidth: `${width}px` }}
-    >
-      <div className={styles.dropdown} style={{ width: '100%', maxWidth: `${width}px`, height: `${height}px` }}>
-        <span>{item}</span>
-        <Icon iconName="dropdown-arrow" />
+    <>
+      <div
+        ref={dropdownRef}
+        onClick={(): void => {
+          setOpen(!open);
+        }}
+        className={!error ? styles.dropdownWrapper : `${styles.dropdownWrapper} ${styles.error}`}
+        style={{ width: '100%', maxWidth: `${width}px` }}
+      >
+        <div className={styles.dropdown} style={{ width: '100%', maxWidth: `${width}px`, height: `${height}px` }}>
+          <span>{item}</span>
+          <Icon iconName="dropdown-arrow" />
+        </div>
+
+        {open && (
+          <div className={styles.itemsWrapper}>
+            {itemComponents}
+          </div>
+        )}
       </div>
 
-      {open && (
-      <div className={styles.itemsWrapper}>
-        {itemComponents}
-      </div>
-      )}
-    </div>
+      {error && <span className={styles.errorTextForm}>{error}</span>}
+    </>
+
   );
 };

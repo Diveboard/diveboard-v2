@@ -55,6 +55,7 @@
     "semi": "error",
     "no-console": "warn",
     "react/require-default-props": "off",
+    "react/no-unstable-nested-components": "off",
     "no-restricted-syntax": "off",
     "consistent-return": "off",
     "no-underscore-dangle": "off",

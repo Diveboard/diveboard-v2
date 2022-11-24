@@ -14,7 +14,7 @@ const LogDive: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   <AuthLayout user={user}>
     <MainLayout>
       <LogDiveProvider>
-        <LogDiveBlock />
+        <LogDiveBlock userId={user.uid} />
       </LogDiveProvider>
     </MainLayout>
   </AuthLayout>

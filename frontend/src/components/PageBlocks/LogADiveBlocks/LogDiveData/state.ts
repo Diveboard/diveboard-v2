@@ -25,15 +25,12 @@ const secondStep: SecondStepType = {
 };
 
 const thirdStep: ThirdStepType = {
-  spot: {
-    country: undefined,
-    name: undefined,
-    lat: undefined,
-    lng: undefined,
-  },
+  spotId: null,
 };
 
-const fourthStep: FourthStepType = {};
+const fourthStep: FourthStepType = {
+  species: [],
+};
 
 const fifthStep: FifthStepType = {
   diveCenter: undefined,
@@ -48,8 +45,10 @@ const sixthStep: SixthStepType = {
 
 const seventhStep: SeventhStepType = {
   gears: undefined,
+  save: false,
 };
 
+// @ts-ignore
 const eighthStep: EighthStepType = {};
 
 const ninthStep: NinthStepType = {

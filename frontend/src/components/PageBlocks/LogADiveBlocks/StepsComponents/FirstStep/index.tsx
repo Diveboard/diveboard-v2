@@ -12,10 +12,7 @@ import { FirstStepType } from '../../types/stepTypes';
 import { FirstStepErrors } from '../../types/errorTypes';
 import styles from '../../styles.module.scss';
 
-export const FirstStep: FC<StepProps> = ({
-  step,
-  setStep,
-}) => {
+export const FirstStep: FC<StepProps> = ({ step, setStep }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
 
   // overview
@@ -27,6 +24,7 @@ export const FirstStep: FC<StepProps> = ({
 
   const [overviewErrors, setOverviewErrors] = useState<FirstStepErrors>({
     diveNumberError: '',
+    tripNameError: '',
   });
 
   const setErrors = () => setStepErrors({
@@ -47,7 +45,8 @@ export const FirstStep: FC<StepProps> = ({
 
   // dive activities
   const [diveActivities, setDiveActivities] = useState<
-  Omit<FirstStepType['diveActivities'], 'other'>>({
+  Omit<FirstStepType['diveActivities'], 'other'>
+  >({
     recreational: false,
     training: false,
     nightDive: false,
@@ -74,6 +73,7 @@ export const FirstStep: FC<StepProps> = ({
       setOverview(data.overview);
       setDiveReviews(data.diveReviews);
       setDiveActivities(data.diveActivities);
+      setOther(data.diveActivities.other.toString());
     }
   }, [step]);
 
@@ -102,7 +102,6 @@ export const FirstStep: FC<StepProps> = ({
           other={other}
           setOther={setOther}
         />
-
       </div>
       <StepsNavigation
         setStep={setStep}

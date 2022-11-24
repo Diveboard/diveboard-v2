@@ -11,11 +11,11 @@ import { useWindowWidth } from '../../../../../../hooks/useWindowWidth';
 
 type Props = {
   parameters: SecondStepType['parameters'];
-  setParameters: React.Dispatch<React.SetStateAction<SecondStepType['parameters']>>
-  errors:
-  SecondStepErrors
-  setErrors:
-  React.Dispatch<React.SetStateAction<SecondStepErrors>>
+  setParameters: React.Dispatch<
+  React.SetStateAction<SecondStepType['parameters']>
+  >;
+  errors: SecondStepErrors;
+  setErrors: React.Dispatch<React.SetStateAction<SecondStepErrors>>;
 };
 
 export const Parameters: FC<Props> = ({
@@ -26,16 +26,9 @@ export const Parameters: FC<Props> = ({
 }) => {
   const isMobile = useWindowWidth(500, 768);
 
-  const params = setParams(
-    parameters,
-    setParameters,
-  );
+  const params = setParams(parameters, setParameters);
 
-  const errorsParams = setParams(
-    errors,
-    setErrors,
-  );
-
+  const errorsParams = setParams(errors, setErrors);
   return (
     <div className={styles.parameters}>
       <InputLabelWrapper label="Time In" mode={isMobile ? 'half' : 'common'}>
@@ -90,17 +83,23 @@ export const Parameters: FC<Props> = ({
         />
       </InputLabelWrapper>
 
-      <InputLabelWrapper label="Surface Interval" mode={isMobile ? 'full' : 'common'}>
+      <InputLabelWrapper
+        label="Surface Interval"
+        mode={isMobile ? 'full' : 'common'}
+      >
         <Input
           type="number"
-          value={parameters.surfaceInterval ? parameters.surfaceInterval.toString() : ''}
+          value={
+            parameters.surfaceInterval
+              ? parameters.surfaceInterval.toString()
+              : ''
+          }
           setValue={(val) => params('surfaceInterval', +(val as string))}
           height={48}
           width={730}
           placeholder="min"
         />
       </InputLabelWrapper>
-
     </div>
   );
 };

@@ -4,44 +4,23 @@ import { Input } from '../../../../Input/CommonInput';
 import { MarginWrapper } from '../../../../MarginWrapper';
 import { Button } from '../../../../Buttons/Button';
 import { ButtonGroupMultiple } from '../../../../ButtonGroup/ButtonGroupMultiple';
-import { Buddy } from '../../types/commonTypes';
+import {
+  firestorePublicProfileService,
+} from '../../../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
+import { BuddyItemType } from './index';
 import styles from './style.module.scss';
 
-const buddies: {
-  name: string;
-  id: string;
-  imgSrc?: string;
-}[] = [{
-  id: 'sdkgjsdlkgjsdfl',
-  name: 'Sara',
-  imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
-},
-{
-  id: 'sdkgjJJJJJJsdlkgjsdfl',
-  name: 'Barafdgd',
-  imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
-}, {
-  id: 'HHGKsdkgjsdlkgjsdfl',
-  name: 'Karakjsadkjldfs',
-  imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
-}, {
-  id: 'NBBYIKMNBYsdkgjsdlkgjsdfl',
-  name: 'Nar',
-  imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
-},
-];
-
 type Props = {
-  selectedBuddies: Buddy[];
+  selectedBuddies: BuddyItemType[];
   setSelectedBuddies: React.Dispatch<
-  React.SetStateAction<Buddy[]>>
+  React.SetStateAction<BuddyItemType[]>>
 };
 
 export const SearchAndAddBuddies: FC<Props> = ({
   selectedBuddies,
   setSelectedBuddies,
 }) => {
-  const [myBuddies, setMyBuddies] = useState<Buddy[]>([]);
+  const [myBuddies, setMyBuddies] = useState<BuddyItemType[]>([]);
   const [searchType, setSearchType] = useState('diveboard');
   const [buddyNameError, setBuddyNameError] = useState('');
   const [searchedBuddyName, setSearchedBuddyName] = useState('');
@@ -50,26 +29,33 @@ export const SearchAndAddBuddies: FC<Props> = ({
   const [buddyEmailError, setBuddyEmailError] = useState('');
   const [mode, setMode] = useState<string[]>([]);
 
-  const clickSearchedBuddyHandler = (clickedBuddy: Buddy) => {
+  const clickSearchedBuddyHandler = (clickedBuddy: BuddyItemType) => {
     const buddiesPrevStateCallback = (prev) => {
       const b = prev.find((item) => {
-        if (clickedBuddy.id) {
+        if ('id' in clickedBuddy) {
           return item.id === clickedBuddy.id;
         }
         return item.name === clickedBuddy.name;
       });
       if (b) {
         return prev.filter((item) => {
-          if (clickedBuddy.id) {
+          if ('id' in clickedBuddy) {
             return item.id !== clickedBuddy.id;
           }
           return item.name !== clickedBuddy.name;
         });
       }
+
+      if ('id' in clickedBuddy) {
+        return [...prev, {
+          id: clickedBuddy.id,
+          name: clickedBuddy.name,
+          imgSrc: clickedBuddy.imgSrc,
+        }];
+      }
       return [...prev, {
-        id: clickedBuddy.id,
         name: clickedBuddy.name,
-        imgSrc: clickedBuddy.imgSrc,
+        email: clickedBuddy.email,
       }];
     };
     setSelectedBuddies(buddiesPrevStateCallback);
@@ -78,8 +64,21 @@ export const SearchAndAddBuddies: FC<Props> = ({
 
   const addBuddyHandler = () => {
     if (buddyName) {
-      const duplicate = myBuddies.find((item) => item.name === buddyName);
-      if (!duplicate) {
+      const duplicateMyBuddies = myBuddies.find((item) => {
+        if ('name' in item) {
+          return item.name === buddyName;
+        }
+        return false;
+      });
+
+      const duplicateSelectedBuddies = selectedBuddies.find((item) => {
+        if ('name' in item) {
+          return item.name === buddyName;
+        }
+        return false;
+      });
+
+      if (!duplicateMyBuddies && !duplicateSelectedBuddies) {
         setSelectedBuddies([...selectedBuddies, {
           name: buddyName,
           email: buddyEmail,
@@ -97,10 +96,10 @@ export const SearchAndAddBuddies: FC<Props> = ({
   };
 
   useEffect(() => {
-    const filtered = buddies.filter((item) => {
+    const filtered = myBuddies.filter((item) => {
       let notContains = true;
       selectedBuddies.forEach((selectedItem) => {
-        if (selectedItem.id === item.id) {
+        if ('id' in selectedItem && 'id' in item && selectedItem.id === item.id) {
           notContains = false;
         }
       });
@@ -113,6 +112,22 @@ export const SearchAndAddBuddies: FC<Props> = ({
     const checked = selectedBuddies.map((item) => item.name);
     setMode(checked);
   }, [selectedBuddies]);
+
+  useEffect(() => {
+    if (searchedBuddyName.length >= 3) {
+      (async () => {
+        const buddiesPredictions = await firestorePublicProfileService
+          .getUserPredictionsByName(searchedBuddyName);
+        const buddies = buddiesPredictions
+          .map((buddy) => ({
+            id: buddy.uid,
+            name: buddy.name,
+            imgSrc: buddy.photoURL,
+          } as BuddyItemType));
+        setMyBuddies(buddies);
+      })();
+    }
+  }, [searchedBuddyName]);
 
   return (
     <>
@@ -206,7 +221,6 @@ export const SearchAndAddBuddies: FC<Props> = ({
             items={myBuddies}
             onClick={clickSearchedBuddyHandler}
           />
-
         </div>
       )}
 

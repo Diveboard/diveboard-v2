@@ -33,7 +33,8 @@ export const TextArea: FC<Props> = ({
   const textAreaStyle = {
     padding: '16px 16px 16px 16px',
     height: `${height}px`,
-    width: `${width}px`,
+    maxWidth: `${width}px`,
+    width: '100%',
   };
 
   return (

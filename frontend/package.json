@@ -12,7 +12,9 @@
     "deploy": "next build && firebase deploy --only hosting,functions:nextServer"
   },
   "dependencies": {
+    "@googlemaps/region-lookup": "^0.0.0",
     "@stripe/react-stripe-js": "^1.7.2",
+    "@types/google-map-react": "^2.1.7",
     "@types/google.maps": "^3.48.6",
     "@types/js-cookie": "^3.0.1",
     "@types/react-transition-group": "^4.4.5",
@@ -34,6 +36,7 @@
     "react-apexcharts": "^1.4.0",
     "react-datepicker": "^4.8.0",
     "react-dom": "17.0.2",
+    "react-phone-number-input": "^3.2.12",
     "react-slick": "^0.29.0",
     "react-transition-group": "^4.4.2",
     "sass": "^1.49.8",

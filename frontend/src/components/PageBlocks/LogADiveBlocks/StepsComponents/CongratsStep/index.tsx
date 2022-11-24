@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { useRouter } from 'next/router';
 import { StepProps } from '../../types/commonTypes';
 import styles from './styles.module.scss';
 import { ContentModeType, PlanType } from '../../../DonateBlocks/donateTypes';
@@ -8,6 +9,9 @@ import { Button } from '../../../../Buttons/Button';
 export const CongratsStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
   const [planMode, setPlanMode] = useState<PlanType>();
   const [contentMode, setContentMode] = useState<ContentModeType>('main');
+
+  const router = useRouter();
+
   console.log(planMode, contentMode);
   return (
     <>
@@ -87,7 +91,7 @@ export const CongratsStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
               Previous
             </span>
           </Button>
-          <span>No, thanks</span>
+          <span onClick={() => router.push('/dive-manager')}>No, thanks</span>
         </div>
       </div>
     </>

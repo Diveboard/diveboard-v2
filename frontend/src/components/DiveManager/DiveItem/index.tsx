@@ -3,19 +3,40 @@ import { CSSTransition } from 'react-transition-group';
 
 import { Checkbox } from '../../CheckBox';
 import DiveInfo from '../DiveInfo';
-import { DummyDataObj } from '../DUMMY_DATA_OBJ';
 
 import styles from './styles.module.scss';
+import { month } from '../../../utils/date';
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+type diveType = {
+  id: number;
+  number: number;
+  date: Date;
+  spot: string;
+  divetime: number;
+  depth: number;
+  diversCount: number;
+  trip: string;
+  diveShop: string;
+  water: string;
+  visibility: string;
+  altitude: number;
+  featuredGear: string;
+};
 
 type Props = {
-  itm: DummyDataObj;
+  itm: diveType;
   isSelectAll: boolean;
+  checked: boolean;
+  setChecked: (val: boolean) => void;
   changeIsSelectAll: () => void;
   isChange: boolean;
 };
 
 export const DiveItem: FC<Props> = ({
   itm,
+  checked,
+  setChecked,
   isSelectAll,
   changeIsSelectAll,
   isChange,
@@ -34,17 +55,17 @@ export const DiveItem: FC<Props> = ({
     altitude,
     featuredGear,
   } = itm;
-  const [checkboxItem, setCheckboxItem] = useState(false);
+  // const [checkboxItem, setCheckboxItem] = useState(false);
   const [isShow, setShow] = useState(true);
 
   useEffect(() => {
     if (isChange) {
-      setCheckboxItem(isSelectAll);
+      setChecked(isSelectAll);
     }
   }, [isSelectAll]);
 
-  const checkboxHandler = () => {
-    setCheckboxItem(() => !checkboxItem);
+  const checkboxHandler = (val) => {
+    setChecked(val);
     if (isSelectAll) {
       changeIsSelectAll();
     }
@@ -52,6 +73,14 @@ export const DiveItem: FC<Props> = ({
 
   const showHandler = () => {
     setShow(() => !isShow);
+  };
+
+  const parseDate = (isoDate: Date): string => {
+    if (!isoDate) {
+      return '';
+    }
+    const newDate = new Date(isoDate);
+    return `${month[newDate.getMonth() - 1]} ${newDate.getDate()}, ${newDate.getFullYear()}`;
   };
 
   return (
@@ -67,14 +96,14 @@ export const DiveItem: FC<Props> = ({
           #
           {number}
         </div>
-        <div className={styles.date}>{date}</div>
+        <div className={styles.date}>{parseDate(date)}</div>
       </div>
       <div className={styles.subwrapper}>
         <div className={styles.spot}>{spot}</div>
         <Checkbox
           name="name"
           className="column"
-          checked={checkboxItem}
+          checked={checked}
           onChecked={checkboxHandler}
         />
       </div>

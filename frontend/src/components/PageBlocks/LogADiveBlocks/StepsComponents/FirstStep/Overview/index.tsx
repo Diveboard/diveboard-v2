@@ -79,6 +79,12 @@ export const Overview: FC<Props> = ({
           }
           height={48}
           width={570}
+          error={overviewDataErrors.tripNameError}
+          setError={
+            (val) => {
+              errorsParams('tripNameError', val as string);
+            }
+          }
         />
       </div>
     </div>

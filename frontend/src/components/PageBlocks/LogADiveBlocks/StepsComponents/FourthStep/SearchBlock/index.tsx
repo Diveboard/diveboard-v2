@@ -1,52 +1,43 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import KebabButton from '../../../../../Buttons/KebabButton';
 import { Icon } from '../../../../../Icons/Icon';
 
 import styles from './styles.module.scss';
 
-export const Search: FC = () => {
-  const [searchValue, setSearchValue] = useState('');
-  const [isValid, setValid] = useState(true);
-  const formArea = useRef(null);
+type Props = {
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+  onClick: (searchedValue: string)=>void;
+};
 
-  const onChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
-    setSearchValue(event.currentTarget.value);
-    setValid(true);
-  };
-
-  const searchHandler = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (searchValue.length === 0) {
-      return;
-    }
-    if (searchValue.length < 3) {
-      setValid(false);
-    } else {
-      setValid(true);
-    }
-  };
-
+export const Search: FC<Props> = ({ value, setValue, onClick }) => {
+  const [error, setError] = useState(false);
   return (
-    <form className={styles.search} onSubmit={searchHandler} ref={formArea}>
+    <div className={styles.search}>
       <input
         type="text"
-        value={searchValue}
-        onChange={onChangeHandler}
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value);
+          setError(false);
+        }}
         className={
-          isValid ? styles.searchInput : `${styles.searchInput} ${styles.error}`
+          !error ? styles.searchInput : `${styles.searchInput}  ${styles.error}`
         }
         placeholder="Spieces name"
       />
-      <KebabButton className="search" type="submit">
+      <KebabButton
+        className="search"
+        type="submit"
+        onClick={() => {
+          value.length >= 3 ? onClick(value) : setError(true);
+        }}
+      >
         <Icon iconName="search" width={24} height={24} />
         <span>Search</span>
       </KebabButton>
-      {!isValid && (
-        <div className={styles.errorText}>
-          The search term must be at least 3 characters
-        </div>
-      )}
-    </form>
+      {error && <span className={styles.errorText}>type more than 2 letters</span>}
+    </div>
   );
 };

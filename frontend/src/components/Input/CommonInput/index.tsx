@@ -12,8 +12,9 @@ type Props = {
   disabled?: boolean
   height?: number;
   width?: number
-  type?: 'text' | 'number';
+  type?: 'text' | 'number' | 'date' | 'time';
   iconPosition?: 'left' | 'right';
+  onFocusChange?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const Input: FC<Props> = ({
@@ -28,6 +29,7 @@ export const Input: FC<Props> = ({
   width,
   type,
   iconPosition,
+  onFocusChange,
 }) => {
   const getInputStyle = (errorValue: string) => {
     if (errorValue) {
@@ -58,6 +60,14 @@ export const Input: FC<Props> = ({
           className={getInputStyle(error)}
           placeholder={placeholder}
           disabled={disabled}
+          onFocus={() => {
+            onFocusChange
+            && onFocusChange(true);
+          }}
+          onBlur={() => {
+            onFocusChange
+            && onFocusChange(false);
+          }}
         />
 
         {iconName && (
