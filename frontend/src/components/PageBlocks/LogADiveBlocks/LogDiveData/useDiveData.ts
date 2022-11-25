@@ -124,6 +124,6 @@ export const UseDiveData = () => {
     getStepData,
     getAllStepsData,
     setData,
-    setEmptyData
+    setEmptyData,
   };
 };
