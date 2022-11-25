@@ -9,7 +9,7 @@ import { useWindowWidth } from '../../../../../../hooks/useWindowWidth';
 
 type Props = {
   advancedParameters: SecondStepType['advancedParameters'];
-  setAdvancedParameters: React.Dispatch<React.SetStateAction<SecondStepType['advancedParameters']>>
+  setAdvancedParameters: (res: SecondStepType['advancedParameters']) => void;
 };
 
 export const AdvancedParameters: FC<Props> = ({
@@ -62,7 +62,7 @@ export const AdvancedParameters: FC<Props> = ({
 
         <InputLabelWrapper label="Water visibility:" mode={isMobile ? 'half' : 'common'}>
           <Dropdown
-            item={advancedParameters.waterVisibility}
+            item={advancedParameters.waterVisibility || ''}
             setItem={(val) => params(
               'waterVisibility',
               val as typeof advancedParameters.waterVisibility,
@@ -74,7 +74,7 @@ export const AdvancedParameters: FC<Props> = ({
 
         <InputLabelWrapper label="Current" mode={isMobile ? 'half' : 'common'}>
           <Dropdown
-            item={advancedParameters.current}
+            item={advancedParameters.current || ''}
             setItem={
               (val) => params(
                 'current',
@@ -102,7 +102,7 @@ export const AdvancedParameters: FC<Props> = ({
 
         <InputLabelWrapper label="Water type" mode={isMobile ? 'half' : 'common'}>
           <Dropdown
-            item={advancedParameters.waterType}
+            item={advancedParameters.waterType || ''}
             setItem={
               (val) => params(
                 'waterType',

@@ -62,7 +62,7 @@ export const Overview: FC<Props> = ({
           Notes
         </h3>
         <TextArea
-          value={overviewData.notes}
+          value={overviewData.notes || ''}
           setValue={
             (val) => params('notes', val as string)
           }
@@ -73,7 +73,7 @@ export const Overview: FC<Props> = ({
           Trip Name
         </h3>
         <Input
-          value={overviewData.tripName}
+          value={overviewData.tripName || ''}
           setValue={
             (val) => params('tripName', val as string)
           }

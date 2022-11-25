@@ -18,32 +18,26 @@ import styles from './styles.module.scss';
 
 export const SecondStep: FC<StepProps> = ({ step, setStep }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
-
+  const [data, setData] = useState<SecondStepType>(undefined);
   const [showChart, setShowChart] = useState(false);
   const showedChart = useRef(false);
 
-  const [spots, setSpots] = useState<
-  {
-    depth: number;
-    diveTime: number;
-    temperature: number;
-  }[]
-  >([]);
+  // TODO: // For what
+  // const [spots, setSpots] = useState<{
+  //   depth: number;
+  //   diveTime: number;
+  //   temperature: number;
+  // }[]
+  // >([]);
 
-  const [parameters, setParameters] = useState<SecondStepType['parameters']>({
-    time: '',
-    date: null,
-    maxDepth: undefined,
-    duration: undefined,
-    surfaceInterval: undefined,
-    safetySpots: [
-      {
-        id: 1,
-        period: undefined,
-        depth: undefined,
-      },
-    ],
-  });
+  // useEffect(() => {
+  //   const newSpots = data?.parameters?.safetySpots.map((spot) => ({
+  //     depth: spot.depth,
+  //     diveTime: spot.period,
+  //     temperature: 0,
+  //   }));
+  //   setSpots(newSpots);
+  // }, [data?.parameters?.safetySpots]);
 
   const [parametersErrors, setParametersErrors] = useState<SecondStepErrors>({
     timeError: '',
@@ -54,30 +48,10 @@ export const SecondStep: FC<StepProps> = ({ step, setStep }) => {
 
   const setErrors = () => setStepErrors({
     stepType: 2,
-    data: parameters,
+    data: data.parameters,
     errors: parametersErrors,
     setErrors: setParametersErrors,
   });
-
-  const [advancedParameters, setAdvancedParameters] = useState<
-  SecondStepType['advancedParameters']
-  >({
-    surfaceTemp: undefined,
-    bottomTemp: undefined,
-    weights: undefined,
-    waterType: undefined,
-    current: undefined,
-    altitude: undefined,
-    waterVisibility: undefined,
-  });
-
-  const [tanks, setTanks] = useState<SecondStepType['tanks']>([]);
-
-  const secondStepData: SecondStepType = {
-    parameters,
-    advancedParameters,
-    tanks,
-  };
 
   useEffect(() => {
     // load points //todo
@@ -88,24 +62,10 @@ export const SecondStep: FC<StepProps> = ({ step, setStep }) => {
       setShowChart(true);
     }
     showedChart.current = true;
-  }, [parameters, advancedParameters, tanks]);
+  }, [data]);
 
   useEffect(() => {
-    const newSpots = parameters.safetySpots.map((spot) => ({
-      depth: spot.depth,
-      diveTime: spot.period,
-      temperature: 0,
-    }));
-    setSpots(newSpots);
-  }, [parameters.safetySpots]);
-
-  useEffect(() => {
-    const data = getStepData(2) as SecondStepType;
-    if (Object.values(data).every((item) => !!item)) {
-      setParameters(data.parameters);
-      setAdvancedParameters(data.advancedParameters);
-      setTanks(data.tanks);
-    }
+    setData(getStepData(2) as SecondStepType);
   }, [step]);
 
   if (step !== 2) {
@@ -113,11 +73,16 @@ export const SecondStep: FC<StepProps> = ({ step, setStep }) => {
   }
 
   return (
-    <>
-      <div className={styles.secondStep}>
-        <h2>Profile</h2>
-        {showChart && <DepthChart points={spots} />}
-        {!showChart && (
+    <div>
+      {data && (
+      <>
+        <div className={styles.secondStep}>
+          <h2>Profile</h2>
+          {/* TODO: Check it */}
+          {showChart
+              && data.parameters?.safetySpots
+              && <DepthChart points={data.parameters.safetySpots} />}
+          {!showChart && (
           <>
             <MarginWrapper top={10} />
             <p>
@@ -160,28 +125,33 @@ export const SecondStep: FC<StepProps> = ({ step, setStep }) => {
               </Button>
             </div>
           </>
-        )}
-        <Parameters
-          parameters={parameters}
-          setParameters={setParameters}
-          errors={parametersErrors}
-          setErrors={setParametersErrors}
-        />
+          )}
+          <Parameters
+            parameters={data.parameters}
+            setParameters={(res) => setData({ ...data, parameters: res })}
+            errors={parametersErrors}
+            setErrors={setParametersErrors}
+          />
 
-        <SafetySpots parameters={parameters} setParameters={setParameters} />
-        <AdvancedParameters
-          advancedParameters={advancedParameters}
-          setAdvancedParameters={setAdvancedParameters}
+          <SafetySpots
+            parameters={data.parameters}
+            setParameters={(res) => setData({ ...data, parameters: res })}
+          />
+          <AdvancedParameters
+            advancedParameters={data.advancedParameters}
+            setAdvancedParameters={(res) => setData({ ...data, advancedParameters: res })}
+          />
+          <Tanks tanks={data.tanks} setTanks={(res) => setData({ ...data, tanks: res })} />
+        </div>
+        <StepsNavigation
+          setStep={setStep}
+          setErrors={setErrors}
+          setStepData={() => {
+            setStepData(2, data);
+          }}
         />
-        <Tanks tanks={tanks} setTanks={setTanks} />
-      </div>
-      <StepsNavigation
-        setStep={setStep}
-        setErrors={setErrors}
-        setStepData={() => {
-          setStepData(2, secondStepData);
-        }}
-      />
-    </>
+      </>
+      )}
+    </div>
   );
 };

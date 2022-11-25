@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { getOptions } from './getChartOptions';
 import { useWindowWidthNumber } from '../../hooks/useWindowWidthNumber';
+import {SafetySpot} from "../PageBlocks/LogADiveBlocks/types/commonTypes";
 
 React.useLayoutEffect = useEffect;
 
@@ -10,11 +11,7 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), {
 });
 
 type Props = {
-  points: {
-    depth: number;
-    diveTime: number;
-    temperature: number;
-  }[];
+  points: SafetySpot[];
 };
 
 export const DepthChart: FC<Props> = ({ points }): JSX.Element => {
@@ -28,17 +25,17 @@ export const DepthChart: FC<Props> = ({ points }): JSX.Element => {
     let sortedData = [...points];
 
     sortedData = sortedData.map((item) => {
-      if (item.depth === undefined || item.diveTime === undefined) {
+      if (item.depth === undefined || item.period === undefined) {
         return { ...item, depth: 0, diveTime: 0 };
       }
       return item;
     });
 
-    sortedData.sort((a, b) => a.diveTime - b.diveTime);
+    sortedData.sort((a, b) => a.period - b.period);
 
     sortedData.forEach((item) => {
       depth.push(item.depth);
-      diveTime.push(item.diveTime);
+      diveTime.push(item.period);
     });
     setDiveTimeData(diveTime);
     setData([

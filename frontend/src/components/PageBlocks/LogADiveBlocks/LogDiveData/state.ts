@@ -41,9 +41,30 @@ const firstStep: FirstStepType = {
 };
 
 const secondStep: SecondStepType = {
-  parameters: undefined,
-  advancedParameters: undefined,
-  tanks: undefined,
+  parameters: {
+    time: '',
+    date: null,
+    maxDepth: undefined,
+    duration: undefined,
+    surfaceInterval: undefined,
+    safetySpots: [
+      {
+        id: 1,
+        period: undefined,
+        depth: undefined,
+      },
+    ],
+  },
+  advancedParameters: {
+    surfaceTemp: undefined,
+    bottomTemp: undefined,
+    weights: undefined,
+    waterType: undefined,
+    current: undefined,
+    altitude: undefined,
+    waterVisibility: undefined,
+  },
+  tanks: [],
 };
 
 const thirdStep: ThirdStepType = {
