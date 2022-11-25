@@ -7,11 +7,9 @@ import styles from './styles.module.scss';
 
 type Props = {
   diveActivities: Omit<FirstStepType['diveActivities'], 'other'>;
-  setDiveActivities: React.Dispatch<
-  React.SetStateAction<Omit<FirstStepType['diveActivities'], 'other'>>
-  >;
-  other: string;
-  setOther: React.Dispatch<React.SetStateAction<string>>;
+  setDiveActivities: (res: FirstStepType['diveActivities']) => void;
+  other: string[];
+  setOther: (res: string) => void;
 };
 
 export const DiveActivities: FC<Props> = ({
@@ -130,7 +128,7 @@ export const DiveActivities: FC<Props> = ({
 
           <div className={styles.inputWrapper}>
             <span className={styles.label}>Other (comma separated):</span>
-            <Input value={other} setValue={setOther} height={48} width={244} />
+            <Input value={other?.toString() || ''} setValue={setOther} height={48} width={244} />
           </div>
 
         </div>

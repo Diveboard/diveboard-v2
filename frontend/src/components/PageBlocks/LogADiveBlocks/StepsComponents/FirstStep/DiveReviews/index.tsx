@@ -8,9 +8,7 @@ import { setParams } from '../../../LogDiveHelpers/setParams/setParams';
 
 type Props = {
   diveReviews: FirstStepType['diveReviews'];
-  setDiveReviews: React.Dispatch<
-  React.SetStateAction<FirstStepType['diveReviews']>
-  >;
+  setDiveReviews: (res: FirstStepType['diveReviews']) => void;
 };
 
 export const DiveReviews: FC<Props> = ({ diveReviews, setDiveReviews }) => {

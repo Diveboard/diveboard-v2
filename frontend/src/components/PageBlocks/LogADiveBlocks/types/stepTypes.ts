@@ -16,7 +16,6 @@ export type FirstStepType = {
     wreck?: ScoreType;
     bigFish?: ScoreType;
   };
-
   diveActivities: {
     recreational: boolean;
     training: boolean;

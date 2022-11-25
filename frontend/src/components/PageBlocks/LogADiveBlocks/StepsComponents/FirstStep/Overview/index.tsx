@@ -8,7 +8,7 @@ import { setParams } from '../../../LogDiveHelpers/setParams/setParams';
 
 type Props = {
   overviewData: FirstStepType['overview'];
-  setOverviewData: React.Dispatch<React.SetStateAction<FirstStepType['overview']>>;
+  setOverviewData: (res: FirstStepType['overview']) => void;
   overviewDataErrors: FirstStepErrors;
   setOverviewDataErrors: React.Dispatch<React.SetStateAction<FirstStepErrors>>;
 };

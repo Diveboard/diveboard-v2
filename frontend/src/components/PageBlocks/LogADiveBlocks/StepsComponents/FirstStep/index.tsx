@@ -14,13 +14,7 @@ import styles from '../../styles.module.scss';
 
 export const FirstStep: FC<StepProps> = ({ step, setStep }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
-
-  // overview
-  const [overview, setOverview] = useState<FirstStepType['overview']>({
-    diveNumber: 0,
-    notes: '',
-    tripName: '',
-  });
+  const [data, setData] = useState<FirstStepType>(undefined);
 
   const [overviewErrors, setOverviewErrors] = useState<FirstStepErrors>({
     diveNumberError: '',
@@ -29,52 +23,13 @@ export const FirstStep: FC<StepProps> = ({ step, setStep }) => {
 
   const setErrors = () => setStepErrors({
     stepType: 1,
-    data: overview,
+    data: data.overview,
     errors: overviewErrors,
     setErrors: setOverviewErrors,
   });
 
-  // dives reviews
-  const [diveReviews, setDiveReviews] = useState<FirstStepType['diveReviews']>({
-    overReview: 5,
-    diveDifficulty: 5,
-    marineLifeQuality: 5,
-    wreck: undefined,
-    bigFish: undefined,
-  });
-
-  // dive activities
-  const [diveActivities, setDiveActivities] = useState<
-  Omit<FirstStepType['diveActivities'], 'other'>
-  >({
-    recreational: false,
-    training: false,
-    nightDive: false,
-    drift: false,
-    deepDive: false,
-    wreck: false,
-    cave: false,
-    reef: false,
-    photo: false,
-    research: false,
-  });
-
-  const [other, setOther] = useState('');
-
-  const firstStepData: FirstStepType = {
-    overview: { ...overview, diveNumber: +overview.diveNumber },
-    diveReviews,
-    diveActivities: { ...diveActivities, other: other?.split(',') },
-  };
-
   useEffect(() => {
-    const data = getStepData(1) as FirstStepType;
-    if (Object.values(data).every((item) => !!item)) {
-      setOverview(data.overview);
-      setDiveReviews(data.diveReviews);
-      setDiveActivities(data.diveActivities);
-      setOther(data.diveActivities?.other?.toString());
-    }
+    setData(getStepData(1) as FirstStepType);
   }, [step]);
 
   if (step !== 1) {
@@ -82,34 +37,42 @@ export const FirstStep: FC<StepProps> = ({ step, setStep }) => {
   }
 
   return (
-    <>
-      <div className={styles.container}>
-        <Overview
-          overviewData={overview}
-          setOverviewData={setOverview}
-          overviewDataErrors={overviewErrors}
-          setOverviewDataErrors={setOverviewErrors}
-        />
+    <div>
+      {data && (
+      <>
+        <div className={styles.container}>
+          <Overview
+            overviewData={data.overview}
+            setOverviewData={(res) => {
+              setData({ ...data, overview: res });
+            }}
+            overviewDataErrors={overviewErrors}
+            setOverviewDataErrors={setOverviewErrors}
+          />
 
-        <DiveReviews
-          diveReviews={diveReviews}
-          setDiveReviews={setDiveReviews}
-        />
+          <DiveReviews
+            diveReviews={data.diveReviews}
+            setDiveReviews={(res) => setData({ ...data, diveReviews: res })}
+          />
 
-        <DiveActivities
-          diveActivities={diveActivities}
-          setDiveActivities={setDiveActivities}
-          other={other}
-          setOther={setOther}
+          <DiveActivities
+            diveActivities={data.diveActivities}
+            setDiveActivities={(res) => setData({ ...data, diveActivities: res })}
+            other={data.diveActivities.other}
+            setOther={(res) => {
+              setData({ ...data, diveActivities: { ...data.diveActivities, other: res.split(',') } });
+            }}
+          />
+        </div>
+        <StepsNavigation
+          setStep={setStep}
+          setErrors={setErrors}
+          setStepData={() => {
+            setStepData(1, data);
+          }}
         />
-      </div>
-      <StepsNavigation
-        setStep={setStep}
-        setErrors={setErrors}
-        setStepData={() => {
-          setStepData(1, firstStepData);
-        }}
-      />
-    </>
+      </>
+      )}
+    </div>
   );
 };
