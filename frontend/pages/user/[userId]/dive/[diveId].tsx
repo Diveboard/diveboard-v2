@@ -1,19 +1,24 @@
 import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { MainLayout } from '../src/layouts/MainLayout';
-import { AuthLayout } from '../src/layouts/AuthLayout';
-import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
-import { DivePageBlock } from '../src/components/DivePage/divePageBlock';
+import { useRouter } from 'next/router';
+import { MainLayout } from '../../../../src/layouts/MainLayout';
+import { AuthLayout } from '../../../../src/layouts/AuthLayout';
+import { firebaseAdmin } from '../../../../src/firebase/firebaseAdmin';
+import { DivePageBlock } from '../../../../src/components/DivePage/divePageBlock';
 
 const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   user,
-}) => (
-  <AuthLayout user={user}>
-    <MainLayout>
-      <DivePageBlock />
-    </MainLayout>
-  </AuthLayout>
-);
+}) => {
+  const router = useRouter();
+  const { userId, diveId } = router.query;
+  return (
+    <AuthLayout user={user}>
+      <MainLayout>
+        <DivePageBlock diveUserId={userId as string} diveId={diveId as string} />
+      </MainLayout>
+    </AuthLayout>
+  );
+};
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const uid = context.req.cookies.__session;
