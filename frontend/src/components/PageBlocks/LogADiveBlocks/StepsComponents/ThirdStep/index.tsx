@@ -112,6 +112,7 @@ export const ThirdStep: FC<StepProps> = ({
           createdNewSpotId={createdNewSpotId.current}
           setChosenPointId={setChosenPointId}
           setButton={setClickedPoint}
+          disableError={() => setSpotError({ spotError: '' })}
         />
         {spotError.spotError && <span className="error-text">Choose spot</span>}
         {!createSpotMode && (

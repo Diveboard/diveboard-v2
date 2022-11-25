@@ -74,6 +74,7 @@ export const Parameters: FC<Props> = ({
           value={parameters.duration ? parameters.duration.toString() : ''}
           setValue={(val) => params('duration', +(val as string))}
           height={48}
+          min={0}
           width={isMobile ? 768 : 165}
           placeholder="min"
           error={errors.durationError}
@@ -94,6 +95,7 @@ export const Parameters: FC<Props> = ({
               ? parameters.surfaceInterval.toString()
               : ''
           }
+          min={0}
           setValue={(val) => params('surfaceInterval', +(val as string))}
           height={48}
           width={730}
