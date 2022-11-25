@@ -78,7 +78,7 @@ export const CongratsStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
       <div className={styles.stepsNavWrapper}>
         <div className={styles.stepsNav}>
           <Button
-            onClick={() => setStep(9)}
+            onClick={() => setStep(0)}
             height={32}
             width={104}
             borderRadius={30}

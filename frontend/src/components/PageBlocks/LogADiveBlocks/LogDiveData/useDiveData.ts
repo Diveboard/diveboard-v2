@@ -28,6 +28,10 @@ export const UseDiveData = () => {
     dispatch(diveDataActions.setStep(step));
   };
 
+  const setEmptyData = () => {
+    dispatch(diveStepDataActions.setEmptyData());
+  };
+
   const getCurrentStep = (): StepType => state.step;
 
   const setStepData = (step: StepType, StepData: StepsDataType) => {
@@ -120,5 +124,6 @@ export const UseDiveData = () => {
     getStepData,
     getAllStepsData,
     setData,
+    setEmptyData
   };
 };

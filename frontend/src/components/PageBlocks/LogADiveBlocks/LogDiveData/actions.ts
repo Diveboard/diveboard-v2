@@ -21,6 +21,9 @@ export const diveDataActions = {
 };
 
 export const diveStepDataActions = {
+  setEmptyData: () => ({
+    type: 'update-empty-state',
+  } as const),
   setFirstStepData: (firstStepData: FirstStepType) => ({
     type: 'set-first-step-data',
     payload: { firstStepData },

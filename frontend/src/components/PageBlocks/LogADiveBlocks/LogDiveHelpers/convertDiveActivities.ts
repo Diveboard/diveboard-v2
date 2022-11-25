@@ -30,7 +30,7 @@ export const convertToDiveActivities = (diveActivities: Array<string>) => {
     research: false,
     other: [],
   };
-  diveActivities.forEach((activity) => {
+  diveActivities?.forEach((activity) => {
     const item = activity.charAt(0).toLowerCase() + activity.slice(1);
     if (activities[item] === undefined) {
       activities.other.push(item);
