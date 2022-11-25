@@ -105,8 +105,9 @@ export const NinthStep: FC<StepProps & { diveId?: string }> = ({
             border="none"
             backgroundColor="#0059DE"
             disable={isLoading}
+            onClick={publishStepsData}
           >
-            <span className={styles.btnText} onClick={publishStepsData}>
+            <span className={styles.btnText}>
               Publish
             </span>
           </Button>

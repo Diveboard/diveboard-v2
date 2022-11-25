@@ -33,6 +33,7 @@ type Props = {
   createdNewSpotId: string;
   setChosenPointId: React.Dispatch<React.SetStateAction<string>>;
   setButton:React.Dispatch<React.SetStateAction<string>>;
+  disableError?: () => void;
 };
 
 export const LogADiveDiveMap: FC<Props> = ({
@@ -48,6 +49,7 @@ export const LogADiveDiveMap: FC<Props> = ({
   createdNewSpotId,
   setChosenPointId,
   setButton,
+  disableError,
 }) => {
   const [region, setRegion] = useState('');
   const userLocation = useUserLocation();
@@ -67,6 +69,7 @@ export const LogADiveDiveMap: FC<Props> = ({
         const spotId = markers.find((item) => item.name === name);
         setChosenPointId(spotId.id);
         setButton(name);
+        disableError();
       }}
     />
   ));

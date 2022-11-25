@@ -15,6 +15,7 @@ type Props = {
   type?: 'text' | 'number' | 'date' | 'time';
   iconPosition?: 'left' | 'right';
   onFocusChange?: React.Dispatch<React.SetStateAction<boolean>>;
+  min?: number;
 };
 
 export const Input: FC<Props> = ({
@@ -30,6 +31,7 @@ export const Input: FC<Props> = ({
   type,
   iconPosition,
   onFocusChange,
+  min,
 }) => {
   const getInputStyle = (errorValue: string) => {
     if (errorValue) {
@@ -48,6 +50,7 @@ export const Input: FC<Props> = ({
     <>
       <div className={styles.inputWrapper} style={{ maxWidth: width }}>
         <input
+          min={min}
           type={type}
           style={inputStyle}
           value={value}

@@ -49,7 +49,7 @@ export const DiveItem: FC<Props> = ({
       return '';
     }
     const newDate = new Date(isoDate);
-    return `${month[newDate.getMonth() - 1]} ${newDate.getDate()}, ${newDate.getFullYear()}`;
+    return `${month[newDate.getMonth()]} ${newDate.getDate()}, ${newDate.getFullYear()}`;
   };
 
   return (

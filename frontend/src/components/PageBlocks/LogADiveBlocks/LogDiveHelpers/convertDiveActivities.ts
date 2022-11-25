@@ -4,8 +4,8 @@ export const convertDiveActivities = (diveActivities: FirstStepType['diveActivit
   let activities: string[] = [];
   // eslint-disable-next-line guard-for-in
   for (const key in diveActivities) {
-    if (key === 'other') {
-      const upperOtherActivities = diveActivities[key].map((item) => (
+    if (key === 'other' && diveActivities[key]) {
+      const upperOtherActivities = diveActivities[key]?.map((item) => (
         item.charAt(0).toUpperCase() + item.slice(1)));
       activities = [...activities, ...upperOtherActivities];
     } else if (diveActivities[key]) {
@@ -30,7 +30,7 @@ export const convertToDiveActivities = (diveActivities: Array<string>) => {
     research: false,
     other: [],
   };
-  diveActivities.forEach((activity) => {
+  diveActivities?.forEach((activity) => {
     const item = activity.charAt(0).toLowerCase() + activity.slice(1);
     if (activities[item] === undefined) {
       activities.other.push(item);
