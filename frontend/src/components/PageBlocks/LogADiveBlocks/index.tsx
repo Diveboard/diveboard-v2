@@ -28,13 +28,22 @@ type Props = {
 export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
   const [step, setStep] = useState<StepType>(0);
   const [isLoading, setLoading] = useState<boolean>(false);
-  const { setCurrentStep, setData, getAllStepsData } = useContext(LogDiveDataContext);
+  const {
+    setCurrentStep, setData, getAllStepsData, setEmptyData,
+  } = useContext(LogDiveDataContext);
 
   const router = useRouter();
+  const { isNew } = router.query;
 
   useEffect(() => {
-    setCurrentStep(step);
-  }, [step]);
+    if (isNew) {
+      setEmptyData();
+      setStep(0);
+      router.push('/log-dive');
+    } else {
+      setCurrentStep(step);
+    }
+  }, [step, isNew]);
 
   useEffect(() => {
     if (dive) {

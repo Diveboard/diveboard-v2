@@ -87,7 +87,7 @@ const sixthStep: SixthStepType = {
 };
 
 const seventhStep: SeventhStepType = {
-  gears: undefined,
+  gears: [],
   save: false,
 };
 

@@ -10,7 +10,7 @@ type Props = {
   overviewData: FirstStepType['overview'];
   setOverviewData: (res: FirstStepType['overview']) => void;
   overviewDataErrors: FirstStepErrors;
-  setOverviewDataErrors: React.Dispatch<React.SetStateAction<FirstStepErrors>>;
+  setOverviewDataErrors: (res: FirstStepErrors) => void;
 };
 
 export const Overview: FC<Props> = ({

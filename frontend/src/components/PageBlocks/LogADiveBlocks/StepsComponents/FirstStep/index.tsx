@@ -59,12 +59,16 @@ export const FirstStep: FC<StepProps> = ({ step, setStep }) => {
 
           <DiveReviews
             diveReviews={data.diveReviews}
-            setDiveReviews={(res) => setData({ ...data, diveReviews: res })}
+            setDiveReviews={(res) => {
+              setData({ ...data, diveReviews: res });
+            }}
           />
 
           <DiveActivities
             diveActivities={data.diveActivities}
-            setDiveActivities={(res) => setData({ ...data, diveActivities: res })}
+            setDiveActivities={(res) => {
+              setData({ ...data, diveActivities: res });
+            }}
             other={data.diveActivities.other}
             setOther={(res) => {
               setData({ ...data, diveActivities: { ...data.diveActivities, other: res.split(',') } });
