@@ -4,11 +4,12 @@ import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 import { GalleryBlock } from '../src/components/PageBlocks/GalleryBlock';
+import { firestoreDivesService } from '../src/firebase/firestore/firestoreServices/firestoreDivesService';
 
-const Gallery: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
+const Gallery: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user, images }) => (
   <AuthLayout user={user}>
     <MainLayout>
-      <GalleryBlock />
+      <GalleryBlock images={images} user={user} />
     </MainLayout>
   </AuthLayout>
 );
@@ -27,6 +28,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     email, photoURL = '', displayName = '',
   } = await firebaseAdmin.auth().getUser(uid);
 
+  const images = await firestoreDivesService.getImagesInDives(uid);
+
   return {
     props: {
       user: {
@@ -35,6 +38,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         photoURL,
         name: displayName,
       },
+      images,
     },
   };
 };

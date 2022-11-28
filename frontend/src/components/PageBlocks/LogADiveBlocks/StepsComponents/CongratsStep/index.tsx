@@ -1,12 +1,11 @@
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { StepProps } from '../../types/commonTypes';
 import styles from './styles.module.scss';
 import { ContentModeType, PlanType } from '../../../DonateBlocks/donateTypes';
 import { Icon } from '../../../../Icons/Icon';
 import { Button } from '../../../../Buttons/Button';
 
-export const CongratsStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
+export const CongratsStep = () => {
   const [planMode, setPlanMode] = useState<PlanType>();
   const [contentMode, setContentMode] = useState<ContentModeType>('main');
 
@@ -78,7 +77,7 @@ export const CongratsStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
       <div className={styles.stepsNavWrapper}>
         <div className={styles.stepsNav}>
           <Button
-            onClick={() => setStep(0)}
+            onClick={() => router.push('/log-dive?isNew=true')}
             height={32}
             width={104}
             borderRadius={30}

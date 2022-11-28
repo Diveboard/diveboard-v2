@@ -63,7 +63,7 @@ export const DiveItem: FC<Props> = ({
       <div className={styles.info}>
         <div className={styles.number}>
           #
-          {itm.aboutDive.diveNumber}
+          {itm.aboutDive?.diveNumber}
         </div>
         <div className={styles.date}>{parseDate(itm.date)}</div>
       </div>
@@ -78,8 +78,8 @@ export const DiveItem: FC<Props> = ({
       </div>
       <div className={styles.infowrapper}>
         <DiveInfo
-          diveTime={itm.diveData.duration}
-          deepness={itm.diveData.maxDepth}
+          diveTime={itm.diveData?.duration}
+          deepness={itm.diveData?.maxDepth}
           diversCount={itm.buddies?.length}
         />
 

@@ -14,6 +14,7 @@ import { SixthStepType } from '../../types/stepTypes';
 import { StepProps } from '../../types/commonTypes';
 import stylesContainer from '../../styles.module.scss';
 import styles from './styles.module.scss';
+import { StepsIndicator } from '../../StepsIndicator';
 
 export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
@@ -41,7 +42,6 @@ export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
         setError('duplicate url');
         return;
       }
-
       setMediaUrl((prevMediaUrl) => [...prevMediaUrl, url]);
       setUrl('');
     } else {
@@ -57,14 +57,8 @@ export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
     <AddedUrl key={item} url={item} setMediaUrl={setMediaUrl} />
   ));
 
-  const sixthStepData: SixthStepType = {
-    files,
-    mediaUrl,
-  };
-
   useEffect(() => {
     const data = getStepData(6) as SixthStepType;
-    // TODO: Add files
     if (data.mediaUrl) {
       setMediaUrl(data.mediaUrl);
     }
@@ -74,8 +68,22 @@ export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
     return null;
   }
 
+  const nextStep = async () => {
+    setStepData(6, {
+      files,
+      mediaUrl,
+    });
+  };
+
+  // TODO: Delete file from storage
+
   return (
     <>
+      <StepsIndicator
+        step={step}
+        setStep={setStep}
+        setStepData={nextStep}
+      />
       <div className={stylesContainer.container}>
         <div className={styles.sixthStep}>
           <h2>Pictures and Videos</h2>
@@ -132,9 +140,7 @@ export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
 
       <StepsNavigation
         setStep={setStep}
-        setStepData={() => {
-          setStepData(6, sixthStepData);
-        }}
+        setStepData={nextStep}
       />
     </>
   );

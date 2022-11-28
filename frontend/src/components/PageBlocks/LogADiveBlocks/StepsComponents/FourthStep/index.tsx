@@ -13,6 +13,7 @@ import { SpeciesType } from '../../../../../firebase/firestore/models';
 import { StepProps } from '../../types/commonTypes';
 import { FourthStepType, ThirdStepType } from '../../types/stepTypes';
 import styles from './styles.module.scss';
+import { StepsIndicator } from '../../StepsIndicator';
 
 export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, userId }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
@@ -94,6 +95,11 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
 
   return (
     <>
+      <StepsIndicator
+        step={step}
+        setStep={setStep}
+        setStepData={() => setStepData(4, fourthStepData)}
+      />
       <div className={styles.fourthStep}>
         <div className={styles.container}>
           <div className={styles.title}>Species</div>
@@ -168,9 +174,7 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
       </div>
       <StepsNavigation
         setStep={setStep}
-        setStepData={() => {
-          setStepData(4, fourthStepData);
-        }}
+        setStepData={() => setStepData(4, fourthStepData)}
       />
     </>
   );

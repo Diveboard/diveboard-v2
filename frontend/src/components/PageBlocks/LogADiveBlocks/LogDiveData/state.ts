@@ -13,15 +13,58 @@ import {
 import { StepType } from '../types/commonTypes';
 
 const firstStep: FirstStepType = {
-  overview: undefined,
-  diveReviews: undefined,
-  diveActivities: undefined,
+  overview: {
+    diveNumber: undefined,
+    notes: undefined,
+    tripName: undefined,
+  },
+  diveReviews: {
+    overReview: 5,
+    diveDifficulty: 5,
+    marineLifeQuality: 5,
+    wreck: undefined,
+    bigFish: undefined,
+  },
+  diveActivities: {
+    recreational: false,
+    training: false,
+    nightDive: false,
+    drift: false,
+    deepDive: false,
+    wreck: false,
+    cave: false,
+    reef: false,
+    photo: false,
+    research: false,
+    other: undefined,
+  },
 };
 
 const secondStep: SecondStepType = {
-  parameters: undefined,
-  advancedParameters: undefined,
-  tanks: undefined,
+  parameters: {
+    time: '',
+    date: null,
+    maxDepth: undefined,
+    duration: undefined,
+    surfaceInterval: undefined,
+    safetySpots: [
+      {
+        id: 1,
+        period: undefined,
+        depth: undefined,
+      },
+    ],
+  },
+  advancedParameters: {
+    surfaceTemp: undefined,
+    bottomTemp: undefined,
+    weights: undefined,
+    waterType: undefined,
+    current: undefined,
+    altitude: undefined,
+    waterVisibility: undefined,
+  },
+  tanks: [],
 };
 
 const thirdStep: ThirdStepType = {
@@ -40,11 +83,11 @@ const fifthStep: FifthStepType = {
 
 const sixthStep: SixthStepType = {
   files: undefined,
-  mediaUrl: undefined,
+  mediaUrl: [],
 };
 
 const seventhStep: SeventhStepType = {
-  gears: undefined,
+  gears: [],
   save: false,
 };
 

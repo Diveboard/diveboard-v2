@@ -6,7 +6,7 @@ import { SecondStepType } from '../../../types/stepTypes';
 import styles from './styles.module.scss';
 
 type Props = {
-  setTanks: React.Dispatch<React.SetStateAction<SecondStepType['tanks']>>,
+  setTanks: (res: SecondStepType['tanks']) => void;
   tanks: SecondStepType['tanks'],
 };
 

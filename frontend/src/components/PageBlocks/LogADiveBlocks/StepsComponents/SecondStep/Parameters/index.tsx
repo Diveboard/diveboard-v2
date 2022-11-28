@@ -11,9 +11,7 @@ import { useWindowWidth } from '../../../../../../hooks/useWindowWidth';
 
 type Props = {
   parameters: SecondStepType['parameters'];
-  setParameters: React.Dispatch<
-  React.SetStateAction<SecondStepType['parameters']>
-  >;
+  setParameters: (res: SecondStepType['parameters']) => void;
   errors: SecondStepErrors;
   setErrors: React.Dispatch<React.SetStateAction<SecondStepErrors>>;
 };
@@ -34,7 +32,7 @@ export const Parameters: FC<Props> = ({
       <InputLabelWrapper label="Time In" mode={isMobile ? 'half' : 'common'}>
         <TimePickerInput
           setTime={(val) => params('time', val)}
-          currentTime={parameters.time}
+          currentTime={parameters.time || ''}
           error={errors.timeError}
           setError={(val) => {
             errorsParams('timeError', val as string);

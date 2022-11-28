@@ -47,6 +47,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       throw new Error('no user uid');
     }
 
+    // TODO: Add to service
     const snapshotUser = await firebaseAdmin
       .firestore().doc(`${firestorePaths.users.path}/${uid}`).get();
     const {

@@ -10,7 +10,7 @@ type Props = {
   addedToFavourite?: boolean;
   size?: 'normal' | 'small' | 'mobileScroll';
   onToggle?: () => void;
-  authorName?:string
+  authorName?: string
 };
 
 export const PhotoCard: FC<Props> = ({

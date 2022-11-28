@@ -8,9 +8,9 @@ import { setParams } from '../../../LogDiveHelpers/setParams/setParams';
 
 type Props = {
   overviewData: FirstStepType['overview'];
-  setOverviewData: React.Dispatch<React.SetStateAction<FirstStepType['overview']>>;
+  setOverviewData: (res: FirstStepType['overview']) => void;
   overviewDataErrors: FirstStepErrors;
-  setOverviewDataErrors: React.Dispatch<React.SetStateAction<FirstStepErrors>>;
+  setOverviewDataErrors: (res: FirstStepErrors) => void;
 };
 
 export const Overview: FC<Props> = ({
@@ -62,7 +62,7 @@ export const Overview: FC<Props> = ({
           Notes
         </h3>
         <TextArea
-          value={overviewData.notes}
+          value={overviewData.notes || ''}
           setValue={
             (val) => params('notes', val as string)
           }
@@ -73,7 +73,7 @@ export const Overview: FC<Props> = ({
           Trip Name
         </h3>
         <Input
-          value={overviewData.tripName}
+          value={overviewData.tripName || ''}
           setValue={
             (val) => params('tripName', val as string)
           }

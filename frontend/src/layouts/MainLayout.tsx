@@ -6,6 +6,7 @@ import { GuestHeader, UserHeader } from '../components/Header/DesktopHeader';
 import { MobileNavBar } from '../components/MobileNavBar';
 import { FooterMobile } from '../components/Footer/MobileFooter';
 import { AuthStatusContext } from './AuthLayout';
+import { LogDiveProvider } from '../components/PageBlocks/LogADiveBlocks/LogDiveData/LogDiveProvider';
 
 export const MainLayout: FC = ({ children }) => {
   const isWidth = useWindowWidth(500, 769);
@@ -15,7 +16,9 @@ export const MainLayout: FC = ({ children }) => {
   const headerComponent = userAuth ? userHeader : guestHeader;
   return (
     <>
-      {headerComponent}
+      <LogDiveProvider>
+        {headerComponent}
+      </LogDiveProvider>
 
       {children}
       {!isWidth ? <Footer /> : <FooterMobile />}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { CommentsBlock } from './CommentsBlock';
 import { SpotDiveData } from './SpotDiveData';
@@ -16,9 +16,38 @@ import {
 } from './DIVE_PAGE_DUMMY_DATA';
 
 import styles from './divePageBlock.module.scss';
+import { firestoreDivesService } from '../../firebase/firestore/firestoreServices/firestoreDivesService';
+import { Loader } from '../Loader';
+import { NoDive } from '../DiveManager/NoData';
 
-export const DivePageBlock = (): JSX.Element => {
+type Props = {
+  diveUserId: string,
+  diveId: string
+};
+
+export const DivePageBlock = ({ diveUserId, diveId }: Props): JSX.Element => {
   const isMobile = useWindowWidth(500, 769);
+
+  const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [dive, setDive] = useState(undefined);
+
+  const fetchDive = async () => {
+    if (diveUserId && diveId) {
+      setLoading(true);
+      const data = await firestoreDivesService.getDiveData(diveUserId, diveId);
+      if (!data) {
+        setError('No dives');
+      } else {
+        setDive(data);
+      }
+      setLoading(false);
+    }
+  };
+  console.log(dive);
+  useEffect(() => {
+    fetchDive();
+  }, [diveId, diveUserId]);
 
   const renderPhotoBlock = () => (isMobile
     ? <MobilePhotoGroup photos={photos} />
@@ -30,23 +59,28 @@ export const DivePageBlock = (): JSX.Element => {
 
   return (
     <section className={styles.wrapper}>
-      <SpotDiveData spotData={spotData} />
-      {renderPhotoBlock()}
-      <div className={styles.subwrapper}>
-        <ChartBlock diveData={diveData} />
-        <div className={styles.thirdWrapper}>
-          <GearUsed gearUsed={gearUsed} />
-          <div className={styles.speciesWrapper}>
-            <DivePageMobContainer>
-              <DivePageTitle title="Species Identified" />
-              <div className={styles.cardsWrapper}>
-                {renderSpeciesBlock()}
+      <Loader loading={isLoading} />
+      {!error ? (
+        <>
+          <SpotDiveData spotData={spotData} />
+          {renderPhotoBlock()}
+          <div className={styles.subwrapper}>
+            <ChartBlock diveData={diveData} />
+            <div className={styles.thirdWrapper}>
+              <GearUsed gearUsed={gearUsed} />
+              <div className={styles.speciesWrapper}>
+                <DivePageMobContainer>
+                  <DivePageTitle title="Species Identified" />
+                  <div className={styles.cardsWrapper}>
+                    {renderSpeciesBlock()}
+                  </div>
+                </DivePageMobContainer>
               </div>
-            </DivePageMobContainer>
+            </div>
           </div>
-        </div>
-      </div>
-      <CommentsBlock allComments={allComments} />
+          <CommentsBlock allComments={allComments} />
+        </>
+      ) : <NoDive />}
     </section>
   );
 };

@@ -3,19 +3,15 @@ import styles from './styles.module.scss';
 import { Icon } from '../../../Icons/Icon';
 import { useOutsideClick } from '../../../../hooks/useOutsideClick';
 import { ProfileImage } from '../../SettingsBlocks/SettingsItemContent/NotEditedContent/ProfileImage';
-
-type ImageType = {
-  imgScr: string,
-  favorites: number,
-  author: string,
-};
+import { UserType } from '../../../../types';
 
 type Props = {
-  image: ImageType;
+  image: string;
   open: boolean;
   onClose: () => void;
   handleNextSlide: () => void;
   handlePrevSlide: () => void;
+  user: UserType;
 };
 
 export const Lightbox: FC<Props> = ({
@@ -24,6 +20,7 @@ export const Lightbox: FC<Props> = ({
   onClose,
   handleNextSlide,
   handlePrevSlide,
+  user,
 }) => {
   const ref = useRef();
 
@@ -58,7 +55,7 @@ export const Lightbox: FC<Props> = ({
             </a>
             <div className={styles.btnsGroup}>
               <a
-                href={image.imgScr}
+                href={image}
                 download
                 target="_blank"
                 rel="noreferrer"
@@ -73,22 +70,24 @@ export const Lightbox: FC<Props> = ({
             </div>
           </div>
           <div className={styles.innerWrapper}>
-            {/* eslint-disable-next-line jsx-a11y/alt-text */}
+            {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
             <img
-              src={image.imgScr}
+              className={styles.img}
+              src={image}
+              alt="image"
             />
             <div className={styles.imgData}>
               <div className={styles.avatar}>
                 <ProfileImage
-                  imgSrc="/TEST_IMG_THEN_DELETE/photo3.jpg"
+                  imgSrc={user.photoURL || '/appIcons/no-photo.svg'}
                   size={44}
                 />
-                <span className={styles.authorName}>Alex Ksso</span>
+                <span className={styles.authorName}>{user.name}</span>
               </div>
               <div className={styles.imgDataText}>
-                <span className={styles.date}>September 15, 2021</span>
-                <span className={styles.place}>Philippines, Bohol Sea, Dap Dap</span>
-                <span className={styles.camera}>Camera: NIKON D800E</span>
+                {/* <span className={styles.date}>September 15, 2021</span> */}
+                {/* <span className={styles.place}>Philippines, Bohol Sea, Dap Dap</span> */}
+                {/* <span className={styles.camera}>Camera: NIKON D800E</span> */}
               </div>
             </div>
           </div>
