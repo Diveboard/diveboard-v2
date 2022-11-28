@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { getOptions } from './getChartOptions';
 import { useWindowWidthNumber } from '../../hooks/useWindowWidthNumber';
-import {SafetySpot} from "../PageBlocks/LogADiveBlocks/types/commonTypes";
+import { SafetySpot } from '../PageBlocks/LogADiveBlocks/types/commonTypes';
 
 React.useLayoutEffect = useEffect;
 

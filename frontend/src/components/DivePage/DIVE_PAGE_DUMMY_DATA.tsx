@@ -91,28 +91,28 @@ export const diveData = {
   points: [
     {
       depth: 1,
-      diveTime: 1,
-      temperature: 24,
+      period: 1,
+      id: 24,
     },
     {
       depth: 10,
-      diveTime: 10,
-      temperature: 20,
+      period: 10,
+      id: 20,
     },
     {
       depth: 5,
-      diveTime: 5,
-      temperature: 24,
+      period: 5,
+      id: 24,
     },
     {
       depth: 20,
-      diveTime: 20,
-      temperature: 24,
+      period: 20,
+      id: 24,
     },
     {
       depth: 2,
-      diveTime: 21,
-      temperature: 24,
+      period: 21,
+      id: 24,
     },
   ],
   characteristics: {

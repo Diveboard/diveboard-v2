@@ -5,14 +5,11 @@ import { DivePageMobContainer } from '../DivePageMobContainer';
 import { DivePageTitle } from '../DivePageTitle';
 
 import styles from './styles.module.scss';
+import { SafetySpot } from '../../PageBlocks/LogADiveBlocks/types/commonTypes';
 
 type Props = {
   diveData: {
-    points: {
-      depth: number;
-      diveTime: number;
-      temperature: number;
-    }[];
+    points: SafetySpot[];
     characteristics: {
       typeFillingBalon: string;
       ballon: string;
