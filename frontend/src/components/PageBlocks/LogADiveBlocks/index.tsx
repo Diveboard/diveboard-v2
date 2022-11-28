@@ -18,16 +18,17 @@ import styles from './styles.module.scss';
 import { firestoreDivesService } from '../../../firebase/firestore/firestoreServices/firestoreDivesService';
 import { Loader } from '../../Loader';
 import { convertAllStepsData } from './LogDiveHelpers/convertAllStepsData';
+import { DiveType } from '../../../types';
 
 type Props = {
+  dive?: DiveType;
   diveId?: string;
   userId: string;
 };
 
-export const LogDiveBlock = ({ diveId, userId }: Props) => {
+export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
   const [step, setStep] = useState<StepType>(0);
-  const [error, setError] = useState('');
-  const [isLoading, setLoading] = useState<boolean>(true);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const { setCurrentStep, setData, getAllStepsData } = useContext(LogDiveDataContext);
 
   const router = useRouter();
@@ -37,23 +38,12 @@ export const LogDiveBlock = ({ diveId, userId }: Props) => {
   }, [step]);
 
   useEffect(() => {
-    if (diveId && userId) {
-      (async () => {
-        setLoading(true);
-        const dive = await firestoreDivesService.getDiveData(userId, diveId);
-        if (!dive) {
-          setError('Dive is not found');
-        } else {
-          // @ts-ignore
-          setData(dive);
-          setStep(1);
-        }
-        setLoading(false);
-      })();
-    } else {
-      setLoading(false);
+    if (dive) {
+      // @ts-ignore
+      setData(dive);
+      setStep(1);
     }
-  }, [diveId, userId]);
+  }, [dive]);
 
   const saveDraft = async () => {
     const allStepsData = getAllStepsData();
@@ -66,43 +56,36 @@ export const LogDiveBlock = ({ diveId, userId }: Props) => {
       // @ts-ignore
       await firestoreDivesService.setDiveData(data, userId);
     }
+    setLoading(false);
     router.push('/dive-manager');
   };
 
   return (
     <div className={styles.diveWrapper}>
       <Loader loading={isLoading} />
-      {error ? (
-        <div className={styles.header}>
-          <h1>Dive is not found</h1>
-        </div>
-      ) : (
-        <>
-          {step !== 10 && (
-          <div className={styles.header}>
-            <h1>{diveId ? `Dive ${diveId}` : 'New Dive'}</h1>
-            <span onClick={saveDraft}>SAVE DRAFT</span>
-          </div>
-          )}
-          {!isLoading && (
-          <>
-            {step === 0 && <PreStep setStep={setStep} />}
-            {step !== 0 && step !== 10 && (
-            <StepsIndicator step={step} setStep={setStep} />
-            )}
-            <FirstStep step={step} setStep={setStep} />
-            <SecondStep step={step} setStep={setStep} />
-            <ThirdStep step={step} setStep={setStep} />
-            <FourthStep step={step} setStep={setStep} userId={userId} />
-            <FifthStep step={step} setStep={setStep} />
-            <SixthStep step={step} setStep={setStep} />
-            <SeventhStep step={step} setStep={setStep} />
-            <EighthStep step={step} setStep={setStep} />
-            <NinthStep step={step} setStep={setStep} diveId={diveId} />
-            {step === 10 && <CongratsStep setStep={setStep} />}
-          </>
-          )}
-        </>
+      {step !== 10 && (
+      <div className={styles.header}>
+        <h1>{diveId ? `Dive ${diveId}` : 'New Dive'}</h1>
+        <span onClick={saveDraft}>SAVE DRAFT</span>
+      </div>
+      )}
+      {!isLoading && (
+      <>
+        {step === 0 && <PreStep setStep={setStep} />}
+        {step !== 0 && step !== 10 && (
+        <StepsIndicator step={step} setStep={setStep} />
+        )}
+        <FirstStep step={step} setStep={setStep} />
+        <SecondStep step={step} setStep={setStep} />
+        <ThirdStep step={step} setStep={setStep} />
+        <FourthStep step={step} setStep={setStep} userId={userId} />
+        <FifthStep step={step} setStep={setStep} />
+        <SixthStep step={step} setStep={setStep} />
+        <SeventhStep step={step} setStep={setStep} />
+        <EighthStep step={step} setStep={setStep} />
+        <NinthStep step={step} setStep={setStep} diveId={diveId} />
+        {step === 10 && <CongratsStep setStep={setStep} />}
+      </>
       )}
     </div>
   );

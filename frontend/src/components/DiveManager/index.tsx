@@ -24,11 +24,13 @@ import { Backdrop } from '../Backdrop';
 import styles from './styles.module.scss';
 import { firestoreDivesService } from '../../firebase/firestore/firestoreServices/firestoreDivesService';
 import { Loader } from '../Loader';
+import { DiveType } from '../../types';
 
 type Props = {
   userId: string;
+  userDives: Array<DiveType>
 };
-const DiveManager = ({ userId }: Props) => {
+const DiveManager = ({ userId, userDives }: Props) => {
   const [checkboxItem, setCheckboxItem] = useState(false);
   const [isChangeSelectAll, setChangeSelectAll] = useState(false);
   const [isShowSettings, setShowSettings] = useState(false);
@@ -202,23 +204,25 @@ const DiveManager = ({ userId }: Props) => {
         closePopup();
       }
     }
-
     document.addEventListener('keydown', handleEscapeKey);
     return () => document.removeEventListener('keydown', handleEscapeKey);
   }, []);
 
   useEffect(() => {
-    fetchDives();
+    if (!Array.isArray(userDives) || userDives.length === 0) {
+      setError('No dives');
+    } else {
+      setDives(userDives.map((item) => ({ dive: item, checked: false })));
+    }
+    setLoading(false);
   }, [userId]);
 
   const sortDives = (divesData) => {
     if (sortType === 'recent') {
-      // @ts-ignore
-      return divesData.sort((a, b) => new Date(b.dive.date) - new Date(a.dive.date));
+      return divesData.sort((a, b) => +new Date(b.dive.date) - +new Date(a.dive.date));
     }
     if (sortType === 'oldest') {
-      // @ts-ignore
-      return divesData.sort((a, b) => new Date(a.dive.date) - new Date(b.dive.date));
+      return divesData.sort((a, b) => +new Date(a.dive.date) - +new Date(b.dive.date));
     }
     if (sortType === 'drafts') {
       return divesData.filter((dive) => dive.dive.draft);
