@@ -6,7 +6,7 @@ import styles from './styles.module.scss';
 
 type Props = {
   setStep: React.Dispatch<React.SetStateAction<StepType>>
-  setStepData: () => void
+  setStepData: () => void;
   setErrors?: () => boolean
 };
 
@@ -16,10 +16,8 @@ export const StepsNavigation: FC<Props> = ({
   setErrors,
 }) => {
   const setPrev = () => {
-    if (!setErrors || !setErrors()) {
-      setStepData();
-      setStep((prevState) => prevState - 1 as StepType);
-    }
+    setStepData();
+    setStep((prevState) => prevState - 1 as StepType);
   };
 
   const setNext = () => {

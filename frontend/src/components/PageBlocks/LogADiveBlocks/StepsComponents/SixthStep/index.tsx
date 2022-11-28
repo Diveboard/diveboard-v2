@@ -14,6 +14,7 @@ import { SixthStepType } from '../../types/stepTypes';
 import { StepProps } from '../../types/commonTypes';
 import stylesContainer from '../../styles.module.scss';
 import styles from './styles.module.scss';
+import { StepsIndicator } from '../../StepsIndicator';
 
 export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
@@ -76,6 +77,11 @@ export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
 
   return (
     <>
+      <StepsIndicator
+        step={step}
+        setStep={setStep}
+        setStepData={() => setStepData(6, sixthStepData)}
+      />
       <div className={stylesContainer.container}>
         <div className={styles.sixthStep}>
           <h2>Pictures and Videos</h2>
@@ -132,9 +138,7 @@ export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
 
       <StepsNavigation
         setStep={setStep}
-        setStepData={() => {
-          setStepData(6, sixthStepData);
-        }}
+        setStepData={() => setStepData(6, sixthStepData)}
       />
     </>
   );

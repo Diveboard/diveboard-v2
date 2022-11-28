@@ -26,6 +26,7 @@ import {
   firestoreGuidesService,
 } from '../../../../../firebase/firestore/firestoreServices/firestoreGuidesService';
 import { firestoreBuddiesService } from '../../../../../firebase/firestore/firestoreServices/firestoreBuddiesService';
+import { StepsIndicator } from '../../StepsIndicator';
 
 export type BuddyItemType = {
   id: string;
@@ -95,6 +96,11 @@ export const FifthStep: FC<StepProps> = ({
         async
         src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}&libraries=places`}
       />
+      <StepsIndicator
+        step={step}
+        setStep={setStep}
+        setStepData={() => setStepData(5, fifthStepData)}
+      />
       <div className={containerStyle.container}>
         <div className={styles.fifthStep}>
           <h2>
@@ -151,9 +157,7 @@ export const FifthStep: FC<StepProps> = ({
       </div>
       <StepsNavigation
         setStep={setStep}
-        setStepData={() => {
-          setStepData(5, fifthStepData);
-        }}
+        setStepData={() => setStepData(5, fifthStepData)}
       />
       {openPopup && (
         <Popup

@@ -15,6 +15,7 @@ import { StepProps } from '../../types/commonTypes';
 import { SecondStepType } from '../../types/stepTypes';
 import { SecondStepErrors } from '../../types/errorTypes';
 import styles from './styles.module.scss';
+import { StepsIndicator } from '../../StepsIndicator';
 
 export const SecondStep: FC<StepProps> = ({ step, setStep }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
@@ -74,6 +75,12 @@ export const SecondStep: FC<StepProps> = ({ step, setStep }) => {
 
   return (
     <div>
+      <StepsIndicator
+        step={step}
+        setStep={setStep}
+        setErrors={setErrors}
+        setStepData={() => setStepData(2, data)}
+      />
       {data && (
       <>
         <div className={styles.secondStep}>
@@ -146,9 +153,7 @@ export const SecondStep: FC<StepProps> = ({ step, setStep }) => {
         <StepsNavigation
           setStep={setStep}
           setErrors={setErrors}
-          setStepData={() => {
-            setStepData(2, data);
-          }}
+          setStepData={() => setStepData(2, data)}
         />
       </>
       )}

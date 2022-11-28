@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { StepsIndicator } from './StepsIndicator';
 import { PreStep } from './StepsComponents/PreStep';
 import { FirstStep } from './StepsComponents/FirstStep';
 import { SecondStep } from './StepsComponents/SecondStep';
@@ -72,9 +71,6 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
       {!isLoading && (
       <>
         {step === 0 && <PreStep setStep={setStep} />}
-        {step !== 0 && step !== 10 && (
-        <StepsIndicator step={step} setStep={setStep} />
-        )}
         <FirstStep step={step} setStep={setStep} />
         <SecondStep step={step} setStep={setStep} />
         <ThirdStep step={step} setStep={setStep} />

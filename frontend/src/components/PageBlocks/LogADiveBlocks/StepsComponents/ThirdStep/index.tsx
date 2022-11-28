@@ -13,6 +13,7 @@ import styles from './styles.module.scss';
 import { firestoreSpotsService } from '../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
 import { setStepErrors } from '../../LogDiveHelpers/stepsErrors/setStepErrors';
 import { ThirdStepErrors } from '../../types/errorTypes';
+import { StepsIndicator } from '../../StepsIndicator';
 
 export const ThirdStep: FC<StepProps> = ({
   step,
@@ -92,6 +93,12 @@ export const ThirdStep: FC<StepProps> = ({
 
   return (
     <>
+      <StepsIndicator
+        step={step}
+        setStep={setStep}
+        setErrors={setErrors}
+        setStepData={() => setStepData(3, data)}
+      />
       <div className={styles.thirdStep}>
         <h2>Dive Site</h2>
 
@@ -139,9 +146,7 @@ export const ThirdStep: FC<StepProps> = ({
       <StepsNavigation
         setStep={setStep}
         setErrors={setErrors}
-        setStepData={() => {
-          setStepData(3, data);
-        }}
+        setStepData={() => setStepData(3, data)}
       />
     </>
   );

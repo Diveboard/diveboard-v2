@@ -11,6 +11,7 @@ import { StepProps } from '../../types/commonTypes';
 import { FirstStepType } from '../../types/stepTypes';
 import { FirstStepErrors } from '../../types/errorTypes';
 import styles from '../../styles.module.scss';
+import { StepsIndicator } from '../../StepsIndicator';
 
 export const FirstStep: FC<StepProps> = ({ step, setStep }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
@@ -38,6 +39,12 @@ export const FirstStep: FC<StepProps> = ({ step, setStep }) => {
 
   return (
     <div>
+      <StepsIndicator
+        step={step}
+        setStep={setStep}
+        setErrors={setErrors}
+        setStepData={() => setStepData(1, data)}
+      />
       {data && (
       <>
         <div className={styles.container}>
@@ -67,9 +74,7 @@ export const FirstStep: FC<StepProps> = ({ step, setStep }) => {
         <StepsNavigation
           setStep={setStep}
           setErrors={setErrors}
-          setStepData={() => {
-            setStepData(1, data);
-          }}
+          setStepData={() => setStepData(1, data)}
         />
       </>
       )}

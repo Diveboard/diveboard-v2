@@ -8,6 +8,7 @@ import { StepProps } from '../../types/commonTypes';
 import { EighthStepType } from '../../types/stepTypes';
 import stylesContainer from '../../styles.module.scss';
 import styles from './styles.module.scss';
+import { StepsIndicator } from '../../StepsIndicator';
 
 export const EighthStep: FC<StepProps> = ({
   step,
@@ -22,11 +23,15 @@ export const EighthStep: FC<StepProps> = ({
   if (step !== 8) {
     return null;
   }
+
   return (
-
     <>
+      <StepsIndicator
+        step={step}
+        setStep={setStep}
+        setStepData={() => setStepData(8, eighthStep)}
+      />
       <div className={stylesContainer.container}>
-
         {!currentSurveyMode && (
           <div className={styles.eighthStep}>
             <div className={styles.titleBlock}>
@@ -61,9 +66,7 @@ export const EighthStep: FC<StepProps> = ({
       {!currentSurveyMode && (
         <StepsNavigation
           setStep={setStep}
-          setStepData={() => {
-            setStepData(8, eighthStep);
-          }}
+          setStepData={() => setStepData(8, eighthStep)}
         />
       )}
 

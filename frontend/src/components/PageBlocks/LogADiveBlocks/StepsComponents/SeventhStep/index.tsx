@@ -14,6 +14,7 @@ import { GearForm } from './GearForm';
 import { StepProps } from '../../types/commonTypes';
 import { SeventhStepType } from '../../types/stepTypes';
 import styles from './styles.module.scss';
+import { StepsIndicator } from '../../StepsIndicator';
 
 export const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
   const isMobile = useWindowWidth(500, 768);
@@ -90,6 +91,11 @@ export const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
 
   return (
     <>
+      <StepsIndicator
+        step={step}
+        setStep={setStep}
+        setStepData={() => setStepData(7, seventhStepData)}
+      />
       <div className={styles.container}>
         <h2>Gear</h2>
         <p>Track the gear that you used.</p>
@@ -116,9 +122,7 @@ export const SeventhStep: FC<StepProps> = ({ step, setStep }) => {
       </div>
       <StepsNavigation
         setStep={setStep}
-        setStepData={() => {
-          setStepData(7, seventhStepData);
-        }}
+        setStepData={() => setStepData(7, seventhStepData)}
       />
     </>
   );

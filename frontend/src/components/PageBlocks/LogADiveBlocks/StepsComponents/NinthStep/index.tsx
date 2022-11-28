@@ -17,6 +17,7 @@ import styles from './styles.module.scss';
 import { firestoreDivesService } from '../../../../../firebase/firestore/firestoreServices/firestoreDivesService';
 import { AuthStatusContext } from '../../../../../layouts/AuthLayout';
 import { Loader } from '../../../../Loader';
+import { StepsIndicator } from '../../StepsIndicator';
 
 export const NinthStep: FC<StepProps & { diveId?: string }> = ({
   step,
@@ -80,6 +81,7 @@ export const NinthStep: FC<StepProps & { diveId?: string }> = ({
 
   return (
     <>
+      <StepsIndicator step={step} setStep={setStep} setStepData={() => {}} />
       <div className={containerStyle.container}>
         <div className={styles.ninthStep}>
           <Loader loading={isLoading} />
