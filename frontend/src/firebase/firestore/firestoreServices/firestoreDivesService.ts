@@ -56,7 +56,7 @@ export const firestoreDivesService = {
         const dive = {
           ...data,
           id: doc.id,
-          date: data.diveData.date ? convertTimestampDate(data.diveData.date) : null,
+          date: data.diveData?.date ? convertTimestampDate(data.diveData.date) : null,
         };
         dives.push(dive);
       });
@@ -133,6 +133,25 @@ export const firestoreDivesService = {
       console.log(e.message);
       throw new Error('update dive properties error');
     }
+  },
+
+  getImagesInDives: async (
+    userId: string,
+  ) => {
+    const docRef = collection(db, `Test_Dives/${userId}/userDives`);
+    const q = query(
+      docRef,
+      where('externalImgsUrls', '!=', []),
+    );
+    const querySnapshot = await getDocs(q);
+    let images = [];
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    querySnapshot.forEach((doc) => {
+      const { externalImgsUrls } = doc.data();
+      images = [...images, ...externalImgsUrls];
+    });
+    // @ts-ignore
+    return [...new Set(images)];
   },
 
   getUserSpeciesInDives: async (

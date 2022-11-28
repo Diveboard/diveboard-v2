@@ -8,7 +8,7 @@ type Props = {
 };
 
 export const AddedUrl: FC<Props> = ({ url, setMediaUrl }) => {
-  const deleteUrlHandler = () => {
+  const deleteUrlHandler = async () => {
     setMediaUrl((prevUrls) => prevUrls.filter((item) => item !== url));
   };
   return (

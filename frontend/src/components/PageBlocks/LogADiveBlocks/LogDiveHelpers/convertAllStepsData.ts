@@ -6,9 +6,11 @@ import {
 } from './convertDiveActivities';
 import { convertTimestampDate } from '../../../../utils/convertTimestampDate';
 import { SafetySpot } from '../types/commonTypes';
+import { firestoreGalleryService } from '../../../../firebase/firestore/firestoreServices/firestoreGalleryService';
 
-export const convertAllStepsData = (
+export const convertAllStepsData = async (
   stepsData: AllStepsDataType,
+  userId: string,
   draft: boolean = false,
 ) => {
   const replaceUndefinedToNull = (obj) => {
@@ -27,6 +29,25 @@ export const convertAllStepsData = (
       return spot;
     }
   });
+
+  const uploadFiles = async () => {
+    const filesUrls = stepsData.sixthStep.mediaUrl;
+    const { files } = stepsData.sixthStep;
+    if (files?.length) {
+      for (let i = 0; i < files.length; i++) {
+        // eslint-disable-next-line no-await-in-loop
+        const res = await firestoreGalleryService.uploadGalleryFile(userId, files[i].file);
+        // eslint-disable-next-line no-await-in-loop
+        const imageRef = await firestoreGalleryService.getGalleryFile(res.ref);
+        if (imageRef) {
+          filesUrls.push(imageRef);
+        } else {
+          throw new Error('Error');
+        }
+      }
+    }
+    return filesUrls;
+  };
 
   return {
     buddies: stepsData.fifthStep.buddies || [],
@@ -48,7 +69,7 @@ export const convertAllStepsData = (
       ...replaceUndefinedToNull(stepsData.firstStep.diveReviews),
     },
     draft,
-    externalImgsUrls: stepsData.sixthStep.mediaUrl || [],
+    externalImgsUrls: await uploadFiles(),
     gears: stepsData.seventhStep.gears?.map((gear) => replaceUndefinedToNull(gear)) || [],
     publishingMode: stepsData.ninthStep.publishingMode,
     species: stepsData.fourthStep.species || [],

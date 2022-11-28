@@ -83,7 +83,7 @@ const fifthStep: FifthStepType = {
 
 const sixthStep: SixthStepType = {
   files: undefined,
-  mediaUrl: undefined,
+  mediaUrl: [],
 };
 
 const seventhStep: SeventhStepType = {

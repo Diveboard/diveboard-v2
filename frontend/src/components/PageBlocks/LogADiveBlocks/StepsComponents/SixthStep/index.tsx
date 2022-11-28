@@ -42,7 +42,6 @@ export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
         setError('duplicate url');
         return;
       }
-
       setMediaUrl((prevMediaUrl) => [...prevMediaUrl, url]);
       setUrl('');
     } else {
@@ -58,14 +57,8 @@ export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
     <AddedUrl key={item} url={item} setMediaUrl={setMediaUrl} />
   ));
 
-  const sixthStepData: SixthStepType = {
-    files,
-    mediaUrl,
-  };
-
   useEffect(() => {
     const data = getStepData(6) as SixthStepType;
-    // TODO: Add files
     if (data.mediaUrl) {
       setMediaUrl(data.mediaUrl);
     }
@@ -75,12 +68,21 @@ export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
     return null;
   }
 
+  const nextStep = async () => {
+    setStepData(6, {
+      files,
+      mediaUrl,
+    });
+  };
+
+  // TODO: Delete file from storage
+
   return (
     <>
       <StepsIndicator
         step={step}
         setStep={setStep}
-        setStepData={() => setStepData(6, sixthStepData)}
+        setStepData={nextStep}
       />
       <div className={stylesContainer.container}>
         <div className={styles.sixthStep}>
@@ -138,7 +140,7 @@ export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
 
       <StepsNavigation
         setStep={setStep}
-        setStepData={() => setStepData(6, sixthStepData)}
+        setStepData={nextStep}
       />
     </>
   );

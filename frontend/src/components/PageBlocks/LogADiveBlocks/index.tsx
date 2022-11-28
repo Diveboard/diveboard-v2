@@ -55,8 +55,8 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
 
   const saveDraft = async () => {
     const allStepsData = getAllStepsData();
-    const data = convertAllStepsData(allStepsData, true);
     setLoading(true);
+    const data = await convertAllStepsData(allStepsData, userId, true);
     if (diveId) {
       // @ts-ignore
       await firestoreDivesService.updateDiveData(userId, diveId, data);
@@ -64,7 +64,6 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
       // @ts-ignore
       await firestoreDivesService.setDiveData(data, userId);
     }
-    setLoading(false);
     router.push('/dive-manager');
   };
 
@@ -88,8 +87,8 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
         <SixthStep step={step} setStep={setStep} />
         <SeventhStep step={step} setStep={setStep} />
         <EighthStep step={step} setStep={setStep} />
-        <NinthStep step={step} setStep={setStep} diveId={diveId} />
-        {step === 10 && <CongratsStep setStep={setStep} />}
+        <NinthStep step={step} setStep={setStep} diveId={diveId} userId={userId} />
+        {step === 10 && <CongratsStep />}
       </>
       )}
     </div>

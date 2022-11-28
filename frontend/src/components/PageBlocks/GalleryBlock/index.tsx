@@ -5,106 +5,14 @@ import { buttons } from '../../DiveManager/diveData';
 import { SearchAnimatedInput } from '../../Input/SearchAnimatedInput';
 import { PhotoCard } from '../../Cards/PhotoCard';
 import { Lightbox } from './Lightbox';
+import { UserType } from '../../../types';
 
-const photos = [
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo2.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo3.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo4.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo2.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/shark.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo5.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo6.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo2.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo3.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo4.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/shark.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo5.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo6.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo2.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo3.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo4.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/shark.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo5.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo6.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-];
+type Props = {
+  user: UserType,
+  images: Array<string>
+};
 
-export const GalleryBlock = () => {
+export const GalleryBlock = ({ images, user }: Props) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [openLightbox, setOpenLightbox] = useState(false);
   const [imageIndex, setImageIndex] = useState<number>(null);
@@ -129,7 +37,7 @@ export const GalleryBlock = () => {
       <div
         className={styles.imageGrid}
       >
-        {photos.map((photo, index) => (
+        {images.map((photo, index) => (
           <div
               /* eslint-disable-next-line react/no-array-index-key */
             key={index}
@@ -139,20 +47,21 @@ export const GalleryBlock = () => {
             }}
           >
             <PhotoCard
-              imgSrc={photo.imgScr}
-              favourites={photo.favorites}
-              authorName={photo.author}
+              imgSrc={photo}
+              favourites={0}
+              authorName={user.name}
             />
           </div>
         ))}
       </div>
       <Lightbox
         open={openLightbox}
-        image={photos[imageIndex]}
+        image={images[imageIndex]}
+        user={user}
         onClose={() => {
           setOpenLightbox(false);
         }}
-        handleNextSlide={() => (imageIndex < photos.length - 1
+        handleNextSlide={() => (imageIndex < images.length - 1
           ? setImageIndex((idx) => idx + 1)
           : setOpenLightbox(false))}
         handlePrevSlide={() => (imageIndex > 0

@@ -19,10 +19,11 @@ import { AuthStatusContext } from '../../../../../layouts/AuthLayout';
 import { Loader } from '../../../../Loader';
 import { StepsIndicator } from '../../StepsIndicator';
 
-export const NinthStep: FC<StepProps & { diveId?: string }> = ({
+export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
   step,
   setStep,
   diveId,
+  userId,
 }) => {
   const { userAuth } = useContext(AuthStatusContext);
   const { getStepData, setStepData, getAllStepsData } = useContext(LogDiveDataContext);
@@ -66,7 +67,7 @@ export const NinthStep: FC<StepProps & { diveId?: string }> = ({
   }
 
   const publishStepsData = async () => {
-    const data = convertAllStepsData(allStepsData);
+    const data = await convertAllStepsData(allStepsData, userId);
     setLoading(true);
     if (diveId) {
       // @ts-ignore
