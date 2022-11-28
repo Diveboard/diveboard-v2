@@ -31,7 +31,7 @@ type Props = {
   setNewPoint: React.Dispatch<React.SetStateAction<boolean>>;
   setNewPointCoords: React.Dispatch<React.SetStateAction<{ lat: number, lng: number }>>;
   createdNewSpotId: string;
-  setChosenPointId: React.Dispatch<React.SetStateAction<string>>;
+  setChosenPointId: (res: string) => void;
   setButton:React.Dispatch<React.SetStateAction<string>>;
   disableError?: () => void;
 };

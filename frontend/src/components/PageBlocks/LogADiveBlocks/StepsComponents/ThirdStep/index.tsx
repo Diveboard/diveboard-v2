@@ -19,6 +19,7 @@ export const ThirdStep: FC<StepProps> = ({
   setStep,
 }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
+  const [data, setData] = useState<ThirdStepType>(undefined);
   const userLocation = useUserLocation();
   const [location, setLocation] = useState({
     lat: 41.5,
@@ -36,7 +37,6 @@ export const ThirdStep: FC<StepProps> = ({
 
   const [zoom, setZoom] = useState(5);
 
-  const [chosenPointId, setChosenPointId] = useState<string>(null);
   const [clickedPoint, setClickedPoint] = useState('');
 
   const createdNewSpotId = useRef<string>();
@@ -46,10 +46,6 @@ export const ThirdStep: FC<StepProps> = ({
     text: item.name,
   })), [markers]);
 
-  const thirdStepData: ThirdStepType = {
-    spotId: chosenPointId,
-  };
-
   useEffect(() => {
     if (userLocation) {
       setLocation(userLocation);
@@ -58,21 +54,21 @@ export const ThirdStep: FC<StepProps> = ({
 
   useEffect(() => {
     if (!createSpotMode && newSpotName && markers.length) {
-      const spotId = markers.find((item) => item.name === newSpotName);
-      if (spotId) {
-        setChosenPointId(spotId.id);
+      const spot = markers.find((item) => item.name === newSpotName);
+      if (spot) {
+        setData({ spotId: spot.id });
       }
     }
   }, [createSpotMode, step, markers]);
 
   useEffect(() => {
     const { spotId } = getStepData(3) as ThirdStepType;
+    setData({ spotId });
     (async () => {
       if (spotId) {
         const spot = await firestoreSpotsService.getSpotById(
           spotId,
         );
-        setChosenPointId(spotId);
         setLocation({ lat: spot.lat, lng: spot.lng });
         setClickedPoint(spot.name);
       }
@@ -85,7 +81,7 @@ export const ThirdStep: FC<StepProps> = ({
 
   const setErrors = () => setStepErrors({
     stepType: 3,
-    data: chosenPointId,
+    data: data.spotId,
     errors: spotError,
     setErrors: setSpotError,
   });
@@ -110,7 +106,7 @@ export const ThirdStep: FC<StepProps> = ({
           setNewPoint={setCreateSpotMode}
           setNewPointCoords={setNewPointCoords}
           createdNewSpotId={createdNewSpotId.current}
-          setChosenPointId={setChosenPointId}
+          setChosenPointId={(res) => setData({ spotId: res })}
           setButton={setClickedPoint}
           disableError={() => setSpotError({ spotError: '' })}
         />
@@ -120,8 +116,8 @@ export const ThirdStep: FC<StepProps> = ({
             <ButtonGroup
               buttons={buttons}
               onClick={(buttonName) => {
-                const spotId = markers.find((item) => item.name === buttonName);
-                setChosenPointId(spotId.id);
+                const spot = markers.find((item) => item.name === buttonName);
+                setData({ spotId: spot.id });
                 setSpotError({ spotError: '' });
               }}
               defaultChecked={newSpotName || clickedPoint}
@@ -144,7 +140,7 @@ export const ThirdStep: FC<StepProps> = ({
         setStep={setStep}
         setErrors={setErrors}
         setStepData={() => {
-          setStepData(3, thirdStepData);
+          setStepData(3, data);
         }}
       />
     </>
