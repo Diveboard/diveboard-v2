@@ -21,6 +21,13 @@ export const GalleryBlock = ({ images, user }: Props) => {
     document.body.style.overflow = 'overlay';
   }, []);
 
+  const filterBySearch = (gallery: Array<ImageInfo>) => {
+    if (searchQuery) {
+      return gallery.filter((img) => img.spot.toLowerCase().includes(searchQuery.toLowerCase()));
+    }
+    return gallery;
+  };
+
   const sortImages = (gallery: Array<ImageInfo>) => {
     if (sortType === 'recent') {
       return gallery.sort((a, b) => +new Date(b.date) - +new Date(a.date));
@@ -51,7 +58,7 @@ export const GalleryBlock = ({ images, user }: Props) => {
       <div
         className={styles.imageGrid}
       >
-        {sortImages(images).map((photo, index) => (
+        {filterBySearch(sortImages(images)).map((photo, index) => (
           <div
               /* eslint-disable-next-line react/no-array-index-key */
             key={index}
