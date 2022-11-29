@@ -148,6 +148,9 @@ export const firestoreDivesService = {
     // eslint-disable-next-line @typescript-eslint/no-shadow
     querySnapshot.forEach((doc) => {
       const { externalImgsUrls } = doc.data();
+      // const spot = spotId ? await firestoreSpotsService.getSpotNameById(spotId) : null;
+      // TODO: Add info to gallery
+      // Date, spot name, draft
       images = [...images, ...externalImgsUrls];
     });
     // @ts-ignore

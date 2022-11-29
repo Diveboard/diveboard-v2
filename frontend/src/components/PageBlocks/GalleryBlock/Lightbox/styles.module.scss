@@ -27,11 +27,19 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 30px;
+
+  > a {
+    cursor: pointer;
+  }
 }
 
 .btnsGroup {
   display: flex;
   flex-direction: row;
+
+  a {
+    cursor: pointer;
+  }
 }
 
 .innerWrapper {
@@ -100,10 +108,13 @@
   flex-direction: row;
   justify-content: flex-end;
   color: white;
-  margin-top: 30px;
+  position: absolute;
+  bottom: 30px;
+  left: 80vw;
 
-  >a {
+  > a {
     display: flex;
+    cursor: pointer;
   }
 }
 
@@ -113,11 +124,18 @@
     padding: 0 10px;
   }
 
+  .footerNav {
+    bottom: 80px;
+    left: 85vw;
+  }
+
   .outerWrapper {
     margin: 90px auto 0;
   }
 
   .innerWrapper {
+    position: static;
+
     img {
       max-height: 50vh;
     }
@@ -131,6 +149,7 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 0;
-    bottom: -120px;
+    bottom: 60px;
+    left: 0;
   }
 }
