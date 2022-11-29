@@ -13,6 +13,13 @@ export type UserType = {
   qualifications: string[];
 };
 
+export type ImageInfo = {
+  img: string,
+  date: Date | null,
+  draft: boolean,
+  spot: string
+};
+
 export type DiveType =
   {
     userName: string;

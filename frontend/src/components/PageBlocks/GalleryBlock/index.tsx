@@ -5,29 +5,43 @@ import { buttons } from '../../DiveManager/diveData';
 import { SearchAnimatedInput } from '../../Input/SearchAnimatedInput';
 import { PhotoCard } from '../../Cards/PhotoCard';
 import { Lightbox } from './Lightbox';
-import { UserType } from '../../../types';
+import { ImageInfo, UserType } from '../../../types';
 
 type Props = {
   user: UserType,
-  images: Array<string>
+  images: Array<ImageInfo>
 };
 
 export const GalleryBlock = ({ images, user }: Props) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [openLightbox, setOpenLightbox] = useState(false);
   const [imageIndex, setImageIndex] = useState<number>(null);
-
+  const [sortType, setSortType] = useState('recent');
   useEffect(() => {
     document.body.style.overflow = 'overlay';
   }, []);
 
+  const sortImages = (gallery: Array<ImageInfo>) => {
+    if (sortType === 'recent') {
+      return gallery.sort((a, b) => +new Date(b.date) - +new Date(a.date));
+    }
+    if (sortType === 'oldest') {
+      return gallery.sort((a, b) => +new Date(a.date) - +new Date(b.date));
+    }
+    if (sortType === 'drafts') {
+      return gallery.filter((img) => img.draft);
+    }
+    return gallery;
+  };
+
   return (
-    <div className={styles.wrapper}>
+    <div className={`${styles.wrapper} ${styles['min-height-wrapper']}`}>
       <h1>Gallery</h1>
       <div className={styles.sortBar}>
         <ButtonGroup
           buttons={buttons}
-          onClick={() => {}}
+          onClick={(val) => setSortType(val)}
+          defaultChecked={sortType}
         />
         <SearchAnimatedInput
           value={searchQuery}
@@ -37,7 +51,7 @@ export const GalleryBlock = ({ images, user }: Props) => {
       <div
         className={styles.imageGrid}
       >
-        {images.map((photo, index) => (
+        {sortImages(images).map((photo, index) => (
           <div
               /* eslint-disable-next-line react/no-array-index-key */
             key={index}

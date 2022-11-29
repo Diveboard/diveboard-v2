@@ -3,10 +3,11 @@ import styles from './styles.module.scss';
 import { Icon } from '../../../Icons/Icon';
 import { useOutsideClick } from '../../../../hooks/useOutsideClick';
 import { ProfileImage } from '../../SettingsBlocks/SettingsItemContent/NotEditedContent/ProfileImage';
-import { UserType } from '../../../../types';
+import { ImageInfo, UserType } from '../../../../types';
+import { month } from '../../../../utils/date';
 
 type Props = {
-  image: string;
+  image: ImageInfo;
   open: boolean;
   onClose: () => void;
   handleNextSlide: () => void;
@@ -37,6 +38,11 @@ export const Lightbox: FC<Props> = ({
 
   if (!open) return null;
 
+  const convertDate = (dateStr: Date) => {
+    const date = new Date(dateStr);
+    return `${month[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+  };
+
   return (
     <div
       className={styles.mask}
@@ -55,7 +61,7 @@ export const Lightbox: FC<Props> = ({
             </a>
             <div className={styles.btnsGroup}>
               <a
-                href={image}
+                href={image.img}
                 download
                 target="_blank"
                 rel="noreferrer"
@@ -73,7 +79,7 @@ export const Lightbox: FC<Props> = ({
             {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
             <img
               className={styles.img}
-              src={image}
+              src={image.img}
               alt="image"
             />
             <div className={styles.imgData}>
@@ -85,8 +91,10 @@ export const Lightbox: FC<Props> = ({
                 <span className={styles.authorName}>{user.name}</span>
               </div>
               <div className={styles.imgDataText}>
-                {/* <span className={styles.date}>September 15, 2021</span> */}
-                {/* <span className={styles.place}>Philippines, Bohol Sea, Dap Dap</span> */}
+                <span className={styles.date}>
+                  {convertDate(image.date)}
+                </span>
+                <span className={styles.place}>{image.spot}</span>
                 {/* <span className={styles.camera}>Camera: NIKON D800E</span> */}
               </div>
             </div>

@@ -251,7 +251,7 @@ const DiveManager = ({ userId, userDives }: Props) => {
   ));
 
   return (
-    <section className={`${styles.wrapper} ${styles['dive-manager-wrapper']}`}>
+    <section className={`${styles.wrapper} ${styles['min-height-wrapper']}`}>
       <div className={styles.subheader}>
         <div className={styles.title}>Dive Manager</div>
         <div ref={dropdownKebab}>

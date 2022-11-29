@@ -38,7 +38,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         photoURL,
         name: displayName,
       },
-      images,
+      images: JSON.parse(JSON.stringify(images)),
     },
   };
 };

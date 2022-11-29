@@ -3,9 +3,10 @@ import Image from 'next/image';
 import { imageLoader } from '../../Icons/Icon';
 import styles from './styles.module.scss';
 import FavoritesBlock from './FavoritesBlock';
+import { ImageInfo } from '../../../types';
 
 type Props = {
-  imgSrc: string;
+  imgSrc: ImageInfo;
   favourites: number;
   addedToFavourite?: boolean;
   size?: 'normal' | 'small' | 'mobileScroll';
@@ -43,7 +44,7 @@ export const PhotoCard: FC<Props> = ({
     >
       {size ? (
         <Image
-          src={imgSrc}
+          src={imgSrc.img}
           layout="fill"
           loader={imageLoader}
           className={styles.img}
@@ -52,7 +53,7 @@ export const PhotoCard: FC<Props> = ({
       ) : (
       // eslint-disable-next-line jsx-a11y/img-redundant-alt
         <img
-          src={imgSrc}
+          src={imgSrc.img}
           alt="photo"
         />
       )}

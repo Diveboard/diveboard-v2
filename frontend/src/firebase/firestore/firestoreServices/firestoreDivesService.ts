@@ -147,14 +147,30 @@ export const firestoreDivesService = {
     let images = [];
     // eslint-disable-next-line @typescript-eslint/no-shadow
     querySnapshot.forEach((doc) => {
-      const { externalImgsUrls } = doc.data();
-      // const spot = spotId ? await firestoreSpotsService.getSpotNameById(spotId) : null;
-      // TODO: Add info to gallery
-      // Date, spot name, draft
-      images = [...images, ...externalImgsUrls];
+      const {
+        externalImgsUrls, diveData, draft, spotId,
+      } = doc.data();
+      externalImgsUrls.forEach((i) => {
+        images.push({
+          img: i,
+          date: diveData?.date ? convertTimestampDate(diveData.date) : null,
+          draft,
+          spot: spotId,
+        });
+      });
     });
     // @ts-ignore
-    return [...new Set(images)];
+    images = [...new Set(images)];
+    for (let i = 0; i < images.length; i++) {
+      if (images[i].spot) {
+        const spotId = images[i].spot;
+        // eslint-disable-next-line no-await-in-loop
+        images[i].spot = await firestoreSpotsService.getSpotNameById(spotId);
+      } else {
+        images[i].spot = '';
+      }
+    }
+    return images;
   },
 
   getUserSpeciesInDives: async (
