@@ -144,7 +144,8 @@ export const firestoreDivesService = {
       where('externalImgsUrls', '!=', []),
     );
     const querySnapshot = await getDocs(q);
-    let images = [];
+    const images = [];
+    const foundSpotsSet = new Set();
     // eslint-disable-next-line @typescript-eslint/no-shadow
     querySnapshot.forEach((doc) => {
       const {
@@ -157,20 +158,21 @@ export const firestoreDivesService = {
           draft,
           spot: spotId,
         });
+        foundSpotsSet.add(spotId);
       });
     });
-    // @ts-ignore
-    images = [...new Set(images)];
-    for (let i = 0; i < images.length; i++) {
-      if (images[i].spot) {
-        const spotId = images[i].spot;
-        // eslint-disable-next-line no-await-in-loop
-        images[i].spot = await firestoreSpotsService.getSpotNameById(spotId);
-      } else {
-        images[i].spot = '';
-      }
+    const spots: { [key: string]: string } = {};
+    // @ts-ignore Get spots names
+    const foundSpots = [...foundSpotsSet];
+    for (let i = 0; i < foundSpots.length; i++) {
+      // eslint-disable-next-line no-await-in-loop
+      spots[foundSpots[i]] = await firestoreSpotsService.getSpotNameById(foundSpots[i]);
     }
-    return images;
+
+    return images.map((i) => ({
+      ...i,
+      spot: spots[i.spot],
+    }));
   },
 
   getUserSpeciesInDives: async (
