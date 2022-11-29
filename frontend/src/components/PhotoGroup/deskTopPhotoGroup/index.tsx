@@ -11,19 +11,19 @@ export const DeskTopPhotoGroup: FC<PhotoGroupProps> = ({ photos }) => {
     if (index % 3 === 0) {
       return (
         <PhotoCard
-          imgSrc={photo.imgScr}
-          favourites={photo.favorites}
+          imgSrc={photo}
+          favourites={0}
           size="normal"
-          authorName={photo.author}
+          authorName="Author"
         />
       );
     }
     return (
       <PhotoCard
-        imgSrc={photo.imgScr}
-        favourites={photo.favorites}
+        imgSrc={photo}
+        favourites={0}
         size="small"
-        authorName={photo.author}
+        authorName="Author"
       />
     );
   });

@@ -69,7 +69,7 @@ export const Lightbox: FC<Props> = ({
                 <Icon iconName="download" size={30} />
               </a>
               <a
-                onClick={() => navigator.share()}
+                onClick={() => navigator?.share()}
               >
                 <Icon iconName="share" size={30} />
               </a>

@@ -1,16 +1,20 @@
 import React, { FC } from 'react';
-import { PhotoGroupProps } from '../photoGroupProps';
 import { PhotoCard } from '../../Cards/PhotoCard';
 import styles from './styles.module.scss';
+import { ImageInfo } from '../../../types';
 
-export const MobilePhotoGroup:FC<PhotoGroupProps> = ({ photos }) => {
+type Props = {
+  photos: Array<ImageInfo>
+};
+
+export const MobilePhotoGroup: FC<Props> = ({ photos }) => {
   const photosElements = photos.map((photo) => (
-    <div key={photo.imgScr}>
+    <div key={photo.img}>
       <PhotoCard
-        imgSrc={photo.imgScr}
-        favourites={photo.favorites}
+        imgSrc={photo}
+        favourites={0}
         size="mobileScroll"
-        authorName={photo.author}
+        authorName="Author"
       />
     </div>
   ));

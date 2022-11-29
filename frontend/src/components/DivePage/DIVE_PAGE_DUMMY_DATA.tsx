@@ -20,70 +20,36 @@ export const spotData = {
 
 export const photos = [
   {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo2.jpg',
-    favorites: 0,
-    author: 'Ivan Kudrja',
-    id: 0,
+    img: '/TEST_IMG_THEN_DELETE/fish.jpg',
+    date: null,
+    draft: false,
+    spot: '',
+  }, {
+    img: '/TEST_IMG_THEN_DELETE/photo3.jpg',
+    date: null,
+    draft: false,
+    spot: '',
+  }, {
+    img: '/TEST_IMG_THEN_DELETE/photo6.jpg',
+    date: null,
+    draft: false,
+    spot: '',
+  }, {
+    img: '/TEST_IMG_THEN_DELETE/photo7.jpg',
+    date: null,
+    draft: false,
+    spot: '',
+  }, {
+    img: '/TEST_IMG_THEN_DELETE/photo8.jpg',
+    date: null,
+    draft: false,
+    spot: '',
   },
   {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo3.jpg',
-    favorites: 1,
-    author: 'Ivan Kudrja',
-    id: 1,
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo4.jpg',
-    favorites: 2,
-    author: 'Ivan Kudrja',
-    id: 2,
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/shark.jpg',
-    favorites: 3,
-    author: 'Ivan Kudrja',
-    id: 3,
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo5.jpg',
-    favorites: 4,
-    author: 'Ivan Kudrja',
-    id: 4,
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo6.jpg',
-    favorites: 5,
-    author: 'Ivan Kudrja',
-    id: 5,
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo2.jpg',
-    favorites: 6,
-    author: 'Ivan Kudrja',
-    id: 6,
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo3.jpg',
-    favorites: 7,
-    author: 'Ivan Kudrja',
-    id: 7,
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo4.jpg',
-    favorites: 8,
-    author: 'Ivan Kudrja',
-    id: 8,
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/shark.jpg',
-    favorites: 9,
-    author: 'Ivan Kudrja',
-    id: 9,
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo5.jpg',
-    favorites: 10,
-    author: 'Ivan Kudrja',
-    id: 10,
+    img: '/TEST_IMG_THEN_DELETE/photo8.jpg',
+    date: null,
+    draft: false,
+    spot: '',
   },
 ];
 

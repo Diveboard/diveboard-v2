@@ -2,6 +2,7 @@ import React from 'react';
 import { PhotoCard } from '../../../../Cards/PhotoCard';
 import { ArrowLink } from '../../../../ArrowLink';
 import styles from './styles.module.scss';
+import { photos } from '../../../../DivePage/DIVE_PAGE_DUMMY_DATA';
 
 export const PhotoDivesBlock = () => (
   <div className={styles.photoDivesWrapper}>
@@ -11,24 +12,24 @@ export const PhotoDivesBlock = () => (
       <div className={styles.leftGroup}>
         <div className={styles.column}>
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/shark.jpg"
+            imgSrc={photos[0]}
             favourites={136}
             size="normal"
           />
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/photo2.jpg"
+            imgSrc={photos[1]}
             favourites={136}
             size="small"
           />
         </div>
         <div className={styles.column}>
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/photo3.jpg"
+            imgSrc={photos[2]}
             favourites={136}
             size="small"
           />
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/photo4.jpg"
+            imgSrc={photos[3]}
             favourites={136}
             size="normal"
           />
@@ -37,24 +38,24 @@ export const PhotoDivesBlock = () => (
       <div className={styles.rightGroup}>
         <div className={styles.column}>
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/photo5.jpg"
+            imgSrc={photos[4]}
             favourites={136}
             size="normal"
           />
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/photo6.jpg"
+            imgSrc={photos[5]}
             favourites={136}
             size="small"
           />
         </div>
         <div className={styles.column}>
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/photo7.jpg"
+            imgSrc={photos[2]}
             favourites={136}
             size="small"
           />
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/photo8.jpg"
+            imgSrc={photos[3]}
             favourites={136}
             size="normal"
           />

@@ -1,7 +1,5 @@
+import { ImageInfo } from '../../types';
+
 export type PhotoGroupProps = {
-  photos: {
-    imgScr: string;
-    favorites: number;
-    author?: string;
-  }[]
+  photos: Array<ImageInfo>
 };
