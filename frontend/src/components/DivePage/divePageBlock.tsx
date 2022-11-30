@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { CommentsBlock } from './CommentsBlock';
 import { SpotDiveData } from './SpotDiveData';
@@ -11,63 +11,48 @@ import { DivePageTitle } from './DivePageTitle';
 import { MobilePhotoGroup } from '../PhotoGroup/mobilePhotoGroup';
 import { DesktopPhotoBlock } from './DesktopPhotoBlock';
 import { DivePageMobContainer } from './DivePageMobContainer';
-import {
-  diveData, spotData, photos, gearUsed, speciesList, allComments,
-} from './DIVE_PAGE_DUMMY_DATA';
+import { allComments } from './DIVE_PAGE_DUMMY_DATA';
 
 import styles from './divePageBlock.module.scss';
-import { firestoreDivesService } from '../../firebase/firestore/firestoreServices/firestoreDivesService';
-import { Loader } from '../Loader';
 import { NoDive } from '../DiveManager/NoData';
+import { UserType } from '../../types';
+import { DiveType, SpeciesType, SpotType } from '../../firebase/firestore/models';
 
 type Props = {
-  diveUserId: string,
-  diveId: string
+  user: UserType,
+  dive: DiveType,
+  spot: SpotType,
+  species?: Array<SpeciesType>
 };
 
-export const DivePageBlock = ({ diveUserId, diveId }: Props): JSX.Element => {
+export const DivePageBlock = ({
+  user, dive, spot, species,
+}: Props): JSX.Element => {
   const isMobile = useWindowWidth(500, 769);
 
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [dive, setDive] = useState(undefined);
-
-  const fetchDive = async () => {
-    if (diveUserId && diveId) {
-      setLoading(true);
-      const data = await firestoreDivesService.getDiveData(diveUserId, diveId);
-      if (!data) {
-        setError('No dives');
-      } else {
-        setDive(data);
-      }
-      setLoading(false);
-    }
-  };
-  console.log(dive);
-  useEffect(() => {
-    fetchDive();
-  }, [diveId, diveUserId]);
-
   const renderPhotoBlock = () => (isMobile
-    ? <MobilePhotoGroup photos={photos} />
-    : <DesktopPhotoBlock photos={photos} />);
+    ? <MobilePhotoGroup photos={dive.externalImgsUrls} />
+    : <DesktopPhotoBlock photos={dive.externalImgsUrls} />);
 
   const renderSpeciesBlock = () => (isMobile
-    ? <SpeciesMobile speciesList={speciesList} />
-    : <SpeciesIdentified speciesList={speciesList} />);
+    ? <SpeciesMobile speciesList={species} />
+    : <SpeciesIdentified speciesList={species} />);
 
   return (
     <section className={styles.wrapper}>
-      <Loader loading={isLoading} />
-      {!error ? (
+      {dive && dive.publishingMode === 'public' && !dive.draft ? (
         <>
-          <SpotDiveData spotData={spotData} />
+          <SpotDiveData user={user} dive={dive} spot={spot} />
           {renderPhotoBlock()}
           <div className={styles.subwrapper}>
-            <ChartBlock diveData={diveData} />
+            {(!!dive.diveData?.safetySpots.length || !!dive?.tanks.length) && (
+              <ChartBlock diveData={{ points: dive.diveData?.safetySpots, tanks: dive?.tanks }} />
+            )}
             <div className={styles.thirdWrapper}>
-              <GearUsed gearUsed={gearUsed} />
+              {(!!dive.gears.length || dive.diveData?.weights) && (
+                <GearUsed gears={dive.gears} weight={dive.diveData?.weights} />
+              )}
+              {!!species.length && (
               <div className={styles.speciesWrapper}>
                 <DivePageMobContainer>
                   <DivePageTitle title="Species Identified" />
@@ -76,6 +61,7 @@ export const DivePageBlock = ({ diveUserId, diveId }: Props): JSX.Element => {
                   </div>
                 </DivePageMobContainer>
               </div>
+              )}
             </div>
           </div>
           <CommentsBlock allComments={allComments} />

@@ -31,6 +31,18 @@ export type FirstStepType = {
   };
 };
 
+export type Tank = {
+  id: number;
+  cylinder: '1x' | '2x';
+  volume: number;
+  size: 'L' | 'cuft';
+  material: 'steel' | 'aluminum' | 'carbon';
+  mixture: 'air' | 'nitrox' | 'trimix';
+  pressureStart: number;
+  pressureEnd: number;
+  pressureMeasures: 'bar' | 'psi';
+};
+
 export type SecondStepType = {
   parameters: {
     time: string;
@@ -50,17 +62,7 @@ export type SecondStepType = {
     altitude: number;
     waterType: 'salt' | 'fresh';
   };
-  tanks: {
-    id: number;
-    cylinder: '1x' | '2x';
-    volume: number;
-    size: 'L' | 'cuft';
-    material: 'steel' | 'aluminum' | 'carbon';
-    mixture: 'air' | 'nitrox' | 'trimix';
-    pressureStart: number;
-    pressureEnd: number;
-    pressureMeasures: 'bar' | 'psi';
-  }[];
+  tanks: Tank[];
 };
 
 export type ThirdStepType = {

@@ -3,14 +3,10 @@ import React, { FC } from 'react';
 import Slider from 'react-slick';
 import { SpeciesCard } from '../../../Cards/SpeciesCard';
 import { Arrow } from '../../DesktopPhotoBlock/SampleArrow/sampleArrow';
+import { SpeciesType } from '../../../../firebase/firestore/models';
 
 type Props = {
-  speciesList: {
-    id: number;
-    imgSrc: string;
-    speciesName: string;
-    scientificName: string;
-  }[];
+  speciesList: Array<SpeciesType>
 };
 
 export const SpeciesIdentified: FC<Props> = ({ speciesList }): JSX.Element => {
@@ -55,8 +51,8 @@ export const SpeciesIdentified: FC<Props> = ({ speciesList }): JSX.Element => {
         <SpeciesCard
           key={itm.id}
           imgSrc={itm.imgSrc}
-          speciesName={itm.speciesName}
-          scientificName={itm.scientificName}
+          speciesName={itm.cname.map((i) => i.name).toString()}
+          scientificName={itm.sname}
           className="smallCard"
         />
       ))}

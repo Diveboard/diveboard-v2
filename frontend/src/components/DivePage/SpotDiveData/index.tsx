@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { flag } from 'country-emoji';
 
 import KebabButton from '../../Buttons/KebabButton';
 import { LinkedButton } from '../../Buttons/LinkedButton';
@@ -7,60 +8,32 @@ import { ProfileImage } from '../../PageBlocks/SettingsBlocks/SettingsItemConten
 import { DivePageMobContainer } from '../DivePageMobContainer';
 
 import styles from './styles.module.scss';
+import { DiveType, SpotType } from '../../../firebase/firestore/models';
+import { UserType } from '../../../types';
+import { convertTimestampDate } from '../../../utils/convertTimestampDate';
+import { parseDate } from '../../../utils/parseDate';
 
 type Props = {
-  spotData: {
-    nameDiver: string;
-    imgSrc: string;
-    spotName: string;
-    spotCountry: string;
-    spotLocation: string;
-    diveN: number;
-    date: string;
-    maxDepth: number;
-    duration: number;
-    typeWater: string;
-    temperatureOnSurface: number;
-    temperatureOnBottom: number;
-    diveType: string[];
-    visibility: string;
-    commentAuthor: string;
-    saves: number;
-  };
+  user: UserType,
+  dive: DiveType,
+  spot: SpotType
 };
 
 export const SpotDiveData: FC<Props> = ({
-  spotData: {
-    nameDiver,
-    imgSrc,
-    spotName,
-    spotCountry,
-    spotLocation,
-    diveN,
-    date,
-    maxDepth,
-    duration,
-    typeWater,
-    temperatureOnSurface,
-    temperatureOnBottom,
-    diveType,
-    visibility,
-    commentAuthor,
-    saves,
-  },
+  user, dive, spot,
 }): JSX.Element => {
-  const [countSaves, setCountSaves] = useState(saves);
-  const [isOnSaves, setSaves] = useState(false);
-  const [isShowComment, setShowComment] = useState(false);
+  const [isShowNote, setShowMore] = useState(false);
 
-  const diveTypeList = () => diveType.join(', ');
+  const diveTypeList = () => dive.diveActivities.join(', ');
+
+  const spotName = `${spot.location?.location}, ${spot.location?.country}, ${spot.location?.region}`;
 
   const moreButtonHandler = () => {
-    setShowComment(true);
+    setShowMore(true);
   };
 
   const lessButtonHandler = () => {
-    setShowComment(false);
+    setShowMore(false);
   };
 
   const shareButtonHandler = async () => {
@@ -72,12 +45,7 @@ export const SpotDiveData: FC<Props> = ({
     if (navigator.canShare(data)) await navigator.share(data);
   };
 
-  const savesButtonHandler = () => {
-    isOnSaves ? setCountSaves((prev) => prev - 1) : setCountSaves((prev) => prev + 1);
-    setSaves(!isOnSaves);
-  };
-
-  const renderAuthorComment = (text: string) => {
+  const renderNotes = (text: string) => {
     if (text.length > 180) {
       return (
         <div className={styles.comment}>
@@ -92,7 +60,7 @@ export const SpotDiveData: FC<Props> = ({
     return <div className={styles.comment}>{text}</div>;
   };
 
-  const renderAllAuthorComment = (text: string) => (
+  const showMore = (text: string) => (
     <div className={styles.comment}>
       {text}
       {' '}
@@ -115,29 +83,27 @@ export const SpotDiveData: FC<Props> = ({
                 <span className={styles.share} onClick={shareButtonHandler}>
                   <Icon iconName="share-dive" size={16} />
                 </span>
-                <KebabButton className="saves" onClick={savesButtonHandler}>
+                <KebabButton className="saves">
                   <span>
-                    {countSaves}
-                    {' '}
-                    Saves
+                    0 Saves
                   </span>
                   <Icon iconName="heart" size={16} />
                 </KebabButton>
               </div>
             </div>
             <div className={styles.leftContentWrapper}>
-              <ProfileImage imgSrc={imgSrc} size={74} />
+              <ProfileImage imgSrc={user.photoURL} size={74} />
               <div className={styles.spotTitleWrapper}>
                 <div className={styles.spotTitle}>
-                  {nameDiver}
+                  {user.name}
                   {' '}
                   in
                   {' '}
-                  {spotName}
+                  {spot.name}
                 </div>
                 <div className={styles.spotCountryWrapper}>
-                  <Icon iconName={spotCountry} size={16} />
-                  <div className={styles.spotLocation}>{spotLocation}</div>
+                  <div>{flag(spot.location.country)}</div>
+                  <div className={styles.spotLocation}>{spotName}</div>
                 </div>
               </div>
             </div>
@@ -146,11 +112,9 @@ export const SpotDiveData: FC<Props> = ({
             <span className={styles.share} onClick={shareButtonHandler}>
               <Icon iconName="share-dive" size={16} />
             </span>
-            <KebabButton className="saves" onClick={savesButtonHandler}>
+            <KebabButton className="saves">
               <span>
-                {countSaves}
-                {' '}
-                Saves
+                0 Saves
               </span>
               <Icon iconName="heart" size={16} />
             </KebabButton>
@@ -159,71 +123,92 @@ export const SpotDiveData: FC<Props> = ({
         <div className={styles.diveDataWrapper}>
           <div className={styles.diveInfo}>
             <ul>
+              {dive.aboutDive && (
               <li>
                 Dive N:
                 {' '}
-                <span>{diveN}</span>
+                <span>{dive.aboutDive.diveNumber}</span>
               </li>
+              )}
+              {dive.diveData?.date && (
               <li>
                 Date:
                 {' '}
-                <span>{date}</span>
+                <span>{parseDate(convertTimestampDate(dive.diveData.date))}</span>
               </li>
+              )}
+              {dive.diveData?.maxDepth && (
               <li>
                 Max depth:
                 {' '}
                 <span>
-                  {maxDepth}
+                  {dive.diveData.maxDepth}
                   {' '}
                   m
                 </span>
               </li>
+              )}
+              {dive.diveData.duration && (
               <li>
                 Duration:
                 {' '}
                 <span>
-                  {duration}
+                  {dive.diveData?.duration}
                   {' '}
                   min
                 </span>
               </li>
+              )}
+              {dive.diveData?.waterType && (
               <li>
                 Water:
                 {' '}
-                <span>{typeWater}</span>
+                <span>{dive.diveData.waterType}</span>
               </li>
+              )}
+              {dive.diveData?.surfaceTemp && (
               <li>
                 Temperature on surface:
                 {' '}
                 <span>
-                  {temperatureOnSurface}
-                  <sup>o</sup>
-                  C
+                  {dive.diveData.surfaceTemp}
+                  {/* <sup>o</sup> */}
+                  {/* C */}
                 </span>
               </li>
+              )}
+              {dive.diveData?.bottomTemp && (
               <li>
                 Temperature on bottom:
                 {' '}
                 <span>
-                  {temperatureOnBottom}
-                  <sup>o</sup>
-                  C
+                  {dive.diveData.bottomTemp}
+                  {/* <sup>o</sup> */}
+                  {/* C */}
                 </span>
               </li>
+              )}
+              {!!dive.diveActivities?.length && (
               <li>
                 Dive Type:
                 {' '}
                 <span>{diveTypeList()}</span>
               </li>
+              )}
+              {dive.diveData?.waterVisibility && (
               <li>
                 Visibility:
                 {' '}
-                <span>{visibility}</span>
+                <span>{dive.diveData?.waterVisibility}</span>
               </li>
+              )}
             </ul>
           </div>
-          {!isShowComment
-            ? renderAuthorComment(commentAuthor) : renderAllAuthorComment(commentAuthor)}
+          { dive.aboutDive?.notes && (
+          <div>
+            {!isShowNote ? renderNotes(dive.aboutDive?.notes) : showMore(dive.aboutDive?.notes)}
+          </div>
+          ) }
         </div>
       </div>
     </DivePageMobContainer>

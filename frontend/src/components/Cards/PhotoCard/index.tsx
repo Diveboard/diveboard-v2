@@ -3,10 +3,9 @@ import Image from 'next/image';
 import { imageLoader } from '../../Icons/Icon';
 import styles from './styles.module.scss';
 import FavoritesBlock from './FavoritesBlock';
-import { ImageInfo } from '../../../types';
 
 type Props = {
-  imgSrc: ImageInfo;
+  imgUrl?: string;
   favourites: number;
   addedToFavourite?: boolean;
   size?: 'normal' | 'small' | 'mobileScroll';
@@ -15,12 +14,12 @@ type Props = {
 };
 
 export const PhotoCard: FC<Props> = ({
-  imgSrc,
   addedToFavourite,
   favourites,
   size,
   onToggle,
   authorName,
+  imgUrl,
 }) => {
   const getCardSize = () => {
     if (size === 'normal') {
@@ -44,7 +43,7 @@ export const PhotoCard: FC<Props> = ({
     >
       {size ? (
         <Image
-          src={imgSrc.img}
+          src={imgUrl}
           layout="fill"
           loader={imageLoader}
           className={styles.img}
@@ -53,7 +52,7 @@ export const PhotoCard: FC<Props> = ({
       ) : (
       // eslint-disable-next-line jsx-a11y/img-redundant-alt
         <img
-          src={imgSrc.img}
+          src={imgUrl}
           alt="photo"
         />
       )}

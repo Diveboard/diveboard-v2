@@ -5,10 +5,9 @@ import { Arrow } from './SampleArrow/sampleArrow';
 import { PhotoCard } from '../../Cards/PhotoCard';
 
 import styles from './styles.module.scss';
-import { ImageInfo } from '../../../types';
 
 type Props = {
-  photos: Array<ImageInfo>;
+  photos: Array<string>;
 };
 
 export const DesktopPhotoBlock: FC<Props> = ({ photos }) => {
@@ -21,8 +20,8 @@ export const DesktopPhotoBlock: FC<Props> = ({ photos }) => {
 
       if (i % 3 === 0) {
         newPhotoArray.push(
-          <div key={curr.img} className={styles.column}>
-            <PhotoCard imgSrc={curr} favourites={0} size="normal" authorName="Author" />
+          <div key={i} className={styles.column}>
+            <PhotoCard imgUrl={curr} favourites={0} size="normal" authorName="Author" />
           </div>,
         );
         i++;
@@ -33,14 +32,14 @@ export const DesktopPhotoBlock: FC<Props> = ({ photos }) => {
       newPhotoArray.push(
         next
           ? [
-            <div key={curr.img} className={styles.column}>
-              <PhotoCard imgSrc={curr} favourites={0} size="small" authorName="Author" />
-              <PhotoCard imgSrc={next} favourites={0} size="small" authorName="Author" />
+            <div key={curr} className={styles.column}>
+              <PhotoCard imgUrl={curr} favourites={0} size="small" authorName="Author" />
+              <PhotoCard imgUrl={next} favourites={0} size="small" authorName="Author" />
             </div>,
           ]
           : [
-            <div key={curr.img} className={styles.column}>
-              <PhotoCard imgSrc={curr} favourites={0} size="normal" authorName="Author" />
+            <div key={curr} className={styles.column}>
+              <PhotoCard imgUrl={curr} favourites={0} size="normal" authorName="Author" />
             </div>,
           ],
       );

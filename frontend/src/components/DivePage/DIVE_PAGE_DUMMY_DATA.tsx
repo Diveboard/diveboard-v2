@@ -1,3 +1,5 @@
+import { SpeciesType } from '../../firebase/firestore/models';
+
 export const spotData = {
   nameDiver: 'Ivan Carozza',
   imgSrc: '/TEST_IMG_THEN_DELETE/testUserImg.svg',
@@ -98,32 +100,69 @@ export const gearUsed = {
   weights: 12,
 };
 
-export const speciesList = [
+export const speciesList: SpeciesType[] = [
   {
-    id: 1, imgSrc: '/TEST_IMG_THEN_DELETE/photo2.jpg', speciesName: 'Emperor Angelfish', scientificName: 'Pomacanthus imperator',
-  },
-
-  {
-    id: 2, imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg', speciesName: 'Emperor Angelfish', scientificName: 'Pomacanthus imperator',
-  },
-
-  {
-    id: 3, imgSrc: '/TEST_IMG_THEN_DELETE/photo3.jpg', speciesName: 'Emperor Angelfish', scientificName: 'Pomacanthus imperator',
-  },
-
-  {
-    id: 4, imgSrc: '/TEST_IMG_THEN_DELETE/photo4.jpg', speciesName: 'Emperor Angelfish', scientificName: 'Pomacanthus imperator',
+    id: '1',
+    cname: [{ name: 'string', language: 'string' }],
+    sname: 'df',
+    category: 'string',
+    coords: [{ lat: 5, lng: 20 }],
+    old_eolsnames_id: 5,
+    imgSrc: '/TEST_IMG_THEN_DELETE/photo5.jpg',
   },
   {
-    id: 5, imgSrc: '/TEST_IMG_THEN_DELETE/photo2.jpg', speciesName: 'Emperor Angelfish', scientificName: 'Pomacanthus imperator',
+    id: '2',
+    cname: [{ name: 'string', language: 'string' }],
+    sname: 'df',
+    category: 'string',
+    coords: [{ lat: 5, lng: 20 }],
+    old_eolsnames_id: 5,
+    imgSrc: '/TEST_IMG_THEN_DELETE/photo2.jpg',
   },
-
   {
-    id: 6, imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg', speciesName: 'Emperor Angelfish', scientificName: 'Pomacanthus imperator',
+    id: '3',
+    cname: [{ name: 'string', language: 'string' }],
+    sname: 'df',
+    category: 'string',
+    coords: [{ lat: 5, lng: 20 }],
+    old_eolsnames_id: 5,
+    imgSrc: '/TEST_IMG_THEN_DELETE/photo3.jpg',
   },
-
   {
-    id: 7, imgSrc: '/TEST_IMG_THEN_DELETE/photo3.jpg', speciesName: 'Emperor Angelfish', scientificName: 'Pomacanthus imperator',
+    id: '4',
+    cname: [{ name: 'string', language: 'string' }],
+    sname: 'df',
+    category: 'string',
+    coords: [{ lat: 5, lng: 20 }],
+    old_eolsnames_id: 5,
+    imgSrc: '/TEST_IMG_THEN_DELETE/photo2.jpg',
+  },
+  {
+    id: '5',
+    cname: [{ name: 'string', language: 'string' }],
+    sname: 'df',
+    category: 'string',
+    coords: [{ lat: 5, lng: 20 }],
+    old_eolsnames_id: 5,
+    imgSrc: '/TEST_IMG_THEN_DELETE/photo4.jpg',
+  },
+  {
+    id: '6',
+    cname: [{ name: 'string', language: 'string' }],
+    sname: 'df',
+    category: 'string',
+    coords: [{ lat: 5, lng: 20 }],
+    old_eolsnames_id: 5,
+    imgSrc: '/TEST_IMG_THEN_DELETE/photo3.jpg',
+  },
+  {
+    id: '7',
+    cname: [{ name: 'string', language: 'string' }],
+    sname: 'df',
+    category: 'string',
+    coords: [{ lat: 5, lng: 20 }],
+    old_eolsnames_id: 5,
+    imgSrc: '/TEST_IMG_THEN_DELETE/shark.jpg',
   },
 ];
 

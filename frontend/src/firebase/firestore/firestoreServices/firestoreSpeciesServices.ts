@@ -41,6 +41,23 @@ export const firestoreSpeciesServices = {
     }
   },
 
+  getSpeciesByIds: async (speciesIds: Array<string>) => {
+    try {
+      // const speciesIds = await firestoreDivesService.getUserSpeciesInDives(userId);
+      const species = [];
+      for (let i = 0; i < speciesIds.length; i++) {
+        const docRef = doc(db, firestorePaths.species.path, speciesIds[i]);
+        // eslint-disable-next-line no-await-in-loop
+        const docSnap = await getDoc(docRef);
+        species.push({ id: speciesIds[i], ...docSnap.data() });
+      }
+      return species.filter((fish) => fish);
+    } catch (e) {
+      console.log(e.message);
+      throw new Error('get my species  error');
+    }
+  },
+
   getMySpecies: async (userId: string) => {
     try {
       const speciesIds = await firestoreDivesService.getUserSpeciesInDives(userId);

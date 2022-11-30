@@ -56,8 +56,8 @@ export const SpotBlocks = () => {
   const [tab, setTab] = useState<'info' | 'dives' | 'shops'>('info');
 
   const renderPhotoBlock = isMobile
-    ? <MobilePhotoGroup photos={photos} />
-    : <DesktopPhotoBlock photos={photos} />;
+    ? <MobilePhotoGroup photos={photos.map((i) => i.img)} />
+    : <DesktopPhotoBlock photos={photos.map((i) => i.img)} />;
 
   return (
     <div className={styles.spotBlock}>

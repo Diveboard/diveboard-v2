@@ -1,12 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
-
-import { Checkbox } from '../../CheckBox';
-import DiveInfo from '../DiveInfo';
-
-import styles from './styles.module.scss';
-import { month } from '../../../utils/date';
+import { parseDate } from '../../../utils/parseDate';
 import { DiveType } from '../../../firebase/firestore/models';
+import DiveInfo from '../DiveInfo';
+import { Checkbox } from '../../CheckBox';
+import styles from './styles.module.scss';
 
 type Props = {
   itm: DiveType & { spot: string, date: Date | null };
@@ -42,14 +40,6 @@ export const DiveItem: FC<Props> = ({
 
   const showHandler = () => {
     setShow(() => !isShow);
-  };
-
-  const parseDate = (isoDate: Date): string => {
-    if (!isoDate) {
-      return '';
-    }
-    const newDate = new Date(isoDate);
-    return `${month[newDate.getMonth()]} ${newDate.getDate()}, ${newDate.getFullYear()}`;
   };
 
   return (

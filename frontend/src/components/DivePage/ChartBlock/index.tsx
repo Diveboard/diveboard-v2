@@ -6,11 +6,13 @@ import { DivePageTitle } from '../DivePageTitle';
 
 import styles from './styles.module.scss';
 import { SafetySpot } from '../../PageBlocks/LogADiveBlocks/types/commonTypes';
+import { SecondStepType, Tank } from '../../PageBlocks/LogADiveBlocks/types/stepTypes';
 
 type Props = {
   diveData: {
     points: SafetySpot[];
-    characteristics: {
+    tanks: SecondStepType['tanks'],
+    characteristics?: {
       typeFillingBalon: string;
       ballon: string;
       sac: number;
@@ -22,9 +24,8 @@ type Props = {
 export const ChartBlock: FC<Props> = ({
   diveData: {
     points,
-    characteristics: {
-      typeFillingBalon, ballon, sac, rmv,
-    },
+    tanks,
+    // characteristics,
   },
 }): JSX.Element => {
   // calculate avarage depth
@@ -33,7 +34,12 @@ export const ChartBlock: FC<Props> = ({
     points.forEach((itm) => {
       summAllDepth += itm.depth;
     });
-    return summAllDepth / points.length;
+    return (summAllDepth / points.length).toFixed(2);
+  };
+
+  const convertTankName = (tank: Tank) => {
+    const material = tank?.material ? tank.material.charAt(0).toUpperCase() + tank.material.slice(1) : '';
+    return `${tank?.volume || ''} ${tank?.size || ''} ${material} ${tank?.pressureStart || ''} -> ${tank?.pressureEnd || ''} ${tank?.pressureMeasures || ''}`;
   };
 
   return (
@@ -41,47 +47,58 @@ export const ChartBlock: FC<Props> = ({
       <DivePageMobContainer>
         <DivePageTitle title="Dive Profile" />
       </DivePageMobContainer>
-      <div className={styles.depthChartMargin} id="no_border_radius">
-        <DepthChart points={points} />
-      </div>
+      {!!points.length && (
+        <div className={styles.depthChartMargin} id="no_border_radius">
+          <DepthChart points={points} />
+        </div>
+      )}
+      {!!tanks?.length && (
       <DivePageMobContainer>
         <div className={styles.chartInfo}>
-          <div className={styles.typeFillingBalon}>{typeFillingBalon}</div>
-          <div className={styles.characteristics}>
-            <ul>
-              <li>{ballon}</li>
-              <li>
-                Avarage depth:
+          {tanks.map((tank) => (
+            <div key={tank.id}>
+              <div className={styles.typeFillingBalon}>{tank.mixture}</div>
+              <div className={styles.characteristics}>
+                <ul>
+                  <li>
+                    {convertTankName(tank)}
+                  </li>
+                  <li>
+                    Avarage depth:
+                    {' '}
+                    <span>
+                      {avarageDepth()}
+                      {' '}
+                      m
+                    </span>
+                  </li>
+                  {/* <li> */}
+                  {/*  SAC: */}
+                  {/*  {' '} */}
+                  {/*  <span> */}
+                  {/*    sac */}
+                  {/*    {' '} */}
+                  {/*    bar/min */}
+                  {/*  </span> */}
+                  {/* </li> */}
+                  {/* <li> */}
+                  {/*  RMV: */}
+                  {/*  {' '} */}
+                  {/*  <span> */}
+                  {/*    rmv */}
+                  {/*    {' '} */}
+                  {/*    L/min */}
+                  {/*  </span> */}
+                  {/* </li> */}
+                </ul>
                 {' '}
-                <span>
-                  {avarageDepth()}
-                  {' '}
-                  m
-                </span>
-              </li>
-              <li>
-                SAC:
-                {' '}
-                <span>
-                  {sac}
-                  {' '}
-                  bar/min
-                </span>
-              </li>
-              <li>
-                RMV:
-                {' '}
-                <span>
-                  {rmv}
-                  {' '}
-                  L/min
-                </span>
-              </li>
-            </ul>
-            {' '}
-          </div>
+              </div>
+            </div>
+          ))}
+
         </div>
       </DivePageMobContainer>
+      )}
     </div>
   );
 };
