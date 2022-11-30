@@ -17,6 +17,7 @@ export const GalleryBlock = ({ images, user }: Props) => {
   const [openLightbox, setOpenLightbox] = useState(false);
   const [imageIndex, setImageIndex] = useState<number>(null);
   const [sortType, setSortType] = useState('recent');
+
   useEffect(() => {
     document.body.style.overflow = 'overlay';
   }, []);

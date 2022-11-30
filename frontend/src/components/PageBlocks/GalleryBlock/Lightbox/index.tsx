@@ -53,8 +53,8 @@ export const Lightbox: FC<Props> = ({
         e.stopPropagation();
       }}
     >
-      <div>
-        <div className={styles.outerWrapper} ref={ref}>
+      <div className={styles.outerWrapper} ref={ref}>
+        <div className={styles.btnContainer}>
           <div className={styles.headerNav}>
             <a onClick={handlePrevSlide}>
               <Icon iconName="back-button" size={30} />
@@ -75,36 +75,36 @@ export const Lightbox: FC<Props> = ({
               </a>
             </div>
           </div>
-          <div className={styles.innerWrapper}>
-            {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
-            <img
-              className={styles.img}
-              src={image.img}
-              alt="image"
-            />
-            <div className={styles.imgData}>
-              <div className={styles.avatar}>
-                <ProfileImage
-                  imgSrc={user.photoURL || '/appIcons/no-photo.svg'}
-                  size={44}
-                />
-                <span className={styles.authorName}>{user.name}</span>
-              </div>
-              <div className={styles.imgDataText}>
-                <span className={styles.date}>
-                  {convertDate(image.date)}
-                </span>
-                <span className={styles.place}>{image.spot}</span>
-                {/* <span className={styles.camera}>Camera: NIKON D800E</span> */}
-              </div>
+        </div>
+        <div className={styles.innerWrapper}>
+          {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
+          <img
+            className={styles.img}
+            src={image.img}
+            alt="image"
+          />
+          <div className={styles.imgData}>
+            <div className={styles.avatar}>
+              <ProfileImage
+                imgSrc={user.photoURL || '/appIcons/no-photo.svg'}
+                size={44}
+              />
+              <span className={styles.authorName}>{user.name}</span>
+            </div>
+            <div className={styles.imgDataText}>
+              <span className={styles.date}>
+                {convertDate(image.date)}
+              </span>
+              <span className={styles.place}>{image.spot}</span>
+              {/* <span className={styles.camera}>Camera: NIKON D800E</span> */}
             </div>
           </div>
-          <div className={styles.footerNav}>
-            <a onClick={handleNextSlide}>
-              <span>Next</span>
-              <Icon iconName="arrow-right" />
-            </a>
-          </div>
+        </div>
+        <div className={styles.footerNav}>
+          <a onClick={handleNextSlide}>
+            <span>Next</span>
+            <Icon iconName="arrow-right" />
+          </a>
         </div>
       </div>
     </div>
