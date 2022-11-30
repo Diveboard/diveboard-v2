@@ -8,25 +8,27 @@ export const firestoreBuddiesService = {
   getBuddiesByIds: async (buddiesIds: string[]) => {
     const buddies: ({
       name: string,
-      email: string
+      email: string,
+      id: string,
     })[] = [];
-
     const docRef = collection(
       db,
       `${firestorePaths.users.path}`,
     );
     try {
       for (let i = 0; i < buddiesIds.length; i++) {
-        const q = query(
-          docRef,
-          where(documentId(), '==', buddiesIds[i]),
-        );
-        // eslint-disable-next-line no-await-in-loop
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-          const { name, email } = doc.data();
-          buddies.push({ email, name });
-        });
+        if (buddiesIds[i]) {
+          const q = query(
+            docRef,
+            where(documentId(), '==', buddiesIds[i]),
+          );
+          // eslint-disable-next-line no-await-in-loop
+          const querySnapshot = await getDocs(q);
+          querySnapshot.forEach((doc) => {
+            const { name, email } = doc.data();
+            buddies.push({ email, name, id: doc.id });
+          });
+        }
       }
       return buddies;
     } catch (e) {

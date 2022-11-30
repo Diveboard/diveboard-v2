@@ -75,11 +75,19 @@ export const FifthStep: FC<StepProps> = ({
     const data = getStepData(5) as FifthStepType;
     if (Object.values(data).every((item) => !!item)) {
       (async () => {
-        const buddies = await firestoreBuddiesService.getBuddiesByIds(
+        const diveboardBuddies = [];
+        const newBuddies = [];
+        data?.buddies.forEach((buddy) => {
           // @ts-ignore
-          data.buddies?.map((i) => i.id),
-        );
-        setSelectedBuddies(buddies);
+          if (buddy.id) {
+            // @ts-ignore
+            diveboardBuddies.push(buddy.id);
+          } else {
+            newBuddies.push(buddy);
+          }
+        });
+        const buddies = await firestoreBuddiesService.getBuddiesByIds(diveboardBuddies);
+        setSelectedBuddies([...buddies, ...newBuddies]);
         // TODO: Add dive center
         // TODO: Add guide
       })();

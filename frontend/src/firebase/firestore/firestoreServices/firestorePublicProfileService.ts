@@ -8,11 +8,12 @@ import {
   collection,
   query,
   getDocs,
-  orderBy, startAt,
+  orderBy, startAt, where,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { firestorePaths } from '../firestorePaths';
 import { UserType } from '../../../types';
+import { firestoreDivesService } from './firestoreDivesService';
 
 export const firestorePublicProfileService = {
   setEmail: async (email: string, userId: string) => {
@@ -84,6 +85,34 @@ export const firestorePublicProfileService = {
       return docSnap.data() as UserType | undefined;
     } catch (e) {
       throw new Error('get user data error');
+    }
+  },
+
+  getUsersInfo: async (usersIds: Array<{ id?: string, name?: string }>) => {
+    try {
+      const users = [];
+      for (let i = 0; i < usersIds.length; i++) {
+        if (usersIds[i].id) {
+          const docRef = doc(db, firestorePaths.users.path, usersIds[i].id);
+          // eslint-disable-next-line no-await-in-loop
+          const docSnap = await getDoc(docRef);
+          const { name, photoURL } = docSnap.data();
+          // eslint-disable-next-line no-await-in-loop
+          const diveTotal = await firestoreDivesService.getDivesCountByUserId(usersIds[i].id);
+          users.push({
+            id: usersIds[i].id, name, photoURL, diveTotal,
+          });
+        } else {
+          users.push({
+            name: usersIds[i]?.name,
+            diveTotal: 1,
+          });
+        }
+      }
+      return users;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error('get user error');
     }
   },
 

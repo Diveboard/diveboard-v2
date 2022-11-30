@@ -17,16 +17,18 @@ import styles from './divePageBlock.module.scss';
 import { NoDive } from '../DiveManager/NoData';
 import { UserType } from '../../types';
 import { DiveType, SpeciesType, SpotType } from '../../firebase/firestore/models';
+import { DiveBuddyCard } from '../Cards/DiveBuddyCard';
 
 type Props = {
   user: UserType,
   dive: DiveType,
   spot: SpotType,
   species?: Array<SpeciesType>
+  buddies: Array<any>
 };
 
 export const DivePageBlock = ({
-  user, dive, spot, species,
+  user, dive, spot, species, buddies,
 }: Props): JSX.Element => {
   const isMobile = useWindowWidth(500, 769);
 
@@ -64,6 +66,23 @@ export const DivePageBlock = ({
               )}
             </div>
           </div>
+          {!!buddies?.length && (
+          <DivePageMobContainer>
+            <DivePageTitle title="Dive Buddies" />
+            <div className={styles.divesWrapper}>
+              {buddies.map((buddy) => (
+                <DiveBuddyCard
+                  key={buddy.id || buddy.name}
+                  imgSrc={buddy?.photoURL || '/appIcons/no-photo.svg'}
+                  name={buddy?.name}
+                  onDiveBoard={buddy?.diveTotal}
+                  total={buddy?.diveTotal}
+                  onSpot={1}
+                />
+              ))}
+            </div>
+          </DivePageMobContainer>
+          )}
           <CommentsBlock allComments={allComments} />
         </>
       ) : <NoDive />}

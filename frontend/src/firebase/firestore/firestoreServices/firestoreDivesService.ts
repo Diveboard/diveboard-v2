@@ -40,6 +40,20 @@ export const firestoreDivesService = {
     }
   },
 
+  getDivesCountByUserId: async (userId: string) => {
+    try {
+      const docRef = collection(db, `Test_Dives/${userId}/userDives`);
+      const q = query(
+        docRef,
+      );
+      const querySnapshot = await getDocs(q);
+      return querySnapshot.size;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error('get dive data error');
+    }
+  },
+
   getDivesByUserId: async (
     userId: string,
   ) => {
