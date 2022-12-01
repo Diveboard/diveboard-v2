@@ -36,12 +36,12 @@ export const getTankActions = (
       setMixture: (mixture) => {
         setTanks(setParameters('mixture', mixture));
       },
-      // setO2: (o2) => {
-      //   setTanks(setParameters('o2', +o2));
-      // },
-      // setHe: (he) => {
-      //   setTanks(setParameters('he', +he));
-      // },
+      setO2: (o2) => {
+        setTanks(setParameters('o2', +o2));
+      },
+      setHe: (he) => {
+        setTanks(setParameters('he', +he));
+      },
       setStart: (start) => {
         setTanks(setParameters('pressureStart', +start));
       },

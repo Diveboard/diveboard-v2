@@ -67,7 +67,7 @@ export const Tank: FC<Props> = ({
 
     <MarginWrapper top={10} display="block">
       <InputLabelWrapper label="Mixture">
-        <div className={styles.row}>
+        <div className={styles.mixture}>
           <Dropdown
             item={mixture}
             setItem={
@@ -76,27 +76,25 @@ export const Tank: FC<Props> = ({
             allItems={['air', 'nitrox', 'trimix']}
             width={160}
           />
-          {/*{mixture === 'trimix'*/}
-          {/*    && (*/}
-          {/*    <>*/}
-          {/*      <Input*/}
-          {/*        type="number"*/}
-          {/*        value={o2 ? `${o2}` : ''}*/}
-          {/*        setValue={setTankParameters.setO2}*/}
-          {/*        height={48}*/}
-          {/*        width={112}*/}
-          {/*        placeholder="m"*/}
-          {/*      />*/}
-          {/*      <Input*/}
-          {/*        type="number"*/}
-          {/*        value={he ? `${he}` : ''}*/}
-          {/*        setValue={setTankParameters.setHe}*/}
-          {/*        height={48}*/}
-          {/*        width={112}*/}
-          {/*        placeholder="m"*/}
-          {/*      />*/}
-          {/*    </>*/}
-          {/*    )}*/}
+          {mixture === 'trimix'
+              && (
+              <>
+                <Input
+                  type="number"
+                  value={o2 ? `${o2}` : ''}
+                  setValue={setTankParameters.setO2}
+                  height={48}
+                  width={112}
+                />
+                <Input
+                  type="number"
+                  value={he ? `${he}` : ''}
+                  setValue={setTankParameters.setHe}
+                  height={48}
+                  width={112}
+                />
+              </>
+              )}
         </div>
       </InputLabelWrapper>
     </MarginWrapper>

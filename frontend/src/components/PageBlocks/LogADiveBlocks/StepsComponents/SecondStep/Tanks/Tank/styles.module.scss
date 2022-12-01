@@ -1,3 +1,5 @@
+
+
 .tank {
   margin: 10px 0;
   width: 100%;
@@ -13,6 +15,8 @@
     >div{
       margin-bottom: 20px;
     }
+
+
 
 
     .labelWrapper {
@@ -31,6 +35,15 @@
     > div {
       margin-right: 10px;
     }
+  }
+}
+
+.mixture {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  > div {
+    margin-right: 10px;
   }
 }
 
