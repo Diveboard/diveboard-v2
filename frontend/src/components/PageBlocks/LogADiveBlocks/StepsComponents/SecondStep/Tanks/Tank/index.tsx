@@ -127,17 +127,16 @@ export const Tank: FC<Props> = ({
                 placeholder="m"
               />
             </div>
+          </div>
 
-            <Dropdown
-              item={pressureMeasures}
-              setItem={
+          <Dropdown
+            item={pressureMeasures}
+            setItem={
                 setTankParameters.setMeasures
               }
-              allItems={['bar', 'psi']}
-              width={112}
-            />
-
-          </div>
+            allItems={['bar', 'psi']}
+            width={112}
+          />
 
         </InputLabelWrapper>
         <div className={styles.buttonWrapper}>

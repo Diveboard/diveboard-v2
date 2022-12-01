@@ -16,9 +16,6 @@
       margin-bottom: 20px;
     }
 
-
-
-
     .labelWrapper {
       display: flex;
       align-items: center;
@@ -32,7 +29,7 @@
       margin-right: 10px;
     }
 
-    > div {
+    > div:not(:last-child) {
       margin-right: 10px;
     }
   }
@@ -42,7 +39,7 @@
   display: flex;
   flex-wrap: nowrap;
   flex-direction: row;
-  > div {
+  > div:not(:last-child) {
     margin-right: 10px;
   }
 }
