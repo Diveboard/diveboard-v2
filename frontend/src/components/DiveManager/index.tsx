@@ -235,6 +235,7 @@ const DiveManager = ({ userId, userDives }: Props) => {
       key={itm.dive.id}
       itm={itm.dive}
       checked={itm.checked}
+      onClick={() => router.push(`/user/${userId}/dive/${itm.dive.id}`)}
       setChecked={(val) => {
         const newDives = dives.map((i) => {
           if (i.dive.id === itm.dive.id) {

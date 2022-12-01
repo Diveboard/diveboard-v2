@@ -13,6 +13,7 @@ type Props = {
   setChecked: (val: boolean) => void;
   changeIsSelectAll: () => void;
   isChange: boolean;
+  onClick: () => void;
 };
 
 export const DiveItem: FC<Props> = ({
@@ -22,6 +23,7 @@ export const DiveItem: FC<Props> = ({
   isSelectAll,
   changeIsSelectAll,
   isChange,
+  onClick,
 }) => {
   const [isShow, setShow] = useState(true);
 
@@ -50,7 +52,7 @@ export const DiveItem: FC<Props> = ({
           : styles.wrapper
       }
     >
-      <div className={styles.info}>
+      <div className={styles.info} onClick={onClick}>
         <div className={styles.number}>
           #
           {itm.aboutDive?.diveNumber}

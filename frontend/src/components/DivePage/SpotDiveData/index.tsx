@@ -42,7 +42,8 @@ export const SpotDiveData: FC<Props> = ({
       url: location.href,
       text: 'Share your dive',
     };
-    if (navigator.canShare(data)) await navigator.share(data);
+    console.log(data);
+    // if (navigator.canShare(data)) await navigator.share(data);
   };
 
   const renderNotes = (text: string) => {
