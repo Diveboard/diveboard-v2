@@ -85,6 +85,7 @@ export const Tank: FC<Props> = ({
                   setValue={setTankParameters.setO2}
                   height={48}
                   width={112}
+                  placeholder="O2"
                 />
                 <Input
                   type="number"
@@ -92,6 +93,7 @@ export const Tank: FC<Props> = ({
                   setValue={setTankParameters.setHe}
                   height={48}
                   width={112}
+                  placeholder="He"
                 />
               </>
               )}
