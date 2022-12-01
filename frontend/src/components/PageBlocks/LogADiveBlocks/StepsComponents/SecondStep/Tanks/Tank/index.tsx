@@ -15,6 +15,8 @@ export const Tank: FC<Props> = ({
   cylinder,
   material,
   mixture,
+  o2,
+  he,
   size,
   volume,
   pressureStart,
@@ -74,6 +76,27 @@ export const Tank: FC<Props> = ({
             allItems={['air', 'nitrox', 'trimix']}
             width={160}
           />
+          {/*{mixture === 'trimix'*/}
+          {/*    && (*/}
+          {/*    <>*/}
+          {/*      <Input*/}
+          {/*        type="number"*/}
+          {/*        value={o2 ? `${o2}` : ''}*/}
+          {/*        setValue={setTankParameters.setO2}*/}
+          {/*        height={48}*/}
+          {/*        width={112}*/}
+          {/*        placeholder="m"*/}
+          {/*      />*/}
+          {/*      <Input*/}
+          {/*        type="number"*/}
+          {/*        value={he ? `${he}` : ''}*/}
+          {/*        setValue={setTankParameters.setHe}*/}
+          {/*        height={48}*/}
+          {/*        width={112}*/}
+          {/*        placeholder="m"*/}
+          {/*      />*/}
+          {/*    </>*/}
+          {/*    )}*/}
         </div>
       </InputLabelWrapper>
     </MarginWrapper>
