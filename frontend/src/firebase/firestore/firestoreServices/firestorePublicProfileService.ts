@@ -88,7 +88,7 @@ export const firestorePublicProfileService = {
     }
   },
 
-  getUsersInfo: async (usersIds: Array<{ id?: string, name?: string }>) => {
+  getUsersInfo: async (usersIds: Array<{ id?: string, name?: string }>, spotId?: string) => {
     try {
       const users = [];
       for (let i = 0; i < usersIds.length; i++) {
@@ -99,13 +99,17 @@ export const firestorePublicProfileService = {
           const { name, photoURL } = docSnap.data();
           // eslint-disable-next-line no-await-in-loop
           const diveTotal = await firestoreDivesService.getDivesCountByUserId(usersIds[i].id);
+          // eslint-disable-next-line no-await-in-loop
+          const divesOnSpot = spotId ? await firestoreDivesService
+            .getDivesCountByUserIdInSpot(usersIds[i].id, spotId) : 0;
           users.push({
-            id: usersIds[i].id, name, photoURL, diveTotal,
+            id: usersIds[i].id, name, photoURL, diveTotal, divesOnSpot,
           });
         } else {
           users.push({
             name: usersIds[i]?.name,
             diveTotal: 1,
+            divesOnSpot: 1,
           });
         }
       }

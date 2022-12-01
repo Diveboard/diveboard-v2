@@ -77,7 +77,7 @@ export const DivePageBlock = ({
                   name={buddy?.name}
                   onDiveBoard={buddy?.diveTotal}
                   total={buddy?.diveTotal}
-                  onSpot={1}
+                  onSpot={buddy?.divesOnSpot}
                 />
               ))}
             </div>

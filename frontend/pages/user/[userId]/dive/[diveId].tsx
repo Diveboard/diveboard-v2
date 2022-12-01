@@ -56,7 +56,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     species = await firestoreSpeciesServices.getSpeciesByIds(data.species);
   }
   if (data?.buddies.length) {
-    buddies = await firestorePublicProfileService.getUsersInfo(data.buddies);
+    buddies = await firestorePublicProfileService.getUsersInfo(data.buddies, data?.spotId);
   }
   return {
     props: {
