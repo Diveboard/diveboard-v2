@@ -5,6 +5,7 @@ import { useOutsideClick } from '../../../../hooks/useOutsideClick';
 import { ProfileImage } from '../../SettingsBlocks/SettingsItemContent/NotEditedContent/ProfileImage';
 import { ImageInfo, UserType } from '../../../../types';
 import { month } from '../../../../utils/date';
+import {downloadFile} from "../../../../utils/download";
 
 type Props = {
   image: ImageInfo;
@@ -60,16 +61,14 @@ export const Lightbox: FC<Props> = ({
               <Icon iconName="back-button" size={30} />
             </a>
             <div className={styles.btnsGroup}>
+              <span onClick={async () => downloadFile(image.img)}>
+                <Icon iconName="download" size={30} />
+              </span>
               <a
                 href={image.img}
                 download
                 target="_blank"
                 rel="noreferrer"
-              >
-                <Icon iconName="download" size={30} />
-              </a>
-              <a
-                onClick={() => navigator?.share()}
               >
                 <Icon iconName="share" size={30} />
               </a>

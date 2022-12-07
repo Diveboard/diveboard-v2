@@ -25,6 +25,38 @@ export const firestoreDivesService = {
     }
   },
 
+  updateDiveData: async (
+    userId: string,
+    diveId: string,
+    dive: DiveType,
+  ) => {
+    try {
+      const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveId);
+      const docSnap = await getDoc(docRef);
+      const { spotId } = await docSnap.data();
+      if (dive.spotId !== spotId) {
+        // Add dive to new spot
+        const spot = await firestoreSpotsService.getSpotById(dive.spotId);
+        if (spot) {
+          const newSpot = { ...spot };
+          newSpot.dives?.push(diveId);
+          await firestoreSpotsService.updateSpotById(dive.spotId, newSpot);
+        }
+
+        // Delete dive from old spot
+        const spotO = await firestoreSpotsService.getSpotById(spotId);
+        const oldSpot = { ...spotO };
+        oldSpot.dives = oldSpot.dives.filter((i) => i !== diveId);
+        await firestoreSpotsService.updateSpotById(spotId, oldSpot);
+      }
+      await setDoc(docRef, { ...dive }, { merge: false });
+      return true;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error('update dive data error');
+    }
+  },
+
   unpublishDives: async (userId: string, diveIds: Array<string>) => {
     try {
       for (let i = 0; i < diveIds.length; i++) {
@@ -235,21 +267,6 @@ export const firestoreDivesService = {
     } catch (e) {
       console.log(e.message);
       throw new Error('get dive data error');
-    }
-  },
-
-  updateDiveData: async (
-    userId: string,
-    diveId: string,
-    dive: DiveType,
-  ) => {
-    try {
-      const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveId);
-      await setDoc(docRef, { ...dive }, { merge: false });
-      return true;
-    } catch (e) {
-      console.log(e.message);
-      throw new Error('update dive data error');
     }
   },
 

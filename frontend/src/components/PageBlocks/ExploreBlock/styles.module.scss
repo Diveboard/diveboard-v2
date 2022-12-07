@@ -5,15 +5,20 @@
   margin-top: 5px;
 }
 
+.min-height-wrapper {
+  height: 100vh;
+}
+
 .map {
   width: 70vw;
+  min-height: calc(100vh - 30px);
 }
 
 .sidebar {
   display: flex;
   flex-direction: column;
   width: 33vw;
-  max-height: 78.6vh;
+  max-height: calc(100vh - 30px);
   overflow: auto;
   margin-top: 80px;
   padding: 30px 35px 20px 75px;
@@ -40,11 +45,19 @@
   justify-content: space-between;
   margin: 16px 0 14px;
 
-  >span {
+  > button {
     width: 100%;
     text-align: center;
-    border-bottom: 2px solid rgba(0, 3, 69, 0.05);
     line-height: 49px;
+    cursor: pointer;
+    border: none;
+    border-bottom: 2px solid rgba(0, 3, 69, 0.05);
+    background-color: transparent;
+
+    &:disabled {
+      color: #9b9b9b;
+      cursor: not-allowed;
+    }
   }
 
   .active {
@@ -91,9 +104,15 @@
   font-size: 14px;
   line-height: 20px;
   color: #000345;
-  margin-bottom: 36px;
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: column;
 
-  >b {
+  > span {
+    line-height: 25px;
+  }
+
+  > b {
     font-weight: 500;
     font-size: 14px;
     line-height: 20px;

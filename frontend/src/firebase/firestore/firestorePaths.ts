@@ -24,6 +24,9 @@ const guidesPath = `${shopsSegment}/guides`;
 // Countries
 const countriesSegment = 'countries';
 const countriesPath = countriesSegment;
+// Areas
+const areasSegment = 'areas';
+const areasPath = areasSegment;
 // Geonemes core
 const geonamesSegment = 'geonames_cores';
 const geonamesPath = geonamesSegment;
@@ -79,6 +82,10 @@ export const firestorePaths = {
   regions: {
     path: regionsPath,
     segment: regionsSegment,
+  },
+  areas: {
+    path: areasPath,
+    segment: areasSegment,
   },
   featureCode: {
     path: featureCodePath,

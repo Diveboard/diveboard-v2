@@ -201,7 +201,7 @@ export const firestoreGeoDataService = {
     }
   },
 
-  getRegions: async (locationName) => {
+  getRegions: async (locationName, limitRegions) => {
     const upperLocation = locationName.trim()
       .charAt(0)
       .toUpperCase() + locationName.slice(1);
@@ -210,20 +210,42 @@ export const firestoreGeoDataService = {
       const q = query(
         docRef,
         where('name', '>=', upperLocation),
-        limit(5),
+        limit(limitRegions || 5),
       );
-      const locations: { id: string | number, name: string }[] = [];
+      const locations: { id: string | number, name: string, nesw_bounds?: any }[] = [];
 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((document) => {
-        const { name } = document.data();
-        const { id } = document;
-        locations.push({ id, name });
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        const { name, nesw_bounds, id } = document.data();
+        locations.push({
+          // @ts-ignore
+          id: document.id, regionId: id, name, coords: JSON.parse(nesw_bounds),
+        });
       });
       return locations;
     } catch (e) {
       console.log(e);
       throw new Error('get regions error');
+    }
+  },
+
+  getRegionArea: async (id: string) => {
+    try {
+      const docRef = collection(db, firestorePaths.areas.path);
+      const q = query(
+        docRef,
+        where('id', '==', id),
+      );
+      const querySnapshot = await getDocs(q);
+      const regions = [];
+      querySnapshot.forEach((document) => {
+        regions.push(document.data());
+      });
+      return regions[0];
+    } catch (e) {
+      console.log(e);
+      throw new Error('get geoname coords by name error');
     }
   },
 

@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
+import { flag } from 'country-emoji';
 import styles from './styles.module.scss';
 import { Icon } from '../../../Icons/Icon';
 
@@ -9,6 +10,7 @@ type Props = {
   depth: string
   imgSrc: string
   favorite: boolean
+  country?: string
 };
 
 const SpotCard: FC<Props> = ({
@@ -17,6 +19,7 @@ const SpotCard: FC<Props> = ({
   region,
   imgSrc,
   favorite,
+  country,
 }) => (
   <div className={styles.wrapper}>
     <Image
@@ -28,8 +31,7 @@ const SpotCard: FC<Props> = ({
     />
     <div className={styles.description}>
       <div className={styles.region}>
-        <Icon iconName="Egypt" size={16} />
-        {region}
+        {`${flag(country)} ${region}`}
         <div className={styles.favIcon}><Icon iconName={favorite ? 'heart filled in' : 'heart'} size={16} /></div>
       </div>
       <span className={styles.name}>{name}</span>

@@ -7,12 +7,16 @@ type Props = {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   withBackArrow?: boolean;
+  onClick?: () => void;
+  children?: any
 };
 
 export const SearchAnimatedInput: FC<Props> = ({
   value,
   setValue,
   withBackArrow,
+  onClick,
+  children,
 }) => {
   const isMobile = useWindowWidth(500, 768);
   const [opened, setOpened] = useState(false);
@@ -57,13 +61,14 @@ export const SearchAnimatedInput: FC<Props> = ({
       />
       <span
         onClick={() => {
+          onClick();
           setOpened(true);
         }}
         className={styles.searchButton}
       >
         <Icon iconName="search" size={24} />
       </span>
-
+      {children}
     </div>
   );
 };

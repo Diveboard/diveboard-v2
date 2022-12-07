@@ -65,6 +65,20 @@ export const firestoreSpotsService = {
     }
   },
 
+  getSpotsByRegion: async (region: string) => {
+    const docRef = collection(db, firestorePaths.spots.path);
+    const q = query(
+      docRef,
+      where('location.region', '==', region),
+    );
+    const querySnapshot = await getDocs(q);
+    const spots = [];
+    querySnapshot.forEach((document) => {
+      spots.push({ id: document.id, ...document.data() });
+    });
+    return spots;
+  },
+
   getAllSpotsInMapViewport: async (bounds: {
     ne: Coords;
     sw: Coords;
