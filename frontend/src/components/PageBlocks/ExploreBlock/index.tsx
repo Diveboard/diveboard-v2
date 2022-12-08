@@ -201,16 +201,12 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const searchHandler = async (item) => {
     setRegions([]);
     setSearchQuery(item.name);
-    // @ts-ignore
     if (item.regionId) {
-      // @ts-ignore
       const reg = await firestoreGeoDataService.getRegionArea(item.regionId);
       setRegion(reg);
     }
-    // @ts-ignore
-    if (item?.coords) {
-      // @ts-ignore
-      setMapsCoords(item.coords.northeast);
+    if (item?.coords?.ne) {
+      setMapsCoords(item.coords?.ne);
     }
     setIsFetch(false);
     const res = await firestoreSpotsService.getSpotsByRegion(item.name);
