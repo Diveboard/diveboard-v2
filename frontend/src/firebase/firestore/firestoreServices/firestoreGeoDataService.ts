@@ -2,7 +2,7 @@ import {
   collection, getDocs, query, orderBy, startAt, limit, where, doc, getDoc,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
-import { Coords } from '../../../types';
+import { Bounds, Coords } from '../../../types';
 import { firestorePaths } from '../firestorePaths';
 
 export const firestoreGeoDataService = {
@@ -20,16 +20,34 @@ export const firestoreGeoDataService = {
       );
       const querySnapshot = await getDocs(q);
 
-      const countries: { id: string | number, name: string }[] = [];
+      const countries: {
+        id: string | number,
+        name: string,
+        coords: Bounds,
+        countryId?: string
+      }[] = [];
+
       querySnapshot.forEach((document) => {
         const {
           cname,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          nesw_bounds,
+          countryId,
         } = document.data();
         const { id } = document;
         const name = cname.trim().toLowerCase();
-
         if (name.startsWith(lowCaseCountryName)) {
-          countries.push({ id, name: cname });
+          const { northeast: ne, southwest: sw } = JSON.parse(nesw_bounds);
+          const coords = {
+            ne,
+            sw,
+          };
+          countries.push({
+            id,
+            name: cname,
+            coords,
+            countryId,
+          });
         }
       });
 
@@ -201,7 +219,7 @@ export const firestoreGeoDataService = {
     }
   },
 
-  getRegions: async (locationName, limitRegions) => {
+  getRegions: async (locationName, countryId, limitRegions = 5) => {
     const upperLocation = locationName.trim()
       .charAt(0)
       .toUpperCase() + locationName.slice(1);
@@ -212,15 +230,40 @@ export const firestoreGeoDataService = {
         where('name', '>=', upperLocation),
         limit(limitRegions || 5),
       );
-      const locations: { id: string | number, name: string, nesw_bounds?: any }[] = [];
+      // if (countryId) {
+      //   q = query(
+      //     docRef,
+      //     where('name', '>=', upperLocation),
+      //     // Add to region collection country name
+      //     where('countryId', '==', countryId),
+      //     limit(limitRegions || 5),
+      //   );
+      // }
+      const locations: {
+        id: string | number,
+        name: string,
+        coords?: Bounds,
+        regionId?: string
+      }[] = [];
 
       const querySnapshot = await getDocs(q);
+
       querySnapshot.forEach((document) => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const { name, nesw_bounds, id } = document.data();
+        let coords;
+        if (nesw_bounds) {
+          const { northeast: ne, southwest: sw } = JSON.parse(nesw_bounds);
+          coords = {
+            ne,
+            sw,
+          };
+        }
         locations.push({
-          // @ts-ignore
-          id: document.id, regionId: id, name, coords: JSON.parse(nesw_bounds),
+          id: document.id,
+          regionId: id,
+          name,
+          coords,
         });
       });
       return locations;

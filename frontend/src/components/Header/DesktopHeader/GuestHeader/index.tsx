@@ -56,7 +56,7 @@ export const GuestHeader: FC = (): JSX.Element => {
 
       <div className={styles.rightGroup}>
         <LinkedButton
-          link="/"
+          link="/explore"
           iconName={
             router.pathname === pagesRoutes.mainPageGuest && !scrolled
               ? 'search-white'

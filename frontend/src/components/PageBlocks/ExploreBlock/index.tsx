@@ -186,7 +186,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
 
   const fetchRegions = async () => {
     if (inputRegion && isFetch) {
-      const res = await firestoreGeoDataService.getRegions(inputRegion, 15);
+      const res = await firestoreGeoDataService.getRegions(inputRegion, null, 15);
       setRegions(res);
     }
   };

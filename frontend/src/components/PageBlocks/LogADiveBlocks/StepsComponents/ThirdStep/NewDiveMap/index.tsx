@@ -14,11 +14,11 @@ import { MarkerType } from '../../../types/commonTypes';
 import {
   firestoreSpotsService,
 } from '../../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
-import { Coords } from '../../../../../../types';
 import styles from './styles.module.scss';
 import {
   firestoreGeoDataService,
 } from '../../../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
+import { Bounds } from '../../../../../../types';
 
 type Props = {
   location: { lat: number, lng: number };
@@ -34,6 +34,7 @@ type Props = {
   setChosenPointId: (res: string) => void;
   setButton:React.Dispatch<React.SetStateAction<string>>;
   disableError?: () => void;
+  boundsCoors?: Bounds;
 };
 
 export const LogADiveDiveMap: FC<Props> = ({
@@ -50,13 +51,11 @@ export const LogADiveDiveMap: FC<Props> = ({
   setChosenPointId,
   setButton,
   disableError,
+  boundsCoors,
 }) => {
   const [region, setRegion] = useState('');
   const userLocation = useUserLocation();
-  const bounds = useRef<{
-    ne: Coords;
-    sw: Coords;
-  }>();
+  const bounds = useRef<Bounds>();
 
   const markersComponents = markers.map((point) => (
     <DivePoint
@@ -125,6 +124,18 @@ export const LogADiveDiveMap: FC<Props> = ({
       });
     setMarkers(markersItems);
   };
+  useEffect(() => {
+    // Handle add new spot
+    if (boundsCoors) {
+      bounds.current = boundsCoors;
+      const lat = (boundsCoors.sw.lat + boundsCoors.ne.lat) / 2;
+      const lng = (boundsCoors.sw.lng + boundsCoors.ne.lng) / 2;
+      setLocation({
+        lat,
+        lng,
+      });
+    }
+  }, [boundsCoors]);
 
   useEffect(() => {
     if (userLocation) setLocation(userLocation);

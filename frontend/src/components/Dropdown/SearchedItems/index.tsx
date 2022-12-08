@@ -3,13 +3,17 @@ import React, {
 } from 'react';
 import { SearchDropdownPanel } from './SearchDropdownPanel';
 import { useDebounced } from '../../../hooks/useDebounced';
+import { Bounds } from '../../../types';
+// import { useOutsideClick } from '../../../hooks/useOutsideClick';
 
 type Props = {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
-  onSearchHandler: (value: string) => Promise<{ id: string | number, name: string }[]>;
-  onSearchedItemClicked?: (item: { id: string | number, name: string }) => void;
+  onSearchHandler: (value: string) =>
+  Promise<{ id: string | number, name: string, coords?: Bounds }[]>;
+  onSearchedItemClicked?: (item: { id: string | number, name: string, coords?: Bounds }) => void;
   focus?: boolean;
+  setBounds?: (bounds: Bounds) => void;
 };
 
 export const SearchedItems: FC<Props> = ({
@@ -18,6 +22,7 @@ export const SearchedItems: FC<Props> = ({
   setValue,
   onSearchedItemClicked,
   focus = true,
+  setBounds,
 }) => {
   const [items, setItems] = useState<{ id:string | number, name:string }[]>([]);
   const [loading, setLoading] = useState(false);
@@ -50,6 +55,9 @@ export const SearchedItems: FC<Props> = ({
     }
   }, [debouncedValue]);
 
+  // @ts-ignore
+  // useOutsideClick(() => setOpen(false), clickedValue);
+
   if (!open) {
     return null;
   }
@@ -62,6 +70,9 @@ export const SearchedItems: FC<Props> = ({
         setItems([]);
         setOpen(false);
         setValue(item.name);
+        if (item.coords) {
+          setBounds(item.coords);
+        }
         if (onSearchedItemClicked) {
           onSearchedItemClicked(item);
         }

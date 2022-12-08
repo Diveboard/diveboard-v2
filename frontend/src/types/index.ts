@@ -69,6 +69,11 @@ type SpeciesType = {
   }
 };
 
+export type Bounds = {
+  ne: Coords;
+  sw: Coords;
+};
+
 export type Coords = {
   lat: number;
   lng: number;

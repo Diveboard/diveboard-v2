@@ -34,7 +34,7 @@ export const UserHeader: FC = (): JSX.Element => {
 
       <div className={styles.rightGroup}>
         <LinkedButton
-          link="/"
+          link="/explore"
           iconName="search"
         />
 

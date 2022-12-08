@@ -14,6 +14,7 @@ import { firestoreSpotsService } from '../../../../../firebase/firestore/firesto
 import { setStepErrors } from '../../LogDiveHelpers/stepsErrors/setStepErrors';
 import { ThirdStepErrors } from '../../types/errorTypes';
 import { StepsIndicator } from '../../StepsIndicator';
+import { Bounds } from '../../../../../types';
 
 export const ThirdStep: FC<StepProps> = ({
   step,
@@ -27,6 +28,7 @@ export const ThirdStep: FC<StepProps> = ({
     lng: 30.33,
   });
   const [newSpotName, setNewSpotName] = useState('');
+  const [bounds, setBounds] = useState<Bounds>(undefined);
 
   const [markers, setMarkers] = useState<MarkerType[]>([]);
 
@@ -103,6 +105,7 @@ export const ThirdStep: FC<StepProps> = ({
         <h2>Dive Site</h2>
 
         <LogADiveDiveMap
+          boundsCoors={bounds}
           location={location}
           setLocation={setLocation}
           markers={markers}
@@ -140,6 +143,7 @@ export const ThirdStep: FC<StepProps> = ({
             setCreateSpotMode={setCreateSpotMode}
             newPointCoords={newPointCoords}
             zoom={zoom}
+            setBounds={setBounds}
           />
         )}
       </div>

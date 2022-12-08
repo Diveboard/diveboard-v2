@@ -19,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (uid) {
     return {
       redirect: {
-        destination: '/main/home-user',
+        destination: '/logbook',
         permanent: false,
       },
     };

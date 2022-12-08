@@ -9,6 +9,7 @@ import {
 import { Button } from '../../../../../Buttons/Button';
 import { createNewSpotData, createNewSpotHandler } from '../thirdStepHelpers';
 import { Loader } from '../../../../../Loader';
+import { Bounds } from '../../../../../../types';
 
 type Props = {
   newSpotName: string;
@@ -17,10 +18,17 @@ type Props = {
   createdNewSpotId: React.MutableRefObject<string>
   newPointCoords: { lat: number, lng: number };
   zoom: number;
+  setBounds?: (bounds: Bounds) => void;
 };
 
 export const CreateNewSpot: FC<Props> = ({
-  newSpotName, setNewSpotName, setCreateSpotMode, newPointCoords, zoom, createdNewSpotId,
+  newSpotName,
+  setNewSpotName,
+  setCreateSpotMode,
+  newPointCoords,
+  zoom,
+  createdNewSpotId,
+  setBounds,
 }) => {
   const [newSpotNameError, setNewSpotNameError] = useState('');
 
@@ -43,6 +51,7 @@ export const CreateNewSpot: FC<Props> = ({
     setLoading,
     setCreateSpotMode,
   );
+
   return (
     <div>
       <div className={styles.newSpotGroup}>
@@ -79,6 +88,7 @@ export const CreateNewSpot: FC<Props> = ({
               value={newSpotCountry}
               setValue={setNewSpotCountry}
               onSearchHandler={firestoreGeoDataService.getCountries}
+              setBounds={setBounds}
             />
           </div>
           <div className={styles.countryInputWrapper}>
@@ -89,13 +99,16 @@ export const CreateNewSpot: FC<Props> = ({
               height={48}
               width={720}
               error={newSpotRegionError}
+              disabled={!newSpotCountry}
               setError={setNewSpotRegionError}
             />
 
             <SearchedItems
               value={newSpotRegion}
               setValue={setNewSpotRegion}
+              // @ts-ignore
               onSearchHandler={firestoreGeoDataService.getRegions}
+              setBounds={setBounds}
             />
           </div>
           <div className={styles.countryInputWrapper}>
