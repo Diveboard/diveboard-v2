@@ -1,10 +1,11 @@
+
+
 .tank {
   margin: 10px 0;
   width: 100%;
   background: #F0F6FF;
   padding: 44px 28px 25px 28px;
   border-radius: 30px;
-
 
   .row {
     display: flex;
@@ -13,7 +14,6 @@
     >div{
       margin-bottom: 20px;
     }
-
 
     .labelWrapper {
       display: flex;
@@ -28,9 +28,18 @@
       margin-right: 10px;
     }
 
-    > div {
+    > div:not(:last-child) {
       margin-right: 10px;
     }
+  }
+}
+
+.mixture {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  > div:not(:last-child) {
+    margin-right: 10px;
   }
 }
 

@@ -15,6 +15,8 @@ export const Tank: FC<Props> = ({
   cylinder,
   material,
   mixture,
+  o2,
+  he,
   size,
   volume,
   pressureStart,
@@ -65,7 +67,7 @@ export const Tank: FC<Props> = ({
 
     <MarginWrapper top={10} display="block">
       <InputLabelWrapper label="Mixture">
-        <div className={styles.row}>
+        <div className={styles.mixture}>
           <Dropdown
             item={mixture}
             setItem={
@@ -74,6 +76,27 @@ export const Tank: FC<Props> = ({
             allItems={['air', 'nitrox', 'trimix']}
             width={160}
           />
+          {mixture === 'trimix'
+              && (
+              <>
+                <Input
+                  type="number"
+                  value={o2 ? `${o2}` : ''}
+                  setValue={setTankParameters.setO2}
+                  height={48}
+                  width={112}
+                  placeholder="O2"
+                />
+                <Input
+                  type="number"
+                  value={he ? `${he}` : ''}
+                  setValue={setTankParameters.setHe}
+                  height={48}
+                  width={112}
+                  placeholder="He"
+                />
+              </>
+              )}
         </div>
       </InputLabelWrapper>
     </MarginWrapper>
@@ -106,17 +129,16 @@ export const Tank: FC<Props> = ({
                 placeholder="m"
               />
             </div>
+          </div>
 
-            <Dropdown
-              item={pressureMeasures}
-              setItem={
+          <Dropdown
+            item={pressureMeasures}
+            setItem={
                 setTankParameters.setMeasures
               }
-              allItems={['bar', 'psi']}
-              width={112}
-            />
-
-          </div>
+            allItems={['bar', 'psi']}
+            width={112}
+          />
 
         </InputLabelWrapper>
         <div className={styles.buttonWrapper}>

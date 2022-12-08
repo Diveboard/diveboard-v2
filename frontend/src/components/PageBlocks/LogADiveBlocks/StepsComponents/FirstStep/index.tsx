@@ -40,6 +40,8 @@ export const FirstStep: FC<StepProps> = ({ step, setStep }) => {
   return (
     <div>
       <StepsIndicator
+        objectKey="overview"
+        currentDataKey="diveNumber"
         step={step}
         setStep={setStep}
         setErrors={setErrors}

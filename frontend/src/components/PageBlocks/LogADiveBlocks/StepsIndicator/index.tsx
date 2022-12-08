@@ -1,8 +1,11 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { StepType } from '../types/commonTypes';
 import styles from './styles.module.scss';
+import { LogDiveDataContext } from '../LogDiveData/logDiveContext';
 
 type Props = {
+  currentDataKey?: 'diveNumber' | 'date';
+  objectKey?: 'parameters' | 'overview';
   step: StepType;
   setStep: React.Dispatch<React.SetStateAction<StepType>>;
   setStepData: () => void;
@@ -13,8 +16,11 @@ type StepItemProps = Props & {
 };
 
 const StepItem: FC<StepItemProps> = ({
-  currentStep, step, setStep, setStepData, setErrors,
+  currentStep, step, setStep, setStepData, setErrors, objectKey, currentDataKey,
 }) => {
+  const { getStepData } = useContext(LogDiveDataContext);
+  const data = getStepData(step);
+
   const clickHandler = () => {
     if (currentStep === step) {
       return;
@@ -24,6 +30,12 @@ const StepItem: FC<StepItemProps> = ({
         setStepData();
         if (step !== 9) {
           setStep(currentStep);
+        }
+        if (step === 1 && !data[objectKey][currentDataKey]) {
+          setStep(2);
+        }
+        if (step === 2 && !data[objectKey][currentDataKey]) {
+          setStep(3);
         }
       }
     } else {
@@ -42,6 +54,8 @@ const StepItem: FC<StepItemProps> = ({
 
 export const StepsIndicator: FC<Props> = ({
   step,
+  objectKey,
+  currentDataKey,
   setStep,
   setStepData,
   setErrors,
@@ -51,6 +65,8 @@ export const StepsIndicator: FC<Props> = ({
     <div className={styles.indicatorWrapper}>
       {steps.map((item) => (
         <StepItem
+          currentDataKey={currentDataKey}
+          objectKey={objectKey}
           key={item}
           currentStep={item as StepType}
           step={step}

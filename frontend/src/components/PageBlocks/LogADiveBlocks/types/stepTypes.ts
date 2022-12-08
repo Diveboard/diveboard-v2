@@ -38,6 +38,8 @@ export type Tank = {
   size: 'L' | 'cuft';
   material: 'steel' | 'aluminum' | 'carbon';
   mixture: 'air' | 'nitrox' | 'trimix';
+  o2?:number;
+  he?:number;
   pressureStart: number;
   pressureEnd: number;
   pressureMeasures: 'bar' | 'psi';
