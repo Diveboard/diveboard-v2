@@ -5,7 +5,7 @@ import { useOutsideClick } from '../../../../hooks/useOutsideClick';
 import { ProfileImage } from '../../SettingsBlocks/SettingsItemContent/NotEditedContent/ProfileImage';
 import { ImageInfo, UserType } from '../../../../types';
 import { month } from '../../../../utils/date';
-import {downloadFile} from "../../../../utils/download";
+import { downloadFile } from '../../../../utils/download';
 
 type Props = {
   image: ImageInfo;
