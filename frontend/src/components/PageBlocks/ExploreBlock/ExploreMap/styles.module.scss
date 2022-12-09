@@ -18,6 +18,8 @@
 
 @media (max-width: 768px) {
   .mapWrapper {
+    position: fixed;
+    top: 0;
     width: 100vw;
     height: 100vh;
     transition: visibility .1s .3s ease-in-out;
