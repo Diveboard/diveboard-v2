@@ -165,7 +165,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
       }
       sidebar.style.top = 'calc(100% - 60px)';
       sidebar.style.bottom = '0';
-      sidebar.style.maxHeight = '60px';
       navbar.style.visibility = 'hidden';
       map.style.visibility = 'visible';
       input.style.visibility = 'visible';
