@@ -1,9 +1,8 @@
-import React, { FC, SetStateAction } from 'react';
+import React, { FC } from 'react';
 import GoogleMapReact, { Maps } from 'google-map-react';
 import { getMapOptions } from '../../../../utils/getMapOptions';
 import { DivePoint } from '../../../Point';
 import styles from './styles.module.scss';
-import { SearchAnimatedInput } from '../../../Input/SearchAnimatedInput';
 
 type Props = {
   coords: {
@@ -18,18 +17,16 @@ type Props = {
     lng: number;
     diveName: string;
   }[];
-  searchQuery: string;
-  setSearchQuery: React.Dispatch<SetStateAction<string>>;
   isMobile?: boolean;
+  renderInput?: JSX.Element;
 };
 
 export const ExploreMap: FC<Props> = ({
   coords,
   points,
   zoom,
-  searchQuery,
-  setSearchQuery,
   isMobile,
+  renderInput,
 }) => {
   const handleApiLoaded = (map, maps) => {
     console.log({ maps });
@@ -49,11 +46,7 @@ export const ExploreMap: FC<Props> = ({
     <div className={styles.mapWrapper}>
       {isMobile && (
       <div className={styles.inputWrapper} id="mapInput">
-        <SearchAnimatedInput
-          value={searchQuery}
-          setValue={setSearchQuery}
-          withBackArrow
-        />
+        {renderInput}
       </div>
       )}
       <GoogleMapReact

@@ -220,36 +220,40 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     setSpots(res);
   };
 
+  const renderInput = (
+    <SearchAnimatedInput
+      value={searchQuery}
+      setValue={(val) => {
+        setSearchQuery(val);
+        setActiveTab('Spots');
+      }}
+      withBackArrow
+      onClick={() => {
+        setIsFetch(true);
+        fetchRegions();
+      }}
+    >
+      {!!regions?.length && (
+      <SearchDropdownPanel
+        loading={false}
+        onItemClick={searchHandler}
+        items={regions}
+      />
+      )}
+    </SearchAnimatedInput>
+  );
+
   return (
     <div className={`${styles.wrapper} ${styles['min-height-wrapper']}`}>
       <div className={styles.sidebar} id="sidebar" onTouchEnd={handleSidebar}>
-        {!isMobile && (
-        <SearchAnimatedInput
-          value={searchQuery}
-          setValue={(val) => {
-            setSearchQuery(val);
-            setActiveTab('Spots');
-          }}
-          withBackArrow
-          onClick={() => {
-            setIsFetch(true);
-            fetchRegions();
-          }}
+        {!isMobile && renderInput}
+        <div
+          className={styles.tabs}
+          onTouchStart={(e) => setTouchStartY(e.touches[0].screenY)}
         >
-          {!!regions?.length && (
-          <SearchDropdownPanel
-            loading={false}
-            onItemClick={searchHandler}
-            items={regions}
-          />
-          )}
-        </SearchAnimatedInput>
-        )}
-        <div className={styles.tabs}>
           {isMobile && (
           <div
             className={styles.mobDashWrapper}
-            onTouchStart={(e) => setTouchStartY(e.touches[0].screenY)}
           >
             <div className={styles.mobDash} />
           </div>
@@ -376,9 +380,8 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
           coords={mapCoords}
           zoom={7}
           points={markerPoints}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
           isMobile={isMobile}
+          renderInput={renderInput}
         />
         {/* {typeof chosenSpot === 'number' && ( */}
         {/* <div className={styles.chosenSpot}> */}
