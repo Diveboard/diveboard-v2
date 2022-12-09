@@ -97,7 +97,9 @@ export const firestoreSpotsService = {
           lat,
           lng,
           name,
+          dives,
           stats: { divesLogged },
+          location,
           zoom,
         } = document.data();
         const { id } = document;
@@ -106,6 +108,8 @@ export const firestoreSpotsService = {
             id,
             name,
             divesLogged,
+            dives: dives.length,
+            location,
             zoom,
             lat,
             lng,

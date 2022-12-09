@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import GoogleMapReact from 'google-map-react';
 import styles from './styles.module.scss';
 import { SearchAnimatedInput } from '../../Input/SearchAnimatedInput';
 import SpotCard from './SpotCard';
@@ -205,8 +206,13 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
       const reg = await firestoreGeoDataService.getRegionArea(item.regionId);
       setRegion(reg);
     }
-    if (item?.coords?.ne) {
-      setMapsCoords(item.coords?.ne);
+    if (item?.coords) {
+      const lat = (item.coords.sw.lat + item.coords.ne.lat) / 2;
+      const lng = (item.coords.sw.lng + item.coords.ne.lng) / 2;
+      setMapsCoords({
+        lat,
+        lng,
+      });
     }
     setIsFetch(false);
     const res = await firestoreSpotsService.getSpotsByRegion(item.name);
@@ -242,6 +248,22 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
       )}
     </SearchAnimatedInput>
   );
+
+  const onMapChange = async (e: GoogleMapReact.ChangeEventValue) => {
+    const markersItems = await firestoreSpotsService
+      .getAllSpotsInMapViewport({
+        ne: e.bounds.ne,
+        sw: e.bounds.sw,
+      });
+    setMarkerPoints(markersItems.map((s) => ({
+      id: s.id,
+      lat: s.lat,
+      lng: s.lng,
+      divesCount: s.dives,
+      diveName: s.name,
+    })));
+    setSpots(markersItems);
+  };
 
   return (
     <div className={`${styles.wrapper} ${styles['min-height-wrapper']}`}>
@@ -283,7 +305,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
                   name={spot.name}
                 // Check it
                   depth={spot.stats?.averageDepth?.metric}
-                  imgSrc={spot.bestPictures[0] || '/images/fish.jpg'}
+                  imgSrc={spot.bestPictures?.length ? spot.bestPictures[0] : '/images/fish.jpg'}
                   favorite={false}
                   country={spot.location?.country}
                 />
@@ -382,6 +404,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
           points={markerPoints}
           isMobile={isMobile}
           renderInput={renderInput}
+          onMapChange={onMapChange}
         />
         {/* {typeof chosenSpot === 'number' && ( */}
         {/* <div className={styles.chosenSpot}> */}

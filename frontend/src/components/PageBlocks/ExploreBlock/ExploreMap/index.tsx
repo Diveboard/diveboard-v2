@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import GoogleMapReact, { Maps } from 'google-map-react';
+import { useRouter } from 'next/router';
 import { getMapOptions } from '../../../../utils/getMapOptions';
 import { DivePoint } from '../../../Point';
 import styles from './styles.module.scss';
@@ -19,6 +20,7 @@ type Props = {
   }[];
   isMobile?: boolean;
   renderInput?: JSX.Element;
+  onMapChange: (e: GoogleMapReact.ChangeEventValue) => void;
 };
 
 export const ExploreMap: FC<Props> = ({
@@ -27,10 +29,13 @@ export const ExploreMap: FC<Props> = ({
   zoom,
   isMobile,
   renderInput,
+  onMapChange,
 }) => {
   const handleApiLoaded = (map, maps) => {
     console.log({ maps });
   };
+
+  const router = useRouter();
 
   const markers = points.map((point) => (
     <DivePoint
@@ -39,6 +44,7 @@ export const ExploreMap: FC<Props> = ({
       lat={point.lat}
       lng={point.lng}
       diveName={point.diveName}
+      onClick={() => router.push('/spot')}
     />
   ));
 
@@ -54,10 +60,10 @@ export const ExploreMap: FC<Props> = ({
         id="map"
         yesIWantToUseGoogleMapApiInternals
         bootstrapURLKeys={
-              {
-                key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY,
-              }
-            }
+          {
+            key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY,
+          }
+        }
         defaultCenter={coords}
         center={{ lat: coords.lat - 1, lng: coords.lng }}
         defaultZoom={zoom}
@@ -66,6 +72,7 @@ export const ExploreMap: FC<Props> = ({
           map,
           maps,
         }) => handleApiLoaded(map, maps)}
+        onChange={onMapChange}
       >
         {markers}
       </GoogleMapReact>
