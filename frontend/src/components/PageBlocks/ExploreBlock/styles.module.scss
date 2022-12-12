@@ -162,14 +162,14 @@
   }
 
   .sidebar {
-    max-height: 50vh;
+    height: 88vh;
     display: block;
     width: 100vw;
     margin: 0;
     padding: 0 10px 50px;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
-    position: absolute;
+    position: fixed;
     top: 48%;
     z-index: 3;
     background: white;
