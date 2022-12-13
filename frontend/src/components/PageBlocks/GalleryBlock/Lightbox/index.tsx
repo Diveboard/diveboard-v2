@@ -13,7 +13,7 @@ type Props = {
   onClose: () => void;
   handleNextSlide: () => void;
   handlePrevSlide: () => void;
-  user: UserType;
+  user?: UserType;
 };
 
 export const Lightbox: FC<Props> = ({
@@ -85,10 +85,10 @@ export const Lightbox: FC<Props> = ({
           <div className={styles.imgData}>
             <div className={styles.avatar}>
               <ProfileImage
-                imgSrc={user.photoURL || '/appIcons/no-photo.svg'}
+                imgSrc={user?.photoURL || '/appIcons/no-photo.svg'}
                 size={44}
               />
-              <span className={styles.authorName}>{user.name}</span>
+              <span className={styles.authorName}>{user?.name}</span>
             </div>
             <div className={styles.imgDataText}>
               <span className={styles.date}>

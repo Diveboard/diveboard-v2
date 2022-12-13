@@ -2,28 +2,45 @@ import React, { FC, useContext } from 'react';
 import { Footer } from '../components/Footer/DesktopFooter';
 import { useWindowWidth } from '../hooks/useWindowWidth';
 import { MobileGuestHeader, MobileUserHeader } from '../components/Header/MobileHeader';
-import { GuestHeader, UserHeader } from '../components/Header/DesktopHeader';
 import { MobileNavBar } from '../components/MobileNavBar';
 import { FooterMobile } from '../components/Footer/MobileFooter';
 import { AuthStatusContext } from './AuthLayout';
 import { LogDiveProvider } from '../components/PageBlocks/LogADiveBlocks/LogDiveData/LogDiveProvider';
+import { GuestHeader, UserHeader } from '../components/Header/DesktopHeader';
 
-export const MainLayout: FC = ({ children }) => {
-  const isWidth = useWindowWidth(500, 769);
+type Props = {
+  isHideMobileHeader?: boolean;
+  isFilled?: boolean;
+};
+
+export const MainLayout: FC<Props> = ({ isHideMobileHeader = false, isFilled, children }) => {
+  const isMobile = useWindowWidth(500, 769);
   const { userAuth } = useContext(AuthStatusContext);
-  const guestHeader = !isWidth ? <GuestHeader /> : <MobileGuestHeader />;
-  const userHeader = !isWidth ? <UserHeader /> : <MobileUserHeader />;
-  const headerComponent = userAuth ? userHeader : guestHeader;
+
+  const headerComponent = () => {
+    if (userAuth) {
+      if (!isMobile) {
+        return <UserHeader />;
+      } if (!isHideMobileHeader) {
+        return <MobileUserHeader />;
+      }
+    } else {
+      if (!isMobile) {
+        return <GuestHeader isFilled={isFilled} />;
+      } if (!isHideMobileHeader) {
+        return <MobileGuestHeader />;
+      }
+    }
+  };
+
   return (
     <>
       <LogDiveProvider>
-        {headerComponent}
+        {headerComponent()}
       </LogDiveProvider>
-
       {children}
-      {!isWidth ? <Footer /> : <FooterMobile />}
-
-      {isWidth && <MobileNavBar loggedIn={!!userAuth} />}
+      {!isMobile ? <Footer /> : <FooterMobile />}
+      {isMobile && <MobileNavBar loggedIn={!!userAuth} />}
     </>
   );
 };

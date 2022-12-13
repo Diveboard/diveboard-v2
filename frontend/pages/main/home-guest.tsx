@@ -7,7 +7,7 @@ import Guest from '../../src/components/PageBlocks/HomePageBlocks/Guest';
 const HomeGuest:
 InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
-    <MainLayout>
+    <MainLayout isFilled>
       <Guest />
     </MainLayout>
   </AuthLayout>

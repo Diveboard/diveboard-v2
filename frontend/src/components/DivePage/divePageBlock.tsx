@@ -20,7 +20,7 @@ import { DiveType, SpeciesType, SpotType } from '../../firebase/firestore/models
 import { DiveBuddyCard } from '../Cards/DiveBuddyCard';
 
 type Props = {
-  user: UserType,
+  user?: UserType,
   dive: DiveType,
   spot: SpotType,
   species?: Array<SpeciesType>

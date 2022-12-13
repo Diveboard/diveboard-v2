@@ -8,7 +8,7 @@ import { Lightbox } from './Lightbox';
 import { ImageInfo, UserType } from '../../../types';
 
 type Props = {
-  user: UserType,
+  user?: UserType,
   images: Array<ImageInfo>
 };
 
@@ -59,7 +59,7 @@ export const GalleryBlock = ({ images, user }: Props) => {
       <div
         className={styles.imageGrid}
       >
-        {filterBySearch(sortImages(images)).map((photo, index) => (
+        {!!images.length && filterBySearch(sortImages(images)).map((photo, index) => (
           <div
               /* eslint-disable-next-line react/no-array-index-key */
             key={index}
@@ -71,7 +71,7 @@ export const GalleryBlock = ({ images, user }: Props) => {
             <PhotoCard
               imgUrl={photo.img}
               favourites={0}
-              authorName={user.name}
+              authorName={user?.name}
             />
           </div>
         ))}

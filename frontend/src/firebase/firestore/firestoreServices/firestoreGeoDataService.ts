@@ -278,7 +278,7 @@ export const firestoreGeoDataService = {
       const docRef = collection(db, firestorePaths.areas.path);
       const q = query(
         docRef,
-        where('id', '==', id),
+        where('id', '==', +id),
       );
       const querySnapshot = await getDocs(q);
       const regions = [];

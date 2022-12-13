@@ -14,7 +14,7 @@ import { convertTimestampDate } from '../../../utils/convertTimestampDate';
 import { parseDate } from '../../../utils/parseDate';
 
 type Props = {
-  user: UserType,
+  user?: UserType,
   dive: DiveType,
   spot: SpotType
 };
@@ -93,17 +93,17 @@ export const SpotDiveData: FC<Props> = ({
               </div>
             </div>
             <div className={styles.leftContentWrapper}>
-              <ProfileImage imgSrc={user.photoURL} size={74} />
+              <ProfileImage imgSrc={user?.photoURL} size={74} />
               <div className={styles.spotTitleWrapper}>
                 <div className={styles.spotTitle}>
-                  {user.name}
+                  {user?.name}
                   {' '}
                   in
                   {' '}
-                  {spot.name}
+                  {spot?.name}
                 </div>
                 <div className={styles.spotCountryWrapper}>
-                  <div>{flag(spot.location.country)}</div>
+                  <div>{flag(spot.location?.country)}</div>
                   <div className={styles.spotLocation}>{spotName}</div>
                 </div>
               </div>

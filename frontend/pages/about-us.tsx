@@ -7,7 +7,7 @@ import AboutUsBlock from '../src/components/PageBlocks/AboutUsBlocks';
 
 const AboutUs: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
-    <MainLayout>
+    <MainLayout isFilled>
       <AboutUsBlock />
     </MainLayout>
   </AuthLayout>

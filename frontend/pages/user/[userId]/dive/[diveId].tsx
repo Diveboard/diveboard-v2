@@ -17,10 +17,11 @@ const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   spot,
   species,
   buddies,
+  diveUser,
 }) => (
   <AuthLayout user={user}>
     <MainLayout>
-      <DivePageBlock dive={dive} user={user} spot={spot} species={species} buddies={buddies} />
+      <DivePageBlock dive={dive} user={diveUser} spot={spot} species={species} buddies={buddies} />
     </MainLayout>
   </AuthLayout>
 );
@@ -28,20 +29,15 @@ const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const uid = context.req.cookies.__session;
   const { diveId, userId } = context.query;
-
-  if (!uid) {
-    return {
-      props: {
-        user: null,
-      },
+  let user = null;
+  if (uid) {
+    const data = await firebaseAdmin.auth().getUser(uid);
+    user = {
+      email: data.email,
+      photoURL: data.photoURL,
+      displayName: data.displayName,
     };
   }
-
-  const {
-    email,
-    photoURL = '',
-    displayName = '',
-  } = await firebaseAdmin.auth().getUser(uid);
 
   const data = await firestoreDivesService.getDiveData(userId as string, diveId as string);
   let spot = null;
@@ -55,17 +51,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (data?.species.length) {
     species = await firestoreSpeciesServices.getSpeciesByIds(data.species);
   }
+
   if (data?.buddies.length) {
     buddies = await firestorePublicProfileService.getUsersInfo(data.buddies, data?.spotId);
   }
+
+  const diveUser = await firestorePublicProfileService.getUserById(userId as string);
+
   return {
     props: {
-      user: {
-        uid,
-        email,
-        photoURL,
-        name: displayName,
-      },
+      user: user ? JSON.parse(JSON.stringify(user)) : null,
+      diveUser: diveUser ? JSON.parse(JSON.stringify(diveUser)) : null,
       dive: data ? JSON.parse(JSON.stringify(data)) : null,
       spot: spot ? JSON.parse(JSON.stringify(spot)) : null,
       species: JSON.parse(JSON.stringify(species)),
