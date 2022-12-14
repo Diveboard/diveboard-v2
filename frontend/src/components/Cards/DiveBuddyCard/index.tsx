@@ -10,6 +10,7 @@ type Props = {
   onDiveBoard: number;
   total: number;
   onSpot: number;
+  onClick: () => void
 };
 
 export const DiveBuddyCard: FC<Props> = ({
@@ -18,11 +19,12 @@ export const DiveBuddyCard: FC<Props> = ({
   onDiveBoard,
   total,
   onSpot,
+  onClick,
 }) => {
   const isTablet = useWindowWidth(500, 1025);
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={onClick}>
       <div className={styles.imgWrapper}>
         <Image
           src={imgSrc}

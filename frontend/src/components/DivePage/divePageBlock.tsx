@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { useRouter } from 'next/router';
 import { CommentsBlock } from './CommentsBlock';
 import { SpotDiveData } from './SpotDiveData';
 import { GearUsed } from './GearBlock';
@@ -31,6 +32,8 @@ export const DivePageBlock = ({
   user, dive, spot, species, buddies,
 }: Props): JSX.Element => {
   const isMobile = useWindowWidth(500, 769);
+
+  const router = useRouter();
 
   const renderPhotoBlock = () => (isMobile
     ? <MobilePhotoGroup photos={dive.externalImgsUrls} />
@@ -72,6 +75,7 @@ export const DivePageBlock = ({
             <div className={styles.divesWrapper}>
               {buddies.map((buddy) => (
                 <DiveBuddyCard
+                  onClick={() => buddy.id && router.push(`/logbook/${buddy.id}`)}
                   key={buddy.id || buddy.name}
                   imgSrc={buddy?.photoURL || '/appIcons/no-photo.svg'}
                   name={buddy?.name}

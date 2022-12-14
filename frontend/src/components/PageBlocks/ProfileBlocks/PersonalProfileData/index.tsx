@@ -41,7 +41,7 @@ export const PersonalProfileData: FC<Props> = ({
     return diveIn;
   };
 
-  const countries = getDiveCountries();
+  const countries = dives.length ? getDiveCountries() : [];
 
   const getDivesPublished = () => {
     const divesPublished = dives.filter((dive) => !dive.draft && dive.publishingMode === 'public');
@@ -80,17 +80,21 @@ export const PersonalProfileData: FC<Props> = ({
   };
 
   const getDeepestDive = () => {
-    const deepestDive = dives.reduce((prev, current) => (
-      ((prev.diveData?.maxDepth || 0) > (current.diveData?.maxDepth || 0)) ? prev : current));
-    const location = deepestDive.spot?.location;
-    return `${deepestDive.diveData?.maxDepth || 0}m in ${location?.location}, ${location?.country}`;
+    const deepestDive = dives.reduce(
+      (prev, current) => (
+        ((prev.diveData?.maxDepth || 0) > (current.diveData?.maxDepth || 0)) ? prev : current),
+    );
+    const location = deepestDive?.spot?.location;
+    return `${deepestDive?.diveData?.maxDepth || 0}m in ${location?.location}, ${location?.country}`;
   };
 
   const getLongestDive = () => {
-    const longestDive = dives.reduce((prev, current) => (
-      ((prev.diveData?.duration || 0) > (current.diveData?.duration || 0)) ? prev : current));
-    const location = longestDive.spot?.location;
-    return `${convertMinutes(longestDive.diveData?.duration || 0)} in ${location?.location}, ${location?.country}`;
+    const longestDive = dives.reduce(
+      (prev, current) => (
+        ((prev.diveData?.duration || 0) > (current.diveData?.duration || 0)) ? prev : current),
+    );
+    const location = longestDive?.spot?.location;
+    return `${convertMinutes(longestDive?.diveData?.duration || 0)} in ${location?.location}, ${location?.country}`;
   };
 
   return (
@@ -132,12 +136,12 @@ export const PersonalProfileData: FC<Props> = ({
         <DiveData
           qualification="PADI Ice Diver, CMAS Nitrox 1"
           diveIn={Array.from(new Set(countries)).join(', ')}
-          divesPublished={getDivesPublished()}
-          thisYear={getCountThisYearDives()}
-          mostDives={getMostDives()}
-          totalUnderwaterTime={getTotalUnderwaterTime()}
-          deepestDive={getDeepestDive()}
-          longestDive={getLongestDive()}
+          divesPublished={!!dives.length && getDivesPublished()}
+          thisYear={!!dives.length && getCountThisYearDives()}
+          mostDives={!!dives.length && getMostDives()}
+          totalUnderwaterTime={!!dives.length && getTotalUnderwaterTime()}
+          deepestDive={!!dives.length && getDeepestDive()}
+          longestDive={!!dives.length && getLongestDive()}
           aboutDiver={about}
         />
 

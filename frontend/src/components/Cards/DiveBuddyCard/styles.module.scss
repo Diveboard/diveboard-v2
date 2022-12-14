@@ -6,6 +6,10 @@
   box-shadow: 0 8px 15px rgba(0, 62, 89, 0.06);
   border-radius: 15px;
 
+  &:hover {
+    cursor: pointer;
+  }
+
   .imgWrapper {
     .img {
       border-radius: 15px 0 0 15px;
