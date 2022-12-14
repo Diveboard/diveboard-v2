@@ -124,7 +124,9 @@ export const firestoreDivesService = {
       });
       for (const dive of dives) {
         // eslint-disable-next-line no-await-in-loop
-        dive.spot = dive.spotId ? await firestoreSpotsService.getSpotNameById(dive.spotId) : null;
+        const spot = dive.spotId ? await firestoreSpotsService.getSpotById(dive.spotId) : null;
+        dive.spot = spot;
+        dive.spotName = spot ? `${spot.location?.location}, ${spot.location?.country}, ${spot?.location.region}` : null;
       }
       return dives;
     } catch (e) {

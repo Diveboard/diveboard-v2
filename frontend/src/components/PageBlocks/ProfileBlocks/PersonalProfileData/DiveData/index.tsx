@@ -6,7 +6,7 @@ type Props = {
   qualification: string;
   diveIn: string;
   divesPublished: string;
-  thisYear: string;
+  thisYear: number;
   totalUnderwaterTime: string;
   mostDives: string;
   deepestDive: string;
@@ -88,6 +88,7 @@ export const DiveData: FC <Props> = ({
     </div>
     <div className={styles.thirdBlock}>
       <span>{aboutDiver}</span>
+      { aboutDiver && (
       <Button
         border="none"
         borderRadius={30}
@@ -96,6 +97,7 @@ export const DiveData: FC <Props> = ({
       >
         <span className={styles.more}>View More</span>
       </Button>
+      ) }
     </div>
   </div>
 );

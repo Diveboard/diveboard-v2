@@ -4,6 +4,11 @@
   box-shadow: 0 8px 15px rgba(0, 62, 89, 0.06);
   border-radius: 15px;
   position: relative;
+  flex: 1 0 21%;
+
+  &:hover {
+    cursor: pointer;
+  }
 
   .imgWrapper {
     position: relative;
@@ -142,6 +147,8 @@
 @media (max-width: 768px) {
   .diveCard {
     min-width: 300px;
+    flex: 1 0 0;
+
     .footer {
       padding: 11px 15px;
 

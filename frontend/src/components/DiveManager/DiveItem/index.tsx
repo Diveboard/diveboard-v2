@@ -7,7 +7,7 @@ import { Checkbox } from '../../CheckBox';
 import styles from './styles.module.scss';
 
 type Props = {
-  itm: DiveType & { spot: string, date: Date | null };
+  itm: DiveType & { spotName?: string, spot: string, date: Date | null };
   isSelectAll: boolean;
   checked: boolean;
   setChecked: (val: boolean) => void;
@@ -60,7 +60,7 @@ export const DiveItem: FC<Props> = ({
         <div className={styles.date}>{parseDate(itm.date)}</div>
       </div>
       <div className={styles.subwrapper}>
-        <div className={styles.spot}>{itm.spot}</div>
+        <div className={styles.spot}>{itm.spotName}</div>
         <Checkbox
           name="name"
           className="column"

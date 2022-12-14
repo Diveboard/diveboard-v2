@@ -46,6 +46,7 @@ export type SpeciesTypeWithoutId = Omit<SpeciesType, 'id'>;
 type DiveActivities = Capitalize<keyof Omit<FirstStepType['diveActivities'], 'other'>>[] | string[];
 
 export type DiveType = {
+  id?: string;
   draft: boolean;
   diveActivities: DiveActivities;
   diveData: SecondStepType['parameters'] & SecondStepType['advancedParameters'];

@@ -70,7 +70,7 @@ export const SearchedItems: FC<Props> = ({
         setItems([]);
         setOpen(false);
         setValue(item.name);
-        if (item.coords) {
+        if (item.coords && setBounds) {
           setBounds(item.coords);
         }
         if (onSearchedItemClicked) {

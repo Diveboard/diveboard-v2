@@ -12,7 +12,7 @@ type Props = {
   };
   zoom: number;
   points: {
-    id: number;
+    id: string;
     divesCount: number;
     lat: number;
     lng: number;

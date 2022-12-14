@@ -148,6 +148,7 @@ export const SignInBlock: FC = () => {
               ? 'Your Email'
               : 'Enter the code from your email'
           }
+          type={mode === 'login/signup' ? 'email' : 'text'}
           iconName={mode === 'login/signup' && 'email'}
           width={570}
         />

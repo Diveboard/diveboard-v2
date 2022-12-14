@@ -10,12 +10,14 @@ type Props = {
   addedToFavourite: boolean;
   date: Date;
   diveName;
-  diveTime: number;
+  diveTime: string;
   deepness: number;
   diversCount: number;
+  onClick: () => void;
 };
 
 export const DiveCard: FC<Props> = ({
+  onClick,
   imgSrc,
   tagsNumber,
   date,
@@ -27,7 +29,7 @@ export const DiveCard: FC<Props> = ({
 }) => {
   const diveDate = `${month[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
   return (
-    <div className={styles.diveCard}>
+    <div className={styles.diveCard} onClick={onClick}>
       <div className={styles.imgWrapper}>
         <Image
           src={imgSrc}
@@ -58,8 +60,6 @@ export const DiveCard: FC<Props> = ({
             <Icon iconName="time" size={16} />
             <span>
               {diveTime}
-              {' '}
-              min
             </span>
           </div>
           <div className={styles.dataItem}>

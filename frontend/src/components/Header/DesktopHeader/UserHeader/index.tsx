@@ -43,7 +43,7 @@ export const UserHeader: FC = (): JSX.Element => {
           iconName="heart-gap"
         />
         <LinkedButton
-          link="/"
+          link={pagesRoutes.mainPageUser}
           iconName="community-small"
         />
 

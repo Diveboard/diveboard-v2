@@ -1,11 +1,14 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { Button } from '../../../../Buttons/Button';
 import { Icon } from '../../../../Icons/Icon';
 import styles from './styles.module.scss';
 import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
+import pagesRoutes from '../../../../../routes/pagesRoutes.json';
 
 export const MapBlock = () => {
   const isWidth = useWindowWidth(500, 768);
+  const router = useRouter();
   return (
     <div className={styles.mapBlockWrapper}>
       <h2 className={styles.title}>Recently added to a Diveboard</h2>
@@ -22,7 +25,7 @@ export const MapBlock = () => {
             borderRadius={30}
             border="none"
             backgroundColor="#FDC90D"
-            onClick={() => {}}
+            onClick={() => router.push(pagesRoutes.logDivePageRout)}
           >
             <div className={styles.innerBtnWrapper}>
               <Icon iconName="logbook" />

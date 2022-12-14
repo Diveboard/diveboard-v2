@@ -3,6 +3,7 @@ import { PhotoCard } from '../../../../Cards/PhotoCard';
 import { ArrowLink } from '../../../../ArrowLink';
 import styles from './styles.module.scss';
 import { photos } from '../../../../DivePage/DIVE_PAGE_DUMMY_DATA';
+import pagesRoutes from '../../../../../routes/pagesRoutes.json';
 
 export const PhotoDivesBlock = () => (
   <div className={styles.photoDivesWrapper}>
@@ -63,7 +64,7 @@ export const PhotoDivesBlock = () => (
       </div>
     </div>
     <div className={styles.arrowWrapper}>
-      <ArrowLink text="View Gallery" color="#0059DE" link="/" />
+      <ArrowLink text="View Gallery" color="#0059DE" link={pagesRoutes.galleryPageRout} />
     </div>
   </div>
 );

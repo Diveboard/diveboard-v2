@@ -82,7 +82,7 @@ export const firestorePublicProfileService = {
     try {
       const docRef = doc(db, firestorePaths.users.path, userId);
       const docSnap = await getDoc(docRef);
-      return docSnap.data() as UserType | undefined;
+      return { ...docSnap.data(), uid: docSnap.id } as UserType | undefined;
     } catch (e) {
       throw new Error('get user data error');
     }
@@ -109,7 +109,7 @@ export const firestorePublicProfileService = {
           users.push({
             name: usersIds[i]?.name,
             diveTotal: 1,
-            divesOnSpot: 1,
+            divesOnSpot: 0,
           });
         }
       }

@@ -23,7 +23,7 @@ export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const uid = context.req.cookies.__session;
-  console.log(uid);
+
   if (!uid) {
     return {
       redirect: {

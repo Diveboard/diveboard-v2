@@ -12,7 +12,7 @@ type Props = {
   disabled?: boolean
   height?: number;
   width?: number
-  type?: 'text' | 'number' | 'date' | 'time';
+  type?: 'text' | 'number' | 'date' | 'time' | 'email';
   iconPosition?: 'left' | 'right';
   onFocusChange?: React.Dispatch<React.SetStateAction<boolean>>;
   min?: number;
@@ -51,7 +51,7 @@ export const Input: FC<Props> = ({
       <div className={styles.inputWrapper} style={{ maxWidth: width }}>
         <input
           min={min}
-          type={type}
+          type={type || 'text'}
           style={inputStyle}
           value={value}
           onChange={(event) => {

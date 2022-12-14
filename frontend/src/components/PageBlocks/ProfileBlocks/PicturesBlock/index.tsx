@@ -1,11 +1,14 @@
 import React from 'react';
 import { Title } from '../Title';
 import { ButtonGroup } from '../../../ButtonGroup';
-import { PhotoGroup } from '../../../PhotoGroup';
 import styles from './styles.module.scss';
-import { photos } from '../../../DivePage/DIVE_PAGE_DUMMY_DATA';
+import { DesktopPhotoBlock } from '../../../DivePage/DesktopPhotoBlock';
 
-export const PicturesBlock = () => {
+type Props = {
+  pictures: Array<string>
+};
+
+export const PicturesBlock = ({ pictures }: Props) => {
   const buttons = [{
     connectedMode: 'all',
     text: 'All pictures',
@@ -48,6 +51,7 @@ export const PicturesBlock = () => {
   //     author: 'Ivan Kudrja',
   //   },
   // ];
+
   return (
     <div className={styles.picturesWrapper}>
       <Title title="Pictures" />
@@ -58,14 +62,18 @@ export const PicturesBlock = () => {
         }
         onClick={() => {}}
       />
-      <PhotoGroup photos={photos} />
-      <span
-        className={styles.viewMore}
-        onClick={() => {
-        }}
-      >
-        View More Pictures
-      </span>
+      <div className={styles.imagesContainer}>
+        <DesktopPhotoBlock photos={pictures} />
+      </div>
+
+      {/* <PhotoGroup photos={pictures.slice(0, 6)} /> */}
+      {/* <span */}
+      {/*  className={styles.viewMore} */}
+      {/*  onClick={() => { */}
+      {/*  }} */}
+      {/* > */}
+      {/*  View More Pictures */}
+      {/* </span> */}
     </div>
   );
 };

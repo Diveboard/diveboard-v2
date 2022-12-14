@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import landingLabel from '../../../../../../public/images/landing-label.png';
 import styles from './styles.module.scss';
 import { Input } from '../../../../Input/CommonInput';
@@ -11,6 +12,8 @@ import { ButtonGroup } from '../../../../ButtonGroup';
 export const MainBannerBlock = () => {
   const isWidth = useWindowWidth(500, 768);
   const [inputValue, setInputValue] = useState('');
+
+  const router = useRouter();
 
   const buttons = [{
     connectedMode: 'spots',
@@ -26,7 +29,9 @@ export const MainBannerBlock = () => {
   }];
 
   const search = () => {
+    router.push(`/explore?location=${inputValue}&type=spot`);
   };
+
   return (
     <div className={styles.mainBannerWrapper}>
       <div className={styles.label}>

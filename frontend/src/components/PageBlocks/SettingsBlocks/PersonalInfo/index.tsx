@@ -18,13 +18,7 @@ type Props = {
 
 export const PersonalInfo: FC<Props> = ({ title = true }) => {
   const {
-    userAuth: {
-      photoURL,
-      name,
-      email,
-      country,
-      about,
-    },
+    userAuth,
   } = useContext(AuthStatusContext);
 
   const isOffline = useContext(NetworkStatusContext);
@@ -37,8 +31,8 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <ProfileImage imgSrc={photoURL} />
-          <EditedProfileImage imgSrc={photoURL} />
+          <ProfileImage imgSrc={userAuth?.photoURL} />
+          <EditedProfileImage imgSrc={userAuth?.photoURL} />
         </SettingsItem>
 
         <SettingsItem
@@ -46,7 +40,7 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <span className={styles.primaryItemContent}>{name}</span>
+          <span className={styles.primaryItemContent}>{userAuth?.name}</span>
           <EditedProfileName />
         </SettingsItem>
 
@@ -55,7 +49,7 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <span className={styles.primaryItemContent}>{email}</span>
+          <span className={styles.primaryItemContent}>{userAuth?.email}</span>
           <EditedProfileEmail />
         </SettingsItem>
 
@@ -64,7 +58,7 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <span className={styles.primaryItemContent}>{country}</span>
+          <span className={styles.primaryItemContent}>{userAuth?.country}</span>
           <EditedProfileCountry />
         </SettingsItem>
 
@@ -73,7 +67,7 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <span className={styles.primaryItemContent}>{about}</span>
+          <span className={styles.primaryItemContent}>{userAuth?.about}</span>
           <EditedProfileAbout />
         </SettingsItem>
       </SettingsGroup>

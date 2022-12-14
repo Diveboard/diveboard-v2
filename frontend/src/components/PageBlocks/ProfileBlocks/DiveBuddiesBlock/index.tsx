@@ -4,42 +4,24 @@ import { DiveBuddyCard } from '../../../Cards/DiveBuddyCard';
 import { ArrowLink } from '../../../ArrowLink';
 import style from './styles.module.scss';
 
-export const DiveBuddies: FC = () => (
+type Props = {
+  buddies: Array<any>
+};
+
+export const DiveBuddies: FC<Props> = ({ buddies }) => (
   <div className={style.blockWrapper}>
-    <Title title="Dive Buddies (45)" />
+    <Title title={`Dive Buddies (${buddies?.length || 0})`} />
     <div className={style.cardsWrapper}>
-
-      <DiveBuddyCard
-        imgSrc="/TEST_IMG_THEN_DELETE/photo4.jpg"
-        name="Nolan Franci"
-        onDiveBoard={125}
-        total={157}
-        onSpot={4}
-      />
-
-      <DiveBuddyCard
-        imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
-        name="Nolan Franci"
-        onDiveBoard={125}
-        total={157}
-        onSpot={4}
-      />
-
-      <DiveBuddyCard
-        imgSrc="/TEST_IMG_THEN_DELETE/photo5.jpg"
-        name="Nolan Franci"
-        onDiveBoard={125}
-        total={157}
-        onSpot={4}
-      />
-
-      <DiveBuddyCard
-        imgSrc="/TEST_IMG_THEN_DELETE/photo6.jpg"
-        name="Nolan Franci"
-        onDiveBoard={125}
-        total={157}
-        onSpot={4}
-      />
+      {buddies.map((buddy) => (
+        <DiveBuddyCard
+          key={buddy.id || buddy.name}
+          imgSrc={buddy.photoURL || '/TEST_IMG_THEN_DELETE/photo4.jpg'}
+          name={buddy.name}
+          onDiveBoard={buddy.diveTotal}
+          total={buddy.diveTotal}
+          onSpot={0}
+        />
+      ))}
     </div>
 
     <div className={style.arrowLinkWrapper}>
