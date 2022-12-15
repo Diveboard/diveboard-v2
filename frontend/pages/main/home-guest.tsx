@@ -15,11 +15,10 @@ InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const uid = context.req.cookies.__session;
-
   if (uid) {
     return {
       redirect: {
-        destination: '/logbook',
+        destination: `/logbook/${uid}`,
         permanent: false,
       },
     };

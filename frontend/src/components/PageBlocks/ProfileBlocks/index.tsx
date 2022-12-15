@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 import { PersonalProfileData } from './PersonalProfileData';
 import { DivesMap } from './DivesMap';
 import { DivesBlock } from './DivesBlock';
@@ -10,6 +11,37 @@ import pagesRoutes from '../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
 import { DiveType, SpeciesType, SpotType } from '../../../firebase/firestore/models';
 import { UserType } from '../../../types';
+
+// const certifications = [
+//   {
+//     certificateName: 'CMAS 3* VDST / N4 ',
+//     obtainingDate: '(Aug 2012)',
+//   },
+//   {
+//     certificateName: 'CMAS Nitrox 1',
+//     obtainingDate: '(Aug 2012)',
+//   },
+//   {
+//     certificateName: 'PADI Ice Diver',
+//     obtainingDate: '(Jan 2012)',
+//   },
+//   {
+//     certificateName: 'Self-assessed Photography',
+//     obtainingDate: '(Mar 2011)',
+//   },
+//   {
+//     certificateName: 'CMAS 2 Star',
+//     obtainingDate: '(Jul 2006)',
+//   },
+//   {
+//     certificateName: 'FFESSM Level 2',
+//     obtainingDate: '(Jul 2006)',
+//   },
+//   {
+//     certificateName: 'CMAS 1 Star',
+//     obtainingDate: '(Jul 2005)',
+//   },
+// ];
 
 type Props = {
   dives: Array<DiveType & { spot: SpotType, date: string }>
@@ -34,49 +66,33 @@ export const ProfileBlock = ({
     lng: dive.spot?.lng,
   }));
 
-  // const certifications = [
-  //   {
-  //     certificateName: 'CMAS 3* VDST / N4 ',
-  //     obtainingDate: '(Aug 2012)',
-  //   },
-  //   {
-  //     certificateName: 'CMAS Nitrox 1',
-  //     obtainingDate: '(Aug 2012)',
-  //   },
-  //   {
-  //     certificateName: 'PADI Ice Diver',
-  //     obtainingDate: '(Jan 2012)',
-  //   },
-  //   {
-  //     certificateName: 'Self-assessed Photography',
-  //     obtainingDate: '(Mar 2011)',
-  //   },
-  //   {
-  //     certificateName: 'CMAS 2 Star',
-  //     obtainingDate: '(Jul 2006)',
-  //   },
-  //   {
-  //     certificateName: 'FFESSM Level 2',
-  //     obtainingDate: '(Jul 2006)',
-  //   },
-  //   {
-  //     certificateName: 'CMAS 1 Star',
-  //     obtainingDate: '(Jul 2005)',
-  //   },
-  // ];
+  const pictures = dives?.length
+    ? dives.flatMap((dive) => [...dive.externalImgsUrls].map((img) => img))
+    : [];
+
+  const uid = Cookies.get('__session');
+
+  const [isItOwnProfile, setOwnProfile] = useState(uid === logbookUser.uid);
+
+  useEffect(() => {
+    setOwnProfile(uid === logbookUser.uid);
+  }, [logbookUser.uid]);
 
   return (
     <div className={styles.profileBlockWrapper}>
+      {uid && (
       <MobileAddButton
         iconName="new-dive-white"
         link={pagesRoutes.logDivePageRout}
       />
+      )}
 
       <PersonalProfileData
-        imgSrc={logbookUser.photoURL || '/TEST_IMG_THEN_DELETE/photo3.jpg'}
+        imgSrc={logbookUser.photoURL}
         name={logbookUser.name || ''}
         country={logbookUser.country}
         about={logbookUser.about}
+        isItOwnProfile={isItOwnProfile}
         followersCount={0}
         dives={dives}
       />
@@ -85,14 +101,18 @@ export const ProfileBlock = ({
         zoom={7}
         points={markerPoints}
       />
-      {!!dives?.length && <DivesBlock dives={dives} userId={logbookUser.uid} /> }
-      <PicturesBlock
-        pictures={dives.flatMap((dive) => [...dive.externalImgsUrls].map((img) => img))}
-      />
+      {!!dives?.length && (
+        <DivesBlock
+          dives={isItOwnProfile ? dives : dives.filter((dive) => !dive.draft && dive.publishingMode === 'public')}
+          userId={logbookUser.uid}
+          isItOwnProfile={isItOwnProfile}
+        />
+      )}
+      {!!pictures.length && <PicturesBlock pictures={pictures} /> }
       {!!species?.length && <LatestSpecies species={species} /> }
       {/* <CertificationBlock certifications={certifications} /> */}
       {/* <CentersVisitedBlock /> */}
-      { !!buddies?.length && <DiveBuddies buddies={buddies} /> }
+      {!!buddies?.length && <DiveBuddies buddies={buddies} /> }
     </div>
   );
 };

@@ -27,6 +27,7 @@ import {
 } from '../../../../../firebase/firestore/firestoreServices/firestoreGuidesService';
 import { firestoreBuddiesService } from '../../../../../firebase/firestore/firestoreServices/firestoreBuddiesService';
 import { StepsIndicator } from '../../StepsIndicator';
+import { AuthStatusContext } from '../../../../../layouts/AuthLayout';
 
 export type BuddyItemType = {
   id: string;
@@ -42,7 +43,7 @@ export const FifthStep: FC<StepProps> = ({
     setStepData, getStepData,
   } = useContext(LogDiveDataContext);
   const isMobile = useWindowWidth(500, 769);
-
+  const { userAuth } = useContext(AuthStatusContext);
   const [diveCenter, setDiveCenter] = useState('');
   const [guideName, setGuideName] = useState('');
 
@@ -149,7 +150,7 @@ export const FifthStep: FC<StepProps> = ({
           <p>
             Add your usual dive buddies on the Community section of
             {' '}
-            <a href="/logbook" className={styles.ref}>your logbook</a>
+            <a href={`/logbook/${userAuth.uid}`} className={styles.ref}>your logbook</a>
             {' '}
             to facilitate the
             search.

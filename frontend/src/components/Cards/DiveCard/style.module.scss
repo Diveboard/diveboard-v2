@@ -83,6 +83,9 @@
       font-weight: 600;
       font-size: 1.031vw;
       line-height: 1.237vw;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
     }
 
     .dataWrapper {

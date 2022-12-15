@@ -43,9 +43,8 @@ export const DiveBuddyCard: FC<Props> = ({
             <span className={styles.bold}>{onDiveBoard}</span>
             <span>dives on Diveboard</span>
             <span>
-              (total:
+              {'total: '}
               <span className={styles.bold}>{total}</span>
-              )
             </span>
           </div>
         </span>

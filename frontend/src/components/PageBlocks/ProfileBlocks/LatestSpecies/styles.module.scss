@@ -6,6 +6,7 @@
     margin-bottom: 26px;
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 
     > div {
       margin-right: 10px;
@@ -35,6 +36,7 @@
 
     .cardsWrapper {
       overflow-x: scroll;
+      flex-wrap: nowrap;
 
       &::-webkit-scrollbar {
         display: none;

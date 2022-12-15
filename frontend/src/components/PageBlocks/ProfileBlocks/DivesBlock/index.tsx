@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ButtonGroup } from '../../../ButtonGroup';
 import { Title } from '../Title';
@@ -6,16 +6,19 @@ import { SearchAnimatedInput } from '../../../Input/SearchAnimatedInput';
 import { DiveCard } from '../../../Cards/DiveCard';
 import styles from './styles.module.scss';
 import { DiveType } from '../../../../firebase/firestore/models';
+import { useWindowWidth } from '../../../../hooks/useWindowWidth';
 
 type Props = {
   dives: Array<DiveType>;
   userId: string;
+  isItOwnProfile: boolean;
 };
 
-export const DivesBlock = ({ dives, userId }: Props) => {
+export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
   const [searchValue, setSearchValue] = useState('');
   const [isMoreClicked, setShowMoreClicked] = useState(false);
-  const [diveForRender, setDiveForRender] = useState(dives?.slice(0, 4));
+  const isMobile = useWindowWidth(500, 769);
+  const [diveForRender, setDiveForRender] = useState(isMobile ? dives : dives?.slice(0, 4));
   const router = useRouter();
 
   const buttons = [{
@@ -26,21 +29,37 @@ export const DivesBlock = ({ dives, userId }: Props) => {
     connectedMode: 'favourite',
     text: 'Favourite',
   },
-  {
-    connectedMode: 'drafts',
-    text: 'Drafts',
-  }];
+  ];
+
+  useEffect(() => {
+    setShowMoreClicked(false);
+    setDiveForRender(isMobile ? dives : dives?.slice(0, 4));
+  }, [dives]);
+
+  const [sortMode, setSortMode] = useState(buttons[0].connectedMode);
+
+  useEffect(() => {
+    if (sortMode === 'drafts') {
+      setShowMoreClicked(false);
+      setDiveForRender(dives.filter((dive) => dive.draft));
+    }
+    if (sortMode === 'all') {
+      setShowMoreClicked(true);
+      setDiveForRender(dives);
+    }
+  }, [sortMode]);
 
   return (
     <div className={styles.divesWrapper}>
       <Title title="Dives" />
       <div className={styles.filtersWrapper}>
         <ButtonGroup
-          buttons={
-            buttons
-          }
-          defaultChecked={buttons[0].connectedMode}
-          onClick={() => {}}
+          buttons={isItOwnProfile ? [...buttons, {
+            connectedMode: 'drafts',
+            text: 'Drafts',
+          }] : buttons}
+          defaultChecked={sortMode}
+          onClick={(item) => setSortMode(item)}
         />
         <SearchAnimatedInput value={searchValue} setValue={setSearchValue} />
       </div>
@@ -63,17 +82,19 @@ export const DivesBlock = ({ dives, userId }: Props) => {
         ))}
       </div>
 
+      {!isMobile && dives.length > 4 && (
       <span
         className={styles.viewMore}
         onClick={() => {
           const isClicked = !isMoreClicked;
           setShowMoreClicked(isClicked);
+          setSortMode(buttons[0].connectedMode);
           setDiveForRender(isClicked ? dives : dives?.slice(0, 4));
         }}
       >
         {`View ${isMoreClicked ? 'Less' : 'More'}`}
       </span>
-
+      )}
     </div>
 
   );

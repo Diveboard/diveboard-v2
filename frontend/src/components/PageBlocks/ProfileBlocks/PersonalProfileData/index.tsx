@@ -19,6 +19,7 @@ type Props = {
   followersCount: number;
   about: string;
   dives: Array<DiveType & { spot: SpotType, date: string }>
+  isItOwnProfile: boolean
 };
 
 export const PersonalProfileData: FC<Props> = ({
@@ -28,9 +29,9 @@ export const PersonalProfileData: FC<Props> = ({
   country,
   followersCount,
   dives,
+  isItOwnProfile,
 }) => {
   const router = useRouter();
-
   const getDiveCountries = () => {
     const diveIn = [];
     dives.forEach((dive) => {
@@ -101,8 +102,8 @@ export const PersonalProfileData: FC<Props> = ({
     <div className={styles.blockWrapper}>
       <div className={styles.profileDataWrapper}>
         <div className={styles.leftContent}>
-          <div className={styles.backBtnWrapper}>
-            <LinkedButton link="" iconName="back-button" iconSize={40} />
+          <div className={styles.backBtnWrapper} onClick={() => router.back()}>
+            <Icon iconName="back-button" size={40} />
           </div>
           <ProfileImage imgSrc={imgSrc} size={74} />
           <div className={styles.personalDataWrapper}>
@@ -124,10 +125,12 @@ export const PersonalProfileData: FC<Props> = ({
         </div>
 
         <div className={styles.rightContent}>
+          {!isItOwnProfile && (
           <Button backgroundColor="transparent" border="none" borderRadius={30}>
             <span className={styles.followText}>Follow</span>
             <Icon iconName="plus" size={14} />
           </Button>
+          )}
           <LinkedButton link="/" iconName="share" iconSize={40} />
         </div>
       </div>
@@ -145,6 +148,7 @@ export const PersonalProfileData: FC<Props> = ({
           aboutDiver={about}
         />
 
+        {isItOwnProfile && (
         <div className={styles.btnWrapper}>
           <Button
             borderRadius={30}
@@ -162,6 +166,7 @@ export const PersonalProfileData: FC<Props> = ({
             </div>
           </Button>
         </div>
+        )}
 
       </div>
     </div>

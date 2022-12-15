@@ -6,6 +6,7 @@ import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 
 import DiveManagerBlock from '../src/components/DiveManager';
 import { firestoreDivesService } from '../src/firebase/firestore/firestoreServices/firestoreDivesService';
+import pageRoutes from '../src/routes/pagesRoutes.json';
 
 const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   user,
@@ -23,8 +24,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   if (!uid) {
     return {
-      props: {
-        user: null,
+      redirect: {
+        destination: pageRoutes.mainPageGuest,
+        permanent: false,
       },
     };
   }

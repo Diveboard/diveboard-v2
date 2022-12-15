@@ -29,7 +29,7 @@ export const MobileNavBar: FC<Props> = ({ loggedIn }) => (
       activeIconName="logbook-mobile-colored"
       mainIconName="logbook-mobile"
       navItemName="Logbook"
-      navLink={pagesRoutes.profilePageRout as NavType}
+      navLink={'/' as NavType}
     />
 
     <NavItem

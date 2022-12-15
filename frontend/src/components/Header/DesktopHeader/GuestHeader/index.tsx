@@ -28,7 +28,7 @@ export const GuestHeader: FC<{ isFilled?: boolean }> = ({ isFilled }): JSX.Eleme
       <div className={styles.leftGroup}>
         <Logo size={!isWidth ? 'large' : 'medium'} />
         <LinkedButton
-          link="/logbook"
+          link="/"
           label="Logbook"
           iconName={
             router.pathname === pagesRoutes.mainPageGuest && !scrolled

@@ -4,19 +4,19 @@ import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import pageRoutes from '../src/routes/pagesRoutes.json';
 
-const Home
-: NextPage = () => {
+const Home: NextPage = () => {
   const router = useRouter();
+
   useEffect(() => {
     const uid = Cookies.get('__session');
     if (uid) {
-      router.push(pageRoutes.mainPageUser);
+      router.push(`${pageRoutes.mainPageUser}/${uid}`);
     } else {
       router.push(pageRoutes.mainPageGuest);
     }
   }, []);
 
-  return <div>Welcome to Dive board</div>;
+  return <div />;
 };
 
 export default Home;
@@ -32,9 +32,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
+
   return {
     redirect: {
-      destination: pageRoutes.mainPageUser,
+      destination: `${pageRoutes.mainPageUser}/${uid}`,
       permanent: false,
     },
   };

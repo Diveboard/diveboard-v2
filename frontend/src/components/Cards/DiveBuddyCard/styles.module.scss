@@ -89,3 +89,26 @@
     }
   }
 }
+
+@media (max-width: 1024px) {
+  .card {
+    flex: 1 0 40%;
+    width: 50%;
+    height: 101px;
+    margin-right: 0;
+
+    .contentWrapper {
+      padding: 20px 0 20px 24px;
+
+      .divesTextWrapper {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 100%;
+  }
+}

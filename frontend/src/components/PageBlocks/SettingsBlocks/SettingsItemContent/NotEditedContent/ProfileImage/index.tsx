@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import Image from 'next/image';
 import styles from './styles.module.scss';
 import { imageLoader } from '../../../../../Icons/Icon';
@@ -8,7 +8,12 @@ type Props = {
   size?: number;
 };
 export const ProfileImage:FC<Props> = ({ imgSrc, size = 80 }) => {
-  const [src, setSrc] = useState(imgSrc || '/appIcons/no-photo.svg');
+  const emptyPhotoPath = '/appIcons/no-photo.svg';
+  const [src, setSrc] = useState(imgSrc || emptyPhotoPath);
+
+  useEffect(() => {
+    setSrc(imgSrc || emptyPhotoPath);
+  }, [imgSrc]);
 
   return (
     <div className={styles.profileImg}>
@@ -20,7 +25,7 @@ export const ProfileImage:FC<Props> = ({ imgSrc, size = 80 }) => {
         className={styles.img}
         loader={imageLoader}
         unoptimized
-        onError={() => setSrc('/appIcons/no-photo.svg')}
+        onError={() => setSrc(emptyPhotoPath)}
       />
     </div>
   );

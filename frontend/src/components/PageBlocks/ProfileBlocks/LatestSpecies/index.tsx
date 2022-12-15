@@ -3,6 +3,7 @@ import { Title } from '../Title';
 import styles from './styles.module.scss';
 import { SpeciesCard } from '../../../Cards/SpeciesCard';
 import { SpeciesType } from '../../../../firebase/firestore/models';
+import { useWindowWidth } from '../../../../hooks/useWindowWidth';
 
 type Props = {
   species: Array<SpeciesType>
@@ -10,7 +11,10 @@ type Props = {
 
 export const LatestSpecies = ({ species }: Props) => {
   const [isMoreClicked, setShowMoreClicked] = useState(false);
-  const [speciesForRender, setSpeciesForRender] = useState(species?.slice(0, 4));
+  const isMobile = useWindowWidth(500, 769);
+  const [speciesForRender, setSpeciesForRender] = useState(
+    isMobile ? species : species?.slice(0, 4),
+  );
 
   return (
     <div className={styles.latestSpeciesWrapper}>
@@ -26,6 +30,7 @@ export const LatestSpecies = ({ species }: Props) => {
           />
         ))}
       </div>
+      {!isMobile && species.length > 4 && (
       <span
         className={styles.viewMore}
         onClick={() => {
@@ -36,6 +41,7 @@ export const LatestSpecies = ({ species }: Props) => {
       >
         {`View ${isMoreClicked ? 'Less' : 'More'}`}
       </span>
+      )}
     </div>
   );
 };
