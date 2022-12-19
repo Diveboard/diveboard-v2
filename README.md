@@ -4,6 +4,12 @@
 
 Before start <br>
 
+Reveal secrets
+
+`git secret reveal`
+
+Install dependencies
+
 `cd frontend/ && npm i`
 
 ### Development
