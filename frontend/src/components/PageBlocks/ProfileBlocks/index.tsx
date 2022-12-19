@@ -81,10 +81,10 @@ export const ProfileBlock = ({
   return (
     <div className={styles.profileBlockWrapper}>
       {uid && (
-      <MobileAddButton
-        iconName="new-dive-white"
-        link={pagesRoutes.logDivePageRout}
-      />
+        <MobileAddButton
+          iconName="new-dive-white"
+          link={pagesRoutes.logDivePageRout}
+        />
       )}
 
       <PersonalProfileData

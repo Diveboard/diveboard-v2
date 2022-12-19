@@ -15,10 +15,10 @@ export const DiveBuddies: FC<Props> = ({ buddies }) => {
     <div className={style.blockWrapper}>
       <Title title={`Dive Buddies (${buddies?.length || 0})`} />
       <div className={style.cardsWrapper}>
-        {buddies.map((buddy) => (
+        {buddies.map((buddy, key) => (
           <DiveBuddyCard
             onClick={() => buddy.id && router.push(`/logbook/${buddy.id}`)}
-            key={buddy.id || buddy.name}
+            key={buddy.id || key}
             imgSrc={buddy.photoURL || '/TEST_IMG_THEN_DELETE/photo4.jpg'}
             name={buddy.name}
             onDiveBoard={buddy.diveTotal}

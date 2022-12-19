@@ -44,10 +44,9 @@ export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
       setDiveForRender(dives.filter((dive) => dive.draft));
     }
     if (sortMode === 'all') {
-      setShowMoreClicked(true);
-      setDiveForRender(dives);
+      setDiveForRender((isMobile || isMoreClicked) ? dives : dives?.slice(0, 4));
     }
-  }, [sortMode]);
+  }, [sortMode, isMobile]);
 
   return (
     <div className={styles.divesWrapper}>
