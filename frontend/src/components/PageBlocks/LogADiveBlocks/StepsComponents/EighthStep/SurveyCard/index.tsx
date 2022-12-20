@@ -8,9 +8,10 @@ type Props = {
   title: string;
   description: string;
   contributions: number;
+  setCurrentSurvey: (survey: string)=>void;
 };
 export const SurveyCard: FC<Props> = ({
-  surveyType, title, description, contributions,
+  surveyType, title, description, contributions, setCurrentSurvey,
 }) => (
   <div className={styles.surveyCard}>
     <Image src="/images/survey.jpg" width={94} height={140} alt="survey" className={styles.img} />
@@ -27,7 +28,7 @@ export const SurveyCard: FC<Props> = ({
         </span>
       </div>
 
-      <span className={styles.icon}>
+      <span className={styles.icon} onClick={() => { setCurrentSurvey(title); }}>
         <Icon iconName="back-button" size={36} />
       </span>
     </div>

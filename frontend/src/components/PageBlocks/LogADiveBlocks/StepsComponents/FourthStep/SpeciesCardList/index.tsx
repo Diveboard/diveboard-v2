@@ -6,44 +6,48 @@ import { Icon } from '../../../../../Icons/Icon';
 import { SpeciesCardItem } from './SpeciesCardItem/speciesCardItem';
 
 import styles from './styles.module.scss';
-
-type Species = {
-  id: string;
-  sname: string;
-  cnames: string[];
-  preferred_name: string;
-  picture: string;
-  bio: string;
-  url: string;
-  rank: string;
-};
+import { SpeciesType } from '../../../../../../firebase/firestore/models';
 
 type Props = {
-  renderedSpeciesList: {
-    selectedSection: string;
-    speciesArray: Species[];
-  };
-  selectedSpecies: Species[];
+  title: string;
+  speciesList: SpeciesType[];
   backButtonHandler: () => void;
   selectedSpeciesHandler: (speciesId: string) => void;
+  selectedSpeciesList?:SpeciesType[];
 };
 
 export const SpeciesCardList: FC<Props> = ({
-  renderedSpeciesList: { selectedSection, speciesArray },
+  title,
+  speciesList,
   backButtonHandler,
   selectedSpeciesHandler,
-  selectedSpecies,
+  selectedSpeciesList,
 }) => {
   // check if alredy in SELECTED then icon = done
   const isSelected = (speciesId: string) => {
-    const selectedSpeciesIndex = selectedSpecies.findIndex(
+    const selectedSpeciesIndex = selectedSpeciesList.findIndex(
       (itm) => itm.id === speciesId,
     );
-    if (selectedSpeciesIndex === -1) {
-      return false;
-    }
-    return true;
+    return selectedSpeciesIndex !== -1;
   };
+
+  const speciesCards = speciesList.map((species) => (
+    <CSSTransition
+      key={species.id}
+      timeout={200}
+      classNames={{
+        exitActive: styles.exitActive,
+      }}
+    >
+      {/* <span>hello</span> */}
+      <SpeciesCardItem
+        // key={species.id}
+        check={isSelected(species.id)}
+        species={species}
+        selectedSpeciesHandler={selectedSpeciesHandler}
+      />
+    </CSSTransition>
+  ));
 
   return (
     <div className={styles.wrapper}>
@@ -53,25 +57,10 @@ export const SpeciesCardList: FC<Props> = ({
             <Icon iconName="left-arrow" width={16} height={16} />
           </KebabButton>
         </div>
-        <div className={styles.title}>{selectedSection}</div>
+        <div className={styles.title}>{title}</div>
       </div>
       <TransitionGroup className={styles.cardsWrapper}>
-        {speciesArray.map((species) => (
-          <CSSTransition
-            key={species.id}
-            timeout={200}
-            classNames={{
-              exitActive: styles.exitActive,
-            }}
-          >
-            <SpeciesCardItem
-              check={isSelected(species.id)}
-              species={species}
-              key={species.id}
-              selectedSpeciesHandler={selectedSpeciesHandler}
-            />
-          </CSSTransition>
-        ))}
+        {speciesCards}
       </TransitionGroup>
     </div>
   );

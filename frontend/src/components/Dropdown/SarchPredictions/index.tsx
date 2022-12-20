@@ -19,7 +19,6 @@ export const SearchPredictions: FC<Props> = ({
     description: string;
     place_id: string
   }[]>([]);
-
   const handleClick = async (item) => {
     if (noMap) {
       setRegion(item.description);

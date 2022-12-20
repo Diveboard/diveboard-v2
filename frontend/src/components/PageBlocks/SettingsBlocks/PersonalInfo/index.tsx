@@ -5,6 +5,8 @@ import { ProfileImage } from '../SettingsItemContent/NotEditedContent/ProfileIma
 import { EditedProfileImage } from '../SettingsItemContent/EditedContent/EditedProfileImage';
 import { EditedProfileName } from '../SettingsItemContent/EditedContent/EditedProfileName';
 import { EditedProfileEmail } from '../SettingsItemContent/EditedContent/EditedProfileEmail';
+import { EditedProfileCountry } from '../SettingsItemContent/EditedContent/EditedProfileCountry';
+import { EditedProfileAbout } from '../SettingsItemContent/EditedContent/EditedProfileAbout';
 import { AuthStatusContext } from '../../../../layouts/AuthLayout';
 import { NetworkStatusContext } from '../../../../layouts/NetworkStatus';
 import coverStyles from './styles.module.scss';
@@ -16,11 +18,7 @@ type Props = {
 
 export const PersonalInfo: FC<Props> = ({ title = true }) => {
   const {
-    userAuth: {
-      photoURL,
-      name,
-      email,
-    },
+    userAuth,
   } = useContext(AuthStatusContext);
 
   const isOffline = useContext(NetworkStatusContext);
@@ -33,8 +31,8 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <ProfileImage imgSrc={photoURL} />
-          <EditedProfileImage imgSrc={photoURL} />
+          <ProfileImage imgSrc={userAuth?.photoURL} />
+          <EditedProfileImage imgSrc={userAuth?.photoURL} />
         </SettingsItem>
 
         <SettingsItem
@@ -42,7 +40,7 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <span className={styles.primaryItemContent}>{name}</span>
+          <span className={styles.primaryItemContent}>{userAuth?.name}</span>
           <EditedProfileName />
         </SettingsItem>
 
@@ -51,8 +49,26 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <span className={styles.primaryItemContent}>{email}</span>
+          <span className={styles.primaryItemContent}>{userAuth?.email}</span>
           <EditedProfileEmail />
+        </SettingsItem>
+
+        <SettingsItem
+          title="Country"
+          titleBlock="Personal Info"
+          titleMuted
+        >
+          <span className={styles.primaryItemContent}>{userAuth?.country}</span>
+          <EditedProfileCountry />
+        </SettingsItem>
+
+        <SettingsItem
+          title="About"
+          titleBlock="Personal Info"
+          titleMuted
+        >
+          <span className={styles.primaryItemContent}>{userAuth?.about}</span>
+          <EditedProfileAbout />
         </SettingsItem>
       </SettingsGroup>
       <div className={`${coverStyles.opacityCover} ${!isOffline && coverStyles.hidden}`}>

@@ -3,9 +3,10 @@ import KebabButton from '../../../Buttons/KebabButton';
 import { Checkbox } from '../../../CheckBox';
 
 import styles from './styles.module.scss';
+import { PropertiesType } from '../../../../types';
 
 type Props = {
-  copyButtonHandler: () => void;
+  copyButtonHandler: (checkboxValues: PropertiesType) => void;
 };
 
 export const PopupCopy: FC<Props> = ({ copyButtonHandler }) => {
@@ -14,7 +15,7 @@ export const PopupCopy: FC<Props> = ({ copyButtonHandler }) => {
     'Tanks user': true,
     'Water Type': true,
     'Dive type': true,
-    Visability: true,
+    Visibility: true,
     Ratings: true,
     Spot: true,
     'Dive Shop': true,
@@ -47,7 +48,7 @@ export const PopupCopy: FC<Props> = ({ copyButtonHandler }) => {
       <KebabButton
         className="popup"
         thirdClassName="popup__big"
-        onClick={copyButtonHandler}
+        onClick={() => copyButtonHandler(checkboxValues)}
         disabled={count === 0 && true}
       >
         Copy Properties

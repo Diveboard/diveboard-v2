@@ -9,12 +9,15 @@ import { useWindowWidth } from '../../../../hooks/useWindowWidth';
 import pagesRoutes from '../../../../routes/pagesRoutes.json';
 import styles from './style.module.scss';
 
-export const GuestHeader: FC = (): JSX.Element => {
+export const GuestHeader: FC<{ isFilled?: boolean }> = ({ isFilled }): JSX.Element => {
   const router = useRouter();
   const { scrolled } = useScroll(10);
   const isWidth = useWindowWidth(100, 1025);
 
   const scrolledHeaderStyle = () => {
+    if (isFilled === undefined) {
+      return `${styles.header} ${styles.filled}`;
+    }
     if (scrolled) {
       return `${styles.header} ${styles.filled}`;
     }
@@ -25,7 +28,7 @@ export const GuestHeader: FC = (): JSX.Element => {
       <div className={styles.leftGroup}>
         <Logo size={!isWidth ? 'large' : 'medium'} />
         <LinkedButton
-          link="/logbook"
+          link="/"
           label="Logbook"
           iconName={
             router.pathname === pagesRoutes.mainPageGuest && !scrolled
@@ -56,7 +59,7 @@ export const GuestHeader: FC = (): JSX.Element => {
 
       <div className={styles.rightGroup}>
         <LinkedButton
-          link="/"
+          link="/explore"
           iconName={
             router.pathname === pagesRoutes.mainPageGuest && !scrolled
               ? 'search-white'

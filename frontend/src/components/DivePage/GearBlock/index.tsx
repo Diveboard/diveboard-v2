@@ -4,61 +4,43 @@ import { DivePageMobContainer } from '../DivePageMobContainer';
 import { DivePageTitle } from '../DivePageTitle';
 
 import styles from './styles.module.scss';
+import { SeventhStepType } from '../../PageBlocks/LogADiveBlocks/types/stepTypes';
 
 type Props = {
-  gearUsed: {
-    bcd: string;
-    computer: string;
-    fins: string;
-    regulator: string;
-    wetSult: string;
-    weights: number;
-  };
+  gears: SeventhStepType['gears'],
+  weight: number
 };
 
 export const GearUsed: FC<Props> = ({
-  gearUsed: {
-    bcd, computer, fins, regulator, wetSult, weights,
-  },
+  gears,
+  weight,
 }): JSX.Element => (
   <div className={styles.wrapper}>
     <DivePageMobContainer>
       <DivePageTitle title="Specific Gear Used" />
       <ul>
-        <li>
-          BCD:
-          {' '}
-          <span>{bcd}</span>
-        </li>
-        <li>
-          Computer:
-          {' '}
-          <span>{computer}</span>
-        </li>
-        <li>
-          Fins:
-          {' '}
-          <span>{fins}</span>
-        </li>
-        <li>
-          Regulator:
-          {' '}
-          <span>{regulator}</span>
-        </li>
-        <li>
-          Wet Suit:
-          {' '}
-          <span>{wetSult}</span>
-        </li>
+        {gears?.length && gears.map((gear) => (
+          <li key={gear.id}>
+            {gear?.typeOfGear}
+            {' '}
+            <span>
+              {gear?.manufacturer}
+              {' '}
+              {gear?.model}
+            </span>
+          </li>
+        ))}
+        {weight && (
         <li>
           Weights:
           {' '}
           <span>
-            {weights}
+            {weight}
             {' '}
             kg
           </span>
         </li>
+        )}
       </ul>
     </DivePageMobContainer>
   </div>

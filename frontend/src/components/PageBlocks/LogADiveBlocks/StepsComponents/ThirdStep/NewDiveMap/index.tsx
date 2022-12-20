@@ -7,49 +7,77 @@ import { DivePoint } from '../../../../../Point';
 import { SearchInput } from '../../../../../Input/SearchInput';
 import { Button } from '../../../../../Buttons/Button';
 import { Icon } from '../../../../../Icons/Icon';
-import { SearchPredictions } from '../../../../../Dropdown/SarchPredictions';
-import styles from './styles.module.scss';
 import { useUserLocation } from '../../../../../../hooks/useUserLocation';
 import { checkGeolocationAccess } from '../../../../../../utils/checkGeolocationAccess';
+import { SearchedItems } from '../../../../../Dropdown/SearchedItems';
+import { MarkerType } from '../../../types/commonTypes';
+import {
+  firestoreSpotsService,
+} from '../../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
+import styles from './styles.module.scss';
+import {
+  firestoreGeoDataService,
+} from '../../../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
+import { Bounds } from '../../../../../../types';
 
 type Props = {
   location: { lat: number, lng: number };
   setLocation: React.Dispatch<React.SetStateAction<{ lat: number, lng: number }>>;
   zoom: number;
-  points: {
-    id: number;
-    divesCount: number;
-    lat: number;
-    lng: number;
-    diveName: string;
-  }[];
+  setZoom: React.Dispatch<React.SetStateAction<number>>;
+  markers: MarkerType[];
+  setMarkers: React.Dispatch<React.SetStateAction<MarkerType[]>>;
   newPoint: boolean;
   setNewPoint: React.Dispatch<React.SetStateAction<boolean>>;
   setNewPointCoords: React.Dispatch<React.SetStateAction<{ lat: number, lng: number }>>;
+  createdNewSpotId: string;
+  setChosenPointId: (res: string) => void;
+  setButton:React.Dispatch<React.SetStateAction<string>>;
+  disableError?: () => void;
+  boundsCoors?: Bounds;
 };
 
 export const LogADiveDiveMap: FC<Props> = ({
   location,
   setLocation,
   zoom,
-  points,
+  setZoom,
+  markers,
+  setMarkers,
   newPoint,
   setNewPoint,
   setNewPointCoords,
+  createdNewSpotId,
+  setChosenPointId,
+  setButton,
+  disableError,
+  boundsCoors,
 }) => {
   const [region, setRegion] = useState('');
   const userLocation = useUserLocation();
-  const markers = points.map((point) => (
+  const bounds = useRef<Bounds>();
+
+  const markersComponents = markers.map((point) => (
     <DivePoint
       key={point.id}
-      divesCount={point.divesCount}
+      divesCount={point.divesLogged}
       lat={point.lat}
       lng={point.lng}
-      diveName={point.diveName}
+      diveName={point.name}
+      onClick={(name) => {
+        const spotId = markers.find((item) => item.name === name);
+        setChosenPointId(spotId.id);
+        setButton(name);
+        disableError();
+      }}
     />
   ));
 
   const setVisible = useRef<(visible: boolean) => void>();
+  const setNewPositionMarker = useRef<(coords: {
+    lat: number,
+    lng: number,
+  }) => void>();
 
   const handleApiLoaded = (map, maps) => {
     const marker = new maps.Marker({
@@ -74,7 +102,40 @@ export const LogADiveDiveMap: FC<Props> = ({
     marker.setMap(map);
     marker.setVisible(false);
     setVisible.current = (visible: boolean) => marker.setVisible(visible);
+    setNewPositionMarker.current = (coords) => {
+      marker.setPosition(coords);
+    };
   };
+
+  const mapOnChangeHandler = async (e: GoogleMapReact.ChangeEventValue) => {
+    setZoom(e.zoom);
+    setLocation({
+      lat: e.center.lat,
+      lng: e.center.lng,
+    });
+    bounds.current = {
+      ne: e.bounds.ne,
+      sw: e.bounds.sw,
+    };
+    const markersItems = await firestoreSpotsService
+      .getAllSpotsInMapViewport({
+        ne: e.bounds.ne,
+        sw: e.bounds.sw,
+      });
+    setMarkers(markersItems);
+  };
+  useEffect(() => {
+    // Handle add new spot
+    if (boundsCoors) {
+      bounds.current = boundsCoors;
+      const lat = (boundsCoors.sw.lat + boundsCoors.ne.lat) / 2;
+      const lng = (boundsCoors.sw.lng + boundsCoors.ne.lng) / 2;
+      setLocation({
+        lat,
+        lng,
+      });
+    }
+  }, [boundsCoors]);
 
   useEffect(() => {
     if (userLocation) setLocation(userLocation);
@@ -83,6 +144,15 @@ export const LogADiveDiveMap: FC<Props> = ({
   useEffect(() => {
     if (setVisible.current) {
       setVisible.current(newPoint);
+      setNewPositionMarker.current(location);
+    }
+
+    if (!newPoint && bounds.current) {
+      (async () => {
+        const markersItems = await firestoreSpotsService
+          .getAllSpotsInMapViewport(bounds.current);
+        setMarkers(markersItems);
+      })();
     }
   }, [newPoint]);
 
@@ -93,9 +163,18 @@ export const LogADiveDiveMap: FC<Props> = ({
         {!newPoint && (
           <>
 
-            <SearchInput setQueryData={setRegion} ms={1000} placeholder="Region" />
-            <SearchPredictions region={region} setRegion={setRegion} setLocation={setLocation} />
-
+            <SearchInput setQueryData={setRegion} ms={500} placeholder="Region" />
+            <SearchedItems
+              value={region}
+              setValue={setRegion}
+              onSearchHandler={firestoreGeoDataService.getGeonamesPredictions}
+              onSearchedItemClicked={async (item) => {
+                const coords = await firestoreGeoDataService
+                  .getGeonamesCoordsById(item.id as string);
+                setLocation(coords);
+                setRegion('');
+              }}
+            />
             <Button
               width={71}
               height={48}
@@ -125,22 +204,23 @@ export const LogADiveDiveMap: FC<Props> = ({
         defaultCenter={userLocation}
         center={location}
         defaultZoom={zoom}
+        // @ts-ignore
         options={getMapOptions}
         onGoogleApiLoaded={({
           map,
           maps,
         }) => handleApiLoaded(map, maps)}
-        onChange={(e) => setLocation({
-          lat: e.center.lat,
-          lng: e.center.lng,
-        })}
+        onChange={mapOnChangeHandler}
       >
-        {!newPoint && markers}
+        {!newPoint && markersComponents}
       </GoogleMapReact>
       {!newPoint && (
         <span
           className={styles.addPoint}
-          onClick={() => {
+          onClick={async () => {
+            if (createdNewSpotId) {
+              await firestoreSpotsService.deleteSpot(createdNewSpotId);
+            }
             setNewPoint(true);
           }}
         >

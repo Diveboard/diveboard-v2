@@ -6,6 +6,10 @@
   box-shadow: 0 8px 15px rgba(0, 62, 89, 0.06);
   border-radius: 15px;
 
+  &:hover {
+    cursor: pointer;
+  }
+
   .imgWrapper {
     .img {
       border-radius: 15px 0 0 15px;
@@ -83,5 +87,29 @@
         margin-bottom: 3px;
       }
     }
+  }
+}
+
+@media (max-width: 1024px) {
+  .card {
+    flex: 1 0 40%;
+    width: 50%;
+    height: 101px;
+    margin-right: 0;
+
+    .contentWrapper {
+      padding: 20px 0 20px 24px;
+
+      .divesTextWrapper {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 100%;
+    flex: 1 0 100%;
   }
 }

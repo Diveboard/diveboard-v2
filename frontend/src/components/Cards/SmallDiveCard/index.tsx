@@ -8,7 +8,7 @@ type Props = {
   imgSrc: string;
   date: Date;
   diverName: string;
-  diveTime: number;
+  diveTime: string;
   deepness: number;
   diversCount: number;
 };
@@ -26,7 +26,7 @@ export const SmallDiveCard: FC<Props> = ({
     <div className={styles.diveCard}>
       <div className={styles.imgWrapper}>
         <Image
-          src={imgSrc}
+          src={imgSrc || '/appIcons/no-photo.svg'}
           layout="fill"
           loader={imageLoader}
           className={styles.img}

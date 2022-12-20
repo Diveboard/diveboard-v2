@@ -32,24 +32,24 @@ module.exports = withPWA({
     domains: ['firebasestorage.googleapis.com'],
   },
 
-  webpack: (config, {  isServer }) => {
-    if (isServer) {
-      config.plugins.push(
-        new WebpackShellPlugin({
-          onBuildExit: {
-            scripts: [
-              'echo "Transfering files ... "',
-              'cp -r .next/build-manifest.json public/build-manifest.json',
-              'echo "DONE ... "',
-            ],
-            blocking: false,
-            parallel: true
-          }
-        })
-      )
-    }
-    return config
-  },
+  // webpack: (config, {  isServer }) => {
+  //   if (isServer) {
+  //     config.plugins.push(
+  //       new WebpackShellPlugin({
+  //         onBuildExit: {
+  //           scripts: [
+  //             'echo "Transfering files ... "',
+  //             'cp -r .next/build-manifest.json public/build-manifest.json',
+  //             'echo "DONE ... "',
+  //           ],
+  //           blocking: false,
+  //           parallel: true
+  //         }
+  //       })
+  //     )
+  //   }
+  //   return config
+  // },
   pwa: {
     dest: 'public',
     disable: process.env.NODE_ENV === 'development',

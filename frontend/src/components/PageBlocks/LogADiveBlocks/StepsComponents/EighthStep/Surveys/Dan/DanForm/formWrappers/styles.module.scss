@@ -1,0 +1,57 @@
+.blockWrapper {
+  margin-top: 30px;
+  color: #000345;
+
+  .title {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+
+  }
+
+  .notes {
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .content {
+    margin-top: 30px;
+  }
+}
+
+.categoryWrapper {
+  margin-top: 50px;
+
+  .title {
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 26px;
+    color: #000345;
+  }
+
+  .content {
+    margin-top: 14px;
+  }
+}
+
+.formItemWrapper {
+  margin-bottom: 20px;
+
+  .title {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: #000345;
+  }
+
+  .required {
+    font-weight: 600;
+    font-size: 16px;
+    color: red;
+  }
+
+  .content {
+    margin-top: 4px;
+  }
+}

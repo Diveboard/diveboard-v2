@@ -1,5 +1,5 @@
 import React, {
-  FC, useContext, useState,
+  FC, useContext, useEffect, useState,
 } from 'react';
 import Script from 'next/script';
 import { Input } from '../../../../Input/CommonInput';
@@ -8,32 +8,49 @@ import { MarginWrapper } from '../../../../MarginWrapper';
 import { Popup } from '../../../../DiveManager/Popup';
 import { Backdrop } from '../../../../Backdrop';
 import { SearchAndAddBuddies } from './SearchAndAddBuddies';
-import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { Checkbox } from '../../../../CheckBox';
 import { SearchPredictions } from '../../../../Dropdown/SarchPredictions';
 import { Button } from '../../../../Buttons/Button';
 import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
+import { SearchBlock } from './SearchBlock';
+import { useGetShops } from './hooks/useGetShops';
+import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { StepProps } from '../../types/commonTypes';
 import { FifthStepType } from '../../types/stepTypes';
 import containerStyle from '../../styles.module.scss';
 import styles from './style.module.scss';
+import {
+  firestoreShopsService,
+} from '../../../../../firebase/firestore/firestoreServices/firestoreShopsService';
+import {
+  firestoreGuidesService,
+} from '../../../../../firebase/firestore/firestoreServices/firestoreGuidesService';
+import { firestoreBuddiesService } from '../../../../../firebase/firestore/firestoreServices/firestoreBuddiesService';
+import { StepsIndicator } from '../../StepsIndicator';
+import { AuthStatusContext } from '../../../../../layouts/AuthLayout';
+
+export type BuddyItemType = {
+  id: string;
+  name: string;
+  imgSrc: string;
+} | { name: string; email: string };
 
 export const FifthStep: FC<StepProps> = ({
   step,
   setStep,
 }) => {
-  const { setStepData } = useContext(LogDiveDataContext);
+  const {
+    setStepData, getStepData,
+  } = useContext(LogDiveDataContext);
   const isMobile = useWindowWidth(500, 769);
-
+  const { userAuth } = useContext(AuthStatusContext);
   const [diveCenter, setDiveCenter] = useState('');
   const [guideName, setGuideName] = useState('');
 
-  const [selectedBuddies, setSelectedBuddies] = useState<{
-    id?: string,
-    name: string,
-    email?: string,
-    image?:string,
-  }[]>([]);
+  // const [selectedDiveCenter, setSelectedDiveCenter] = useState('');
+  // const [selectedGuide, setSelectedGuide] = useState('');
+
+  const [selectedBuddies, setSelectedBuddies] = useState<BuddyItemType[]>([]);
 
   const [openPopup, setOpenPopup] = useState(false);
   const [checkRequestDC, setCheckRequestDC] = useState(false);
@@ -42,11 +59,41 @@ export const FifthStep: FC<StepProps> = ({
   const [url, setUrl] = useState('');
   const [centerEmail, setCenterEmail] = useState('');
 
+  const { shops, guides } = useGetShops();
+
   const fifthStepData: FifthStepType = {
     diveCenter,
     guideName,
-    buddies: selectedBuddies,
+    buddies: selectedBuddies.map((item) => {
+      if ('id' in item) {
+        return { id: item.id };
+      }
+      return item;
+    }),
   };
+
+  useEffect(() => {
+    const data = getStepData(5) as FifthStepType;
+    if (Object.values(data).every((item) => !!item)) {
+      (async () => {
+        const diveboardBuddies = [];
+        const newBuddies = [];
+        data?.buddies.forEach((buddy) => {
+          // @ts-ignore
+          if (buddy.id) {
+            // @ts-ignore
+            diveboardBuddies.push(buddy.id);
+          } else {
+            newBuddies.push(buddy);
+          }
+        });
+        const buddies = await firestoreBuddiesService.getBuddiesByIds(diveboardBuddies);
+        setSelectedBuddies([...buddies, ...newBuddies]);
+        // TODO: Add dive center
+        // TODO: Add guide
+      })();
+    }
+  }, [step]);
 
   if (step !== 5) {
     return null;
@@ -58,6 +105,11 @@ export const FifthStep: FC<StepProps> = ({
         async
         src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}&libraries=places`}
       />
+      <StepsIndicator
+        step={step}
+        setStep={setStep}
+        setStepData={() => setStepData(5, fifthStepData)}
+      />
       <div className={containerStyle.container}>
         <div className={styles.fifthStep}>
           <h2>
@@ -67,16 +119,14 @@ export const FifthStep: FC<StepProps> = ({
             Add your Divecenter and your dive buddies here
           </p>
 
-          <h3>
-            Dive Center
-          </h3>
-          <Input
-            value={diveCenter}
-            setValue={setDiveCenter}
-            placeholder="Dive Center name"
-            width={570}
-            height={48}
+          <SearchBlock
+            title="Dive Center"
+            inputValue={diveCenter}
+            setInputValue={setDiveCenter}
+            recommendedItems={shops}
+            onSearchHandler={firestoreShopsService.getShopsByName}
           />
+
           <MarginWrapper top={10}>
             <span
               className={styles.ref}
@@ -86,15 +136,12 @@ export const FifthStep: FC<StepProps> = ({
             </span>
           </MarginWrapper>
 
-          <h3>
-            Guide name
-          </h3>
-          <Input
-            value={guideName}
-            setValue={setGuideName}
-            placeholder="Guide name"
-            width={570}
-            height={48}
+          <SearchBlock
+            title="Guide name"
+            inputValue={guideName}
+            setInputValue={setGuideName}
+            recommendedItems={guides}
+            onSearchHandler={firestoreGuidesService.getGuidesByGuideName}
           />
 
           <h3>
@@ -103,7 +150,7 @@ export const FifthStep: FC<StepProps> = ({
           <p>
             Add your usual dive buddies on the Community section of
             {' '}
-            <a href="/logbook" className={styles.ref}>your logbook</a>
+            <a href={`/logbook/${userAuth.uid}`} className={styles.ref}>your logbook</a>
             {' '}
             to facilitate the
             search.
@@ -119,9 +166,7 @@ export const FifthStep: FC<StepProps> = ({
       </div>
       <StepsNavigation
         setStep={setStep}
-        setStepData={() => {
-          setStepData(5, fifthStepData);
-        }}
+        setStepData={() => setStepData(5, fifthStepData)}
       />
       {openPopup && (
         <Popup

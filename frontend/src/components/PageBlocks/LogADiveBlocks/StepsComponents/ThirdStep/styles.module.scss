@@ -14,6 +14,18 @@
   .newSpotGroup {
     margin-top: 30px;
 
+    .backButton{
+      display: inline-flex;
+      justify-content: flex-start;
+      align-items: center;
+      margin-bottom: 20px;
+
+      &:hover{
+        opacity: 0.6;
+        cursor: pointer;
+      }
+    }
+
     .newSpotInputWrapper {
       margin: 20px 0;
 

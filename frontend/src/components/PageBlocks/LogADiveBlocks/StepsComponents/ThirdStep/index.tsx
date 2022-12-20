@@ -1,87 +1,53 @@
 import React, {
-  FC, useContext, useEffect, useMemo, useState,
+  FC, useContext, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { LogADiveDiveMap } from './NewDiveMap';
 import { StepsNavigation } from '../../StepsNavigation';
 import { ButtonGroup } from '../../../../ButtonGroup';
-import { Input } from '../../../../Input/CommonInput';
-import { Button } from '../../../../Buttons/Button';
-import { Icon } from '../../../../Icons/Icon';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
-import {
-  usePointsHandlers,
-} from './thirdStepHelpers';
 import { useUserLocation } from '../../../../../hooks/useUserLocation';
-import { SearchPredictions } from '../../../../Dropdown/SarchPredictions';
 import { MarkerType, StepProps } from '../../types/commonTypes';
 import { ThirdStepType } from '../../types/stepTypes';
+import { CreateNewSpot } from './CreateNewSpot';
 import styles from './styles.module.scss';
-
-const markerPoints = [
-  {
-    id: 1,
-    divesCount: 234,
-    lat: 41.5,
-    lng: 30.33,
-    diveName: 'Aloha',
-  }, {
-    id: 2,
-    divesCount: 2,
-    lat: 41.95,
-    lng: 29.33,
-    diveName: 'Shark',
-  }, {
-    id: 3,
-    divesCount: 17,
-    lat: 42.95,
-    lng: 21.33,
-    diveName: 'Super',
-  }, {
-    id: 4,
-    divesCount: 5,
-    lat: 34.95,
-    lng: 34.33,
-    diveName: 'some super point',
-  }];
+import { firestoreSpotsService } from '../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
+import { setStepErrors } from '../../LogDiveHelpers/stepsErrors/setStepErrors';
+import { ThirdStepErrors } from '../../types/errorTypes';
+import { StepsIndicator } from '../../StepsIndicator';
+import { Bounds } from '../../../../../types';
 
 export const ThirdStep: FC<StepProps> = ({
   step,
   setStep,
 }) => {
-  const { setStepData } = useContext(LogDiveDataContext);
+  const { setStepData, getStepData } = useContext(LogDiveDataContext);
+  const [data, setData] = useState<ThirdStepType>(undefined);
   const userLocation = useUserLocation();
   const [location, setLocation] = useState({
-    lat: 8.379433,
-    lng: 31.16558,
+    lat: 41.5,
+    lng: 30.33,
   });
   const [newSpotName, setNewSpotName] = useState('');
-  const [newSpotNameError, setNewSpotNameError] = useState('');
-  const [newSpotCountry, setNewSpotCountry] = useState('');
-  const [newSpotCountryError, setNewSpotCountryError] = useState('');
+  const [bounds, setBounds] = useState<Bounds>(undefined);
 
-  const [markers, setMarkers] = useState<MarkerType[]>(markerPoints);
+  const [markers, setMarkers] = useState<MarkerType[]>([]);
 
-  const [newPoint, setNewPoint] = useState(false);
+  const [createSpotMode, setCreateSpotMode] = useState(false);
   const [newPointCoords, setNewPointCoords] = useState({
     lat: location.lat,
     lng: location.lng,
   });
 
+  const [zoom, setZoom] = useState(5);
+
+  const [clickedPoint, setClickedPoint] = useState('');
+
+  const createdNewSpotId = useRef<string>();
+
   const buttons = useMemo(() => markers.map((item) => ({
-    connectedMode: item.diveName,
-    text: item.diveName,
+    connectedMode: item.name,
+    text: item.name,
   })), [markers]);
-
-  const [chosenPoint, setChosenPoint] = useState<MarkerType>();
-
-  const thirdStepData: ThirdStepType = {
-    spot: chosenPoint && {
-      name: chosenPoint.diveName,
-      country: newSpotCountry,
-      lng: chosenPoint.lng,
-      lat: chosenPoint.lat,
-    },
-  };
 
   useEffect(() => {
     if (userLocation) {
@@ -89,25 +55,39 @@ export const ThirdStep: FC<StepProps> = ({
     }
   }, [userLocation]);
 
-  // useEffect(() => {
-  //   if (!newPoint) {
-  //     // get coords // todo
-  //     // get points
-  //     setCoords(mapCoords);
-  //   }
-  // }, [region, newPoint]);
+  useEffect(() => {
+    if (!createSpotMode && newSpotName && markers.length) {
+      const spot = markers.find((item) => item.name === newSpotName);
+      if (spot) {
+        setData({ spotId: spot.id });
+      }
+    }
+  }, [createSpotMode, step, markers]);
 
-  const {
-    setPointHandler,
-    setNewPointHandler,
-  } = usePointsHandlers(
-    markers,
-    setChosenPoint,
-    setMarkers,
-    setNewPoint,
-    setNewSpotNameError,
-    setNewSpotCountryError,
-  );
+  useEffect(() => {
+    const { spotId } = getStepData(3) as ThirdStepType;
+    setData({ spotId });
+    (async () => {
+      if (spotId) {
+        const spot = await firestoreSpotsService.getSpotById(
+          spotId,
+        );
+        setLocation({ lat: spot.lat, lng: spot.lng });
+        setClickedPoint(spot.name);
+      }
+    })();
+  }, [step]);
+
+  const [spotError, setSpotError] = useState<ThirdStepErrors>({
+    spotError: '',
+  });
+
+  const setErrors = () => setStepErrors({
+    stepType: 3,
+    data: data.spotId,
+    errors: spotError,
+    setErrors: setSpotError,
+  });
 
   if (step !== 3) {
     return null;
@@ -115,94 +95,62 @@ export const ThirdStep: FC<StepProps> = ({
 
   return (
     <>
+      <StepsIndicator
+        step={step}
+        setStep={setStep}
+        setErrors={setErrors}
+        setStepData={() => setStepData(3, data)}
+      />
       <div className={styles.thirdStep}>
-        <h2>
-          Dive Site
-        </h2>
+        <h2>Dive Site</h2>
 
         <LogADiveDiveMap
+          boundsCoors={bounds}
           location={location}
           setLocation={setLocation}
-          points={markers}
-          zoom={4}
-          newPoint={newPoint}
-          setNewPoint={setNewPoint}
+          markers={markers}
+          setMarkers={setMarkers}
+          zoom={zoom}
+          setZoom={setZoom}
+          newPoint={createSpotMode}
+          setNewPoint={setCreateSpotMode}
           setNewPointCoords={setNewPointCoords}
+          createdNewSpotId={createdNewSpotId.current}
+          setChosenPointId={(res) => setData({ spotId: res })}
+          setButton={setClickedPoint}
+          disableError={() => setSpotError({ spotError: '' })}
         />
-
-        {!newPoint && (
+        {spotError.spotError && <span className="error-text">Choose spot</span>}
+        {!createSpotMode && (
           <div className={styles.pointsBtnGroup}>
             <ButtonGroup
-              buttons={
-                buttons
-              }
-              onClick={setPointHandler}
-              defaultChecked={newSpotName}
+              buttons={buttons}
+              onClick={(buttonName) => {
+                const spot = markers.find((item) => item.name === buttonName);
+                setData({ spotId: spot.id });
+                setSpotError({ spotError: '' });
+              }}
+              defaultChecked={newSpotName || clickedPoint}
             />
           </div>
         )}
 
-        {newPoint && (
-          <div className={styles.newSpotGroup}>
-            <h2>
-              New Spot
-            </h2>
-
-            <div className={styles.newSpotInputWrapper}>
-              <Input
-                value={newSpotName}
-                setValue={setNewSpotName}
-                placeholder="Spot Name"
-                height={48}
-                width={720}
-                error={newSpotNameError}
-                setError={setNewSpotNameError}
-              />
-              <div className={styles.countryInputWrapper}>
-                <Input
-                  value={newSpotCountry}
-                  setValue={setNewSpotCountry}
-                  placeholder="Country"
-                  height={48}
-                  width={720}
-                  error={newSpotCountryError}
-                  setError={setNewSpotCountryError}
-                />
-                <SearchPredictions region={newSpotCountry} setRegion={setNewSpotCountry} noMap />
-              </div>
-
-            </div>
-            <span className={styles.explanationText}>
-              Drag the on
-              {' '}
-              <Icon iconName="new-point" size={24} />
-              {' '}
-              the map to the right location.
-            </span>
-            <div className={styles.buttonWrapper}>
-              <Button
-                width={250}
-                height={56}
-                borderRadius={30}
-                backgroundColor="#F4BF00"
-                border="none"
-                onClick={() => {
-                  setNewPointHandler(newSpotName, newSpotCountry, newPointCoords);
-                }}
-              >
-                <span className={styles.saveBtn}>Save</span>
-
-              </Button>
-            </div>
-
-          </div>
+        {createSpotMode && (
+          <CreateNewSpot
+            setNewSpotName={setNewSpotName}
+            newSpotName={newSpotName}
+            createdNewSpotId={createdNewSpotId}
+            setCreateSpotMode={setCreateSpotMode}
+            newPointCoords={newPointCoords}
+            zoom={zoom}
+            setBounds={setBounds}
+          />
         )}
       </div>
       <StepsNavigation
         setStep={setStep}
-        setStepData={() => {
-          setStepData(3, thirdStepData);
-        }}
+        setErrors={setErrors}
+        setStepData={() => setStepData(3, data)}
       />
     </>
   );

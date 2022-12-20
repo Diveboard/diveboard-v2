@@ -24,10 +24,12 @@
 @media (max-width: 1024px) {
   .blockWrapper {
     .cardsWrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+
       > div {
-        &:nth-child(2) {
-          margin-right: 0;
-        }
+        margin-right: 0;
       }
     }
   }
@@ -36,6 +38,10 @@
 @media (max-width: 768px) {
   .blockWrapper {
     margin-top: 50px;
-   padding-bottom: 30px;
+    padding-bottom: 30px;
+
+    .cardsWrapper {
+      display: block;
+    }
   }
 }

@@ -1,12 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { ButtonGroup } from '../../../ButtonGroup';
 import { Title } from '../Title';
 import { SearchAnimatedInput } from '../../../Input/SearchAnimatedInput';
 import { DiveCard } from '../../../Cards/DiveCard';
 import styles from './styles.module.scss';
+import { DiveType } from '../../../../firebase/firestore/models';
+import { useWindowWidth } from '../../../../hooks/useWindowWidth';
 
-export const DivesBlock = () => {
+type Props = {
+  dives: Array<DiveType>;
+  userId: string;
+  isItOwnProfile: boolean;
+};
+
+export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
   const [searchValue, setSearchValue] = useState('');
+  const [isMoreClicked, setShowMoreClicked] = useState(false);
+  const isMobile = useWindowWidth(500, 769);
+  const [diveForRender, setDiveForRender] = useState(isMobile ? dives : dives?.slice(0, 4));
+  const router = useRouter();
 
   const buttons = [{
     connectedMode: 'all',
@@ -16,77 +29,71 @@ export const DivesBlock = () => {
     connectedMode: 'favourite',
     text: 'Favourite',
   },
-  {
-    connectedMode: 'drafts',
-    text: 'Drafts',
-  }];
+  ];
+
+  useEffect(() => {
+    setShowMoreClicked(false);
+    setDiveForRender(isMobile ? dives : dives?.slice(0, 4));
+  }, [dives]);
+
+  const [sortMode, setSortMode] = useState(buttons[0].connectedMode);
+
+  useEffect(() => {
+    if (sortMode === 'drafts') {
+      setShowMoreClicked(false);
+      setDiveForRender(dives.filter((dive) => dive.draft));
+    }
+    if (sortMode === 'all') {
+      setDiveForRender((isMobile || isMoreClicked) ? dives : dives?.slice(0, 4));
+    }
+  }, [sortMode, isMobile]);
 
   return (
     <div className={styles.divesWrapper}>
       <Title title="Dives" />
       <div className={styles.filtersWrapper}>
         <ButtonGroup
-          buttons={
-            buttons
-          }
-          onClick={() => {}}
+          buttons={isItOwnProfile ? [...buttons, {
+            connectedMode: 'drafts',
+            text: 'Drafts',
+          }] : buttons}
+          defaultChecked={sortMode}
+          onClick={(item) => setSortMode(item)}
         />
         <SearchAnimatedInput value={searchValue} setValue={setSearchValue} />
       </div>
       <div className={styles.cardWrapper}>
-        <DiveCard
-          diveName="France Saint Florent Premier Août"
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
-          tagsNumber="131"
-          addedToFavourite={false}
-          date={new Date('11.04.2001')}
-          diveTime={50}
-          deepness={10}
-          diversCount={2}
-        />
-
-        <DiveCard
-          diveName="France Saint Florent Premier Août"
-          imgSrc="/TEST_IMG_THEN_DELETE/photo8.jpg"
-          tagsNumber="131"
-          addedToFavourite={false}
-          date={new Date('11.04.2001')}
-          diveTime={50}
-          deepness={10}
-          diversCount={2}
-        />
-
-        <DiveCard
-          diveName="France Saint Florent Premier Août"
-          imgSrc="/TEST_IMG_THEN_DELETE/photo7.jpg"
-          tagsNumber="131"
-          addedToFavourite={false}
-          date={new Date('11.04.2001')}
-          diveTime={50}
-          deepness={10}
-          diversCount={2}
-        />
-
-        <DiveCard
-          diveName="France Saint Florent Premier Août"
-          imgSrc="/TEST_IMG_THEN_DELETE/photo6.jpg"
-          tagsNumber="131"
-          addedToFavourite={false}
-          date={new Date('11.04.2001')}
-          diveTime={50}
-          deepness={10}
-          diversCount={2}
-        />
+        {!!diveForRender?.length && diveForRender.map((dive) => (
+          <DiveCard
+            // @ts-ignore
+            key={dive.id}
+            onClick={() => router.push(`/user/${userId}/dive/${dive.id}`)}
+            diveName={dive.aboutDive?.tripName}
+            imgSrc={dive.externalImgsUrls[0] || '/TEST_IMG_THEN_DELETE/fish.jpg'}
+            tagsNumber={dive.aboutDive?.diveNumber?.toString()}
+            addedToFavourite={false}
+              // @ts-ignore
+            date={new Date(dive.date)}
+            diveTime={dive.diveData?.time}
+            deepness={dive.diveData?.maxDepth}
+            diversCount={dive.buddies?.length}
+          />
+        ))}
       </div>
 
+      {!isMobile && dives.length > 4 && (
       <span
         className={styles.viewMore}
         onClick={() => {
+          const isClicked = !isMoreClicked;
+          setShowMoreClicked(isClicked);
+          setSortMode(buttons[0].connectedMode);
+          setDiveForRender(isClicked ? dives : dives?.slice(0, 4));
         }}
       >
-        View More
+        {`View ${isMoreClicked ? 'Less' : 'More'}`}
       </span>
-
+      )}
     </div>
 
   );

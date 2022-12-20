@@ -7,7 +7,7 @@ import Guest from '../../src/components/PageBlocks/HomePageBlocks/Guest';
 const HomeGuest:
 InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
-    <MainLayout>
+    <MainLayout isFilled>
       <Guest />
     </MainLayout>
   </AuthLayout>
@@ -15,11 +15,10 @@ InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const uid = context.req.cookies.__session;
-
   if (uid) {
     return {
       redirect: {
-        destination: '/main/home-user',
+        destination: `/logbook/${uid}`,
         permanent: false,
       },
     };

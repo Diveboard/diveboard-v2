@@ -10,6 +10,7 @@
   background-color: #FFFFFF;
   box-shadow: inset 0 2px 0 rgba(0, 3, 69, 0.05);
   z-index: 100;
+  transition: visibility .1s .3s ease-in-out;
 
   .navItem {
     width: 90px;

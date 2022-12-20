@@ -1,5 +1,5 @@
 import React from 'react';
-import { SecondStepType, SeventhStepType } from './stepTypes';
+import { FirstStepType, SecondStepType, SeventhStepType } from './stepTypes';
 
 export type StepType = 0 | 1 | 2 | 3 | 4 | 5 |
 6 | 7 | 8 | 9 | 10;
@@ -29,6 +29,8 @@ export type SetTankParametersType = {
     setSize: (size: SizeType) => void
     setMaterial:(material: MaterialType) => void
     setMixture: (mixture:MixtureType)=>void
+    setO2: (o2: string) => void
+    setHe: (he: string) => void
     setStart: (start: string)=>void
     setEnd: (end: string)=>void
     setMeasures: (measures: MeasuresType)=>void
@@ -73,16 +75,22 @@ export type SetGearParametersType = {
 
 // type Spot = ThirdStepType['spot'];
 export type Buddy = {
-  id?: string,
-  name: string,
-  email?: string,
-  imgSrc?: string,
-};
+  id: string
+} | { name: string, email?: string };
 
 export type MarkerType = {
-  id: number,
-  divesCount: number,
+  id: string,
+  name: string,
+  divesLogged: number,
+  zoom: number,
   lat: number,
   lng: number,
-  diveName: string
 };
+
+export type SafetySpot = {
+  id: number;
+  depth: number;
+  period: number;
+};
+
+export type DiveReviews = FirstStepType['diveReviews'];

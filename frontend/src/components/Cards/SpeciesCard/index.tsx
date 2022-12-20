@@ -15,7 +15,7 @@ export const SpeciesCard: FC<Props> = ({
 }) => (
   <div className={className ? `${styles.card} ${styles[className]}` : styles.card}>
     <div className={styles.imgWrapper}>
-      <Image src={imgSrc} className={styles.img} layout="fill" loader={imageLoader} unoptimized />
+      <Image src={imgSrc || '/images/default-species.svg'} className={styles.img} layout="fill" loader={imageLoader} unoptimized />
     </div>
 
     <div className={styles.footer}>

@@ -6,7 +6,7 @@ import { SecondStepType } from '../../../types/stepTypes';
 import styles from './styles.module.scss';
 
 type Props = {
-  setTanks: React.Dispatch<React.SetStateAction<SecondStepType['tanks']>>,
+  setTanks: (res: SecondStepType['tanks']) => void;
   tanks: SecondStepType['tanks'],
 };
 
@@ -24,6 +24,8 @@ export const Tanks:FC<Props> = ({ tanks, setTanks }) => {
       pressureStart: 0,
       pressureEnd: undefined,
       pressureMeasures: undefined,
+      o2: undefined,
+      he: undefined,
     }]);
   };
 
@@ -34,6 +36,8 @@ export const Tanks:FC<Props> = ({ tanks, setTanks }) => {
     size,
     material,
     mixture,
+    o2,
+    he,
     pressureStart,
     pressureEnd,
     pressureMeasures,
@@ -47,6 +51,8 @@ export const Tanks:FC<Props> = ({ tanks, setTanks }) => {
         volume={volume}
         size={size}
         material={material}
+        o2={o2}
+        he={he}
         mixture={mixture}
         pressureStart={pressureStart}
         pressureEnd={pressureEnd}

@@ -1,4 +1,6 @@
-import React, { FC, useRef, useState } from 'react';
+import React, {
+  FC, useContext, useRef, useState,
+} from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import { useOutsideClick } from '../../../hooks/useOutsideClick';
@@ -16,6 +18,7 @@ import {
 import { logOut } from '../../../firebase/auth/authService';
 import pageRoutes from '../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
+import { AuthStatusContext } from '../../../layouts/AuthLayout';
 
 const burgerItems = [
   {
@@ -66,6 +69,7 @@ export const Burger: FC = () => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
   const router = useRouter();
+  const { setUserAuth } = useContext(AuthStatusContext);
 
   const outsideClickHandler = (ev: Event): void => {
     if (ev.target !== dropdownRef.current) {
@@ -75,8 +79,9 @@ export const Burger: FC = () => {
 
   const logOutUser = async () => {
     await logOut();
-    Cookies.remove('__session');
-    await router.push('/');
+    await Cookies.remove('__session');
+    setUserAuth(undefined);
+    router.push('/');
   };
 
   const dropdownElements = burgerItems.map((item) => {

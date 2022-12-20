@@ -13,6 +13,6 @@ export const statusUserRedirect = async (
     localStorage.setItem('diveBoardUser', 'oldUser');
     setMode('community');
   } else {
-    await push(pageRoutes.mainPageRoute);
+    await push('/');
   }
 };

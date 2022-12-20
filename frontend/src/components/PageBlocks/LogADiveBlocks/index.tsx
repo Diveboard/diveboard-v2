@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-
-import { StepsIndicator } from './StepsIndicator';
+import { useRouter } from 'next/router';
 import { PreStep } from './StepsComponents/PreStep';
 import { FirstStep } from './StepsComponents/FirstStep';
 import { SecondStep } from './StepsComponents/SecondStep';
@@ -15,39 +14,83 @@ import { CongratsStep } from './StepsComponents/CongratsStep';
 import { LogDiveDataContext } from './LogDiveData/logDiveContext';
 import { StepType } from './types/commonTypes';
 import styles from './styles.module.scss';
+import { firestoreDivesService } from '../../../firebase/firestore/firestoreServices/firestoreDivesService';
+import { Loader } from '../../Loader';
+import { convertAllStepsData } from './LogDiveHelpers/convertAllStepsData';
+import { DiveType } from '../../../types';
 
-export const LogDiveBlock = () => {
+type Props = {
+  dive?: DiveType;
+  diveId?: string;
+  userId: string;
+};
+
+export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
   const [step, setStep] = useState<StepType>(0);
-  const { setCurrentStep } = useContext(LogDiveDataContext);
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const {
+    setCurrentStep, setData, getAllStepsData, setEmptyData,
+  } = useContext(LogDiveDataContext);
+
+  const router = useRouter();
+  const { isNew } = router.query;
 
   useEffect(() => {
-    setCurrentStep(step);
-  }, [step]);
+    if (isNew) {
+      setEmptyData();
+      setStep(0);
+      router.push('/log-dive');
+    } else {
+      setCurrentStep(step);
+    }
+  }, [step, isNew]);
+
+  useEffect(() => {
+    if (dive) {
+      // @ts-ignore
+      setData(dive);
+      setStep(1);
+    }
+  }, [dive]);
+
+  const saveDraft = async () => {
+    const allStepsData = getAllStepsData();
+    setLoading(true);
+    const data = await convertAllStepsData(allStepsData, userId, true);
+    if (diveId) {
+      // @ts-ignore
+      await firestoreDivesService.updateDiveData(userId, diveId, data);
+    } else {
+      // @ts-ignore
+      await firestoreDivesService.setDiveData(data, userId);
+    }
+    router.push('/dive-manager');
+  };
 
   return (
     <div className={styles.diveWrapper}>
+      <Loader loading={isLoading} />
       {step !== 10 && (
       <div className={styles.header}>
-        <h1>New Dive</h1>
-        <span>
-          SAVE DRAFT
-        </span>
+        <h1>{diveId ? `Dive ${diveId}` : 'New Dive'}</h1>
+        <span onClick={saveDraft}>SAVE DRAFT</span>
       </div>
       )}
-      {step === 0 && (
-        <PreStep setStep={setStep} />
+      {!isLoading && (
+      <>
+        {step === 0 && <PreStep setStep={setStep} />}
+        <FirstStep step={step} setStep={setStep} />
+        <SecondStep step={step} setStep={setStep} />
+        <ThirdStep step={step} setStep={setStep} />
+        <FourthStep step={step} setStep={setStep} userId={userId} />
+        <FifthStep step={step} setStep={setStep} />
+        <SixthStep step={step} setStep={setStep} />
+        <SeventhStep step={step} setStep={setStep} />
+        <EighthStep step={step} setStep={setStep} />
+        <NinthStep step={step} setStep={setStep} diveId={diveId} userId={userId} />
+        {step === 10 && <CongratsStep />}
+      </>
       )}
-      {(step !== 0 && step !== 10) && <StepsIndicator step={step} setStep={setStep} />}
-      <FirstStep step={step} setStep={setStep} />
-      <SecondStep step={step} setStep={setStep} />
-      <ThirdStep step={step} setStep={setStep} />
-      <FourthStep step={step} setStep={setStep} />
-      <FifthStep step={step} setStep={setStep} />
-      <SixthStep step={step} setStep={setStep} />
-      <SeventhStep step={step} setStep={setStep} />
-      <EighthStep step={step} setStep={setStep} />
-      <NinthStep step={step} setStep={setStep} />
-      {step === 10 && <CongratsStep setStep={setStep} />}
     </div>
   );
 };

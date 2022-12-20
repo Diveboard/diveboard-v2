@@ -80,9 +80,9 @@
     width: 519px;
 
     li {
-      white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis;
+      //white-space: nowrap;
+      //text-overflow: ellipsis;
       width: 233px;
       span {
         sup {
@@ -117,7 +117,7 @@
   }
 }
 
-@media (max-width: 1024px) { 
+@media (max-width: 1024px) {
   .leftContent {
     flex-direction: column;
   }
@@ -142,7 +142,7 @@
   .spotDataWrapper {
     margin-bottom: 50px;
   }
-  
+
   .leftContent {
     width: 100%;
   }

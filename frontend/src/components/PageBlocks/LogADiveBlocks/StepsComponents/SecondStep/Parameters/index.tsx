@@ -11,11 +11,9 @@ import { useWindowWidth } from '../../../../../../hooks/useWindowWidth';
 
 type Props = {
   parameters: SecondStepType['parameters'];
-  setParameters: React.Dispatch<React.SetStateAction<SecondStepType['parameters']>>
-  errors:
-  SecondStepErrors
-  setErrors:
-  React.Dispatch<React.SetStateAction<SecondStepErrors>>
+  setParameters: (res: SecondStepType['parameters']) => void;
+  errors: SecondStepErrors;
+  setErrors: React.Dispatch<React.SetStateAction<SecondStepErrors>>;
 };
 
 export const Parameters: FC<Props> = ({
@@ -26,22 +24,15 @@ export const Parameters: FC<Props> = ({
 }) => {
   const isMobile = useWindowWidth(500, 768);
 
-  const params = setParams(
-    parameters,
-    setParameters,
-  );
+  const params = setParams(parameters, setParameters);
 
-  const errorsParams = setParams(
-    errors,
-    setErrors,
-  );
-
+  const errorsParams = setParams(errors, setErrors);
   return (
     <div className={styles.parameters}>
       <InputLabelWrapper label="Time In" mode={isMobile ? 'half' : 'common'}>
         <TimePickerInput
           setTime={(val) => params('time', val)}
-          currentTime={parameters.time}
+          currentTime={parameters.time || ''}
           error={errors.timeError}
           setError={(val) => {
             errorsParams('timeError', val as string);
@@ -81,6 +72,7 @@ export const Parameters: FC<Props> = ({
           value={parameters.duration ? parameters.duration.toString() : ''}
           setValue={(val) => params('duration', +(val as string))}
           height={48}
+          min={0}
           width={isMobile ? 768 : 165}
           placeholder="min"
           error={errors.durationError}
@@ -90,17 +82,24 @@ export const Parameters: FC<Props> = ({
         />
       </InputLabelWrapper>
 
-      <InputLabelWrapper label="Surface Interval" mode={isMobile ? 'full' : 'common'}>
+      <InputLabelWrapper
+        label="Surface Interval"
+        mode={isMobile ? 'full' : 'common'}
+      >
         <Input
           type="number"
-          value={parameters.surfaceInterval ? parameters.surfaceInterval.toString() : ''}
+          value={
+            parameters.surfaceInterval
+              ? parameters.surfaceInterval.toString()
+              : ''
+          }
+          min={0}
           setValue={(val) => params('surfaceInterval', +(val as string))}
           height={48}
           width={730}
           placeholder="min"
         />
       </InputLabelWrapper>
-
     </div>
   );
 };

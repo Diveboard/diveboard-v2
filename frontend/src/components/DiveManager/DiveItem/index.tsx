@@ -1,50 +1,40 @@
 import React, { FC, useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
-
-import { Checkbox } from '../../CheckBox';
+import { parseDate } from '../../../utils/parseDate';
+import { DiveType } from '../../../firebase/firestore/models';
 import DiveInfo from '../DiveInfo';
-import { DummyDataObj } from '../DUMMY_DATA_OBJ';
-
+import { Checkbox } from '../../CheckBox';
 import styles from './styles.module.scss';
 
 type Props = {
-  itm: DummyDataObj;
+  itm: DiveType & { spotName?: string, spot: string, date: Date | null };
   isSelectAll: boolean;
+  checked: boolean;
+  setChecked: (val: boolean) => void;
   changeIsSelectAll: () => void;
   isChange: boolean;
+  onClick: () => void;
 };
 
 export const DiveItem: FC<Props> = ({
   itm,
+  checked,
+  setChecked,
   isSelectAll,
   changeIsSelectAll,
   isChange,
+  onClick,
 }) => {
-  const {
-    number,
-    date,
-    spot,
-    divetime,
-    depth,
-    diversCount,
-    trip,
-    diveShop,
-    water,
-    visibility,
-    altitude,
-    featuredGear,
-  } = itm;
-  const [checkboxItem, setCheckboxItem] = useState(false);
   const [isShow, setShow] = useState(true);
 
   useEffect(() => {
     if (isChange) {
-      setCheckboxItem(isSelectAll);
+      setChecked(isSelectAll);
     }
   }, [isSelectAll]);
 
-  const checkboxHandler = () => {
-    setCheckboxItem(() => !checkboxItem);
+  const checkboxHandler = (val) => {
+    setChecked(val);
     if (isSelectAll) {
       changeIsSelectAll();
     }
@@ -62,27 +52,27 @@ export const DiveItem: FC<Props> = ({
           : styles.wrapper
       }
     >
-      <div className={styles.info}>
+      <div className={styles.info} onClick={onClick}>
         <div className={styles.number}>
           #
-          {number}
+          {itm.aboutDive?.diveNumber}
         </div>
-        <div className={styles.date}>{date}</div>
+        <div className={styles.date}>{parseDate(itm.date)}</div>
       </div>
       <div className={styles.subwrapper}>
-        <div className={styles.spot}>{spot}</div>
+        <div className={styles.spot}>{itm.spotName}</div>
         <Checkbox
           name="name"
           className="column"
-          checked={checkboxItem}
+          checked={checked}
           onChecked={checkboxHandler}
         />
       </div>
       <div className={styles.infowrapper}>
         <DiveInfo
-          diveTime={divetime}
-          deepness={depth}
-          diversCount={diversCount}
+          diveTime={itm.diveData?.duration}
+          deepness={itm.diveData?.maxDepth}
+          diversCount={itm.buddies?.length}
         />
 
         {isShow && (
@@ -107,32 +97,32 @@ export const DiveItem: FC<Props> = ({
             <li>
               Trip:
               {' '}
-              <span>{trip}</span>
+              <span>{itm.aboutDive?.tripName}</span>
             </li>
             <li>
               Dive shop:
               {' '}
-              <span>{diveShop}</span>
+              <span>{itm.diveCenter?.id}</span>
             </li>
             <li>
               Water:
               {' '}
-              <span>{water}</span>
+              <span>{itm.diveData?.waterType}</span>
             </li>
             <li>
               Visibility:
               {' '}
-              <span>{visibility}</span>
+              <span>{itm.diveData?.waterVisibility}</span>
             </li>
             <li>
               Altitude:
               {' '}
-              <span>{altitude}</span>
+              <span>{itm.diveData?.altitude}</span>
             </li>
             <li>
               Featured gear:
               {' '}
-              <span>{featuredGear}</span>
+              <span>{itm.gears?.map((gear) => gear?.typeOfGear)?.toString()}</span>
             </li>
           </ul>
           <span className={styles.switch} onClick={showHandler}>

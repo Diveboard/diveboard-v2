@@ -4,6 +4,11 @@
   box-shadow: 0 8px 15px rgba(0, 62, 89, 0.06);
   border-radius: 15px;
   position: relative;
+  flex: 1 0 21%;
+
+  &:hover {
+    cursor: pointer;
+  }
 
   .imgWrapper {
     position: relative;
@@ -78,6 +83,9 @@
       font-weight: 600;
       font-size: 1.031vw;
       line-height: 1.237vw;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
     }
 
     .dataWrapper {
@@ -142,6 +150,8 @@
 @media (max-width: 768px) {
   .diveCard {
     min-width: 300px;
+    flex: 1 0 0;
+
     .footer {
       padding: 11px 15px;
 

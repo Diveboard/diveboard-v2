@@ -2,6 +2,8 @@ import React from 'react';
 import { PhotoCard } from '../../../../Cards/PhotoCard';
 import { ArrowLink } from '../../../../ArrowLink';
 import styles from './styles.module.scss';
+import { photos } from '../../../../DivePage/DIVE_PAGE_DUMMY_DATA';
+import pagesRoutes from '../../../../../routes/pagesRoutes.json';
 
 export const PhotoDivesBlock = () => (
   <div className={styles.photoDivesWrapper}>
@@ -11,24 +13,24 @@ export const PhotoDivesBlock = () => (
       <div className={styles.leftGroup}>
         <div className={styles.column}>
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/shark.jpg"
+            imgUrl={photos[0].img}
             favourites={136}
             size="normal"
           />
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/photo2.jpg"
+            imgUrl={photos[1].img}
             favourites={136}
             size="small"
           />
         </div>
         <div className={styles.column}>
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/photo3.jpg"
+            imgUrl={photos[2].img}
             favourites={136}
             size="small"
           />
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/photo4.jpg"
+            imgUrl={photos[3].img}
             favourites={136}
             size="normal"
           />
@@ -37,24 +39,24 @@ export const PhotoDivesBlock = () => (
       <div className={styles.rightGroup}>
         <div className={styles.column}>
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/photo5.jpg"
+            imgUrl={photos[4].img}
             favourites={136}
             size="normal"
           />
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/photo6.jpg"
+            imgUrl={photos[5].img}
             favourites={136}
             size="small"
           />
         </div>
         <div className={styles.column}>
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/photo7.jpg"
+            imgUrl={photos[2].img}
             favourites={136}
             size="small"
           />
           <PhotoCard
-            imgSrc="/TEST_IMG_THEN_DELETE/photo8.jpg"
+            imgUrl={photos[3].img}
             favourites={136}
             size="normal"
           />
@@ -62,7 +64,7 @@ export const PhotoDivesBlock = () => (
       </div>
     </div>
     <div className={styles.arrowWrapper}>
-      <ArrowLink text="View Gallery" color="#0059DE" link="/" />
+      <ArrowLink text="View Gallery" color="#0059DE" link={pagesRoutes.galleryPageRout} />
     </div>
   </div>
 );

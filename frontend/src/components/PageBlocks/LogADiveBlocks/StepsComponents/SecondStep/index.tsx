@@ -15,34 +15,30 @@ import { StepProps } from '../../types/commonTypes';
 import { SecondStepType } from '../../types/stepTypes';
 import { SecondStepErrors } from '../../types/errorTypes';
 import styles from './styles.module.scss';
+import { StepsIndicator } from '../../StepsIndicator';
 
-export const SecondStep: FC<StepProps> = ({
-  step,
-  setStep,
-}) => {
+export const SecondStep: FC<StepProps> = ({ step, setStep }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
-
+  const [data, setData] = useState<SecondStepType>(undefined);
   const [showChart, setShowChart] = useState(false);
   const showedChart = useRef(false);
 
-  const [spots, setSpots] = useState<{
-    depth: number;
-    diveTime: number;
-    temperature: number;
-  }[]>([]);
+  // TODO: // For what
+  // const [spots, setSpots] = useState<{
+  //   depth: number;
+  //   diveTime: number;
+  //   temperature: number;
+  // }[]
+  // >([]);
 
-  const [parameters, setParameters] = useState<SecondStepType['parameters']>({
-    time: '',
-    date: null,
-    maxDepth: undefined,
-    duration: undefined,
-    surfaceInterval: undefined,
-    safetySpots: [{
-      id: 1,
-      period: undefined,
-      depth: undefined,
-    }],
-  });
+  // useEffect(() => {
+  //   const newSpots = data?.parameters?.safetySpots.map((spot) => ({
+  //     depth: spot.depth,
+  //     diveTime: spot.period,
+  //     temperature: 0,
+  //   }));
+  //   setSpots(newSpots);
+  // }, [data?.parameters?.safetySpots]);
 
   const [parametersErrors, setParametersErrors] = useState<SecondStepErrors>({
     timeError: '',
@@ -53,29 +49,10 @@ export const SecondStep: FC<StepProps> = ({
 
   const setErrors = () => setStepErrors({
     stepType: 2,
-    data: parameters,
+    data: data.parameters,
     errors: parametersErrors,
     setErrors: setParametersErrors,
   });
-
-  const [advancedParameters,
-    setAdvancedParameters] = useState<SecondStepType['advancedParameters']>({
-    surfaceTemp: undefined,
-    bottomTemp: undefined,
-    weights: undefined,
-    waterType: undefined,
-    current: undefined,
-    altitude: undefined,
-    waterVisibility: undefined,
-  });
-
-  const [tanks, setTanks] = useState<SecondStepType['tanks']>([]);
-
-  const secondStepData: SecondStepType = {
-    parameters,
-    advancedParameters,
-    tanks,
-  };
 
   useEffect(() => {
     // load points //todo
@@ -86,23 +63,10 @@ export const SecondStep: FC<StepProps> = ({
       setShowChart(true);
     }
     showedChart.current = true;
-  }, [parameters, advancedParameters, tanks]);
+  }, [data]);
 
   useEffect(() => {
-    const newSpots = parameters.safetySpots.map((spot) => ({
-      depth: spot.depth,
-      diveTime: spot.period,
-      temperature: 0,
-    }));
-    setSpots(newSpots);
-  }, [parameters.safetySpots]);
-
-  useEffect(() => {
-    const data = getStepData(2) as SecondStepType;
-    if (Object.values(data).every((item) => !!item)) {
-      setParameters(data.parameters);
-      setAdvancedParameters(data.advancedParameters);
-    }
+    setData(getStepData(2) as SecondStepType);
   }, [step]);
 
   if (step !== 2) {
@@ -110,80 +74,91 @@ export const SecondStep: FC<StepProps> = ({
   }
 
   return (
-    <>
-      <div className={styles.secondStep}>
-
-        <h2>
-          Profile
-        </h2>
-        {showChart && <DepthChart points={spots} />}
-        {!showChart && (
-        <>
-          <MarginWrapper top={10} />
-          <p>
-            To display on Diveboard the exact profile of your dive, you can either connect directly
-            your
-            dive computer, or select an export from another software.
-            If you don't upload your dive profile, a generic profile will be generated based on the
-            duration and safety stops you entered. You can always upload later.
-          </p>
-          <p>
-            If you don't upload your dive profile, a generic profile will be generated based on the
-            duration and safety stops you entered. You can always upload later.
-          </p>
-
-          <div className={styles.buttonGroup}>
-
-            <Button
-              backgroundColor="#0059DE"
-              border="none"
-              borderRadius={30}
-              width={305}
-              height={48}
-              disable
-            >
-              <span className={styles.primaryButton}>
-                Import from Dive Computer
-              </span>
-
-            </Button>
-
-            <Button
-              backgroundColor="transparent"
-              border="2px solid #000345"
-              borderRadius={30}
-              width={373}
-              height={48}
-            >
-              <span className={styles.secondaryButton}>
-                Import from File & Partner Services
-              </span>
-            </Button>
-          </div>
-        </>
-        )}
-        <Parameters
-          parameters={parameters}
-          setParameters={setParameters}
-          errors={parametersErrors}
-          setErrors={setParametersErrors}
-        />
-
-        <SafetySpots parameters={parameters} setParameters={setParameters} />
-        <AdvancedParameters
-          advancedParameters={advancedParameters}
-          setAdvancedParameters={setAdvancedParameters}
-        />
-        <Tanks tanks={tanks} setTanks={setTanks} />
-
-      </div>
-      <StepsNavigation
+    <div>
+      <StepsIndicator
+        objectKey="parameters"
+        currentDataKey="date"
+        step={step}
         setStep={setStep}
         setErrors={setErrors}
-        setStepData={() => {
-          setStepData(2, secondStepData);
-        }}
+        setStepData={() => setStepData(2, data)}
       />
-    </>
+      {data && (
+      <>
+        <div className={styles.secondStep}>
+          <h2>Profile</h2>
+          {/* TODO: Check it */}
+          {showChart
+              && data.parameters?.safetySpots
+              && <DepthChart points={data.parameters.safetySpots} />}
+          {!showChart && (
+          <>
+            <MarginWrapper top={10} />
+            <p>
+              To display on Diveboard the exact profile of your dive, you can
+              either connect directly your dive computer, or select an export
+              from another software. If you don't upload your dive profile, a
+              generic profile will be generated based on the duration and safety
+              stops you entered. You can always upload later.
+            </p>
+            <p>
+              If you don't upload your dive profile, a generic profile will be
+              generated based on the duration and safety stops you entered. You
+              can always upload later.
+            </p>
+
+            <div className={styles.buttonGroup}>
+              <Button
+                backgroundColor="#0059DE"
+                border="none"
+                borderRadius={30}
+                width={305}
+                height={48}
+                disable
+              >
+                <span className={styles.primaryButton}>
+                  Import from Dive Computer
+                </span>
+              </Button>
+
+              <Button
+                backgroundColor="transparent"
+                border="2px solid #000345"
+                borderRadius={30}
+                width={373}
+                height={48}
+              >
+                <span className={styles.secondaryButton}>
+                  Import from File & Partner Services
+                </span>
+              </Button>
+            </div>
+          </>
+          )}
+          <Parameters
+            parameters={data.parameters}
+            setParameters={(res) => setData({ ...data, parameters: res })}
+            errors={parametersErrors}
+            setErrors={setParametersErrors}
+          />
+
+          <SafetySpots
+            parameters={data.parameters}
+            setParameters={(res) => setData({ ...data, parameters: res })}
+          />
+          <AdvancedParameters
+            advancedParameters={data.advancedParameters}
+            setAdvancedParameters={(res) => setData({ ...data, advancedParameters: res })}
+          />
+          <Tanks tanks={data.tanks} setTanks={(res) => setData({ ...data, tanks: res })} />
+        </div>
+        <StepsNavigation
+          setStep={setStep}
+          setErrors={setErrors}
+          setStepData={() => setStepData(2, data)}
+        />
+      </>
+      )}
+    </div>
   );
 };

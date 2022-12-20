@@ -1,11 +1,16 @@
 import { InferredActionsType } from '../../types/inferActionsType';
 import { InitialDiveDataStateType } from '../../types/diveDataStatetype';
+import { initialDiveDataState } from '../state';
 
 export const diveDataReducer = (
   state: InitialDiveDataStateType,
   action: InferredActionsType,
 ): InitialDiveDataStateType => {
   switch (action.type) {
+    case 'update-empty-state':
+      return {
+        ...initialDiveDataState,
+      };
     case 'set-step':
       return {
         ...state,

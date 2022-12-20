@@ -1,24 +1,25 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
-import { Icon, imageLoader } from '../../Icons/Icon';
+import { imageLoader } from '../../Icons/Icon';
 import styles from './styles.module.scss';
+import FavoritesBlock from './FavoritesBlock';
 
 type Props = {
-  imgSrc: string;
+  imgUrl?: string;
   favourites: number;
   addedToFavourite?: boolean;
   size?: 'normal' | 'small' | 'mobileScroll';
   onToggle?: () => void;
-  authorName?:string
+  authorName?: string
 };
 
 export const PhotoCard: FC<Props> = ({
-  imgSrc,
   addedToFavourite,
   favourites,
   size,
   onToggle,
   authorName,
+  imgUrl,
 }) => {
   const getCardSize = () => {
     if (size === 'normal') {
@@ -42,7 +43,7 @@ export const PhotoCard: FC<Props> = ({
     >
       {size ? (
         <Image
-          src={imgSrc}
+          src={imgUrl}
           layout="fill"
           loader={imageLoader}
           className={styles.img}
@@ -51,20 +52,12 @@ export const PhotoCard: FC<Props> = ({
       ) : (
       // eslint-disable-next-line jsx-a11y/img-redundant-alt
         <img
-          src={imgSrc}
+          src={imgUrl}
           alt="photo"
         />
       )}
 
-      <span className={styles.favouritesBlock}>
-        <span>{favourites}</span>
-        <span>Saves</span>
-
-        <Icon
-          iconName={addedToFavourite ? 'heart filled in' : 'heart'}
-          size={16}
-        />
-      </span>
+      <FavoritesBlock isFavorite={addedToFavourite} count={favourites} />
       {authorName && (
       <span className={styles.author}>
         added by:

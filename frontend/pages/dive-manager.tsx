@@ -5,13 +5,16 @@ import { AuthLayout } from '../src/layouts/AuthLayout';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 
 import DiveManagerBlock from '../src/components/DiveManager';
+import { firestoreDivesService } from '../src/firebase/firestore/firestoreServices/firestoreDivesService';
+import pageRoutes from '../src/routes/pagesRoutes.json';
 
 const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   user,
+  dives,
 }) => (
   <AuthLayout user={user}>
     <MainLayout>
-      <DiveManagerBlock />
+      <DiveManagerBlock userId={user.uid} userDives={dives} />
     </MainLayout>
   </AuthLayout>
 );
@@ -21,8 +24,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   if (!uid) {
     return {
-      props: {
-        user: null,
+      redirect: {
+        destination: pageRoutes.mainPageGuest,
+        permanent: false,
       },
     };
   }
@@ -33,6 +37,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     displayName = '',
   } = await firebaseAdmin.auth().getUser(uid);
 
+  const data = await firestoreDivesService.getDivesByUserId(uid);
+
+  let dives = [];
+
+  if (Array.isArray(data) && data.length !== 0) {
+    dives = JSON.parse(JSON.stringify(data));
+  }
+
   return {
     props: {
       user: {
@@ -41,6 +53,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         photoURL,
         name: displayName,
       },
+      dives,
     },
   };
 };

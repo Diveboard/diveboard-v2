@@ -5,121 +5,51 @@ import { buttons } from '../../DiveManager/diveData';
 import { SearchAnimatedInput } from '../../Input/SearchAnimatedInput';
 import { PhotoCard } from '../../Cards/PhotoCard';
 import { Lightbox } from './Lightbox';
+import { ImageInfo, UserType } from '../../../types';
 
-const photos = [
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo2.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo3.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo4.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo2.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/shark.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo5.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo6.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo2.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo3.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo4.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/shark.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo5.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo6.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo2.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo3.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo4.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/shark.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo5.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-  {
-    imgScr: '/TEST_IMG_THEN_DELETE/photo6.jpg',
-    favorites: 150,
-    author: 'Ivan Kudrja',
-  },
-];
+type Props = {
+  user?: UserType,
+  images: Array<ImageInfo>
+};
 
-export const GalleryBlock = () => {
+export const GalleryBlock = ({ images, user }: Props) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [openLightbox, setOpenLightbox] = useState(false);
   const [imageIndex, setImageIndex] = useState<number>(null);
+  const [sortType, setSortType] = useState('recent');
 
   useEffect(() => {
     document.body.style.overflow = 'overlay';
   }, []);
 
+  const filterBySearch = (gallery: Array<ImageInfo>) => {
+    if (searchQuery) {
+      return gallery.filter((img) => img.spot.toLowerCase().includes(searchQuery.toLowerCase()));
+    }
+    return gallery;
+  };
+
+  const sortImages = (gallery: Array<ImageInfo>) => {
+    if (sortType === 'recent') {
+      return gallery.sort((a, b) => +new Date(b.date) - +new Date(a.date));
+    }
+    if (sortType === 'oldest') {
+      return gallery.sort((a, b) => +new Date(a.date) - +new Date(b.date));
+    }
+    if (sortType === 'drafts') {
+      return gallery.filter((img) => img.draft);
+    }
+    return gallery;
+  };
+
   return (
-    <div className={styles.wrapper}>
+    <div className={`${styles.wrapper} ${styles['min-height-wrapper']}`}>
       <h1>Gallery</h1>
       <div className={styles.sortBar}>
         <ButtonGroup
           buttons={buttons}
-          onClick={() => {}}
+          onClick={(val) => setSortType(val)}
+          defaultChecked={sortType}
         />
         <SearchAnimatedInput
           value={searchQuery}
@@ -129,7 +59,7 @@ export const GalleryBlock = () => {
       <div
         className={styles.imageGrid}
       >
-        {photos.map((photo, index) => (
+        {!!images.length && filterBySearch(sortImages(images)).map((photo, index) => (
           <div
               /* eslint-disable-next-line react/no-array-index-key */
             key={index}
@@ -139,20 +69,21 @@ export const GalleryBlock = () => {
             }}
           >
             <PhotoCard
-              imgSrc={photo.imgScr}
-              favourites={photo.favorites}
-              authorName={photo.author}
+              imgUrl={photo.img}
+              favourites={0}
+              authorName={user?.name}
             />
           </div>
         ))}
       </div>
       <Lightbox
         open={openLightbox}
-        image={photos[imageIndex]}
+        image={images[imageIndex]}
+        user={user}
         onClose={() => {
           setOpenLightbox(false);
         }}
-        handleNextSlide={() => (imageIndex < photos.length - 1
+        handleNextSlide={() => (imageIndex < images.length - 1
           ? setImageIndex((idx) => idx + 1)
           : setOpenLightbox(false))}
         handlePrevSlide={() => (imageIndex > 0

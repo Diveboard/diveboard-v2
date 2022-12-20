@@ -1,6 +1,8 @@
 import React from 'react';
-import { FirstStepType, SecondStepType } from './stepTypes';
-import { FifthStepErrors, FirstStepErrors, SecondStepErrors } from './errorTypes';
+import { FirstStepType, SecondStepType, ThirdStepType } from './stepTypes';
+import {
+  FifthStepErrors, FirstStepErrors, SecondStepErrors, ThirdStepErrors,
+} from './errorTypes';
 
 export type FirstStepErrorsActionType = {
   stepType: 1;
@@ -16,6 +18,13 @@ export type SecondStepErrorsActionType = {
   setErrors: React.Dispatch<React.SetStateAction<SecondStepErrors>>,
 };
 
+export type ThirdStepErrorsActionType = {
+  stepType: 3;
+  data: ThirdStepType['spotId'];
+  errors: ThirdStepErrors;
+  setErrors: React.Dispatch<React.SetStateAction<ThirdStepErrors>>,
+};
+
 export type FifthStepErrorsActionType = {
   stepType: 5;
   data: string;
@@ -26,4 +35,5 @@ export type FifthStepErrorsActionType = {
 export type ErrorsActionType =
   FirstStepErrorsActionType
   | SecondStepErrorsActionType
+  | ThirdStepErrorsActionType
   | FifthStepErrorsActionType;

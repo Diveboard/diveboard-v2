@@ -11,6 +11,10 @@
   }
 }
 
+.min-height-wrapper {
+  min-height: calc(100vh - 238px);
+}
+
 .sortBar {
   display: flex;
   flex-direction: row;

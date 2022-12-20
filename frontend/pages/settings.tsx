@@ -10,6 +10,7 @@ import {
   MobileSettings,
 } from '../src/components/PageBlocks/SettingsBlocks/SettingsModes/MobileSettings';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
+import { firestorePaths } from '../src/firebase/firestore/firestorePaths';
 
 const Settings:
 InferGetServerSidePropsType<typeof getServerSideProps> = (
@@ -46,16 +47,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       throw new Error('no user uid');
     }
 
+    // TODO: Add to service
+    const snapshotUser = await firebaseAdmin
+      .firestore().doc(`${firestorePaths.users.path}/${uid}`).get();
     const {
-      email, photoURL = '', displayName = '',
-    } = await firebaseAdmin.auth().getUser(uid);
+      email, photoURL = '', name = '', country = '', about = '',
+    } = await snapshotUser.data();
+
+    const notificationSegment = firestorePaths.users.settings.notifications.segment;
+    const preferencesSegment = firestorePaths.users.settings.preferences.segment;
+    const getPath = (userId: string) => `${firestorePaths.users.path}/${userId}/${firestorePaths.users.settings.segment}`;
 
     const snapshotPreferences = await firebaseAdmin
-      .firestore().doc(`user-preferences/${uid}`).get();
+      .firestore().doc(`${getPath(uid)}/${preferencesSegment}`).get();
     const preferences = await snapshotPreferences.data();
 
     const snapshotNotifications = await firebaseAdmin
-      .firestore().doc(`notifications/${uid}`).get();
+      .firestore().doc(`${getPath(uid)}/${notificationSegment}`).get();
     const notifications = await snapshotNotifications.data();
 
     return {
@@ -64,13 +72,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           uid,
           email,
           photoURL,
-          name: displayName,
+          name,
+          country,
+          about,
         },
         preferences,
         notifications,
       },
     };
   } catch (e) {
+    console.log(e);
     return {
       redirect: {
         destination: '/auth',

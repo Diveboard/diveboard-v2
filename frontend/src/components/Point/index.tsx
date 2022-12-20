@@ -29,9 +29,10 @@ type Props = {
   lat?: number;
   // eslint-disable-next-line react/no-unused-prop-types
   lng?:number;
+  onClick?:(name: string)=>void
 };
 
-export const DivePoint: FC<Props> = ({ divesCount, diveName }) => {
+export const DivePoint: FC<Props> = ({ divesCount, diveName, onClick }) => {
   const memoizedSizes = useMemo(() => getPointCircleWidth(divesCount), [divesCount]);
   const [showDiveName, setShowDiveName] = useState(false);
   return (
@@ -44,6 +45,7 @@ export const DivePoint: FC<Props> = ({ divesCount, diveName }) => {
         }}
         onMouseEnter={() => { setShowDiveName(true); }}
         onMouseLeave={() => { setShowDiveName(false); }}
+        onClick={() => { onClick && onClick(diveName); }}
       >
         <div
           className={styles.inner}
