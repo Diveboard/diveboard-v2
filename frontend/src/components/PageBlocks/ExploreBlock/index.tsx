@@ -129,6 +129,8 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
 
   const router = useRouter();
 
+  const { location, type } = router.query;
+
   const handleSidebar = (e): void => {
     // setChosenSpot(null);
     const yTouch = e.changedTouches[0].screenY;
@@ -203,7 +205,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     setSearchQuery(item.name);
     if (item.regionId) {
       const reg = await firestoreGeoDataService.getRegionArea(item.regionId);
-      setRegion(reg);
+      setRegion({ ...reg, name: item.name });
     }
     if (item?.coords) {
       const lat = (item.coords.sw.lat + item.coords.ne.lat) / 2;
@@ -225,12 +227,22 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     setSpots(res);
   };
 
+  useEffect(() => {
+    (async () => {
+      if (location && type) {
+        const tab = type as string;
+        setActiveTab(tab.charAt(0).toUpperCase() + tab.slice(1));
+        const res = await firestoreGeoDataService.getRegionById(location);
+        await searchHandler(res);
+      }
+    })();
+  }, [location, type]);
+
   const renderInput = (
     <SearchAnimatedInput
       value={searchQuery}
       setValue={(val) => {
         setSearchQuery(val);
-        setActiveTab('Spots');
       }}
       withBackArrow
       onClick={() => {
@@ -297,7 +309,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
             {!!spots.length && spots.map((spot) => (
               <a
                 key={spot.id}
-                onClick={() => router.push('spot')}
+                onClick={() => router.push(`spot/${spot.id}`)}
               >
                 <SpotCard
                   region={spot.location?.region}
@@ -327,7 +339,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
           {activeTab === 'Region' && (
           <>
             <div className={styles.regionTitle}>
-              <h1>{searchQuery}</h1>
+              <h1>{region?.name}</h1>
               <FavoritesBlock isFavorite={false} count={0} />
             </div>
             <div className={styles.subtitle}>

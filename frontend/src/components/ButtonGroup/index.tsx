@@ -42,8 +42,10 @@ export const ButtonGroup = ({
         key={btn.text}
         className={btnStyle}
         onClick={() => {
-          setMode(btn.connectedMode);
-          onClick(btn.connectedMode);
+          if (special && btn.connectedMode !== 'shops') {
+            setMode(btn.connectedMode);
+            onClick(btn.connectedMode);
+          }
         }}
       >
         {btn.imgSrc ? (

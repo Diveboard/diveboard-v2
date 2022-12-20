@@ -10,8 +10,11 @@
     .left {
       display: flex;
       align-items: center;
-    }
 
+      > div:hover {
+        cursor: pointer;
+      }
+    }
 
   }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import landingLabel from '../../../../../../public/images/landing-label.png';
@@ -8,10 +8,12 @@ import { Button } from '../../../../Buttons/Button';
 import { Icon, imageLoader } from '../../../../Icons/Icon';
 import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
 import { ButtonGroup } from '../../../../ButtonGroup';
+import { SearchDropdownPanel } from '../../../../Dropdown/SearchedItems/SearchDropdownPanel';
+import { firestoreGeoDataService } from '../../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
+import { useDebounce } from '../../../../../hooks/useDebounce';
 
 export const MainBannerBlock = () => {
   const isWidth = useWindowWidth(500, 768);
-  const [inputValue, setInputValue] = useState('');
 
   const router = useRouter();
 
@@ -24,12 +26,44 @@ export const MainBannerBlock = () => {
     text: 'Shops',
   },
   {
-    connectedMode: 'regions',
-    text: 'Regions',
+    connectedMode: 'region',
+    text: 'Region',
   }];
 
+  const [activeTab, setActiveTab] = useState(buttons[0].connectedMode);
+
+  const [inputRegion, setInputRegion] = useState(null);
+  const [isFetch, setIsFetch] = useState(true);
+  const [regions, setRegions] = useState([]);
+
+  const [searchQuery, setSearchQuery] = useState('');
+  useDebounce(searchQuery, setInputRegion, 1000);
+
+  const fetchRegions = async () => {
+    if (inputRegion && isFetch) {
+      const res = await firestoreGeoDataService.getRegions(inputRegion, null, 15);
+      setRegions(res);
+    }
+  };
+
   const search = () => {
-    router.push(`/explore?location=${inputValue}&type=spot`);
+    setIsFetch(true);
+    fetchRegions();
+  };
+
+  useEffect(() => {
+    if (inputRegion) {
+      fetchRegions();
+      setIsFetch(true);
+    }
+  }, [inputRegion]);
+
+  const clickRegionHandler = async (item) => {
+    setRegions([]);
+    if (item.id) {
+      router.push(`/explore?location=${item.id}&type=${activeTab}`);
+    }
+    setIsFetch(false);
   };
 
   return (
@@ -39,7 +73,6 @@ export const MainBannerBlock = () => {
           src={landingLabel}
           layout="fill"
           loader={imageLoader}
-
         />
       </div>
 
@@ -57,10 +90,20 @@ export const MainBannerBlock = () => {
         <div className={styles.inputBlock}>
           <div className={styles.inputWrapper}>
             <Input
-              value={inputValue}
-              setValue={setInputValue}
-              placeholder="location"
-            />
+              value={searchQuery}
+              setValue={(val) => {
+                setSearchQuery(val);
+              }}
+              placeholder="Location"
+            >
+              {!!regions?.length && (
+              <SearchDropdownPanel
+                loading={false}
+                onItemClick={clickRegionHandler}
+                items={regions}
+              />
+              )}
+            </Input>
           </div>
 
           <Button
@@ -80,13 +123,10 @@ export const MainBannerBlock = () => {
 
         <div className={styles.buttonGroup}>
           <ButtonGroup
-            onClick={() => {
-            }}
-            buttons={
-              buttons
-            }
+            onClick={setActiveTab}
+            buttons={buttons}
             special
-            defaultChecked="spots"
+            defaultChecked={activeTab}
           />
         </div>
       </div>

@@ -15,7 +15,7 @@ export const firestoreDivesService = {
       if (diveData.spotId) {
         const spot = await firestoreSpotsService.getSpotById(diveData.spotId);
         const newSpot = { ...spot };
-        newSpot.dives.push(ref.id);
+        newSpot.dives.push({ diveId: ref.id, userId });
         // TODO: Add to spot data
         await firestoreSpotsService.updateSpotById(diveData.spotId, newSpot);
       }
@@ -39,7 +39,7 @@ export const firestoreDivesService = {
         const spot = await firestoreSpotsService.getSpotById(dive.spotId);
         if (spot) {
           const newSpot = { ...spot };
-          newSpot.dives?.push(diveId);
+          newSpot.dives?.push({ diveId, userId });
           await firestoreSpotsService.updateSpotById(dive.spotId, newSpot);
         }
 

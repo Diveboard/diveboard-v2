@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { useWindowWidth } from '../../../hooks/useWindowWidth';
 import { MobilePhotoGroup } from '../../PhotoGroup/mobilePhotoGroup';
 import { photos } from '../../DivePage/DIVE_PAGE_DUMMY_DATA';
@@ -6,10 +7,11 @@ import { DesktopPhotoBlock } from '../../DivePage/DesktopPhotoBlock';
 import { LinkedButton } from '../../Buttons/LinkedButton';
 import { Info } from './Info';
 import { DivesInSpot } from './DivesInSpot';
-import { ShopsInSpot } from './ShopsInSpot';
 import { MobileTabs } from './MobileTabs';
 import { MobileSpotHeader } from './MobileSpotHeader';
 import styles from './styles.module.scss';
+import { DiveType, SpeciesType, SpotType } from '../../../firebase/firestore/models';
+import { Icon } from '../../Icons/Icon';
 
 const images: {
   id: number;
@@ -51,7 +53,14 @@ const images: {
   },
 ];
 
-export const SpotBlocks = () => {
+type Props = {
+  spot: SpotType;
+  dives: Array<DiveType>
+  species: Array<SpeciesType>
+};
+
+export const SpotBlocks = ({ spot, dives, species }: Props) => {
+  const router = useRouter();
   const isMobile = useWindowWidth(500, 769);
   const [tab, setTab] = useState<'info' | 'dives' | 'shops'>('info');
 
@@ -65,11 +74,12 @@ export const SpotBlocks = () => {
         <>
           <div className={styles.header}>
             <div className={styles.left}>
-              <LinkedButton link="" iconName="back-button" iconSize={40} />
+              <div className={styles.backBtnWrapper} onClick={() => router.back()}>
+                <Icon iconName="back-button" size={40} />
+              </div>
               <h1>
-                Shark and Yolana Reef
+                {spot?.name}
               </h1>
-
             </div>
             <LinkedButton link="" iconName="share-link" iconSize={40} />
           </div>
@@ -77,13 +87,15 @@ export const SpotBlocks = () => {
         </>
       )}
 
-      {isMobile && <MobileSpotHeader spotName="Shark and Yolana Reef" images={images} />}
+      {isMobile && <MobileSpotHeader spotName={spot?.name} images={images} />}
 
       {isMobile && <MobileTabs mode={tab} setMode={setTab} />}
       <div className={styles.wrapper}>
-        {isMobile ? tab === 'info' && <Info /> : <Info />}
-        {isMobile ? tab === 'dives' && <DivesInSpot /> : <DivesInSpot />}
-        {isMobile ? tab === 'shops' && <ShopsInSpot /> : <ShopsInSpot />}
+        {isMobile ? tab === 'info'
+            && <Info location={spot?.location} species={species} />
+          : <Info location={spot?.location} species={species} />}
+        {isMobile ? tab === 'dives' && <DivesInSpot dives={dives} /> : <DivesInSpot dives={dives} />}
+        {/* {isMobile ? tab === 'shops' && <ShopsInSpot /> : <ShopsInSpot />} */}
       </div>
 
     </div>

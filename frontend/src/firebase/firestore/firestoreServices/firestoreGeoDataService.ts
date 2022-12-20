@@ -219,6 +219,33 @@ export const firestoreGeoDataService = {
     }
   },
 
+  getRegionById: async (regionId) => {
+    try {
+      const docRef = doc(db, firestorePaths.regions.path, regionId);
+      const docSnap = await getDoc(docRef);
+
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { name, nesw_bounds, id } = docSnap.data();
+      let coords;
+      if (nesw_bounds) {
+        const { northeast: ne, southwest: sw } = JSON.parse(nesw_bounds);
+        coords = {
+          ne,
+          sw,
+        };
+      }
+      return {
+        id: docSnap.id,
+        regionId: id,
+        name,
+        coords,
+      };
+    } catch (e) {
+      console.log(e);
+      throw new Error('get regions error');
+    }
+  },
+
   getRegions: async (locationName, countryId, limitRegions = 5) => {
     const upperLocation = locationName.trim()
       .charAt(0)

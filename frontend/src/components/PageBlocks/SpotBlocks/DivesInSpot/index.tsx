@@ -1,81 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SmallDiveCard } from '../../../Cards/SmallDiveCard';
 import styles from './styles.module.scss';
 import viewMoreStyles from '../viewMore.module.scss';
 import { useWindowWidth } from '../../../../hooks/useWindowWidth';
+import { DiveType } from '../../../../firebase/firestore/models';
+import { convertTimestampDate } from '../../../../utils/convertTimestampDate';
 
-export const DivesInSpot = () => {
+type Props = {
+  dives: Array<DiveType>
+};
+
+export const DivesInSpot = ({ dives }: Props) => {
   const isMobile = useWindowWidth(500, 768);
+  const [isMoreClicked, setMoreClicked] = useState(false);
   return (
     <div className={styles.divesInSpot}>
       {!isMobile && <h2>Dives</h2>}
       <div className={styles.divesInSpotWrapper}>
-        <SmallDiveCard
-          diverName="John Snow"
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
-          date={new Date('11.04.2001')}
-          diveTime={50}
-          deepness={10}
-          diversCount={2}
-        />
-        <SmallDiveCard
-          diverName="John Snow"
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
-          date={new Date('11.04.2001')}
-          diveTime={50}
-          deepness={10}
-          diversCount={2}
-        />
-        <SmallDiveCard
-          diverName="John Snow"
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
-          date={new Date('11.04.2001')}
-          diveTime={50}
-          deepness={10}
-          diversCount={2}
-        />
-        <SmallDiveCard
-          diverName="John Snow"
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
-          date={new Date('11.04.2001')}
-          diveTime={50}
-          deepness={10}
-          diversCount={2}
-        />
-        <SmallDiveCard
-          diverName="John Snow"
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
-          date={new Date('11.04.2001')}
-          diveTime={50}
-          deepness={10}
-          diversCount={2}
-        />
-        <SmallDiveCard
-          diverName="John Snow"
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
-          date={new Date('11.04.2001')}
-          diveTime={50}
-          deepness={10}
-          diversCount={2}
-        />
-        <SmallDiveCard
-          diverName="John Snow"
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
-          date={new Date('11.04.2001')}
-          diveTime={50}
-          deepness={10}
-          diversCount={2}
-        />
-        <SmallDiveCard
-          diverName="John Snow"
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
-          date={new Date('11.04.2001')}
-          diveTime={50}
-          deepness={10}
-          diversCount={2}
-        />
+        {!!dives?.length && dives.map((dive) => (
+          <SmallDiveCard
+            diverName={dive.aboutDive?.tripName}
+            imgSrc={dive.externalImgsUrls[0]}
+            date={convertTimestampDate(dive.diveData?.date)}
+            diveTime={dive.diveData?.time}
+            deepness={dive.diveData?.maxDepth}
+            diversCount={dive.buddies?.length}
+          />
+        ))}
       </div>
-      <span className={viewMoreStyles.viewMore}>View More Dives</span>
+      {dives?.length > 6 && (
+      <span className={viewMoreStyles.viewMore} onClick={() => setMoreClicked(!isMoreClicked)}>
+        {`View ${!isMoreClicked ? 'More' : 'Less'} Dives`}
+      </span>
+      )}
     </div>
   );
 };

@@ -32,6 +32,7 @@ export const Input: FC<Props> = ({
   iconPosition,
   onFocusChange,
   min,
+  children,
 }) => {
   const getInputStyle = (errorValue: string) => {
     if (errorValue) {
@@ -72,7 +73,7 @@ export const Input: FC<Props> = ({
             && onFocusChange(false);
           }}
         />
-
+        {children}
         {iconName && (
           <div className={styles.icon} style={iconPosition === 'right' ? { left: 'unset', right: '16px' } : {}}>
             <Icon iconName={iconName} />

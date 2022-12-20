@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
+import { flag } from 'country-emoji';
 import styles from './styles.module.scss';
-import { Icon } from '../../../../Icons/Icon';
 
 type Props = {
   value: string;
@@ -13,7 +13,7 @@ export const InfoItem: FC<Props> = ({ value, name, country }) => (
     <span className={styles.name}>{name}</span>
     {country && (
       <span className={styles.country}>
-        <Icon iconName={country} size={16} />
+        <span>{flag(country)}</span>
       </span>
     )}
     <span className={styles.value}>{value}</span>

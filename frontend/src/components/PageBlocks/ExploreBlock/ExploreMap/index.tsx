@@ -44,7 +44,7 @@ export const ExploreMap: FC<Props> = ({
       lat={point.lat}
       lng={point.lng}
       diveName={point.diveName}
-      onClick={() => router.push('/spot')}
+      onClick={() => router.push(`/spot/${point.id}`)}
     />
   ));
 
