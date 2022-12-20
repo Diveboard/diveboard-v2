@@ -205,7 +205,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     setSearchQuery(item.name);
     if (item.regionId) {
       const reg = await firestoreGeoDataService.getRegionArea(item.regionId);
-      setRegion({ ...reg, name: item.name });
+      setRegion({ area: reg, name: item.name });
     }
     if (item?.coords) {
       const lat = (item.coords.sw.lat + item.coords.ne.lat) / 2;
@@ -363,7 +363,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
                 <b>27ºC</b>
               </span>
             </div>
-            {region && (
+            {region?.area && (
             <>
               <div className={styles.subtitle}>
                 <Icon iconName="attendance" size={24} />
@@ -375,18 +375,18 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
                 series={[{
                   name: 'series-1',
                   data: [
-                    region.january,
-                    region.february,
-                    region.march,
-                    region.april,
-                    region.may,
-                    region.june,
-                    region.july,
-                    region.august,
-                    region.september,
-                    region.october,
-                    region.november,
-                    region.december,
+                    region.area.january,
+                    region.area.february,
+                    region.area.march,
+                    region.area.april,
+                    region.area.may,
+                    region.area.june,
+                    region.area.july,
+                    region.area.august,
+                    region.area.september,
+                    region.area.october,
+                    region.area.november,
+                    region.area.december,
                   ],
                 }]}
               />
