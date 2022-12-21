@@ -292,7 +292,7 @@ const DiveManager = ({ userId, userDives }: Props) => {
                 <div className={styles.wrapper__buttons}>
                   <ButtonGroup
                     buttons={buttons}
-                    onClick={(val) => setSortType(val)}
+                    onClick={setSortType}
                     defaultChecked={sortType}
                   />
 

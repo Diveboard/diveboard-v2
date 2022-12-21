@@ -39,9 +39,9 @@ class MyDocument extends Document {
           <meta name="msapplication-tap-highlight" content="no" />
           <meta name="theme-color" content="#000000" />
 
-          <link rel="apple-touch-icon" href="/icons/touch-icon-iphone.png" />
+          <link rel="icon" type="image/svg" sizes="32x32" href="/appIcons/diveboard-logo.svg" />
           <link rel="manifest" href="/manifest.json" />
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="icon" href="/appIcons/diveboard-logo.svg" />
 
           <meta name="twitter:card" content="summary" />
           <meta name="twitter:url" content="https://yourdomain.com" />

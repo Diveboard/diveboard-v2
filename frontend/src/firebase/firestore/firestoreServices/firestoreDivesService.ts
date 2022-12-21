@@ -15,7 +15,8 @@ export const firestoreDivesService = {
       if (diveData.spotId) {
         const spot = await firestoreSpotsService.getSpotById(diveData.spotId);
         const newSpot = { ...spot };
-        newSpot.dives.push({ diveId: ref.id, userId });
+        newSpot.dives.push(ref.id);
+        newSpot.dive?.push({ diveId: ref.id, userId });
         // TODO: Add to spot data
         await firestoreSpotsService.updateSpotById(diveData.spotId, newSpot);
       }
@@ -39,7 +40,8 @@ export const firestoreDivesService = {
         const spot = await firestoreSpotsService.getSpotById(dive.spotId);
         if (spot) {
           const newSpot = { ...spot };
-          newSpot.dives?.push({ diveId, userId });
+          newSpot.dive?.push({ diveId, userId });
+          newSpot.dives?.push(diveId);
           await firestoreSpotsService.updateSpotById(dive.spotId, newSpot);
         }
 
@@ -265,7 +267,8 @@ export const firestoreDivesService = {
     try {
       const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveId);
       const docSnap = await getDoc(docRef);
-      return docSnap.data();
+      const data = docSnap.data();
+      return !data.draft || data.publishMode === 'public' ? data : undefined;
     } catch (e) {
       console.log(e.message);
       throw new Error('get dive data error');
@@ -294,6 +297,7 @@ export const firestoreDivesService = {
   ) => {
     try {
       const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveId);
+      // TODO: Delete this dive in spot
       await deleteDoc(docRef);
       return true;
     } catch (e) {

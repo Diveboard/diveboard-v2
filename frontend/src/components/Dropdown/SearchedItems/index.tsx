@@ -4,7 +4,7 @@ import React, {
 import { SearchDropdownPanel } from './SearchDropdownPanel';
 import { useDebounced } from '../../../hooks/useDebounced';
 import { Bounds } from '../../../types';
-// import { useOutsideClick } from '../../../hooks/useOutsideClick';
+import { useOutsideClick } from '../../../hooks/useOutsideClick';
 
 type Props = {
   value: string;
@@ -14,6 +14,7 @@ type Props = {
   onSearchedItemClicked?: (item: { id: string | number, name: string, coords?: Bounds }) => void;
   focus?: boolean;
   setBounds?: (bounds: Bounds) => void;
+  searchRef?: React.RefObject<HTMLDivElement>;
 };
 
 export const SearchedItems: FC<Props> = ({
@@ -23,6 +24,7 @@ export const SearchedItems: FC<Props> = ({
   onSearchedItemClicked,
   focus = true,
   setBounds,
+  searchRef,
 }) => {
   const [items, setItems] = useState<{ id:string | number, name:string }[]>([]);
   const [loading, setLoading] = useState(false);
@@ -55,8 +57,7 @@ export const SearchedItems: FC<Props> = ({
     }
   }, [debouncedValue]);
 
-  // @ts-ignore
-  // useOutsideClick(() => setOpen(false), clickedValue);
+  useOutsideClick(() => setOpen(false), searchRef);
 
   if (!open) {
     return null;

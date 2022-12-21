@@ -1,4 +1,6 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, {
+  FC, useEffect, useRef, useState,
+} from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -13,6 +15,7 @@ import { firestoreGeoDataService } from '../../../firebase/firestore/firestoreSe
 import { useDebounce } from '../../../hooks/useDebounce';
 import { SearchDropdownPanel } from '../../Dropdown/SearchedItems/SearchDropdownPanel';
 import { firestoreSpotsService } from '../../../firebase/firestore/firestoreServices/firestoreSpotsService';
+import { useOutsideClick } from '../../../hooks/useOutsideClick';
 // import { ShopCard } from '../../Cards/ShopsCard';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
@@ -275,11 +278,14 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     })));
     setSpots(markersItems);
   };
+  const searchRef = useRef(null);
+
+  useOutsideClick(() => setRegions([]), searchRef);
 
   return (
     <div className={`${styles.wrapper} ${styles['min-height-wrapper']}`}>
       <div className={styles.sidebar} id="sidebar" onTouchEnd={handleSidebar}>
-        {!isMobile && renderInput}
+        {!isMobile && <div ref={searchRef}>{renderInput}</div>}
         <div
           className={styles.tabs}
           onTouchStart={(e) => setTouchStartY(e.touches[0].screenY)}

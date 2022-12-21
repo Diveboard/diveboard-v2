@@ -37,8 +37,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           const dive = data.dive[i];
           // eslint-disable-next-line no-await-in-loop
           const divesData = await firestoreDivesService.getDiveData(dive.userId, dive.diveId);
-          speciesIds = [...speciesIds, ...divesData.species];
-          dives.push(divesData);
+          if (divesData) {
+            speciesIds = [...speciesIds, ...divesData.species];
+            dives.push(divesData);
+          }
         }
         if (speciesIds.length) {
           species = await firestoreSpeciesServices.getSpeciesByIds(Array.from(new Set(speciesIds)));
@@ -55,6 +57,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     } = await firebaseAdmin.auth()
       .getUser(uid);
     user = {
+      uid,
       email,
       photoURL,
       displayName,

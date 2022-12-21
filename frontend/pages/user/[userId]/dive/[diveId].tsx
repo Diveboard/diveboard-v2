@@ -33,6 +33,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (uid) {
     const data = await firebaseAdmin.auth().getUser(uid);
     user = {
+      uid,
       email: data.email,
       photoURL: data.photoURL,
       displayName: data.displayName,

@@ -42,7 +42,7 @@ export const ButtonGroup = ({
         key={btn.text}
         className={btnStyle}
         onClick={() => {
-          if (special && btn.connectedMode !== 'shops') {
+          if (btn.connectedMode !== 'shops') {
             setMode(btn.connectedMode);
             onClick(btn.connectedMode);
           }

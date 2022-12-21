@@ -25,7 +25,7 @@ export const firstStepErrorsActions = ({
   const notInteger = !Number.isInteger(data.diveNumber);
 
   if (notNaN || notInteger) {
-    newErrors.diveNumberError = 'fill correct number of a dive';
+    newErrors.diveNumberError = 'Fill correct number of a dive';
     error = true;
   }
 

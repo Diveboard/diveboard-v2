@@ -33,9 +33,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (uid) {
     const data = await firebaseAdmin.auth().getUser(uid);
     user = {
+      uid,
       email: data.email,
-      photoURL: data.photoURL,
-      displayName: data.displayName,
+      photoURL: data.photoURL || '',
+      displayName: data.displayName || '',
     };
   }
 
@@ -72,7 +73,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const logbookUser = await firestorePublicProfileService.getUserById(userId as string);
   return {
     props: {
-      user: user ? JSON.parse(JSON.stringify(user)) : null,
+      user,
       logbookUser: logbookUser ? JSON.parse(JSON.stringify(logbookUser)) : null,
       dives,
       species: JSON.parse(JSON.stringify(species)),

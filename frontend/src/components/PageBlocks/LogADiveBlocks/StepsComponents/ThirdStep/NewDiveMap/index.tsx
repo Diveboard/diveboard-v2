@@ -155,26 +155,28 @@ export const LogADiveDiveMap: FC<Props> = ({
       })();
     }
   }, [newPoint]);
+  const searchRef = useRef(null);
 
   return (
     <div className={styles.mapWrapper}>
-
       <div className={styles.searchWrapper}>
         {!newPoint && (
           <>
-
-            <SearchInput setQueryData={setRegion} ms={500} placeholder="Region" />
-            <SearchedItems
-              value={region}
-              setValue={setRegion}
-              onSearchHandler={firestoreGeoDataService.getGeonamesPredictions}
-              onSearchedItemClicked={async (item) => {
-                const coords = await firestoreGeoDataService
-                  .getGeonamesCoordsById(item.id as string);
-                setLocation(coords);
-                setRegion('');
-              }}
-            />
+            <div ref={searchRef} className={styles.searchInputWrapper}>
+              <SearchInput setQueryData={setRegion} ms={500} placeholder="Region" />
+              <SearchedItems
+                value={region}
+                searchRef={searchRef}
+                setValue={setRegion}
+                onSearchHandler={firestoreGeoDataService.getGeonamesPredictions}
+                onSearchedItemClicked={async (item) => {
+                  const coords = await firestoreGeoDataService
+                    .getGeonamesCoordsById(item.id as string);
+                  setLocation(coords);
+                  setRegion('');
+                }}
+              />
+            </div>
             <Button
               width={71}
               height={48}

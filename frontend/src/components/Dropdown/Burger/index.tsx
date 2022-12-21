@@ -91,7 +91,6 @@ export const Burger: FC = () => {
           <LogbookDropdownItem
             key={item.id}
             title={item.title}
-            link={item.link}
           >
             {item.svgItem}
           </LogbookDropdownItem>
