@@ -40,7 +40,6 @@ export const Preferences:FC<Props> = ({ preferences, title = true }) => {
       }
     })();
   }, []);
-
   return (
     <SettingsGroup title={title && 'Preferences'}>
       <SettingsItem
@@ -65,26 +64,12 @@ export const Preferences:FC<Props> = ({ preferences, title = true }) => {
         titleBlock="Preferences"
       >
         <>
-          {preferencesData.scientificData.shareData
-            ? (
-              <div className={styles.secondaryItemContent}>
-                I want to share my data and have my name be mentioned as author
-              </div>
-            ) : (
-              <div className={styles.secondaryItemContent}>
-                I don't want to share my data and have my name be mentioned as author
-              </div>
-            )}
-          {preferencesData.scientificData.shareNotes
-            ? (
-              <div className={styles.secondaryItemContent}>
-                Share your dive notes
-              </div>
-            ) : (
-              <div className={styles.secondaryItemContent}>
-                Don't share your dive notes
-              </div>
-            )}
+          <div className={styles.secondaryItemContent}>
+            {preferencesData.scientificData.shareData || 'I want to share my data and have my name be mentioned as author'}
+          </div>
+          <div className={styles.secondaryItemContent}>
+            {preferencesData.scientificData.shareNotes ? 'Share your dive notes' : 'Don\'t share your dive notes'}
+          </div>
         </>
         <EditedPreferencesScientificData
           preferences={preferencesData}

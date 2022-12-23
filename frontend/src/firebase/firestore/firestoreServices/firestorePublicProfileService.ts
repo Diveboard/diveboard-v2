@@ -8,7 +8,7 @@ import {
   collection,
   query,
   getDocs,
-  orderBy, startAt, where,
+  orderBy, startAt,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { firestorePaths } from '../firestorePaths';

@@ -17,7 +17,7 @@ export type PreferencesType = {
     divesPublic: boolean;
   };
   scientificData: {
-    shareData: boolean;
+    shareData: string;
     shareNotes: boolean;
   };
   language: 'English' | 'Italian' | 'Spanish' | 'German';
@@ -32,7 +32,7 @@ export type NotificationsType = {
 };
 
 export type SpeciesType = {
-  id: string
+  id: string;
   cname: { name: string, language: string }[];
   sname: string;
   category: string;
@@ -59,7 +59,7 @@ export type DiveType = {
   aboutDive: FirstStepType['overview']
   & FirstStepType['diveReviews']
   oldId: number | null
-  unitSystem: 'metric' | 'imperia';
+  unitSystem: 'metric' | 'imperial';
   saves: number;
   spotId: string | null;
 }

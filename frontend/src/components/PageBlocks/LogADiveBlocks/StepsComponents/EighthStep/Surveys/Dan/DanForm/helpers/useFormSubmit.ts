@@ -73,10 +73,10 @@ export const useFormSubmit = (formData: DanSurveyType) => {
     const newErrors = { ...errors };
 
     emptyFields.forEach((emptyItem) => {
-      newErrors[emptyItem] = 'this field is required';
+      newErrors[emptyItem] = 'This field is required';
     });
     if (!isValidPhoneNumber(requiredData.phoneHome)) {
-      newErrors.phoneHome = 'invalid phone number';
+      newErrors.phoneHome = 'Invalid phone number';
     }
 
     setErrors(newErrors);

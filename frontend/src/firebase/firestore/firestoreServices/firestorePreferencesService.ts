@@ -13,7 +13,7 @@ export const firestorePreferencesService = {
       const defaultPreferences: PreferencesType = {
         privacy: { divesPublic: true },
         scientificData: {
-          shareData: true,
+          shareData: 'I want to share my data and have my name be mentioned as author',
           shareNotes: false,
         },
         language: 'English',

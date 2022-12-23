@@ -6,9 +6,10 @@ type Props = {
   name:string;
   onCheck: React.Dispatch<React.SetStateAction<string>>
   checked:string;
+  className?: any;
 };
 export const RadioButton : FC<Props> = ({
-  label, name, onCheck, checked,
+  label, name, onCheck, checked, className,
 }) => (
   <div>
     <input
@@ -21,6 +22,6 @@ export const RadioButton : FC<Props> = ({
       checked={name === checked}
       className={styles.radio}
     />
-    <label htmlFor={name} className={styles.label}>{label}</label>
+    <label htmlFor={name} className={`${styles.label} ${className}`}>{label}</label>
   </div>
 );
