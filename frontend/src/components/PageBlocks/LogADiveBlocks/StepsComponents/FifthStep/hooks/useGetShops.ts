@@ -50,7 +50,7 @@ export const useGetShops = () => {
           guidesItems.push({
             text: guidesData[i].name,
             connectedMode: guidesData[i].name,
-            imgSrc: user && user.photoURL,
+            imgSrc: user && user.photoUrl,
           });
         }
 

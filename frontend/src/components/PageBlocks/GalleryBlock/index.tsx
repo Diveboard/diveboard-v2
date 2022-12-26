@@ -71,7 +71,7 @@ export const GalleryBlock = ({ images, user }: Props) => {
             <PhotoCard
               imgUrl={photo.img}
               favourites={0}
-              authorName={user?.name}
+              authorName={user?.firstName}
             />
           </div>
         ))}
