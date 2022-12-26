@@ -93,10 +93,10 @@ export const SpotDiveData: FC<Props> = ({
               </div>
             </div>
             <div className={styles.leftContentWrapper}>
-              <ProfileImage imgSrc={user?.photoURL} size={74} />
+              <ProfileImage imgSrc={user?.photoUrl} size={74} />
               <div className={styles.spotTitleWrapper}>
                 <div className={styles.spotTitle}>
-                  {user?.name}
+                  {user?.firstName}
                   {' '}
                   in
                   {' '}

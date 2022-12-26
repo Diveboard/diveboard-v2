@@ -2,7 +2,7 @@ import React, { FC, useContext, useState } from 'react';
 import { RadioButton } from '../../../../../RadioButton';
 import { SaveThisButton } from '../SaveThisButton';
 import { MarginWrapper } from '../../../../../MarginWrapper';
-import { PreferencesType } from '../../../../../../firebase/firestore/models';
+import { PreferencesType, UnitSystem } from '../../../../../../firebase/firestore/models';
 import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
 import {
@@ -15,14 +15,14 @@ type Props = {
 };
 
 export const EditedPreferencesUnitSystem: FC<Props> = ({ preferences, setPreferences }) => {
-  const [checkedRadio, setCheckedRadio] = useState(preferences.unitSystem);
+  const [checkedRadio, setCheckedRadio] = useState<UnitSystem>(preferences.unitSystem);
   const [loading, setLoading] = useState(false);
   const { userAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
 
   const setMetricPreferences = () => {
     setLoading(true);
-    firestorePreferencesService.setUnitSystem(checkedRadio, userAuth.uid);
+    firestorePreferencesService.setUnitSystem(checkedRadio as UnitSystem, userAuth.uid);
     setPreferences({ ...preferences, unitSystem: checkedRadio });
     setLoading(false);
     setEditedSettings({ settingsBlock: '', settingsItem: '' });
@@ -32,7 +32,7 @@ export const EditedPreferencesUnitSystem: FC<Props> = ({ preferences, setPrefere
     <div>
       <MarginWrapper display="block" bottom={10}>
         <RadioButton
-          name="metric"
+          name="METRIC"
           label="Metric System (m, ºC, bar, kg)"
           checked={checkedRadio}
           onCheck={setCheckedRadio}
@@ -41,7 +41,7 @@ export const EditedPreferencesUnitSystem: FC<Props> = ({ preferences, setPrefere
 
       <MarginWrapper display="block" bottom={10}>
         <RadioButton
-          name="imperial"
+          name="IMPERIAL"
           label="Imperial System ( in, ºF, pounds)"
           checked={checkedRadio}
           onCheck={setCheckedRadio}

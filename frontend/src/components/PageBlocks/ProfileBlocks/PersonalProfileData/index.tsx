@@ -137,7 +137,7 @@ export const PersonalProfileData: FC<Props> = ({
 
       <div className={styles.diveDataWrapper}>
         <DiveData
-          qualification="PADI Ice Diver, CMAS Nitrox 1"
+          qualification=""
           diveIn={Array.from(new Set(countries)).join(', ')}
           divesPublished={!!dives.length && getDivesPublished()}
           thisYear={!!dives.length && getCountThisYearDives()}

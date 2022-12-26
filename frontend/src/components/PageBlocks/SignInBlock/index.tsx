@@ -85,8 +85,8 @@ export const SignInBlock: FC = () => {
         setUserAuth({
           uid: user.uid,
           email: user.email,
-          photoURL: user.photoURL,
-          name: user.displayName,
+          photoUrl: user.photoURL,
+          firstName: user.displayName,
           country: '',
           qualifications: [],
           about: '',

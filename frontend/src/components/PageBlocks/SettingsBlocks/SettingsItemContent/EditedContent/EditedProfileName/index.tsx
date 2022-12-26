@@ -12,7 +12,7 @@ import {
 export const EditedProfileName: FC = () => {
   const { userAuth, setUserAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
-  const [nameValue, setNameValue] = useState(userAuth.name ? userAuth.name : '');
+  const [nameValue, setNameValue] = useState(userAuth.firstName ? userAuth.firstName : '');
   const [loading, setLoading] = useState(false);
 
   const saveUserName = async () => {
@@ -21,7 +21,7 @@ export const EditedProfileName: FC = () => {
     }
     setLoading(true);
     await updateUserName(nameValue);
-    setUserAuth({ ...userAuth, name: nameValue });
+    setUserAuth({ ...userAuth, firstName: nameValue });
     await firestorePublicProfileService.setName(nameValue, userAuth.uid);
     setLoading(false);
     setEditedSettings({ settingsBlock: '', settingsItem: '' });

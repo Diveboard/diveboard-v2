@@ -1,4 +1,5 @@
 import React, { FC, useContext } from 'react';
+import { name } from 'country-emoji';
 import { SettingsGroup } from '../SettingsGroup';
 import { SettingsItem } from '../SettingsItem';
 import { ProfileImage } from '../SettingsItemContent/NotEditedContent/ProfileImage';
@@ -31,8 +32,8 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <ProfileImage imgSrc={userAuth?.photoURL} />
-          <EditedProfileImage imgSrc={userAuth?.photoURL} />
+          <ProfileImage imgSrc={userAuth?.photoUrl} />
+          <EditedProfileImage imgSrc={userAuth?.photoUrl} />
         </SettingsItem>
 
         <SettingsItem
@@ -40,7 +41,7 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <span className={styles.primaryItemContent}>{userAuth?.name}</span>
+          <span className={styles.primaryItemContent}>{userAuth?.firstName}</span>
           <EditedProfileName />
         </SettingsItem>
 
@@ -58,7 +59,7 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <span className={styles.primaryItemContent}>{userAuth?.country}</span>
+          <span className={styles.primaryItemContent}>{name(userAuth?.country)}</span>
           <EditedProfileCountry />
         </SettingsItem>
 

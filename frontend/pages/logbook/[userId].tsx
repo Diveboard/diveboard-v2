@@ -36,7 +36,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       uid,
       email: data.email,
       photoURL: data.photoURL || '',
-      displayName: data.displayName || '',
+      name: data.displayName || '',
     };
   }
 

@@ -6,8 +6,8 @@ import {
 export type UserType = {
   uid: null | string;
   email: null | string;
-  photoURL: null | string;
-  name: null | string;
+  photoUrl: null | string;
+  firstName: null | string;
   country: null | string;
   about: null | string;
   qualifications: string[];

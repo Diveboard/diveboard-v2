@@ -10,9 +10,10 @@ import { MarginWrapper } from '../../../../MarginWrapper';
 type Props = {
   preferences: PreferencesType
   notifications: NotificationsType
+  language: string
 };
 
-export const DesktopSettings: FC <Props> = ({ preferences, notifications }) => (
+export const DesktopSettings: FC <Props> = ({ preferences, notifications, language }) => (
   <SettingsBlock>
     <EditContextWrapper>
       <MarginWrapper top={20} display="block">
@@ -20,7 +21,7 @@ export const DesktopSettings: FC <Props> = ({ preferences, notifications }) => (
       </MarginWrapper>
 
       <MarginWrapper top={20} display="block">
-        <Preferences preferences={preferences} />
+        <Preferences preferences={preferences} language={language} />
       </MarginWrapper>
 
       <MarginWrapper top={20} display="block">

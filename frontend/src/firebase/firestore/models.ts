@@ -1,4 +1,4 @@
-import { Coords, DanSurveyType } from '../../types';
+import {Coords, DanSurveyType, UserType} from '../../types';
 import {
   FifthStepType,
   FirstStepType, NinthStepType,
@@ -12,16 +12,42 @@ export type PersonalInfoType = {
   name: null | string;
 };
 
+export type UnitSystem = 'METRIC' | 'IMPERIAL';
+export type ShareData = 'OPEN_SHARE' | 'NOT_SHARE' | 'ANONYMOUS_SHARE';
+
+export enum LanguageEnum {
+  en = 'English',
+  it = 'Italian',
+  sp = 'Spanish',
+  ge = 'German',
+}
+
+export type UserSettingsType = {
+  firstName: string | null,
+  lastName: string | null,
+  nickname: string | null,
+  email: string | null,
+  photoUrl: string | null,
+  country: string | null,
+  oldId?: number,
+  about: string | null,
+  uid?: string,
+  settings: {
+    preferences: PreferencesType,
+    language: string;
+    notifications: NotificationsType
+  },
+};
+
 export type PreferencesType = {
   privacy: {
     divesPublic: boolean;
   };
   scientificData: {
-    shareData: string;
+    shareData: ShareData;
     shareNotes: boolean;
   };
-  language: 'English' | 'Italian' | 'Spanish' | 'German';
-  unitSystem: 'metric' | 'imperial';
+  unitSystem: UnitSystem;
 };
 
 export type NotificationsType = {

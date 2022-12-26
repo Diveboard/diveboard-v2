@@ -35,7 +35,7 @@ export const EditedProfileImage: FC<Props> = ({ imgSrc }) => {
       const url = await getAvatarUrl(res.ref);
       await updateUserAvatar(url);
       if (res) {
-        setUserAuth({ ...userAuth, photoURL: url });
+        setUserAuth({ ...userAuth, photoUrl: url });
         await firestorePublicProfileService.setPhotoURL(url, userAuth.uid);
         setLoading(false);
         setEditedSettings({ settingsBlock: '', settingsItem: '' });

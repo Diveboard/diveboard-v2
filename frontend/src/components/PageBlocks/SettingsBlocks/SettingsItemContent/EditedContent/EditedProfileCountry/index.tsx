@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { code } from 'country-emoji';
 import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
 import { Input } from '../../../../../Input/CommonInput';
@@ -23,8 +24,8 @@ export const EditedProfileCountry = () => {
       throw new Error('you are not authorized');
     }
     setLoading(true);
-    setUserAuth({ ...userAuth, country });
-    await firestorePublicProfileService.setCountry(country, userAuth.uid);
+    setUserAuth({ ...userAuth, country: code(country) });
+    await firestorePublicProfileService.setCountry(code(country), userAuth.uid);
     setLoading(false);
     setEditedSettings({ settingsBlock: '', settingsItem: '' });
   };

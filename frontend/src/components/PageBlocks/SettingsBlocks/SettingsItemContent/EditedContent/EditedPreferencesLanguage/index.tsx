@@ -4,31 +4,27 @@ import { SaveThisButton } from '../SaveThisButton';
 import { MarginWrapper } from '../../../../../MarginWrapper';
 import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
-import { PreferencesType } from '../../../../../../firebase/firestore/models';
 import {
   firestorePreferencesService,
 } from '../../../../../../firebase/firestore/firestoreServices/firestorePreferencesService';
 
 type Props = {
-  preferences: PreferencesType;
-  setPreferences: React.Dispatch<React.SetStateAction<PreferencesType>>;
+  lang: string;
+  setLang: (l: string) => void;
 };
 export const EditedPreferencesLanguage: FC<Props> = ({
-  preferences,
-  setPreferences,
+  lang,
+  setLang,
 }) => {
   const [loading, setLoading] = useState(false);
   const { userAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
-  const [language, setLanguage] = useState(preferences.language);
+  const [language, setLanguage] = useState(lang);
 
   const setLanguagePreferences = () => {
     setLoading(true);
     firestorePreferencesService.setLanguage(language, userAuth.uid);
-    setPreferences({
-      ...preferences,
-      language,
-    });
+    setLang(language);
     setLoading(false);
     setEditedSettings({
       settingsBlock: '',

@@ -1,15 +1,15 @@
 // Users
-const usersSegment = 'test-users'; // 'users'
-const settingsSegment = 'settings';
-const notificationsSegment = 'notifications';
-const preferencesSegment = 'preferences';
+const usersSegment = 'users';
+// const settingsSegment = 'settings';
+// const notificationsSegment = 'notifications';
+// const preferencesSegment = 'preferences';
 const divesSegment = 'dives';
 const extraSegment = 'extra';
 
 const usersPath = usersSegment;
-const settingsPath = `${usersPath}/${settingsSegment}`;
-const notificationsPath = `${settingsPath}/${notificationsSegment}`;
-const preferencesPath = `${settingsPath}/${preferencesSegment}`;
+// const settingsPath = `${usersPath}/${settingsSegment}`;
+// const notificationsPath = `${settingsPath}/${notificationsSegment}`;
+// const preferencesPath = `${settingsPath}/${preferencesSegment}`;
 const divesPath = `${usersPath}/${divesSegment}`;
 const extraPath = `${divesPath}/${extraSegment}`;
 // Spots
@@ -50,12 +50,12 @@ export const firestorePaths = {
   users: {
     segment: usersSegment,
     path: usersPath,
-    settings: {
-      segment: settingsSegment,
-      path: settingsPath,
-      notifications: { path: notificationsPath, segment: notificationsSegment },
-      preferences: { path: preferencesPath, segment: preferencesSegment },
-    },
+    // settings: {
+    //   segment: settingsSegment,
+    //   path: settingsPath,
+    //   notifications: { path: notificationsPath, segment: notificationsSegment },
+    //   preferences: { path: preferencesPath, segment: preferencesSegment },
+    // },
     dives: {
       path: divesPath,
       segment: divesSegment,
