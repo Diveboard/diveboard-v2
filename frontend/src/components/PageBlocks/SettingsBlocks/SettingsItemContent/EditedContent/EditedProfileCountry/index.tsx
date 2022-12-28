@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { code } from 'country-emoji';
+import { code, name } from 'country-emoji';
 import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
 import { Input } from '../../../../../Input/CommonInput';
@@ -16,7 +16,7 @@ import styles from '../EditedProfileName/styles.module.scss';
 export const EditedProfileCountry = () => {
   const { userAuth, setUserAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
-  const [country, setCountry] = useState('');
+  const [country, setCountry] = useState(name(userAuth.country || ''));
   const [loading, setLoading] = useState(false);
 
   const saveUsersCountry = async () => {

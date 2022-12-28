@@ -16,7 +16,7 @@ type Props = {
   setPreferences: React.Dispatch<React.SetStateAction<PreferencesType>>;
 };
 
-export const EditedPreferencesScientificData: FC <Props> = ({ preferences, setPreferences }) => {
+export const EditedPreferencesScientificData: FC<Props> = ({ preferences, setPreferences }) => {
   const scientificDataOptions = {
     share: {
       name: 'OPEN_SHARE',
@@ -40,9 +40,9 @@ export const EditedPreferencesScientificData: FC <Props> = ({ preferences, setPr
   const { setEditedSettings } = useContext(EditContext);
   const [loading, setLoading] = useState(false);
 
-  const setScientificDataPreferences = () => {
+  const setScientificDataPreferences = async () => {
     setLoading(true);
-    firestorePreferencesService
+    await firestorePreferencesService
       .setScientificData({ shareData, shareNotes }, userAuth.uid);
     setPreferences({ ...preferences, scientificData: { shareData, shareNotes } });
     setLoading(false);

@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 import { flag } from 'country-emoji';
 
+import { useRouter } from 'next/router';
 import KebabButton from '../../Buttons/KebabButton';
 import { LinkedButton } from '../../Buttons/LinkedButton';
 import { Icon } from '../../Icons/Icon';
@@ -24,6 +25,7 @@ export const SpotDiveData: FC<Props> = ({
 }): JSX.Element => {
   const [isShowNote, setShowMore] = useState(false);
 
+  const router = useRouter();
   const diveTypeList = () => dive.diveActivities.join(', ');
 
   const spotName = `${spot.location?.location}, ${spot.location?.country}, ${spot.location?.region}`;
@@ -92,7 +94,7 @@ export const SpotDiveData: FC<Props> = ({
                 </KebabButton>
               </div>
             </div>
-            <div className={styles.leftContentWrapper}>
+            <div className={styles.leftContentWrapper} onClick={() => router.push(`/logbook/${user.uid}`)}>
               <ProfileImage imgSrc={user?.photoUrl} size={74} />
               <div className={styles.spotTitleWrapper}>
                 <div className={styles.spotTitle}>

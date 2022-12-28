@@ -14,6 +14,7 @@ import { db } from '../firebaseFirestore';
 import { firestorePaths } from '../firestorePaths';
 import { UserType } from '../../../types';
 import { firestoreDivesService } from './firestoreDivesService';
+import { UserSettingsType } from '../models';
 
 export const firestorePublicProfileService = {
   setEmail: async (email: string, userId: string) => {
@@ -34,10 +35,10 @@ export const firestorePublicProfileService = {
     }
   },
 
-  setName: async (name: string, userId: string) => {
+  setName: async (firstName: string, lastName: string, userId: string) => {
     try {
       const ref = doc(db, firestorePaths.users.path, userId);
-      await setDoc(ref, { firstName: name }, { merge: true });
+      await setDoc(ref, { firstName, lastName }, { merge: true });
     } catch (e) {
       throw new Error('set name error');
     }
@@ -82,7 +83,7 @@ export const firestorePublicProfileService = {
     try {
       const docRef = doc(db, firestorePaths.users.path, userId);
       const docSnap = await getDoc(docRef);
-      return { ...docSnap.data(), uid: docSnap.id } as UserType | undefined;
+      return { ...docSnap.data(), uid: docSnap.id } as UserSettingsType | undefined;
     } catch (e) {
       throw new Error('get user data error');
     }
@@ -135,8 +136,10 @@ export const firestorePublicProfileService = {
       const querySnapshot = await getDocs(q);
 
       querySnapshot.forEach((document) => {
-        const { firstName, photoUrl } = document.data() as Omit<UserType, 'uid'>;
-        users.push({ uid: document.id, firstName, photoUrl });
+        const { firstName, photoUrl, lastName } = document.data() as Omit<UserType, 'uid'>;
+        users.push({
+          uid: document.id, firstName, lastName, photoUrl,
+        });
       });
       return users;
     } catch (e) {

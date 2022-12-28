@@ -9,12 +9,10 @@ import {
 import {
   MobileSettings,
 } from '../src/components/PageBlocks/SettingsBlocks/SettingsModes/MobileSettings';
-import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
-import { firestorePaths } from '../src/firebase/firestore/firestorePaths';
+import { firestorePublicProfileService } from '../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
 
-const Settings:
-InferGetServerSidePropsType<typeof getServerSideProps> = ({
-  user, preferences, notifications, language,
+const Settings: InferGetServerSidePropsType<typeof getServerSideProps> = ({
+  user,
 }) => {
   const isWidth = useWindowWidth(500, 769);
 
@@ -24,16 +22,16 @@ InferGetServerSidePropsType<typeof getServerSideProps> = ({
         {!isWidth
           ? (
             <DesktopSettings
-              preferences={preferences}
-              notifications={notifications}
-              language={language}
+              preferences={user.settings.preferences}
+              notifications={user.settings.notifications}
+              language={user.settings.language}
             />
           )
           : (
             <MobileSettings
-              preferences={preferences}
-              notifications={notifications}
-              language={language}
+              preferences={user.settings.preferences}
+              notifications={user.settings.notifications}
+              language={user.settings.language}
             />
           )}
       </MainLayout>
@@ -49,39 +47,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       throw new Error('no user uid');
     }
 
-    const snapshotUser = await firebaseAdmin
-      .firestore().doc(`${firestorePaths.users.path}/${uid}`).get();
-    const {
-      email, photoUrl = '', firstName = '', country = '', about = '',
-    } = await snapshotUser.data();
-    // const usersSettings = firestorePaths.users.segment;
-    // const notificationSegment = firestorePaths.users.settings.notifications.segment;
-    // const preferencesSegment = firestorePaths.users.settings.preferences.segment;
-    // const getPath = (userId: string) => `${firestorePaths.users.path}/${userId}`;
-    // /${firestorePaths.users.settings.segment}`;
+    const user = await firestorePublicProfileService.getUserById(uid);
 
-    const snapshotPreferences = await firebaseAdmin
-      .firestore().doc(`${firestorePaths.users.path}/${uid}`).get();
-    const data = await snapshotPreferences.data();
-    const { notifications, preferences, language } = data.settings;
+    if (!user) {
+      throw new Error('no user');
+    }
 
     return {
       props: {
-        user: {
-          uid,
-          email,
-          photoUrl,
-          firstName,
-          country,
-          about,
-        },
-        preferences,
-        notifications,
-        language,
+        user,
       },
     };
   } catch (e) {
-    console.log(e);
     return {
       redirect: {
         destination: '/auth',

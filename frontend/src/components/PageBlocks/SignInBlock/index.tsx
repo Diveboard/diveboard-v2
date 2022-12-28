@@ -87,6 +87,7 @@ export const SignInBlock: FC = () => {
           email: user.email,
           photoUrl: user.photoURL,
           firstName: user.displayName,
+          lastName: '',
           country: '',
           qualifications: [],
           about: '',

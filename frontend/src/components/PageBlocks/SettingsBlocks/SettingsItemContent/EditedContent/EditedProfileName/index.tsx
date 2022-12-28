@@ -12,7 +12,7 @@ import {
 export const EditedProfileName: FC = () => {
   const { userAuth, setUserAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
-  const [nameValue, setNameValue] = useState(userAuth.firstName ? userAuth.firstName : '');
+  const [nameValue, setNameValue] = useState(`${userAuth.firstName || ''} ${userAuth.lastName || ''}`);
   const [loading, setLoading] = useState(false);
 
   const saveUserName = async () => {
@@ -20,9 +20,15 @@ export const EditedProfileName: FC = () => {
       throw new Error('you are not authorized');
     }
     setLoading(true);
+    let firstName = nameValue;
+    let lastName = '';
+    if (nameValue.trim().includes(' ')) {
+      firstName = nameValue.substring(0, nameValue.indexOf(' '));
+      lastName = nameValue.substring(nameValue.indexOf(' ') + 1);
+    }
     await updateUserName(nameValue);
-    setUserAuth({ ...userAuth, firstName: nameValue });
-    await firestorePublicProfileService.setName(nameValue, userAuth.uid);
+    setUserAuth({ ...userAuth, firstName, lastName });
+    await firestorePublicProfileService.setName(firstName, lastName, userAuth.uid);
     setLoading(false);
     setEditedSettings({ settingsBlock: '', settingsItem: '' });
   };

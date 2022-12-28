@@ -8,6 +8,7 @@ export type UserType = {
   email: null | string;
   photoUrl: null | string;
   firstName: null | string;
+  lastName: null | string,
   country: null | string;
   about: null | string;
   qualifications: string[];

@@ -1,4 +1,6 @@
-import React, { FC, useContext } from 'react';
+import React, {
+  FC, useContext,
+} from 'react';
 import { name } from 'country-emoji';
 import { SettingsGroup } from '../SettingsGroup';
 import { SettingsItem } from '../SettingsItem';
@@ -41,7 +43,7 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <span className={styles.primaryItemContent}>{userAuth?.firstName}</span>
+          <span className={styles.primaryItemContent}>{`${userAuth.firstName || ''} ${userAuth.lastName || ''}`}</span>
           <EditedProfileName />
         </SettingsItem>
 

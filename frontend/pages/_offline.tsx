@@ -12,7 +12,7 @@ const Offline: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user 
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '70vh',
+        height: 'calc(100vh - 238px)',
       }}
       >
         <div>
