@@ -55,7 +55,11 @@ export const DivePageBlock = ({
             )}
             <div className={styles.thirdWrapper}>
               {(!!dive.gears.length || dive.diveData?.weights) && (
-                <GearUsed gears={dive.gears} weight={dive.diveData?.weights} />
+                <GearUsed
+                  gears={dive.gears}
+                  weight={dive.diveData?.weights}
+                  diveUnitSystem={dive.unitSystem}
+                />
               )}
               {!!species.length && (
               <div className={styles.speciesWrapper}>

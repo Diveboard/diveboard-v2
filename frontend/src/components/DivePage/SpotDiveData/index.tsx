@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { flag } from 'country-emoji';
 
 import { useRouter } from 'next/router';
@@ -13,6 +13,13 @@ import { DiveType, SpotType } from '../../../firebase/firestore/models';
 import { UserType } from '../../../types';
 import { convertTimestampDate } from '../../../utils/convertTimestampDate';
 import { parseDate } from '../../../utils/parseDate';
+import {
+  convertCalToFar,
+  convertFarToCal,
+  convertFeetToMeters,
+  convertMetersToFeet,
+} from '../../../utils/unitSystemConverter';
+import { AuthStatusContext } from '../../../layouts/AuthLayout';
 
 type Props = {
   user?: UserType,
@@ -72,6 +79,38 @@ export const SpotDiveData: FC<Props> = ({
       </KebabButton>
     </div>
   );
+
+  const {
+    userAuth,
+  } = useContext(AuthStatusContext);
+
+  const convertTempSystem = (value: number): string => {
+    if (!userAuth) {
+      return `${value} m`;
+    }
+    const userUnitSystem = userAuth.settings.preferences.unitSystem;
+    if (dive.unitSystem === userUnitSystem) {
+      return `${value} ${userUnitSystem === 'METRIC' ? 'ºC' : 'ºF'}`;
+    }
+    if (userUnitSystem === 'METRIC') {
+      return `${convertFarToCal(value)} ºC`;
+    }
+    return `${convertCalToFar(value)} ºF`;
+  };
+
+  const convertDepth = (): string => {
+    if (!userAuth) {
+      return `${dive.diveData?.maxDepth} m`;
+    }
+    const userUnitSystem = userAuth.settings.preferences.unitSystem;
+    if (dive.unitSystem === userUnitSystem) {
+      return `${dive.diveData?.maxDepth} ${userUnitSystem === 'METRIC' ? 'm' : 'ft'}`;
+    }
+    if (userUnitSystem === 'METRIC') {
+      return `${convertFeetToMeters(dive.diveData?.maxDepth)} m`;
+    }
+    return `${convertMetersToFeet(dive.diveData?.maxDepth)} ft`;
+  };
 
   return (
     <DivePageMobContainer>
@@ -145,9 +184,7 @@ export const SpotDiveData: FC<Props> = ({
                 Max depth:
                 {' '}
                 <span>
-                  {dive.diveData.maxDepth}
-                  {' '}
-                  m
+                  {convertDepth()}
                 </span>
               </li>
               )}
@@ -169,23 +206,23 @@ export const SpotDiveData: FC<Props> = ({
                 <span>{dive.diveData.waterType}</span>
               </li>
               )}
-              {dive.diveData?.surfaceTemp && (
+              {!!dive.diveData?.surfaceTemp && (
               <li>
                 Temperature on surface:
                 {' '}
                 <span>
-                  {dive.diveData.surfaceTemp}
+                  {convertTempSystem(dive.diveData.surfaceTemp)}
                   {/* <sup>o</sup> */}
                   {/* C */}
                 </span>
               </li>
               )}
-              {dive.diveData?.bottomTemp && (
+              {!!dive.diveData?.bottomTemp && (
               <li>
                 Temperature on bottom:
                 {' '}
                 <span>
-                  {dive.diveData.bottomTemp}
+                  {convertTempSystem(dive.diveData.bottomTemp)}
                   {/* <sup>o</sup> */}
                   {/* C */}
                 </span>

@@ -81,17 +81,8 @@ export const SignInBlock: FC = () => {
 
       if (user) {
         setCookiesLogin(isKeepLogged, user.uid);
-
-        setUserAuth({
-          uid: user.uid,
-          email: user.email,
-          photoUrl: user.photoURL,
-          firstName: user.displayName,
-          lastName: '',
-          country: '',
-          qualifications: [],
-          about: '',
-        });
+        const userData = await firestorePublicProfileService.getUserById(user.uid);
+        setUserAuth(userData);
 
         await firestorePublicProfileService.setEmail(user.email, user.uid);
         await firestorePreferencesService.setDefaultPreferences(user.uid);

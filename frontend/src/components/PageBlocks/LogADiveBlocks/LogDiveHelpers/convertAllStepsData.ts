@@ -92,6 +92,9 @@ const convertDistanceSystem = (
   userUnitSystem: UnitSystem,
   value: number,
 ): number => {
+  if (!value) {
+    return 0;
+  }
   if (userUnitSystem === 'METRIC') {
     return convertFeetToMeters(value);
   }
@@ -102,6 +105,9 @@ const convertTempSystem = (
   userUnitSystem: UnitSystem,
   value: number,
 ): number => {
+  if (!value) {
+    return 0;
+  }
   if (userUnitSystem === 'METRIC') {
     return convertFarToCal(value);
   }
@@ -112,6 +118,9 @@ const convertWeightSystem = (
   userUnitSystem: UnitSystem,
   value: number,
 ): number => {
+  if (!value) {
+    return 0;
+  }
   if (userUnitSystem === 'METRIC') {
     return convertLbsToKg(value);
   }

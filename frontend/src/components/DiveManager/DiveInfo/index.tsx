@@ -4,7 +4,7 @@ import styles from './styles.module.scss';
 
 type Props = {
   diveTime: number;
-  deepness: number;
+  deepness: string;
   diversCount: number;
 };
 
@@ -22,8 +22,6 @@ const DiveInfo: FC<Props> = ({ diveTime, deepness, diversCount }) => (
       <Icon iconName="depth" size={16} />
       <span>
         {deepness}
-        {' '}
-        m
       </span>
     </div>
     <div className={styles.dataItem}>

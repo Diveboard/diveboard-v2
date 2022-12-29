@@ -3,10 +3,12 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { AuthLayout } from '../../src/layouts/AuthLayout';
 import { SpotBlocks } from '../../src/components/PageBlocks/SpotBlocks';
 import { MainLayout } from '../../src/layouts/MainLayout';
-import { firebaseAdmin } from '../../src/firebase/firebaseAdmin';
 import { firestoreSpotsService } from '../../src/firebase/firestore/firestoreServices/firestoreSpotsService';
 import { firestoreDivesService } from '../../src/firebase/firestore/firestoreServices/firestoreDivesService';
 import { firestoreSpeciesServices } from '../../src/firebase/firestore/firestoreServices/firestoreSpeciesServices';
+import {
+  firestorePublicProfileService,
+} from '../../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
 
 const Spot: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   user, spot, dives, species,
@@ -50,18 +52,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   if (uid) {
-    const {
-      email,
-      photoURL = '',
-      displayName = '',
-    } = await firebaseAdmin.auth()
-      .getUser(uid);
-    user = {
-      uid,
-      email,
-      photoURL,
-      displayName,
-    };
+    user = await firestorePublicProfileService.getUserById(uid);
   }
 
   return {

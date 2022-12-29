@@ -77,6 +77,7 @@ export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
             diveTime={dive.diveData?.time}
             deepness={dive.diveData?.maxDepth}
             diversCount={dive.buddies?.length}
+            diveUnitSystem={dive.unitSystem}
           />
         ))}
       </div>
