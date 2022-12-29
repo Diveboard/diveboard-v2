@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { InputLabelWrapper } from '../../../inputLabelWrapper';
 import { Icon } from '../../../../../Icons/Icon';
 import { incrementId } from '../../../LogDiveHelpers/incrementId';
@@ -7,6 +7,7 @@ import { MarginWrapper } from '../../../../../MarginWrapper';
 import { SecondStepType } from '../../../types/stepTypes';
 import styles from './styles.module.scss';
 import { useWindowWidth } from '../../../../../../hooks/useWindowWidth';
+import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 
 type Props = {
   parameters: SecondStepType['parameters'];
@@ -19,6 +20,9 @@ export const SafetySpots: FC<Props> = ({
 }) => {
   const isMobile = useWindowWidth(500, 768);
   const findSpot = (id: number) => parameters.safetySpots.find((spot) => spot.id === id);
+  const {
+    userAuth,
+  } = useContext(AuthStatusContext);
 
   const spotChange = (id: number, value: string, parameter: 'depth' | 'period') => {
     const foundSpot = findSpot(id);
@@ -84,7 +88,7 @@ export const SafetySpots: FC<Props> = ({
         }
         height={48}
         width={isMobile ? 768 : 270}
-        placeholder="m"
+        placeholder={userAuth.settings.preferences.unitSystem === 'METRIC' ? 'm' : 'ft'}
       />
 
       <MarginWrapper right={10} />

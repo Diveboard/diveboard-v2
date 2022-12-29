@@ -85,7 +85,7 @@ export type DiveType = {
   aboutDive: FirstStepType['overview']
   & FirstStepType['diveReviews']
   oldId: number | null
-  unitSystem: 'metric' | 'imperial';
+  unitSystem: UnitSystem;
   saves: number;
   spotId: string | null;
 }
