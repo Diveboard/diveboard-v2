@@ -16,12 +16,13 @@ import { allComments } from './DIVE_PAGE_DUMMY_DATA';
 
 import styles from './divePageBlock.module.scss';
 import { NoDive } from '../DiveManager/NoData';
-import { UserType } from '../../types';
-import { DiveType, SpeciesType, SpotType } from '../../firebase/firestore/models';
+import {
+  DiveType, SpeciesType, SpotType, UserSettingsType,
+} from '../../firebase/firestore/models';
 import { DiveBuddyCard } from '../Cards/DiveBuddyCard';
 
 type Props = {
-  user?: UserType,
+  user?: UserSettingsType,
   dive: DiveType,
   spot: SpotType,
   species?: Array<SpeciesType>

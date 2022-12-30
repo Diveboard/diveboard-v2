@@ -9,8 +9,7 @@ import { ProfileImage } from '../../PageBlocks/SettingsBlocks/SettingsItemConten
 import { DivePageMobContainer } from '../DivePageMobContainer';
 
 import styles from './styles.module.scss';
-import { DiveType, SpotType } from '../../../firebase/firestore/models';
-import { UserType } from '../../../types';
+import { DiveType, SpotType, UserSettingsType } from '../../../firebase/firestore/models';
 import { convertTimestampDate } from '../../../utils/convertTimestampDate';
 import { parseDate } from '../../../utils/parseDate';
 import {
@@ -22,7 +21,7 @@ import {
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
 
 type Props = {
-  user?: UserType,
+  user?: UserSettingsType,
   dive: DiveType,
   spot: SpotType
 };
@@ -110,6 +109,16 @@ export const SpotDiveData: FC<Props> = ({
       return `${convertFeetToMeters(dive.diveData?.maxDepth)} m`;
     }
     return `${convertMetersToFeet(dive.diveData?.maxDepth)} ft`;
+  };
+
+  const isNoteAvailable = () => {
+    if (!dive.aboutDive?.notes) {
+      return false;
+    }
+    if (userAuth && userAuth.uid === user.uid) {
+      return true;
+    }
+    return user?.settings?.preferences?.scientificData?.shareNotes;
   };
 
   return (
@@ -244,7 +253,7 @@ export const SpotDiveData: FC<Props> = ({
               )}
             </ul>
           </div>
-          { dive.aboutDive?.notes && (
+          { isNoteAvailable() && (
           <div>
             {!isShowNote ? renderNotes(dive.aboutDive?.notes) : showMore(dive.aboutDive?.notes)}
           </div>
