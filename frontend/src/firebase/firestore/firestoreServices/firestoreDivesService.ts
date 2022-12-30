@@ -263,11 +263,15 @@ export const firestoreDivesService = {
   getDiveData: async (
     userId: string,
     diveId: string,
+    withDraft: boolean = false,
   ) => {
     try {
       const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveId);
       const docSnap = await getDoc(docRef);
       const data = docSnap.data();
+      if (withDraft) {
+        return data;
+      }
       return !data.draft || data.publishMode === 'public' ? data : undefined;
     } catch (e) {
       console.log(e.message);

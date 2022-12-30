@@ -44,13 +44,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     //   displayName = '',
     // } = await firebaseAdmin.auth().getUser(uid);
 
-    const user = await firestorePublicProfileService.getUserById(uid);
-
     if (!diveId) {
       throw new Error('no dive');
     }
 
-    const dive = await firestoreDivesService.getDiveData(uid, diveId as string);
+    const user = await firestorePublicProfileService.getUserById(uid);
+
+    const dive = await firestoreDivesService.getDiveData(uid, diveId as string, true);
 
     if (!dive) {
       throw new Error('no dive');

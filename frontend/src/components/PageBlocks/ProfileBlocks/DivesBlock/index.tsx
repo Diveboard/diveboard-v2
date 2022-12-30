@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ButtonGroup } from '../../../ButtonGroup';
 import { Title } from '../Title';
@@ -7,6 +7,7 @@ import { DiveCard } from '../../../Cards/DiveCard';
 import styles from './styles.module.scss';
 import { DiveType } from '../../../../firebase/firestore/models';
 import { useWindowWidth } from '../../../../hooks/useWindowWidth';
+import { AuthStatusContext } from '../../../../layouts/AuthLayout';
 
 type Props = {
   dives: Array<DiveType>;
@@ -20,6 +21,8 @@ export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
   const isMobile = useWindowWidth(500, 769);
   const [diveForRender, setDiveForRender] = useState(isMobile ? dives : dives?.slice(0, 4));
   const router = useRouter();
+
+  const { userAuth } = useContext(AuthStatusContext);
 
   const buttons = [{
     connectedMode: 'all',
@@ -67,7 +70,9 @@ export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
           <DiveCard
             // @ts-ignore
             key={dive.id}
-            onClick={() => router.push(`/user/${userId}/dive/${dive.id}`)}
+            onClick={() => {
+              router.push(dive.draft && userId === userAuth.uid ? `/edit-dive/${dive.id}` : `/user/${userId}/dive/${dive.id}`);
+            }}
             diveName={dive.aboutDive?.tripName}
             imgSrc={dive.externalImgsUrls[0] || '/TEST_IMG_THEN_DELETE/fish.jpg'}
             tagsNumber={dive.aboutDive?.diveNumber?.toString()}
