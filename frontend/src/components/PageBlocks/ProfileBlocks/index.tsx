@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
+import { name } from 'country-emoji';
 import { PersonalProfileData } from './PersonalProfileData';
 import { DivesMap } from './DivesMap';
 import { DivesBlock } from './DivesBlock';
@@ -9,8 +10,9 @@ import { DiveBuddies } from './DiveBuddiesBlock';
 import { MobileAddButton } from '../../Buttons/MobileAddButton';
 import pagesRoutes from '../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
-import { DiveType, SpeciesType, SpotType } from '../../../firebase/firestore/models';
-import { UserType } from '../../../types';
+import {
+  DiveType, SpeciesType, SpotType, UserSettingsType,
+} from '../../../firebase/firestore/models';
 
 // const certifications = [
 //   {
@@ -47,7 +49,7 @@ type Props = {
   dives: Array<DiveType & { spot: SpotType, date: string }>
   species: Array<SpeciesType>
   buddies: Array<any>
-  logbookUser: UserType
+  logbookUser: UserSettingsType
 };
 
 export const ProfileBlock = ({
@@ -88,19 +90,21 @@ export const ProfileBlock = ({
       )}
 
       <PersonalProfileData
-        imgSrc={logbookUser.photoURL}
-        name={logbookUser.name || ''}
-        country={logbookUser.country}
+        imgSrc={logbookUser.photoUrl}
+        name={`${logbookUser.firstName || ''} ${logbookUser.lastName || ''}`}
+        country={name(logbookUser.country)}
         about={logbookUser.about}
         isItOwnProfile={isItOwnProfile}
         followersCount={0}
         dives={dives}
       />
+      {!!dives?.length && (
       <DivesMap
         coords={mapCoords}
         zoom={7}
         points={markerPoints}
       />
+      )}
       {!!dives?.length && (
         <DivesBlock
           dives={isItOwnProfile ? dives : dives.filter((dive) => !dive.draft && dive.publishingMode === 'public')}

@@ -121,8 +121,8 @@ export const SearchAndAddBuddies: FC<Props> = ({
         const buddies = buddiesPredictions
           .map((buddy) => ({
             id: buddy.uid,
-            name: buddy.name,
-            imgSrc: buddy.photoURL,
+            name: buddy.firstName,
+            imgSrc: buddy.photoUrl,
           } as BuddyItemType));
         setMyBuddies(buddies);
       })();

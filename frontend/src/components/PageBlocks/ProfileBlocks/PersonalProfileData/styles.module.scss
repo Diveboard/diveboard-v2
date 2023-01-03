@@ -14,6 +14,7 @@
       .backBtnWrapper {
         margin-top: 10px;
         margin-right: 26px;
+        cursor: pointer;
       }
 
       .personalDataWrapper {
@@ -35,7 +36,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 71px;
+            min-width: 71px;
+            gap: 10px;
           }
 
           .followersWrapper {

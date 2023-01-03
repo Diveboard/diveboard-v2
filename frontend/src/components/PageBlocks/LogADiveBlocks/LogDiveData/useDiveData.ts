@@ -17,7 +17,7 @@ import {
   AllStepsDataType,
 } from '../types/stepTypes';
 import { convertToStepsData } from '../LogDiveHelpers/convertAllStepsData';
-import { DiveType } from '../../../../firebase/firestore/models';
+import { DiveType, UnitSystem } from '../../../../firebase/firestore/models';
 
 export const UseDiveData = () => {
   const [state, dispatch] = useReducer(diveDataReducer, initialDiveDataState);
@@ -77,8 +77,8 @@ export const UseDiveData = () => {
     }
   };
 
-  const setData = (data: DiveType) => {
-    const steps = convertToStepsData(data);
+  const setData = (data: DiveType, unitSystem: UnitSystem) => {
+    const steps = convertToStepsData(data, unitSystem);
     setStepData(1, steps.firstStep);
     setStepData(2, steps.secondStep);
     setStepData(3, steps.thirdStep);

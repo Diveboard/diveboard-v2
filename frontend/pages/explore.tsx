@@ -1,10 +1,10 @@
 import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import ExploreBlock from '../src/components/PageBlocks/ExploreBlock';
 import { useWindowWidth } from '../src/hooks/useWindowWidth';
 import { MainLayout } from '../src/layouts/MainLayout';
+import { firestorePublicProfileService } from '../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
 
 const Explore: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => {
   const isMobile = useWindowWidth(500, 769);
@@ -28,18 +28,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const {
-    email, photoURL = '', displayName = '',
-  } = await firebaseAdmin.auth().getUser(uid);
+  const user = await firestorePublicProfileService.getUserById(uid);
 
   return {
     props: {
-      user: {
-        uid,
-        email,
-        photoURL,
-        name: displayName,
-      },
+      user,
     },
   };
 };

@@ -10,9 +10,10 @@ import { MarginWrapper } from '../../../../MarginWrapper';
 type Props = {
   preferences: PreferencesType
   notifications: NotificationsType
+  language: string
 };
 
-export const MobileSettings: FC<Props> = ({ preferences, notifications }) => {
+export const MobileSettings: FC<Props> = ({ preferences, notifications, language }) => {
   const [mode, setMode] = useState <
   'personal info' | 'preferences' | 'notifications'
   >('personal info');
@@ -30,7 +31,7 @@ export const MobileSettings: FC<Props> = ({ preferences, notifications }) => {
 
         {mode === 'preferences' && (
         <>
-          <Preferences preferences={preferences} title={false} />
+          <Preferences preferences={preferences} title={false} language={language} />
           <MarginWrapper bottom={60} display="inline-block" />
         </>
         )}

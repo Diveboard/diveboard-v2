@@ -1,10 +1,14 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { parseDate } from '../../../utils/parseDate';
-import { DiveType } from '../../../firebase/firestore/models';
+import { DiveType, UnitSystem } from '../../../firebase/firestore/models';
 import DiveInfo from '../DiveInfo';
 import { Checkbox } from '../../CheckBox';
 import styles from './styles.module.scss';
+import { convertFeetToMeters, convertMetersToFeet } from '../../../utils/unitSystemConverter';
+import { AuthStatusContext } from '../../../layouts/AuthLayout';
 
 type Props = {
   itm: DiveType & { spotName?: string, spot: string, date: Date | null };
@@ -27,6 +31,10 @@ export const DiveItem: FC<Props> = ({
 }) => {
   const [isShow, setShow] = useState(true);
 
+  const {
+    userAuth,
+  } = useContext(AuthStatusContext);
+
   useEffect(() => {
     if (isChange) {
       setChecked(isSelectAll);
@@ -42,6 +50,28 @@ export const DiveItem: FC<Props> = ({
 
   const showHandler = () => {
     setShow(() => !isShow);
+  };
+
+  const convertDepth = (dive): string => {
+    const userUnitSystem = userAuth.settings.preferences.unitSystem;
+    if (dive.unitSystem === userUnitSystem) {
+      return `${dive.diveData?.maxDepth} ${userUnitSystem === 'METRIC' ? 'm' : 'ft'}`;
+    }
+    if (userUnitSystem === 'METRIC') {
+      return `${convertFeetToMeters(dive.diveData?.maxDepth)} m`;
+    }
+    return `${convertMetersToFeet(dive.diveData?.maxDepth)} ft`;
+  };
+
+  const convertAltitude = (diveUnitSystem: UnitSystem, value: number): number => {
+    const userUnitSystem = userAuth.settings.preferences.unitSystem;
+    if (diveUnitSystem === userUnitSystem) {
+      return value;
+    }
+    if (userUnitSystem === 'METRIC') {
+      return convertFeetToMeters(value);
+    }
+    return convertMetersToFeet(value);
   };
 
   return (
@@ -71,7 +101,7 @@ export const DiveItem: FC<Props> = ({
       <div className={styles.infowrapper}>
         <DiveInfo
           diveTime={itm.diveData?.duration}
-          deepness={itm.diveData?.maxDepth}
+          deepness={convertDepth(itm)}
           diversCount={itm.buddies?.length}
         />
 
@@ -117,7 +147,7 @@ export const DiveItem: FC<Props> = ({
             <li>
               Altitude:
               {' '}
-              <span>{itm.diveData?.altitude}</span>
+              <span>{convertAltitude(itm.unitSystem, itm.diveData?.altitude)}</span>
             </li>
             <li>
               Featured gear:

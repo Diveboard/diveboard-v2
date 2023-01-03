@@ -18,6 +18,7 @@ import { firestoreDivesService } from '../../../firebase/firestore/firestoreServ
 import { Loader } from '../../Loader';
 import { convertAllStepsData } from './LogDiveHelpers/convertAllStepsData';
 import { DiveType } from '../../../types';
+import { AuthStatusContext } from '../../../layouts/AuthLayout';
 
 type Props = {
   dive?: DiveType;
@@ -31,6 +32,8 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
   const {
     setCurrentStep, setData, getAllStepsData, setEmptyData,
   } = useContext(LogDiveDataContext);
+
+  const { userAuth } = useContext(AuthStatusContext);
 
   const router = useRouter();
   const { isNew } = router.query;
@@ -48,7 +51,7 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
   useEffect(() => {
     if (dive) {
       // @ts-ignore
-      setData(dive);
+      setData(dive, userAuth.settings.preferences.unitSystem);
       setStep(1);
     }
   }, [dive]);
@@ -56,7 +59,12 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
   const saveDraft = async () => {
     const allStepsData = getAllStepsData();
     setLoading(true);
-    const data = await convertAllStepsData(allStepsData, userId, true);
+    const data = await convertAllStepsData(
+      allStepsData,
+      userId,
+      userAuth.settings.preferences.unitSystem,
+      true,
+    );
     if (diveId) {
       // @ts-ignore
       await firestoreDivesService.updateDiveData(userId, diveId, data);

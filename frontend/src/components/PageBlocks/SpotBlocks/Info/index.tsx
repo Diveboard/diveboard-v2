@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { SpeciesMobile } from '../../../DivePage/SpeciesIdentified/SpeciesMobile';
 import { SpeciesIdentified } from '../../../DivePage/SpeciesIdentified/SpeciesSlider';
 import { useWindowWidth } from '../../../../hooks/useWindowWidth';
@@ -6,6 +6,11 @@ import { Icon } from '../../../Icons/Icon';
 import styles from './styles.module.scss';
 import { InfoItem } from './infoItem';
 import { SpeciesType } from '../../../../firebase/firestore/models';
+import { AuthStatusContext } from '../../../../layouts/AuthLayout';
+import {
+  convertCalToFar,
+  convertMetersToFeet,
+} from '../../../../utils/unitSystemConverter';
 
 type Props = {
   location: {
@@ -26,6 +31,32 @@ export const Info = ({ location, species }: Props) => {
     ? <SpeciesMobile speciesList={species} />
     : <SpeciesIdentified speciesList={species} />;
 
+  const {
+    userAuth,
+  } = useContext(AuthStatusContext);
+
+  const convertTempSystem = (value: number): string => {
+    if (!userAuth) {
+      return `${value} ºC`;
+    }
+    const userUnitSystem = userAuth.settings.preferences.unitSystem;
+    if (userUnitSystem === 'IMPERIAL') {
+      return `${convertCalToFar(value)} ºF`;
+    }
+    return `${value} ºC`;
+  };
+
+  const convertDepth = (value): string => {
+    if (!userAuth) {
+      return `${value} m`;
+    }
+    const userUnitSystem = userAuth.settings.preferences.unitSystem;
+    if (userUnitSystem === 'IMPERIAL') {
+      return `${convertMetersToFeet(value)} ft`;
+    }
+    return `${value} m`;
+  };
+
   return (
     <div className={styles.info}>
       {!isMobile && <h2>Info</h2>}
@@ -36,11 +67,11 @@ export const Info = ({ location, species }: Props) => {
             <span>Stats</span>
           </div>
 
-          <InfoItem name="Average depth:" value="11 m" />
+          <InfoItem name="Average depth:" value={convertDepth(11)} />
           <InfoItem name="Visibility:" value="good" />
           <InfoItem name="Average current:" value="light" />
-          <InfoItem name="Average temperature on surface:" value="26ºC" />
-          <InfoItem name="Average temperature on bottom:" value="34ºC" />
+          <InfoItem name="Average temperature on surface:" value={convertTempSystem(26)} />
+          <InfoItem name="Average temperature on bottom:" value={convertTempSystem(34)} />
           <InfoItem name="Dives Logged:" value="60" />
           <InfoItem name="Divers:" value="20" />
 

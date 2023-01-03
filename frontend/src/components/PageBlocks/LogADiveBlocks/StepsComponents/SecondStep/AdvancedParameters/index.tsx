@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { Input } from '../../../../../Input/CommonInput';
 import { InputLabelWrapper } from '../../../inputLabelWrapper';
 import { Dropdown } from '../../../../../Dropdown/Dropdawn';
@@ -6,6 +6,7 @@ import { setParams } from '../../../LogDiveHelpers/setParams/setParams';
 import { SecondStepType } from '../../../types/stepTypes';
 import styles from './styles.module.scss';
 import { useWindowWidth } from '../../../../../../hooks/useWindowWidth';
+import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 
 type Props = {
   advancedParameters: SecondStepType['advancedParameters'];
@@ -17,6 +18,9 @@ export const AdvancedParameters: FC<Props> = ({
   setAdvancedParameters,
 }) => {
   const isMobile = useWindowWidth(500, 768);
+  const {
+    userAuth,
+  } = useContext(AuthStatusContext);
 
   const params = setParams(
     advancedParameters,
@@ -34,7 +38,7 @@ export const AdvancedParameters: FC<Props> = ({
             setValue={(val) => params('surfaceTemp', +(val as string))}
             height={48}
             width={isMobile ? 768 : 165}
-            placeholder="ºC"
+            placeholder={userAuth.settings.preferences.unitSystem === 'METRIC' ? 'ºC' : 'ºF'}
           />
         </InputLabelWrapper>
 
@@ -45,7 +49,7 @@ export const AdvancedParameters: FC<Props> = ({
             setValue={(val) => params('bottomTemp', +(val as string))}
             height={48}
             width={isMobile ? 768 : 165}
-            placeholder="ºC"
+            placeholder={userAuth.settings.preferences.unitSystem === 'METRIC' ? 'ºC' : 'ºF'}
           />
         </InputLabelWrapper>
 
@@ -56,7 +60,7 @@ export const AdvancedParameters: FC<Props> = ({
             setValue={(val) => params('weights', +(val as string))}
             height={48}
             width={isMobile ? 768 : 165}
-            placeholder="kg"
+            placeholder={userAuth.settings.preferences.unitSystem === 'METRIC' ? 'kg' : 'lbs'}
           />
         </InputLabelWrapper>
 
@@ -96,7 +100,7 @@ export const AdvancedParameters: FC<Props> = ({
             )}
             height={48}
             width={isMobile ? 768 : 165}
-            placeholder="m"
+            placeholder={userAuth.settings.preferences.unitSystem === 'METRIC' ? 'm' : 'ft'}
           />
         </InputLabelWrapper>
 

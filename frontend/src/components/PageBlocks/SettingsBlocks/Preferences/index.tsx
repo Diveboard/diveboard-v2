@@ -16,7 +16,7 @@ import {
 import {
   EditedPreferencesUnitSystem,
 } from '../SettingsItemContent/EditedContent/EditedPreferencesUnitSystem';
-import { PreferencesType } from '../../../../firebase/firestore/models';
+import { LanguageEnum, PreferencesType, ShareData } from '../../../../firebase/firestore/models';
 import {
   firestorePreferencesService,
 } from '../../../../firebase/firestore/firestoreServices/firestorePreferencesService';
@@ -26,10 +26,12 @@ import { sameServerData } from '../../../../utils/sameServerData';
 type Props = {
   preferences: PreferencesType
   title?: boolean;
+  language: string
 };
 
-export const Preferences:FC<Props> = ({ preferences, title = true }) => {
+export const Preferences: FC<Props> = ({ language, preferences, title = true }) => {
   const [preferencesData, setPreferencesData] = useState(preferences);
+  const [lang, setLang] = useState(LanguageEnum[language]);
   const { userAuth } = useContext(AuthStatusContext);
 
   useEffect(() => {
@@ -40,6 +42,16 @@ export const Preferences:FC<Props> = ({ preferences, title = true }) => {
       }
     })();
   }, []);
+
+  const displayShareData = (shareData: ShareData): string => {
+    if (shareData === 'OPEN_SHARE') {
+      return 'I want to share my data and have my name be mentioned as author';
+    } if (shareData === 'NOT_SHARE') {
+      return 'I don\'t want to share my data';
+    }
+    return 'I want to share my data anonymously';
+  };
+
   return (
     <SettingsGroup title={title && 'Preferences'}>
       <SettingsItem
@@ -65,7 +77,7 @@ export const Preferences:FC<Props> = ({ preferences, title = true }) => {
       >
         <>
           <div className={styles.secondaryItemContent}>
-            {preferencesData.scientificData.shareData || 'I want to share my data and have my name be mentioned as author'}
+            {displayShareData(preferencesData.scientificData.shareData)}
           </div>
           <div className={styles.secondaryItemContent}>
             {preferencesData.scientificData.shareNotes ? 'Share your dive notes' : 'Don\'t share your dive notes'}
@@ -81,10 +93,10 @@ export const Preferences:FC<Props> = ({ preferences, title = true }) => {
         title="Language"
         titleBlock="Preferences"
       >
-        <span className={styles.secondaryItemContent}>{preferencesData.language}</span>
+        <span className={styles.secondaryItemContent}>{lang}</span>
         <EditedPreferencesLanguage
-          preferences={preferencesData}
-          setPreferences={setPreferencesData}
+          setLang={setLang}
+          lang={lang}
         />
       </SettingsItem>
       <SettingsItem

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { flag } from 'country-emoji';
 import {
@@ -11,6 +11,8 @@ import { DiveData } from './DiveData';
 import pageRoutes from '../../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
 import { DiveType, SpotType } from '../../../../firebase/firestore/models';
+import { AuthStatusContext } from '../../../../layouts/AuthLayout';
+import { convertFeetToMeters, convertMetersToFeet } from '../../../../utils/unitSystemConverter';
 
 type Props = {
   imgSrc: string;
@@ -18,8 +20,8 @@ type Props = {
   country: string;
   followersCount: number;
   about: string;
-  dives: Array<DiveType & { spot: SpotType, date: string }>
-  isItOwnProfile: boolean
+  dives: Array<DiveType & { spot: SpotType, date: string }>;
+  isItOwnProfile: boolean;
 };
 
 export const PersonalProfileData: FC<Props> = ({
@@ -32,6 +34,11 @@ export const PersonalProfileData: FC<Props> = ({
   isItOwnProfile,
 }) => {
   const router = useRouter();
+
+  const {
+    userAuth,
+  } = useContext(AuthStatusContext);
+
   const getDiveCountries = () => {
     const diveIn = [];
     dives.forEach((dive) => {
@@ -80,13 +87,27 @@ export const PersonalProfileData: FC<Props> = ({
     return convertMinutes(totalDuration);
   };
 
+  const convertDepth = (dive): number => {
+    if (!userAuth) {
+      return dive.diveData?.maxDepth;
+    }
+    const userUnitSystem = userAuth.settings.preferences.unitSystem;
+    if (dive.unitSystem === userUnitSystem) {
+      return dive.diveData?.maxDepth;
+    }
+    if (userUnitSystem === 'METRIC') {
+      return convertFeetToMeters(dive.diveData?.maxDepth);
+    }
+    return convertMetersToFeet(dive.diveData?.maxDepth);
+  };
+
   const getDeepestDive = () => {
     const deepestDive = dives.reduce(
       (prev, current) => (
-        ((prev.diveData?.maxDepth || 0) > (current.diveData?.maxDepth || 0)) ? prev : current),
+        ((convertDepth(prev) || 0) > (convertDepth(current) || 0)) ? prev : current),
     );
     const location = deepestDive?.spot?.location;
-    return `${deepestDive?.diveData?.maxDepth || 0}m in ${location?.location}, ${location?.country}`;
+    return `${convertDepth(deepestDive) || 0} ${!userAuth || userAuth.settings.preferences.unitSystem === 'METRIC' ? 'm' : 'ft'} in ${location?.location}, ${location?.country}`;
   };
 
   const getLongestDive = () => {
@@ -137,7 +158,7 @@ export const PersonalProfileData: FC<Props> = ({
 
       <div className={styles.diveDataWrapper}>
         <DiveData
-          qualification="PADI Ice Diver, CMAS Nitrox 1"
+          qualification=""
           diveIn={Array.from(new Set(countries)).join(', ')}
           divesPublished={!!dives.length && getDivesPublished()}
           thisYear={!!dives.length && getCountThisYearDives()}

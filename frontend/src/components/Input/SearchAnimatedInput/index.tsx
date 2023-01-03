@@ -61,7 +61,7 @@ export const SearchAnimatedInput: FC<Props> = ({
       />
       <span
         onClick={() => {
-          onClick();
+          onClick && onClick();
           setOpened(true);
         }}
         className={styles.searchButton}

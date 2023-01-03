@@ -5,7 +5,7 @@ import { MainLayout } from '../src/layouts/MainLayout';
 import { Icon } from '../src/components/Icons/Icon';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 
-const Offline: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
+const Error: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
     <MainLayout>
       <div style={{
@@ -22,15 +22,8 @@ const Offline: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user 
             color: '#000345',
           }}
           >
-            You are offline!!!
+            This page is not found
           </h1>
-          <h2 style={{
-            textAlign: 'center',
-            color: '#FDC90D',
-          }}
-          >
-            please try later
-          </h2>
         </div>
       </div>
     </MainLayout>
@@ -67,4 +60,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-export default Offline;
+export default Error;

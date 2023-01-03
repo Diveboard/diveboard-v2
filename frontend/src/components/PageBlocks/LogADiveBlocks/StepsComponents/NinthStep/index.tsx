@@ -67,7 +67,11 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
   }
 
   const publishStepsData = async () => {
-    const data = await convertAllStepsData(allStepsData, userId);
+    const data = await convertAllStepsData(
+      allStepsData,
+      userId,
+      userAuth.settings.preferences.unitSystem,
+    );
     setLoading(true);
     if (diveId) {
       // @ts-ignore

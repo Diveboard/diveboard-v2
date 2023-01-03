@@ -2,11 +2,11 @@ import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
-import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 
 import DiveManagerBlock from '../src/components/DiveManager';
 import { firestoreDivesService } from '../src/firebase/firestore/firestoreServices/firestoreDivesService';
 import pageRoutes from '../src/routes/pagesRoutes.json';
+import { firestorePublicProfileService } from '../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
 
 const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   user,
@@ -31,11 +31,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const {
-    email,
-    photoURL = '',
-    displayName = '',
-  } = await firebaseAdmin.auth().getUser(uid);
+  const user = await firestorePublicProfileService.getUserById(uid);
+
+  if (!user) {
+    return {
+      redirect: {
+        destination: pageRoutes.mainPageGuest,
+        permanent: false,
+      },
+    };
+  }
 
   const data = await firestoreDivesService.getDivesByUserId(uid);
 
@@ -47,12 +52,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
-      user: {
-        uid,
-        email,
-        photoURL,
-        name: displayName,
-      },
+      user,
       dives,
     },
   };

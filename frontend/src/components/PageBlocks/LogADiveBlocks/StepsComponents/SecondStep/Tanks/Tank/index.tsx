@@ -42,7 +42,6 @@ export const Tank: FC<Props> = ({
           setValue={setTankParameters.setVolume}
           height={48}
           width={112}
-          placeholder="m"
         />
 
         <Dropdown
@@ -71,32 +70,33 @@ export const Tank: FC<Props> = ({
           <Dropdown
             item={mixture}
             setItem={
-          setTankParameters.setMixture
-        }
+              setTankParameters.setMixture
+            }
             allItems={['air', 'nitrox', 'trimix']}
             width={160}
           />
-          {mixture === 'trimix'
-              && (
-              <>
-                <Input
-                  type="number"
-                  value={o2 ? `${o2}` : ''}
-                  setValue={setTankParameters.setO2}
-                  height={48}
-                  width={112}
-                  placeholder="O2"
-                />
-                <Input
-                  type="number"
-                  value={he ? `${he}` : ''}
-                  setValue={setTankParameters.setHe}
-                  height={48}
-                  width={112}
-                  placeholder="He"
-                />
-              </>
-              )}
+          {(mixture === 'trimix' || mixture === 'nitrox') && (
+          <>
+            <Input
+              type="number"
+              value={o2 ? `${o2}` : ''}
+              setValue={setTankParameters.setO2}
+              height={48}
+              width={112}
+              placeholder="O2"
+            />
+            { mixture === 'trimix' && (
+            <Input
+              type="number"
+              value={he ? `${he}` : ''}
+              setValue={setTankParameters.setHe}
+              height={48}
+              width={112}
+              placeholder="He"
+            />
+            ) }
+          </>
+          )}
         </div>
       </InputLabelWrapper>
     </MarginWrapper>
@@ -114,7 +114,6 @@ export const Tank: FC<Props> = ({
                 setValue={setTankParameters.setStart}
                 height={48}
                 width={112}
-                placeholder="m"
               />
             </div>
 
@@ -126,7 +125,6 @@ export const Tank: FC<Props> = ({
                 setValue={setTankParameters.setEnd}
                 height={48}
                 width={112}
-                placeholder="m"
               />
             </div>
           </div>

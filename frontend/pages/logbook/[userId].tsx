@@ -3,7 +3,6 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { ProfileBlock } from '../../src/components/PageBlocks/ProfileBlocks';
 import { AuthLayout } from '../../src/layouts/AuthLayout';
 import { MainLayout } from '../../src/layouts/MainLayout';
-import { firebaseAdmin } from '../../src/firebase/firebaseAdmin';
 import { firestoreDivesService } from '../../src/firebase/firestore/firestoreServices/firestoreDivesService';
 import { firestoreSpeciesServices } from '../../src/firebase/firestore/firestoreServices/firestoreSpeciesServices';
 import { firestorePublicProfileService } from '../../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
@@ -31,13 +30,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let user = null;
 
   if (uid) {
-    const data = await firebaseAdmin.auth().getUser(uid);
-    user = {
-      uid,
-      email: data.email,
-      photoURL: data.photoURL || '',
-      displayName: data.displayName || '',
-    };
+    user = await firestorePublicProfileService.getUserById(uid);
   }
 
   const data = await firestoreDivesService.getDivesByUserId(userId as string);

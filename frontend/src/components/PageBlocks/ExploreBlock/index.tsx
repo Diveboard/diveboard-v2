@@ -1,5 +1,5 @@
 import React, {
-  FC, useEffect, useRef, useState,
+  FC, useContext, useEffect, useRef, useState,
 } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
@@ -16,6 +16,8 @@ import { useDebounce } from '../../../hooks/useDebounce';
 import { SearchDropdownPanel } from '../../Dropdown/SearchedItems/SearchDropdownPanel';
 import { firestoreSpotsService } from '../../../firebase/firestore/firestoreServices/firestoreSpotsService';
 import { useOutsideClick } from '../../../hooks/useOutsideClick';
+import { AuthStatusContext } from '../../../layouts/AuthLayout';
+import { convertCalToFar, convertMetersToFeet } from '../../../utils/unitSystemConverter';
 // import { ShopCard } from '../../Cards/ShopsCard';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
@@ -282,6 +284,32 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
 
   useOutsideClick(() => setRegions([]), searchRef);
 
+  const {
+    userAuth,
+  } = useContext(AuthStatusContext);
+
+  const convertTempSystem = (value: number): string => {
+    if (!userAuth) {
+      return `${value} ºC`;
+    }
+    const userUnitSystem = userAuth.settings.preferences.unitSystem;
+    if (userUnitSystem === 'IMPERIAL') {
+      return `${convertCalToFar(value)} ºF`;
+    }
+    return `${value} ºC`;
+  };
+
+  const convertDepth = (value): string => {
+    if (!userAuth) {
+      return `${value} m`;
+    }
+    const userUnitSystem = userAuth.settings.preferences.unitSystem;
+    if (userUnitSystem === 'IMPERIAL') {
+      return `${convertMetersToFeet(value)} ft`;
+    }
+    return `${value} m`;
+  };
+
   return (
     <div className={`${styles.wrapper} ${styles['min-height-wrapper']}`}>
       <div className={styles.sidebar} id="sidebar" onTouchEnd={handleSidebar}>
@@ -356,17 +384,17 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
               <span>
                 Average depth:
                 {' '}
-                <b>20.78m</b>
+                <b>{convertDepth(20.78)}</b>
               </span>
               <span>
                 Average temperature on bottom:
                 {' '}
-                <b>25°C</b>
+                <b>{convertTempSystem(25)}</b>
               </span>
               <span>
                 Average temperature on surface:
                 {' '}
-                <b>27ºC</b>
+                <b>{convertTempSystem(27)}</b>
               </span>
             </div>
             {region?.area && (

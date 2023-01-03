@@ -39,13 +39,13 @@ export const SearchedItems: FC<Props> = ({
     } else if (clickedValue.current) {
       clickedValue.current = false;
     }
-    if (debouncedValue.length === 0) {
+    if (debouncedValue?.length === 0) {
       setItems([]);
     }
   }, [debouncedValue]);
 
   useEffect(() => {
-    if (debouncedValue.length >= 2 && focus) {
+    if (debouncedValue?.length >= 2 && focus) {
       (async () => {
         setLoading(true);
         const res = await onSearchHandler(debouncedValue);

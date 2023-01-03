@@ -2,12 +2,14 @@ import {
   FirstStepType,
   SecondStepType,
 } from '../components/PageBlocks/LogADiveBlocks/types/stepTypes';
+import { UnitSystem } from '../firebase/firestore/models';
 
 export type UserType = {
   uid: null | string;
   email: null | string;
-  photoURL: null | string;
-  name: null | string;
+  photoUrl: null | string;
+  firstName: null | string;
+  lastName: null | string,
   country: null | string;
   about: null | string;
   qualifications: string[];
@@ -30,7 +32,8 @@ export type DiveType =
     gear: { name: string, manufacture: string }[];
     averageDepth: number;
     comments: CommentType[];
-    species: SpeciesType[]
+    species: SpeciesType[];
+    unitSystem: UnitSystem;
   }
   & FirstStepType['overview']
   & Omit<SecondStepType['parameters'], 'surfaceInterval'>

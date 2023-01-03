@@ -85,10 +85,10 @@ export const Lightbox: FC<Props> = ({
           <div className={styles.imgData}>
             <div className={styles.avatar}>
               <ProfileImage
-                imgSrc={user?.photoURL || '/appIcons/no-photo.svg'}
+                imgSrc={user?.photoUrl || '/appIcons/no-photo.svg'}
                 size={44}
               />
-              <span className={styles.authorName}>{user?.name}</span>
+              <span className={styles.authorName}>{user?.firstName}</span>
             </div>
             <div className={styles.imgDataText}>
               <span className={styles.date}>
