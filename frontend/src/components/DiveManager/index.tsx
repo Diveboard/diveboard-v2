@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/router';
+import { Timestamp } from '@firebase/firestore';
 import { ButtonGroup } from '../ButtonGroup';
 import KebabButton from '../Buttons/KebabButton';
 import { Checkbox } from '../CheckBox';
@@ -30,23 +31,35 @@ type Props = {
   userId: string;
   userDives: Array<DiveType>
 };
+
 const DiveManager = ({ userId, userDives }: Props) => {
   const [checkboxItem, setCheckboxItem] = useState(false);
+
   const [isChangeSelectAll, setChangeSelectAll] = useState(false);
   const [isShowSettings, setShowSettings] = useState(false);
   const [isShowPopupCopy, setShowPopupCopy] = useState(false);
-  const [copiestData, setCopiestData] = useState(undefined);
   const [isShowPopupUnpublish, setShowPopupUnpublish] = useState(false);
   const [isShowPopupDelete, setShowPopupDelete] = useState(false);
-  const dropdownButton = useRef(null); // button block
-  const dropdownKebab = useRef(null); // kebab block
+
   const [isBackdrop, setBackdrop] = useState(false);
+
+  const [copiestData, setCopiestData] = useState(undefined);
+
   const [isLoading, setLoading] = useState(false);
+  const [isFetching, setFetching] = useState(false);
+
   const [error, setError] = useState('');
   const [dives, setDives] = useState([]);
+  const [recentDives, setRecentDives] = useState([]);
+  const [oldestDives, setOldestDives] = useState([]);
+  const [draftDives, setDraftDives] = useState([]);
+
   const [sortType, setSortType] = useState('recent');
 
   const router = useRouter();
+
+  const dropdownButton = useRef(null); // button block
+  const dropdownKebab = useRef(null); // kebab block
 
   const titleCopy = 'Select Properties to Copy';
   const titleUnpublish = 'This Dive will not be visible for other users and will be saved as a draft';
@@ -55,11 +68,13 @@ const DiveManager = ({ userId, userDives }: Props) => {
   const fetchDives = async () => {
     if (userId) {
       setLoading(true);
-      const data = await firestoreDivesService.getDivesByUserId(userId);
+      const data = await firestoreDivesService.getDivesByUserId(userId, 7, 'desc');
       if (!Array.isArray(data) || data.length === 0) {
         setError('No dives');
       } else {
-        setDives(data.map((item) => ({ dive: item, checked: false })));
+        const newDives = data.map((item) => ({ dive: item, checked: false }));
+        setDives(newDives);
+        setRecentDives(newDives);
       }
       setLoading(false);
     }
@@ -212,30 +227,65 @@ const DiveManager = ({ userId, userDives }: Props) => {
     if (!Array.isArray(userDives) || userDives.length === 0) {
       setError('No dives');
     } else {
-      setDives(userDives.map((item) => ({ dive: item, checked: false })));
+      const newDives = userDives.map((item) => ({ dive: item, checked: false }));
+      setDives(newDives);
+      setRecentDives(newDives);
     }
     setLoading(false);
   }, [userId]);
 
-  const sortDives = (divesData) => {
+  const fetchMoreDives = async () => {
+    setFetching(true);
+    const last = dives[dives.length - 1].dive.diveData.date;
+    const lastDate = new Timestamp(last.seconds, last.nanoseconds);
+    const data = await firestoreDivesService.getDivesByUserId(userId, 7, sortType === 'recent' ? 'desc' : 'asc', lastDate);
+    const newDives = data.map((item) => ({ dive: item, checked: false }));
+    setDives([...dives, ...newDives]);
     if (sortType === 'recent') {
-      return divesData.sort((a, b) => +new Date(b.dive.date) - +new Date(a.dive.date));
+      setRecentDives([...dives, ...newDives]);
+    } else {
+      setOldestDives([...dives, ...newDives]);
     }
-    if (sortType === 'oldest') {
-      return divesData.sort((a, b) => +new Date(a.dive.date) - +new Date(b.dive.date));
-    }
-    if (sortType === 'drafts') {
-      return divesData.filter((dive) => dive.dive.draft);
-    }
-    return divesData;
+    setFetching(false);
   };
 
-  const renderDives = sortDives(dives).map((itm) => (
+  const sortDives = async (sortT) => {
+    setSortType(sortT);
+    if (sortT === 'recent') {
+      setDives(recentDives);
+    }
+    if (sortT === 'oldest') {
+      if (oldestDives.length) {
+        setDives(oldestDives);
+      } else {
+        setLoading(true);
+        const data = await firestoreDivesService.getDivesByUserId(userId, 7, 'asc');
+        const newDives = data.map((item) => ({ dive: item, checked: false }));
+        setDives(newDives);
+        setOldestDives(newDives);
+        setLoading(false);
+      }
+    }
+    if (sortT === 'drafts') {
+      if (draftDives.length) {
+        setDives(draftDives);
+      } else {
+        setLoading(true);
+        const data = await firestoreDivesService.getDivesByUserId(userId, 7, 'asc', null, true);
+        const newDives = data.map((item) => ({ dive: item, checked: false }));
+        setDives(newDives);
+        setDraftDives(newDives);
+        setLoading(false);
+      }
+    }
+  };
+
+  const renderDives = dives.map((itm) => (
     <DiveItem
       key={itm.dive.id}
       itm={itm.dive}
       checked={itm.checked}
-      onClick={() => router.push(`/user/${userId}/dive/${itm.dive.id}`)}
+      onClick={() => router.push(itm.dive.draft ? `/edit-dive/${itm.dive.id}` : `/user/${userId}/dive/${itm.dive.id}`)}
       setChecked={(val) => {
         const newDives = dives.map((i) => {
           if (i.dive.id === itm.dive.id) {
@@ -261,71 +311,80 @@ const DiveManager = ({ userId, userDives }: Props) => {
           </KebabButton>
         </div>
       </div>
-      { isLoading ? <Loader loading={isLoading} />
-        : (
-          <>
-            {isShowPopupCopy && (
-            <Popup closePopup={closePopup} title={titleCopy}>
-              <PopupCopy copyButtonHandler={copyButtonHandler} />
-            </Popup>
-            )}
-            {isShowPopupUnpublish && (
-            <Popup closePopup={closePopup} title={titleUnpublish}>
-              <PopupUnpublish
-                unpublishButtonHandler={unpublishButtonHandler}
-                popupTextHandler={closePopup}
-              />
-            </Popup>
-            )}
-            {isShowPopupDelete && (
-            <Popup closePopup={closePopup} title={titleDeleted}>
-              <PopupDelete
-                deleteButtonHandler={deleteButtonHandler}
-                popupTextHandler={closePopup}
-              />
-            </Popup>
-            )}
-            {error ? (
-              <NoDive />
-            ) : (
-              <>
-                <div className={styles.wrapper__buttons}>
-                  <ButtonGroup
-                    buttons={buttons}
-                    onClick={setSortType}
-                    defaultChecked={sortType}
-                  />
 
-                  <div ref={dropdownButton}>
-                    <KebabButton className="kebab" onClick={kebabButtonHandler}>
-                      Settings
-                      <Icon iconName="kebab" width={16} height={16} />
-                    </KebabButton>
-                  </div>
-                  {isShowSettings && (
-                  <SetDropdown
-                    dropdownList={dropdownList}
-                    dropdownButtons={[dropdownButton, dropdownKebab]}
-                    hideDropdown={hideDropdown}
-                    showBackdrop={backdropHandler}
-                  />
-                  )}
-                  <div className={styles.checkbox__mobile}>
-                    <Checkbox name="name" className="column" checked={checkboxItem} onChecked={checkboxHandler}>
-                      Select All
-                    </Checkbox>
-                  </div>
-                </div>
-                <div className={styles.checkbox}>
-                  <Checkbox name="name" className="column" checked={checkboxItem} onChecked={checkboxHandler}>
-                    Select All
-                  </Checkbox>
-                </div>
-                <div className={styles.divelist}>{renderDives}</div>
-              </>
+      {isShowPopupCopy && (
+      <Popup closePopup={closePopup} title={titleCopy}>
+        <PopupCopy copyButtonHandler={copyButtonHandler} />
+      </Popup>
+      )}
+      {isShowPopupUnpublish && (
+      <Popup closePopup={closePopup} title={titleUnpublish}>
+        <PopupUnpublish
+          unpublishButtonHandler={unpublishButtonHandler}
+          popupTextHandler={closePopup}
+        />
+      </Popup>
+      )}
+      {isShowPopupDelete && (
+      <Popup closePopup={closePopup} title={titleDeleted}>
+        <PopupDelete
+          deleteButtonHandler={deleteButtonHandler}
+          popupTextHandler={closePopup}
+        />
+      </Popup>
+      )}
+      {error ? (
+        <NoDive />
+      ) : (
+        <>
+          <div className={styles.wrapper__buttons}>
+            <ButtonGroup
+              buttons={buttons}
+              onClick={sortDives}
+              defaultChecked={sortType}
+            />
+
+            <div ref={dropdownButton}>
+              <KebabButton className="kebab" onClick={kebabButtonHandler}>
+                Settings
+                <Icon iconName="kebab" width={16} height={16} />
+              </KebabButton>
+            </div>
+            {isShowSettings && (
+            <SetDropdown
+              dropdownList={dropdownList}
+              dropdownButtons={[dropdownButton, dropdownKebab]}
+              hideDropdown={hideDropdown}
+              showBackdrop={backdropHandler}
+            />
             )}
-          </>
-        ) }
+            <div className={styles.checkbox__mobile}>
+              <Checkbox name="name" className="column" checked={checkboxItem} onChecked={checkboxHandler}>
+                Select All
+              </Checkbox>
+            </div>
+          </div>
+          <div className={styles.checkbox}>
+            <Checkbox name="name" className="column" checked={checkboxItem} onChecked={checkboxHandler}>
+              Select All
+            </Checkbox>
+          </div>
+          { isLoading ? <Loader loading={isLoading} />
+            : (
+              <>
+                <div className={styles.divelist}>{renderDives}</div>
+                {dives?.length && dives.length % 7 === 0 && (
+                  <div
+                    className={styles.viewMore}
+                    onClick={fetchMoreDives}
+                  >
+                    {isFetching ? <Loader loading={isFetching} /> : 'View More'}
+                  </div>
+                )}
+              </>
+            ) }
+        </>
+      )}
       {isBackdrop && <Backdrop />}
     </section>
   );

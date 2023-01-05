@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { Timestamp } from '@firebase/firestore';
 import { ButtonGroup } from '../../../ButtonGroup';
 import { Title } from '../Title';
 import { SearchAnimatedInput } from '../../../Input/SearchAnimatedInput';
 import { DiveCard } from '../../../Cards/DiveCard';
 import styles from './styles.module.scss';
 import { DiveType } from '../../../../firebase/firestore/models';
-import { useWindowWidth } from '../../../../hooks/useWindowWidth';
 import { AuthStatusContext } from '../../../../layouts/AuthLayout';
+import { firestoreDivesService } from '../../../../firebase/firestore/firestoreServices/firestoreDivesService';
+import { Loader } from '../../../Loader';
 
 type Props = {
   dives: Array<DiveType>;
@@ -17,9 +19,13 @@ type Props = {
 
 export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
   const [searchValue, setSearchValue] = useState('');
-  const [isMoreClicked, setShowMoreClicked] = useState(false);
-  const isMobile = useWindowWidth(500, 769);
-  const [diveForRender, setDiveForRender] = useState(isMobile ? dives : dives?.slice(0, 4));
+  const [isFetching, setFetching] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [allDataGet, setAllDataGet] = useState(false);
+
+  const [diveForRender, setDiveForRender] = useState(dives);
+  const [draftDives, setDraftDives] = useState([]);
+  const [allDives, setAllDives] = useState(dives);
   const router = useRouter();
 
   const { userAuth } = useContext(AuthStatusContext);
@@ -35,21 +41,29 @@ export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
   ];
 
   useEffect(() => {
-    setShowMoreClicked(false);
-    setDiveForRender(isMobile ? dives : dives?.slice(0, 4));
+    setDiveForRender(dives);
+    setAllDives(dives);
   }, [dives]);
 
   const [sortMode, setSortMode] = useState(buttons[0].connectedMode);
 
-  useEffect(() => {
-    if (sortMode === 'drafts') {
-      setShowMoreClicked(false);
-      setDiveForRender(dives.filter((dive) => dive.draft));
+  const sortDives = async (sortT) => {
+    setSortMode(sortT);
+    if (sortT === 'drafts') {
+      if (draftDives.length) {
+        setDiveForRender(draftDives);
+      } else {
+        setLoading(true);
+        const newDives = await firestoreDivesService.getDivesByUserId(userId, 8, 'desc', null, true);
+        setDiveForRender(newDives);
+        setDraftDives(newDives);
+        setLoading(false);
+      }
     }
-    if (sortMode === 'all') {
-      setDiveForRender((isMobile || isMoreClicked) ? dives : dives?.slice(0, 4));
+    if (sortT === 'all') {
+      setDiveForRender(allDives);
     }
-  }, [sortMode, isMobile]);
+  };
 
   return (
     <div className={styles.divesWrapper}>
@@ -61,43 +75,53 @@ export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
             text: 'Drafts',
           }] : buttons}
           defaultChecked={sortMode}
-          onClick={(item) => setSortMode(item)}
+          onClick={sortDives}
         />
         <SearchAnimatedInput value={searchValue} setValue={setSearchValue} />
       </div>
-      <div className={styles.cardWrapper}>
-        {!!diveForRender?.length && diveForRender.map((dive) => (
-          <DiveCard
+      {!isLoading ? (
+        <div className={styles.cardWrapper}>
+          {!!diveForRender?.length && diveForRender.map((dive) => (
+            <DiveCard
             // @ts-ignore
-            key={dive.id}
-            onClick={() => {
-              router.push(dive.draft && userId === userAuth.uid ? `/edit-dive/${dive.id}` : `/user/${userId}/dive/${dive.id}`);
-            }}
-            diveName={dive.aboutDive?.tripName}
-            imgSrc={dive.externalImgsUrls[0] || '/TEST_IMG_THEN_DELETE/fish.jpg'}
-            tagsNumber={dive.aboutDive?.diveNumber?.toString()}
-            addedToFavourite={false}
+              key={dive.id}
+              onClick={() => {
+                router.push(dive.draft && userId === userAuth.uid ? `/edit-dive/${dive.id}` : `/user/${userId}/dive/${dive.id}`);
+              }}
+              diveName={dive.aboutDive?.tripName}
+              imgSrc={dive.externalImgsUrls[0] || '/TEST_IMG_THEN_DELETE/fish.jpg'}
+              tagsNumber={dive.aboutDive?.diveNumber?.toString()}
+              addedToFavourite={false}
               // @ts-ignore
-            date={new Date(dive.date)}
-            diveTime={dive.diveData?.time}
-            deepness={dive.diveData?.maxDepth}
-            diversCount={dive.buddies?.length}
-            diveUnitSystem={dive.unitSystem}
-          />
-        ))}
-      </div>
+              date={new Date(dive.date)}
+              diveTime={dive.diveData?.time}
+              deepness={dive.diveData?.maxDepth}
+              diversCount={dive.buddies?.length}
+              diveUnitSystem={dive.unitSystem}
+            />
+          ))}
+        </div>
+      ) : <Loader loading={isLoading} />}
 
-      {!isMobile && dives.length > 4 && (
+      {!allDataGet && sortMode !== 'drafts' && (
       <span
         className={styles.viewMore}
-        onClick={() => {
-          const isClicked = !isMoreClicked;
-          setShowMoreClicked(isClicked);
+        onClick={async () => {
           setSortMode(buttons[0].connectedMode);
-          setDiveForRender(isClicked ? dives : dives?.slice(0, 4));
+          setFetching(true);
+          const last = diveForRender[diveForRender.length - 1].diveData.date;
+          // @ts-ignore
+          const lastDate = new Timestamp(last.seconds, last.nanoseconds);
+          const data = await firestoreDivesService.getDivesByUserId(userId, 8, 'desc', lastDate);
+          if (!data.length || data.length !== 8) {
+            setAllDataGet(true);
+          }
+          setDiveForRender([...diveForRender, ...data]);
+          setAllDives([...diveForRender, ...data]);
+          setFetching(false);
         }}
       >
-        {`View ${isMoreClicked ? 'Less' : 'More'}`}
+        {isFetching ? <Loader loading={isFetching} /> : 'View More'}
       </span>
       )}
     </div>

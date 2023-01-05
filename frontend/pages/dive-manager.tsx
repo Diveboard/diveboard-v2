@@ -42,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const data = await firestoreDivesService.getDivesByUserId(uid);
+  const data = await firestoreDivesService.getDivesByUserId(uid, 7);
 
   let dives = [];
 

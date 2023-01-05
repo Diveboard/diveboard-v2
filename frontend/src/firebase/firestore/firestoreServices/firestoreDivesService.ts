@@ -1,5 +1,15 @@
 import {
-  collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where,
+  collection,
+  deleteDoc,
+  doc, getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+  limit,
+  orderBy,
+  startAfter,
+  Timestamp,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { DiveType } from '../models';
@@ -105,14 +115,35 @@ export const firestoreDivesService = {
 
   getDivesByUserId: async (
     userId: string,
+    divesLimit: number = 4,
+    sort: 'desc' | 'asc' = 'desc',
+    lastDate: Timestamp = null,
+    draft: boolean = false,
   ) => {
     try {
       const dives = [];
       const docRef = collection(db, `Test_Dives/${userId}/userDives`);
-      const q = query(
+
+      const first = query(
         docRef,
+        orderBy('diveData.date', sort),
+        limit(divesLimit),
       );
-      const querySnapshot = await getDocs(q);
+
+      const next = query(
+        docRef,
+        orderBy('diveData.date', sort),
+        startAfter(lastDate),
+        limit(divesLimit),
+      );
+
+      const drafts = query(
+        docRef,
+        where('draft', '==', true),
+      );
+
+      // eslint-disable-next-line no-nested-ternary
+      const querySnapshot = await getDocs(draft ? drafts : lastDate ? next : first);
 
       // eslint-disable-next-line @typescript-eslint/no-shadow
       querySnapshot.forEach((doc) => {

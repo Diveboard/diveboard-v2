@@ -22,8 +22,6 @@ import { DiveType, UnitSystem } from '../../../../firebase/firestore/models';
 export const UseDiveData = () => {
   const [state, dispatch] = useReducer(diveDataReducer, initialDiveDataState);
 
-  console.log('state', { state });
-
   const setCurrentStep = (step: StepType) => {
     dispatch(diveDataActions.setStep(step));
   };
