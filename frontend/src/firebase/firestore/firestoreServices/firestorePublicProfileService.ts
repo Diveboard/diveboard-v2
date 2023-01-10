@@ -8,7 +8,9 @@ import {
   collection,
   query,
   getDocs,
-  orderBy, startAt,
+  orderBy,
+  startAt,
+  limit,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { firestorePaths } from '../firestorePaths';
@@ -26,10 +28,10 @@ export const firestorePublicProfileService = {
     }
   },
 
-  setPhotoURL: async (photoURL: string, userId: string) => {
+  setPhotoURL: async (photoUrl: string, userId: string) => {
     try {
       const ref = doc(db, firestorePaths.users.path, userId);
-      await setDoc(ref, { photoUrl: photoURL }, { merge: true });
+      await setDoc(ref, { photoUrl }, { merge: true });
     } catch (e) {
       throw new Error('set photo error');
     }
@@ -98,19 +100,24 @@ export const firestorePublicProfileService = {
           // eslint-disable-next-line no-await-in-loop
           const docSnap = await getDoc(docRef);
           if (docSnap.data()) {
-            const { firstName, photoURL } = docSnap.data();
+            const { firstName, lastName, photoUrl } = docSnap.data();
             // eslint-disable-next-line no-await-in-loop
             const diveTotal = await firestoreDivesService.getDivesCountByUserId(usersIds[i].id);
             // eslint-disable-next-line no-await-in-loop
             const divesOnSpot = spotId ? await firestoreDivesService
               .getDivesCountByUserIdInSpot(usersIds[i].id, spotId) : 0;
             users.push({
-              id: usersIds[i].id, firstName, photoURL, diveTotal, divesOnSpot,
+              id: usersIds[i].id,
+              firstName,
+              lastName,
+              photoUrl,
+              diveTotal,
+              divesOnSpot,
             });
           }
         } else {
           users.push({
-            name: usersIds[i]?.name,
+            firstName: usersIds[i]?.name,
             diveTotal: 1,
             divesOnSpot: 0,
           });
@@ -130,8 +137,9 @@ export const firestorePublicProfileService = {
       const docRef = collection(db, firestorePaths.users.path);
       const q = query(
         docRef,
-        orderBy('name'),
+        orderBy('firstName'),
         startAt(predictionName.trim()),
+        limit(15),
       );
       const querySnapshot = await getDocs(q);
 

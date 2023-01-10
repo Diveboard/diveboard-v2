@@ -45,7 +45,7 @@ export const GearUsed: FC<Props> = ({
       <DivePageMobContainer>
         <DivePageTitle title="Specific Gear Used" />
         <ul>
-          {gears?.length && gears.map((gear) => (
+          {!!gears?.length && gears.map((gear) => (
             <li key={gear.id}>
               {gear?.typeOfGear}
               {' '}

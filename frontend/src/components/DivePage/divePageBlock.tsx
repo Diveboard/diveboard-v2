@@ -55,7 +55,7 @@ export const DivePageBlock = ({
               <ChartBlock diveData={{ points: dive.diveData?.safetySpots, tanks: dive?.tanks }} />
             )}
             <div className={styles.thirdWrapper}>
-              {(!!dive.gears.length || dive.diveData?.weights) && (
+              {!!(dive.gears.length || dive.diveData?.weights) && (
                 <GearUsed
                   gears={dive.gears}
                   weight={dive.diveData?.weights}
@@ -82,8 +82,8 @@ export const DivePageBlock = ({
                 <DiveBuddyCard
                   onClick={() => buddy.id && router.push(`/logbook/${buddy.id}`)}
                   key={buddy.id || buddy.name}
-                  imgSrc={buddy?.photoURL || '/appIcons/no-photo.svg'}
-                  name={buddy?.name}
+                  imgSrc={buddy?.photoUrl || '/appIcons/no-photo.svg'}
+                  name={`${buddy?.firstName || ''} ${buddy?.lastName || ''}`}
                   onDiveBoard={buddy?.diveTotal}
                   total={buddy?.diveTotal}
                   onSpot={buddy?.divesOnSpot}

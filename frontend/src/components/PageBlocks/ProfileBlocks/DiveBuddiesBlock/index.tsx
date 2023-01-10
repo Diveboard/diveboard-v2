@@ -19,8 +19,8 @@ export const DiveBuddies: FC<Props> = ({ buddies }) => {
           <DiveBuddyCard
             onClick={() => buddy.id && router.push(`/logbook/${buddy.id}`)}
             key={buddy.id || key}
-            imgSrc={buddy.photoURL || '/TEST_IMG_THEN_DELETE/photo4.jpg'}
-            name={buddy.name}
+            imgSrc={buddy.photoUrl || '/appIcons/no-photo.svg'}
+            name={`${buddy?.firstName || ''} ${buddy?.lastName || ''}`}
             onDiveBoard={buddy.diveTotal}
             total={buddy.diveTotal}
             onSpot={0}

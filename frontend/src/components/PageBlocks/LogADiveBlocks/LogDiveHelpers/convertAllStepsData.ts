@@ -68,8 +68,9 @@ export const convertAllStepsData = async (
     diveData: {
       ...replaceUndefinedToNull(stepsData.secondStep.parameters),
       ...replaceUndefinedToNull(stepsData.secondStep.advancedParameters),
-      // eslint-disable-next-line max-len
-      safetySpots: stepsData.secondStep.parameters?.safetySpots ? checkSafetySpots(stepsData.secondStep.parameters.safetySpots) : [],
+      safetySpots: stepsData.secondStep.parameters?.safetySpots
+        ? checkSafetySpots(stepsData.secondStep.parameters.safetySpots)
+        : [],
     },
     aboutDive: {
       ...replaceUndefinedToNull(stepsData.firstStep.overview),
