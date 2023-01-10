@@ -59,12 +59,12 @@ export const Notification: FC<Props> = ({
       biWeeklyDigest,
       newsletters,
     };
-    firestoreNotificationService.setNotifications(notificationData, userAuth.uid);
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve('');
-      }, 700);
-    });
+    await firestoreNotificationService.setNotifications(notificationData, userAuth.uid);
+    // await new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve('');
+    //   }, 700);
+    // });
     setLoading(false);
   };
 

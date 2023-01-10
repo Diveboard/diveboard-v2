@@ -19,7 +19,7 @@ export const firestorePreferencesService = {
         unitSystem: 'METRIC',
       };
       await setDoc(ref, {
-        settings: { preferences: { ...defaultPreferences }, language: 'English' },
+        settings: { preferences: { ...defaultPreferences }, language: 'en' },
       }, { merge: true });
     } catch (e) {
       throw new Error('set default preferences error');
@@ -67,9 +67,9 @@ export const firestorePreferencesService = {
     }
   },
 
-  getAllPreferences: async (userId: string) => {
+  getUserSettings: async (userId: string) => {
     const docRef = doc(db, getPath(userId));
     const docSnap = await getDoc(docRef);
-    return docSnap.data().settings.preferences;
+    return docSnap.data().settings;
   },
 };

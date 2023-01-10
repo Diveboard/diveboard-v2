@@ -1,5 +1,5 @@
 import React from 'react';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { useWindowWidth } from '../src/hooks/useWindowWidth';
@@ -10,30 +10,19 @@ import {
   MobileSettings,
 } from '../src/components/PageBlocks/SettingsBlocks/SettingsModes/MobileSettings';
 import { firestorePublicProfileService } from '../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
+import { UserSettingsType } from '../src/firebase/firestore/models';
 
-const Settings: InferGetServerSidePropsType<typeof getServerSideProps> = ({
-  user,
-}) => {
+const Settings: NextPage<{ user: UserSettingsType }> = (props) => {
   const isWidth = useWindowWidth(500, 769);
+
+  const { user } = props;
 
   return (
     <AuthLayout user={user}>
       <MainLayout>
         {!isWidth
-          ? (
-            <DesktopSettings
-              preferences={user.settings.preferences}
-              notifications={user.settings.notifications}
-              language={user.settings.language}
-            />
-          )
-          : (
-            <MobileSettings
-              preferences={user.settings.preferences}
-              notifications={user.settings.notifications}
-              language={user.settings.language}
-            />
-          )}
+          ? <DesktopSettings user={user} />
+          : <MobileSettings user={user} />}
       </MainLayout>
     </AuthLayout>
   );

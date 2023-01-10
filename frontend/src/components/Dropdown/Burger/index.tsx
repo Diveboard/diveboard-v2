@@ -81,7 +81,7 @@ export const Burger: FC = () => {
     await logOut();
     await Cookies.remove('__session');
     setUserAuth(undefined);
-    router.push('/');
+    router.push('/main/home-guest');
   };
 
   const dropdownElements = burgerItems.map((item) => {

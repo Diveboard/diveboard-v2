@@ -21,15 +21,21 @@ import {
 
 import styles from './styles.module.scss';
 import editedStyle from '../../../editidStyle.module.scss';
+import { UserSettingsType } from '../../../../../../firebase/firestore/models';
 
-export const EditedProfileEmail: FC = () => {
+type Props = {
+  userEmail: string;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserSettingsType>>
+};
+
+export const EditedProfileEmail: FC<Props> = ({ userEmail, setUserInfo }) => {
   const {
     userAuth,
     setUserAuth,
   } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
   const { availableCode, setExpiresTime } = useContext(AuthCodeContext);
-  const [emailValue, setEmailValue] = useState('');
+  const [emailValue, setEmailValue] = useState(userEmail);
   const [mailError, setMailError] = useState('');
   const [codeValue, setCodeValue] = useState('');
   const [codeError, setCodeError] = useState('');
@@ -72,6 +78,7 @@ export const EditedProfileEmail: FC = () => {
       });
 
       await firestorePublicProfileService.setEmail(emailValue, userAuth.uid);
+      setUserInfo((prev) => ({ ...prev, email: emailValue }));
       setCodeLoading(false);
       setExpiresTime(null);
       setEditedSettings({

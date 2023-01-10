@@ -36,9 +36,12 @@ export const Preferences: FC<Props> = ({ language, preferences, title = true }) 
 
   useEffect(() => {
     (async () => {
-      const clientPreferences = await firestorePreferencesService.getAllPreferences(userAuth.uid);
-      if (!sameServerData(preferences, clientPreferences)) {
-        setPreferencesData(clientPreferences as PreferencesType);
+      const userSettings = await firestorePreferencesService.getUserSettings(userAuth.uid);
+      if (!sameServerData(preferences, userSettings.preferences)) {
+        setPreferencesData(userSettings.preferences as PreferencesType);
+      }
+      if (language !== userSettings.language) {
+        setLang(LanguageEnum[userSettings.language]);
       }
     })();
   }, []);

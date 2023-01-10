@@ -90,7 +90,7 @@ export const SignInBlock: FC = () => {
 
         precachePages(['/logbook', '/settings', '/log-dive']);
 
-        await statusUserRedirect(mode, router.push, setMode);
+        await statusUserRedirect(mode, router.push, setMode, userData.uid);
       }
     } catch (e) {
       setError('invalid or expired code');

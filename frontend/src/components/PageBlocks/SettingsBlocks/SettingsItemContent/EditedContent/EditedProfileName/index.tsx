@@ -8,11 +8,17 @@ import styles from './styles.module.scss';
 import {
   firestorePublicProfileService,
 } from '../../../../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
+import { UserSettingsType } from '../../../../../../firebase/firestore/models';
 
-export const EditedProfileName: FC = () => {
+type Props = {
+  userName: string;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserSettingsType>>
+};
+
+export const EditedProfileName: FC<Props> = ({ userName, setUserInfo }) => {
   const { userAuth, setUserAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
-  const [nameValue, setNameValue] = useState(`${userAuth.firstName || ''} ${userAuth.lastName || ''}`);
+  const [nameValue, setNameValue] = useState(userName);
   const [loading, setLoading] = useState(false);
 
   const saveUserName = async () => {
@@ -28,6 +34,7 @@ export const EditedProfileName: FC = () => {
     }
     await updateUserName(nameValue);
     setUserAuth({ ...userAuth, firstName, lastName });
+    setUserInfo((prev) => ({ ...prev, firstName, lastName }));
     await firestorePublicProfileService.setName(firstName, lastName, userAuth.uid);
     setLoading(false);
     setEditedSettings({ settingsBlock: '', settingsItem: '' });

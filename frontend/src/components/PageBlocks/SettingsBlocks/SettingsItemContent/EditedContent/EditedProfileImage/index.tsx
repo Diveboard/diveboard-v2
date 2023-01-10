@@ -9,12 +9,14 @@ import {
   firestorePublicProfileService,
 } from '../../../../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
 import styles from './styles.module.scss';
+import { UserSettingsType } from '../../../../../../firebase/firestore/models';
 
 type Props = {
   imgSrc: string;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserSettingsType>>
 };
 
-export const EditedProfileImage: FC<Props> = ({ imgSrc }) => {
+export const EditedProfileImage: FC<Props> = ({ imgSrc, setUserInfo }) => {
   const [imgPath, setImgPath] = useState(imgSrc);
   const [avatarFile, setAvatarFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -37,6 +39,7 @@ export const EditedProfileImage: FC<Props> = ({ imgSrc }) => {
       if (res) {
         setUserAuth({ ...userAuth, photoUrl: url });
         await firestorePublicProfileService.setPhotoURL(url, userAuth.uid);
+        setUserInfo((prev) => ({ ...prev, photoUrl: url }));
         setLoading(false);
         setEditedSettings({ settingsBlock: '', settingsItem: '' });
       }

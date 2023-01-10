@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
 import {
@@ -7,11 +7,17 @@ import {
 import { SaveThisButton } from '../SaveThisButton';
 import { TextArea } from '../../../../../Input/TextArea';
 import { MarginWrapper } from '../../../../../MarginWrapper';
+import { UserSettingsType } from '../../../../../../firebase/firestore/models';
 
-export const EditedProfileAbout = () => {
+type Props = {
+  userAbout: string;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserSettingsType>>
+};
+
+export const EditedProfileAbout: FC<Props> = ({ userAbout, setUserInfo }) => {
   const { userAuth, setUserAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
-  const [about, setAbout] = useState(userAuth.about);
+  const [about, setAbout] = useState(userAbout);
   const [loading, setLoading] = useState(false);
 
   const saveUsersAbout = async () => {
@@ -21,6 +27,7 @@ export const EditedProfileAbout = () => {
     setLoading(true);
     setUserAuth({ ...userAuth, about });
     await firestorePublicProfileService.setAbout(about, userAuth.uid);
+    setUserInfo((prev) => ({ ...prev, about }));
     setLoading(false);
     setEditedSettings({ settingsBlock: '', settingsItem: '' });
   };

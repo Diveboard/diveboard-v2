@@ -8,7 +8,7 @@ import styles from './styles.module.scss';
 
 type Props = {
   item: string;
-  setItem: React.Dispatch<React.SetStateAction<string>>;
+  setItem: (val: string) => void;
   allItems: string[];
   width?: number
   height?: number;
