@@ -47,8 +47,10 @@ export const PhoneInput: FC<Props> = ({
   }, [countryValue]);
 
   useEffect(() => {
-    const valid = isValidPhoneNumber(value);
-    console.log({ valid });
+    if (value) {
+      const valid = isValidPhoneNumber(value);
+      console.log({ valid });
+    }
   }, [value]);
 
   return (

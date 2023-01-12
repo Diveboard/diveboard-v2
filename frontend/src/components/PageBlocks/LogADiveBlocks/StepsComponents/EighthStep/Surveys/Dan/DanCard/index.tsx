@@ -48,7 +48,7 @@ export const DanCard: FC<Props> = ({ progress, setStep }) => {
       });
     }
 
-    if (!gears || (gears.length <= 1 && !gears[0].typeOfGear)) {
+    if (!gears || (gears.length <= 1 && !gears[0]?.typeOfGear)) {
       missed.push({
         title: 'Kind of suit used',
         step: 7,
@@ -71,10 +71,8 @@ export const DanCard: FC<Props> = ({ progress, setStep }) => {
   ));
 
   return (
-    <div
-      className={styles.card}
-    >
-      <div className={styles.topLine}>
+    <div className={styles.card}>
+      <div className={styles.topLine} style={{ borderRadius: !missingFields.length ? '20px' : '20px 20px 0 0' }}>
         <div className={styles.wrapper}>
           <span className={styles.title}>Mandatory field completion rate:</span>
           <Progress progress={progress} />
@@ -86,10 +84,12 @@ export const DanCard: FC<Props> = ({ progress, setStep }) => {
         </span>
 
       </div>
+      {!!missingFields.length && (
       <div className={styles.bottomLine}>
         <span className={styles.title}>Missing fields:</span>
         {missingItemsComponents}
       </div>
+      )}
     </div>
   );
 };

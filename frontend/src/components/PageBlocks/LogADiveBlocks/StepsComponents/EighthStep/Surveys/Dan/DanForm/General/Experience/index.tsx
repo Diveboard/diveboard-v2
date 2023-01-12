@@ -23,7 +23,6 @@ export const Experience: FC<Props> = ({
     <CategoryWrapper title="Diving Experience">
       <FormItemWrapper title="Diving license number">
         <Input
-          type="number"
           value={experience.license}
           setValue={licence.setItems}
           height={48}

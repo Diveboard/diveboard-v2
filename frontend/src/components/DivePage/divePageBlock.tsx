@@ -17,6 +17,7 @@ import { allComments } from './DIVE_PAGE_DUMMY_DATA';
 import styles from './divePageBlock.module.scss';
 import { NoDive } from '../DiveManager/NoData';
 import {
+  BuddiesType,
   DiveType, SpeciesType, SpotType, UserSettingsType,
 } from '../../firebase/firestore/models';
 import { DiveBuddyCard } from '../Cards/DiveBuddyCard';
@@ -26,7 +27,7 @@ type Props = {
   dive: DiveType,
   spot: SpotType,
   species?: Array<SpeciesType>
-  buddies: Array<any>
+  buddies: Array<BuddiesType>
 };
 
 export const DivePageBlock = ({
@@ -81,7 +82,7 @@ export const DivePageBlock = ({
               {buddies.map((buddy) => (
                 <DiveBuddyCard
                   onClick={() => buddy.id && router.push(`/logbook/${buddy.id}`)}
-                  key={buddy.id || buddy.name}
+                  key={buddy.id || buddy.firstName}
                   imgSrc={buddy?.photoUrl || '/appIcons/no-photo.svg'}
                   name={`${buddy?.firstName || ''} ${buddy?.lastName || ''}`}
                   onDiveBoard={buddy?.diveTotal}

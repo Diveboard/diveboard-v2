@@ -1,4 +1,4 @@
-import {Coords, DanSurveyType, UserType} from '../../types';
+import { Coords, DanSurveyType } from '../../types';
 import {
   FifthStepType,
   FirstStepType, NinthStepType,
@@ -65,6 +65,15 @@ export type SpeciesType = {
   coords: Coords[];
   old_eolsnames_id: number;
   imgSrc: string
+};
+
+export type BuddiesType = {
+  id: string;
+  firstName: string;
+  lastName?: string;
+  photoUrl?: string;
+  diveTotal: number;
+  divesOnSpot: number;
 };
 
 export type SpeciesTypeWithoutId = Omit<SpeciesType, 'id'>;

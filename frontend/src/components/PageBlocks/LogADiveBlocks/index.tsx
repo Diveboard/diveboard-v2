@@ -37,6 +37,13 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
 
   const router = useRouter();
   const { isNew } = router.query;
+  const [, anchor] = router.asPath.split('#');
+
+  useEffect(() => {
+    if (+anchor !== step && +anchor >= 1 && +anchor < 10) {
+      setStep(+anchor as StepType);
+    }
+  }, [anchor]);
 
   useEffect(() => {
     if (isNew) {
@@ -52,7 +59,11 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
     if (dive) {
       // @ts-ignore
       setData(dive, userAuth.settings.preferences.unitSystem);
-      setStep(1);
+      if (anchor && +anchor !== step && +anchor >= 1 && +anchor < 10) {
+        setStep(+anchor as StepType);
+      } else {
+        setStep(1);
+      }
     }
   }, [dive]);
 

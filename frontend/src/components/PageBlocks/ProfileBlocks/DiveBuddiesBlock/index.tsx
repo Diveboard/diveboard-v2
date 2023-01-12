@@ -4,9 +4,10 @@ import { Title } from '../Title';
 import { DiveBuddyCard } from '../../../Cards/DiveBuddyCard';
 import { ArrowLink } from '../../../ArrowLink';
 import style from './styles.module.scss';
+import { BuddiesType } from '../../../../firebase/firestore/models';
 
 type Props = {
-  buddies: Array<any>
+  buddies: Array<BuddiesType>
 };
 
 export const DiveBuddies: FC<Props> = ({ buddies }) => {

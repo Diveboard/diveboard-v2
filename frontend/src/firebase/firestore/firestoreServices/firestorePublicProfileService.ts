@@ -91,7 +91,7 @@ export const firestorePublicProfileService = {
     }
   },
 
-  getUsersInfo: async (usersIds: Array<{ id?: string, name?: string }>, spotId?: string) => {
+  getBuddiesInfo: async (usersIds: Array<{ id?: string, name?: string }>, spotId?: string) => {
     try {
       const users = [];
       for (let i = 0; i < usersIds.length; i++) {
@@ -117,6 +117,7 @@ export const firestorePublicProfileService = {
           }
         } else {
           users.push({
+            id: usersIds[i]?.id,
             firstName: usersIds[i]?.name,
             diveTotal: 1,
             divesOnSpot: 0,

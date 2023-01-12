@@ -47,7 +47,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   if (data?.buddies.length) {
-    buddies = await firestorePublicProfileService.getUsersInfo(data.buddies, data?.spotId);
+    buddies = await firestorePublicProfileService.getBuddiesInfo(data.buddies, data?.spotId);
   }
 
   const diveUser = await firestorePublicProfileService.getUserById(userId as string);

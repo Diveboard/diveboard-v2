@@ -59,7 +59,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         }
         return { id: buddy };
       });
-      buddies = await firestorePublicProfileService.getUsersInfo(res);
+      buddies = await firestorePublicProfileService.getBuddiesInfo(res);
     }
   }
 

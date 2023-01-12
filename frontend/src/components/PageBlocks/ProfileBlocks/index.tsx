@@ -11,6 +11,7 @@ import { MobileAddButton } from '../../Buttons/MobileAddButton';
 import pagesRoutes from '../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
 import {
+  BuddiesType,
   DiveType, SpeciesType, SpotType, UserSettingsType,
 } from '../../../firebase/firestore/models';
 
@@ -48,7 +49,7 @@ import {
 type Props = {
   dives: Array<DiveType & { spot: SpotType, date: string }>
   species: Array<SpeciesType>
-  buddies: Array<any>
+  buddies: Array<BuddiesType>
   logbookUser: UserSettingsType
 };
 
