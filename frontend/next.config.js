@@ -25,6 +25,7 @@ module.exports = withImages({
 
 const withPWA = require('next-pwa');
 const WebpackShellPlugin = require('webpack-shell-plugin-next');
+const runtimeCaching = require('next-pwa/cache');
 
 module.exports = withPWA({
   extends: ['next', 'prettier'],
@@ -54,11 +55,13 @@ module.exports = withPWA({
     dest: 'public',
     disable: process.env.NODE_ENV === 'development',
     publicExcludes: ['!assets/**/*'],
-    dynamicStartUrlRedirect: true,
-    cacheOnFrontEndNav: true,
+    runtimeCaching,
+    // dynamicStartUrlRedirect: true,
+    // cacheOnFrontEndNav: true,
     // register:false,
     fallbacks: {
       image: '/appIcons/diveboard-logo.svg',
+      document: '/pages/_offline.tsx',
     }
   }
 });

@@ -56,7 +56,7 @@ export const GearUsed: FC<Props> = ({
               </span>
             </li>
           ))}
-          {weight && (
+          {!!weight && (
           <li>
             Weights:
             {' '}

@@ -1,22 +1,31 @@
 {
   "name": "Diveboard",
-  "short_name": "DV",
-  "icons": [
-    {
-      "src": "/appIcons/diveboard-logo.svg",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/appIcons/diveboard-logo.svg",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
+  "short_name": "Diveboard",
   "theme_color": "#FFFFFF",
   "background_color": "#FFFFFF",
   "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait"
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/diveboard-logo192x192.svg",
+      "sizes": "192x192",
+      "type": "image/svg"
+    },
+    {
+      "src": "/diveboard-logo256x256.svg",
+      "sizes": "256x256",
+      "type": "image/svg"
+    },
+    {
+      "src": "/diveboard-logo384x384.svg",
+      "sizes": "384x384",
+      "type": "image/svg",
+    },
+    {
+      "src": "/diveboard-logo512x512.svg",
+      "sizes": "512x512",
+      "type": "image/svg"
+    }
+  ]
 }
