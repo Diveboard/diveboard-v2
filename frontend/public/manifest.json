@@ -20,7 +20,7 @@
     {
       "src": "/diveboard-logo384x384.svg",
       "sizes": "384x384",
-      "type": "image/svg",
+      "type": "image/svg"
     },
     {
       "src": "/diveboard-logo512x512.svg",

@@ -61,7 +61,6 @@ module.exports = withPWA({
     // register:false,
     fallbacks: {
       image: '/appIcons/diveboard-logo.svg',
-      document: '/pages/_offline.tsx',
     }
   }
 });
