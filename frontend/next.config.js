@@ -25,7 +25,7 @@ module.exports = withImages({
 
 const withPWA = require('next-pwa');
 const WebpackShellPlugin = require('webpack-shell-plugin-next');
-const runtimeCaching = require('next-pwa/cache');
+const runtimeCaching = require('./public/cache.js');
 
 module.exports = withPWA({
   extends: ['next', 'prettier'],

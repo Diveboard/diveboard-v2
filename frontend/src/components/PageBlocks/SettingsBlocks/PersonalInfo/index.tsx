@@ -1,5 +1,5 @@
 import React, {
-  FC, useContext, useEffect, useState,
+  FC, useContext, useState,
 } from 'react';
 import { name } from 'country-emoji';
 import { SettingsGroup } from '../SettingsGroup';
@@ -14,11 +14,11 @@ import { NetworkStatusContext } from '../../../../layouts/NetworkStatus';
 import coverStyles from './styles.module.scss';
 import styles from '../itemContentStyle.module.scss';
 import { UserSettingsType } from '../../../../firebase/firestore/models';
-import { AuthStatusContext } from '../../../../layouts/AuthLayout';
-import { sameServerData } from '../../../../utils/sameServerData';
-import {
-  firestorePublicProfileService,
-} from '../../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
+// import { AuthStatusContext } from '../../../../layouts/AuthLayout';
+// import { sameServerData } from '../../../../utils/sameServerData';
+// import {
+//   firestorePublicProfileService,
+// } from '../../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
 
 type Props = {
   user: UserSettingsType;
@@ -30,21 +30,21 @@ export const PersonalInfo: FC<Props> = ({ user, title = true }) => {
 
   const [userInfo, setUserInfo] = useState(user);
 
-  const {
-    setUserAuth,
-  } = useContext(AuthStatusContext);
+  // const {
+  //   setUserAuth,
+  // } = useContext(AuthStatusContext);
 
-  useEffect(() => {
-    (async () => {
-      const clientInfo = await firestorePublicProfileService
-        .getUserById(user.uid);
-
-      if (!sameServerData(clientInfo, user)) {
-        setUserInfo(clientInfo);
-        setUserAuth(clientInfo);
-      }
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     const clientInfo = await firestorePublicProfileService
+  //       .getUserById(user.uid);
+  //
+  //     if (!sameServerData(clientInfo, user)) {
+  //       setUserInfo(clientInfo);
+  //       setUserAuth(clientInfo);
+  //     }
+  //   })();
+  // }, []);
 
   return (
     <div className={coverStyles.opacityWrapper}>
