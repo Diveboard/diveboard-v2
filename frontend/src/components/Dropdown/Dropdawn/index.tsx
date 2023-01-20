@@ -1,5 +1,5 @@
 import React, {
-  FC, useEffect, useRef, useState,
+  FC, useRef, useState,
 } from 'react';
 import { useOutsideClick } from '../../../hooks/useOutsideClick';
 import { Icon } from '../../Icons/Icon';
@@ -24,12 +24,6 @@ export const Dropdown: FC<Props> = ({
   error,
 }) => {
   const [open, setOpen] = useState(false);
-  const [items, setItems] = useState(allItems);
-
-  useEffect(() => {
-    const notSelectedItems = allItems.filter((currentItem) => currentItem !== item);
-    setItems(notSelectedItems);
-  }, [item]);
 
   const dropdownRef = useRef(null);
 
@@ -40,7 +34,7 @@ export const Dropdown: FC<Props> = ({
   };
   useOutsideClick(outsideClickHandler, dropdownRef);
 
-  const itemComponents = items
+  const itemComponents = allItems
     .map((currentItem) => (
       <DropdownItem
         key={currentItem}

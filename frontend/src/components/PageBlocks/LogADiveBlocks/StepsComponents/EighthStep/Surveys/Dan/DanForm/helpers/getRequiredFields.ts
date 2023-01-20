@@ -1,39 +1,24 @@
-// import { DanSurveyType } from '../../../../../../types/stepTypes';
+import { SurveyDanType } from '../../../../../../../../../types';
 
-export const getRequiredFields = (data: any) => {
-  const {
-    beforeDive: { divePlan },
-    duringDive: {
-      environment, platform, thermal, load, decompression, problems, equipment,
-    },
-    afterDive: {
-      feelSymptoms, exposeToAltitude,
-    },
-    identification: {
-      familyName, givenName, sex, birth,
-    },
-    contactInfo: { phoneHome },
-    medicalCondition: { weight, height },
-  } = data;
-
+export const getRequiredFields = (data: SurveyDanType) => {
   return {
-    divePlan,
-    environment,
-    equipment,
-    problems,
-    platform,
-    thermal,
-    load,
-    decompression,
-    feelSymptoms,
-    exposeToAltitude,
-    familyName,
-    givenName,
-    sex,
-    birth,
-    phoneHome,
-    weight: weight.value,
-    height: height.value,
+    divePlan: data?.dive.dive_plan,
+    environment: data?.dive.environment,
+    equipment: data?.dive.malfunction,
+    problems: data?.dive.problems,
+    platform: data?.dive.platform,
+    thermal: data?.dive.thermal_confort,
+    load: data?.dive.workload,
+    decompression: data?.dive.decompression,
+    feelSymptoms: data?.dive.symptoms,
+    exposeToAltitude: data?.dive.altitude_exposure,
+    familyName: data?.diver.name ? data.diver.name[0] : '',
+    givenName: data?.diver.name ? data.diver.name[1] : '',
+    sex: data?.diver.sex,
+    birth: data?.diver.birthday,
+    phoneHome: data?.diver.phone_home ? `+${data?.diver.phone_home.join('')}` : '',
+    weight: data?.diver.weight ? data.diver.weight[0] : '',
+    height: data?.diver.height ? data.diver.height[0] : '',
   } as const;
 };
 

@@ -1,4 +1,6 @@
-import React, { FC, useContext, useState } from 'react';
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react';
 
 import { StepsNavigation } from '../../StepsNavigation';
 import { SurveyCard } from './SurveyCard';
@@ -9,20 +11,34 @@ import { EighthStepType } from '../../types/stepTypes';
 import stylesContainer from '../../styles.module.scss';
 import styles from './styles.module.scss';
 import { StepsIndicator } from '../../StepsIndicator';
+import { SurveyDanType } from '../../../../../types';
+import { InitialDANFormState } from './Surveys/Dan/DanForm/initialDANFormState';
 
 export const EighthStep: FC<StepProps> = ({
   step,
   setStep,
 }) => {
-  const { setStepData } = useContext(LogDiveDataContext);
+  const { setStepData, getStepData } = useContext(LogDiveDataContext);
   const [currentSurveyMode, setCurrentSurveyMode] = useState('');
-  const [survey, setSurvey] = useState<EighthStepType>([]);
+  const [survey, setSurvey] = useState<SurveyDanType>(InitialDANFormState);
+  const [surveyId, setSurveyId] = useState<string>('');
+  const [sendToDAN, setSendTODAN] = useState<boolean>(false);
+  const [saveDAN, setSaveDAN] = useState<boolean>(false);
 
-  const eighthStep: EighthStepType = survey;
+  useEffect(() => {
+    const data = getStepData(8) as EighthStepType;
+    if (data.surveyId) {
+      setSurveyId(data.surveyId);
+    }
+  }, [step]);
 
   if (step !== 8) {
     return null;
   }
+
+  const eighthStep: EighthStepType = {
+    surveyId, danSurvey: survey, sendToDAN, saveDAN,
+  };
 
   return (
     <>
@@ -56,9 +72,13 @@ export const EighthStep: FC<StepProps> = ({
         {currentSurveyMode === 'Dan - Diver’s Alert Network'
           && (
           <DanSurvey
+            survey={survey}
             setSurvey={setSurvey}
-            setSurveyMode={setCurrentSurveyMode}
             setStep={setStep}
+            surveyId={surveyId}
+            sendToDAN={sendToDAN}
+            setSendTODAN={setSendTODAN}
+            setSaveDAN={setSaveDAN}
           />
           )}
       </div>

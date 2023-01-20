@@ -84,7 +84,7 @@ export const UseDiveData = () => {
     setStepData(5, steps.fifthStep);
     setStepData(6, steps.sixthStep);
     setStepData(7, steps.seventhStep);
-    // setStepData(8, steps.eighthStep);
+    setStepData(8, steps.eighthStep);
     setStepData(9, steps.ninthStep);
   };
 

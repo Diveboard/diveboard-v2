@@ -1,21 +1,25 @@
 import React, { FC, useRef, useState } from 'react';
 import Image from 'next/image';
-import { EighthStepType } from '../../../../types/stepTypes';
 import styles from './styles.module.scss';
 import { DanCard } from './DanCard';
 import { StepType } from '../../../../types/commonTypes';
 import { DanForm } from './DanForm';
 import { useIsInViewport } from '../../../../../../../hooks/useInViewport';
 import { Progress } from './Progress';
+import { SurveyDanType } from '../../../../../../../types';
 
 type Props = {
-  setSurvey: React.Dispatch<React.SetStateAction<EighthStepType>>;
-  setSurveyMode: React.Dispatch<React.SetStateAction<string>>;
+  setSurvey: React.Dispatch<React.SetStateAction<SurveyDanType>>;
   setStep: React.Dispatch<React.SetStateAction<StepType>>
+  surveyId?: string;
+  sendToDAN: boolean;
+  setSendTODAN: (val: boolean) => void;
+  survey: SurveyDanType;
+  setSaveDAN: (val: boolean) => void;
 };
 
 export const DanSurvey: FC<Props> = ({
-  setSurvey, setSurveyMode, setStep,
+  survey, setSurvey, setStep, surveyId, sendToDAN, setSendTODAN, setSaveDAN,
 }) => {
   const [progress, setProgress] = useState(0);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -99,10 +103,22 @@ export const DanSurvey: FC<Props> = ({
           </div>
         </div>
 
-        <DanCard progress={progress} setStep={setStep} />
+        <DanCard
+          progress={progress}
+          setStep={setStep}
+          isSentToDAN={survey.sent || false}
+          sendToDAN={sendToDAN}
+          setSendTODAN={setSendTODAN}
+        />
       </div>
 
-      <DanForm setProgress={setProgress} setSurvey={setSurvey} setSurveyMode={setSurveyMode} />
+      <DanForm
+        setProgress={setProgress}
+        setSurvey={setSurvey}
+        survey={survey}
+        surveyId={surveyId}
+        setSaveDAN={setSaveDAN}
+      />
 
     </div>
   );

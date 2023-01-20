@@ -1,26 +1,39 @@
 import {
   collection,
   deleteDoc,
-  doc, getDoc,
+  doc,
+  getDoc,
   getDocs,
-  query,
-  setDoc,
-  where,
   limit,
   orderBy,
+  query,
+  setDoc,
   startAfter,
   Timestamp,
+  where,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { DiveType } from '../models';
 import { convertTimestampDate } from '../../../utils/convertTimestampDate';
 import { firestoreSpotsService } from './firestoreSpotsService';
 import { PropertiesType } from '../../../types';
+import { firestoreSurveyService } from './firestoreSurveyService';
 
 export const firestoreDivesService = {
-  setDiveData: async (diveData: DiveType, userId: string) => {
+  setDiveData: async (diveData: DiveType, userId: string, saveDan: boolean = false) => {
     try {
       const ref = doc(collection(db, `Test_Dives/${userId}`, 'userDives'));
+      if (diveData.danSurvey) {
+        diveData.surveyId = await firestoreSurveyService.addSurvey(
+          userId,
+          ref.id,
+          diveData.danSurvey,
+          saveDan,
+        );
+      } else {
+        diveData.surveyId = null;
+      }
+      delete diveData.danSurvey;
       await setDoc(ref, { ...diveData }, { merge: true });
       if (diveData.spotId) {
         const spot = await firestoreSpotsService.getSpotById(diveData.spotId);
@@ -40,10 +53,22 @@ export const firestoreDivesService = {
     userId: string,
     diveId: string,
     dive: DiveType,
+    saveDan: boolean = false,
   ) => {
     try {
       const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveId);
       const docSnap = await getDoc(docRef);
+      if (dive.danSurvey) {
+        const surveyId = await firestoreSurveyService.updateSurvey(
+          userId,
+          dive.surveyId,
+          diveId,
+          dive.danSurvey,
+          saveDan,
+        );
+        dive.surveyId = surveyId;
+      }
+      delete dive.danSurvey;
       const { spotId } = await docSnap.data();
       if (dive.spotId !== spotId) {
         // Add dive to new spot
@@ -54,7 +79,6 @@ export const firestoreDivesService = {
           newSpot.dives?.push(diveId);
           await firestoreSpotsService.updateSpotById(dive.spotId, newSpot);
         }
-
         // Delete dive from old spot
         const spotO = await firestoreSpotsService.getSpotById(spotId);
         const oldSpot = { ...spotO };

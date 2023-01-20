@@ -1,5 +1,6 @@
 import { Coords, DanSurveyType } from '../../types';
 import {
+  EighthStepType,
   FifthStepType,
   FirstStepType, NinthStepType,
   SecondStepType, SeventhStepType,
@@ -83,6 +84,7 @@ type DiveActivities = Capitalize<keyof Omit<FirstStepType['diveActivities'], 'ot
 export type DiveType = {
   id?: string;
   draft: boolean;
+  surveyId?: string;
   diveActivities: DiveActivities;
   diveData: SecondStepType['parameters'] & SecondStepType['advancedParameters'];
   tanks: SecondStepType['tanks'];
@@ -90,7 +92,6 @@ export type DiveType = {
   diveCenter: { id: string; guide: string };
   buddies: FifthStepType['buddies'];
   externalImgsUrls: string[];
-  danSend: boolean;
   aboutDive: FirstStepType['overview']
   & FirstStepType['diveReviews']
   oldId: number | null
@@ -99,6 +100,7 @@ export type DiveType = {
   spotId: string | null;
 }
 & SeventhStepType
+& EighthStepType
 & NinthStepType;
 
 export type SpotType = {
