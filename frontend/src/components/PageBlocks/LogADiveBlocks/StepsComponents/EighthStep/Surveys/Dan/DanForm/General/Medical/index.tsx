@@ -2,120 +2,148 @@ import React, { FC } from 'react';
 import { CategoryWrapper } from '../../formWrappers/CategoryWrapper';
 import { FormItemWrapper } from '../../formWrappers/FormItemWrapper';
 import { Dropdown } from '../../../../../../../../../Dropdown/Dropdawn';
-import { FormPropsType, getFormProps } from '../../helpers/getFormProps';
 import { Input } from '../../../../../../../../../Input/CommonInput';
 import styles from '../../styles.module.scss';
 import { TextArea } from '../../../../../../../../../Input/TextArea';
 import { FormErrorsType } from '../../helpers/useFormSubmit';
-import { DanSurveyType } from '../../../../../../../../../../types';
+import { SurveyDanType } from '../../../../../../../../../../types';
+import {
+  BooleanVariants, HeightVariants, WeightVariants,
+} from '../../initialDANFormState';
 
 type Props = {
-  medical: DanSurveyType['medicalCondition'];
-  setFormData: React.Dispatch<React.SetStateAction<DanSurveyType>>
+  formData: SurveyDanType;
+  setFormData: React.Dispatch<React.SetStateAction<SurveyDanType>>;
   errors: Pick<FormErrorsType
   , 'weight' | 'height' >
 };
 
 export const MedicalConditions: FC<Props> = ({
-  medical,
+  formData,
   setFormData,
   errors,
-}) => {
-  const {
-    weight,
-    height,
-    medicalConditions,
-    medications,
-    cigarettes,
-  } = getFormProps('medicalCondition', setFormData) as FormPropsType<'medical'>;
-
-  return (
-    <CategoryWrapper title="General medical condition">
-      <FormItemWrapper title="Weight" required>
-        <div className={styles.medicalGroup}>
-          <Input
-            type="number"
-            value={medical.weight.value}
-            setValue={
-              (v) => {
-                // @ts-ignore
-                weight.setItems({ value: v, measures: medical.weight.measures });
-              }
-            }
-            height={48}
-            width={270}
-            error={errors.weight}
-          />
-
-          <Dropdown
-            item={medical.weight.measures}
-            setItem={(v) => {
-              // @ts-ignore
-              weight.setItems({ value: medical.weight.value, measures: v });
-            }}
-            allItems={weight.items}
-            width={140}
-          />
-
-        </div>
-      </FormItemWrapper>
-
-      <FormItemWrapper title="Height" required>
-        <div className={styles.medicalGroup}>
-          <Input
-            type="number"
-            value={medical.height.value}
-            setValue={
-              (v) => {
-                // @ts-ignore
-                height.setItems({ value: v, measures: medical.height.measures });
-              }
-            }
-            height={48}
-            width={270}
-            error={errors.height}
-          />
-
-          <Dropdown
-            item={medical.height.measures}
-            setItem={(v) => {
-              // @ts-ignore
-              height.setItems({ value: medical.height.value, measures: v });
-            }}
-            allItems={height.items}
-            width={140}
-          />
-
-        </div>
-      </FormItemWrapper>
-
-      <FormItemWrapper title="Medical conditions">
-        <TextArea
-          value={medical.conditions}
-          setValue={medicalConditions.setItems}
-          height={116}
-          width={419}
+}) => (
+  <CategoryWrapper title="General medical condition">
+    <FormItemWrapper title="Weight" required>
+      <div className={styles.medicalGroup}>
+        <Input
+          type="number"
+          value={formData.diver.weight ? formData.diver.weight[0] : ''}
+          setValue={(val) => {
+            const newWeight = formData.diver.weight || ['', ''];
+            newWeight[0] = val;
+            return setFormData({
+              ...formData,
+              diver: {
+                ...formData.diver,
+                weight: newWeight,
+              },
+            });
+          }}
+          height={48}
+          width={270}
+          error={errors.weight}
         />
-      </FormItemWrapper>
 
-      <FormItemWrapper title="Medications">
-        <TextArea
-          value={medical.medications}
-          setValue={medications.setItems}
-          height={116}
-          width={419}
-        />
-      </FormItemWrapper>
-
-      <FormItemWrapper title="Smoking Cigarette">
         <Dropdown
-          item={medical.cigarettes}
-          setItem={cigarettes.setItems}
-          allItems={cigarettes.items}
-          width={419}
+          item={formData.diver.weight ? WeightVariants[formData.diver.weight[1]] : ''}
+          setItem={(val) => {
+            const newWeight = formData.diver.weight || ['', ''];
+            newWeight[1] = WeightVariants.findIndex((i) => i === val).toString();
+            setFormData({
+              ...formData,
+              diver: {
+                ...formData.diver,
+                weight: newWeight,
+              },
+            });
+          }}
+          allItems={WeightVariants}
+          width={140}
         />
-      </FormItemWrapper>
 
-    </CategoryWrapper>
-  );
-};
+      </div>
+    </FormItemWrapper>
+
+    <FormItemWrapper title="Height" required>
+      <div className={styles.medicalGroup}>
+        <Input
+          type="number"
+          value={formData.diver.height ? formData.diver.height[0] : ''}
+          setValue={(val) => {
+            const newHeight = formData.diver.height || ['', ''];
+            newHeight[0] = val;
+            return setFormData({
+              ...formData,
+              diver: {
+                ...formData.diver,
+                height: newHeight,
+              },
+            });
+          }}
+          height={48}
+          width={270}
+          error={errors.height}
+        />
+
+        <Dropdown
+          item={formData.diver.height ? HeightVariants[formData.diver.height[1]] : ''}
+          setItem={(val) => {
+            const newHeight = formData.diver.height || ['', ''];
+            newHeight[1] = HeightVariants.findIndex((i) => i === val).toString();
+            setFormData({
+              ...formData,
+              diver: {
+                ...formData.diver,
+                height: newHeight,
+              },
+            });
+          }}
+          allItems={HeightVariants}
+          width={140}
+        />
+
+      </div>
+    </FormItemWrapper>
+
+    <FormItemWrapper title="Medical conditions">
+      <TextArea
+        value={formData.diver.conditions || ''}
+        setValue={(val) => setFormData({
+          ...formData,
+          diver: { ...formData.diver, conditions: val },
+        })}
+        height={116}
+        width={419}
+      />
+    </FormItemWrapper>
+
+    <FormItemWrapper title="Medications">
+      <TextArea
+        value={formData.diver.medications || ''}
+        setValue={(val) => setFormData({
+          ...formData,
+          diver: { ...formData.diver, medications: val },
+        })}
+        height={116}
+        width={419}
+      />
+    </FormItemWrapper>
+
+    <FormItemWrapper title="Smoking Cigarette">
+      <Dropdown
+        item={BooleanVariants[formData.diver.cigarette]}
+        setItem={(val) => setFormData({
+          ...formData,
+          diver: {
+            ...formData.diver,
+            cigarette: BooleanVariants.findIndex((i) => i === val).toString(),
+          },
+        })}
+        allItems={BooleanVariants}
+        width={419}
+      />
+    </FormItemWrapper>
+
+  </CategoryWrapper>
+);

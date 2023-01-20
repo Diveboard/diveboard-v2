@@ -19,13 +19,13 @@ export const MainLayout: FC<Props> = ({ isHideMobileHeader = false, isFilled, ch
 
   const headerComponent = () => {
     if (userAuth) {
-      if (!isMobile) {
+      if (isMobile === false) {
         return <UserHeader />;
       } if (!isHideMobileHeader) {
         return <MobileUserHeader />;
       }
     } else {
-      if (!isMobile) {
+      if (isMobile === false) {
         return <GuestHeader isFilled={isFilled} />;
       } if (!isHideMobileHeader) {
         return <MobileGuestHeader />;

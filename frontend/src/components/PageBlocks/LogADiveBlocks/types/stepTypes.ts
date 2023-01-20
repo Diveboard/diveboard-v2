@@ -2,6 +2,7 @@ import {
   Buddy, GearsVariantsType, SafetySpot, ScoreType,
 } from './commonTypes';
 import { initialDiveDataState } from '../LogDiveData/state';
+import { SurveyDanType } from '../../../../types';
 
 export type FirstStepType = {
   overview: {
@@ -98,10 +99,11 @@ export type SeventhStepType = {
 };
 
 export type EighthStepType = {
-  surveyName: string;
-  surveyId: string;
-  date: Date;
-}[];
+  surveyId?: string;
+  danSurvey?: SurveyDanType;
+  sendToDAN?: boolean;
+  saveDAN?: boolean;
+};
 
 export type PublishingMode = 'public' | 'private' | 'friends only';
 

@@ -14,6 +14,7 @@ import {
   BuddiesType,
   DiveType, SpeciesType, SpotType, UserSettingsType,
 } from '../../../firebase/firestore/models';
+import { SurveysBlock } from './SurveysBlock';
 
 // const certifications = [
 //   {
@@ -51,10 +52,11 @@ type Props = {
   species: Array<SpeciesType>
   buddies: Array<BuddiesType>
   logbookUser: UserSettingsType
+  surveysNumber: number
 };
 
 export const ProfileBlock = ({
-  dives, species, buddies, logbookUser,
+  dives, species, buddies, logbookUser, surveysNumber,
 }: Props) => {
   const mapCoords = {
     lat: 40.95,
@@ -115,9 +117,10 @@ export const ProfileBlock = ({
       )}
       {!!pictures.length && <PicturesBlock pictures={pictures} /> }
       {!!species?.length && <LatestSpecies species={species} /> }
-      {/* <CertificationBlock certifications={certifications} /> */}
+      {/* <CertificationBlock certifications={certifications} />* /}
       {/* <CentersVisitedBlock /> */}
       {!!buddies?.length && <DiveBuddies buddies={buddies} /> }
+      {surveysNumber && <SurveysBlock surveysNumber={surveysNumber} />}
     </div>
   );
 };

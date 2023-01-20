@@ -58,7 +58,8 @@ export const convertAllStepsData = async (
 
   return {
     buddies: stepsData.fifthStep.buddies || [],
-    danSend: false,
+    danSurvey: stepsData.eighthStep.danSurvey,
+    surveyId: stepsData.eighthStep.surveyId,
     diveActivities: convertDiveActivities(stepsData.firstStep.diveActivities),
     // TODO: Implement dive center logic
     diveCenter: {
@@ -206,7 +207,7 @@ export const convertToStepsData = (data: DiveType, unitSystem: UnitSystem) => ({
     })),
     save: true,
   },
-  eighthStep: {},
+  eighthStep: { surveyId: data.surveyId || null },
   ninthStep: {
     publishingMode: data.publishingMode,
   },

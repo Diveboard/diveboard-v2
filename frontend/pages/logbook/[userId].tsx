@@ -6,9 +6,10 @@ import { MainLayout } from '../../src/layouts/MainLayout';
 import { firestoreDivesService } from '../../src/firebase/firestore/firestoreServices/firestoreDivesService';
 import { firestoreSpeciesServices } from '../../src/firebase/firestore/firestoreServices/firestoreSpeciesServices';
 import { firestorePublicProfileService } from '../../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
+import { firestoreSurveyService } from '../../src/firebase/firestore/firestoreServices/firestoreSurveyService';
 
 const Logbook: InferGetServerSidePropsType<typeof getServerSideProps> = ({
-  user, dives, species, buddies, logbookUser,
+  user, dives, species, buddies, logbookUser, surveysNumber,
 }) => (
   <AuthLayout user={user}>
     <MainLayout>
@@ -17,6 +18,7 @@ const Logbook: InferGetServerSidePropsType<typeof getServerSideProps> = ({
         dives={dives}
         species={species}
         buddies={buddies}
+        surveysNumber={surveysNumber}
       />
     </MainLayout>
   </AuthLayout>
@@ -64,6 +66,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   const logbookUser = await firestorePublicProfileService.getUserById(userId as string);
+  const surveysNumber = await firestoreSurveyService.getUserSurveys(userId as string);
+
   return {
     props: {
       user,
@@ -71,6 +75,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       dives,
       species: JSON.parse(JSON.stringify(species)),
       buddies: JSON.parse(JSON.stringify(buddies)),
+      surveysNumber,
     },
   };
 };

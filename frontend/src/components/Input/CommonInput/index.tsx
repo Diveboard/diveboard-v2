@@ -4,7 +4,7 @@ import { Icon } from '../../Icons/Icon';
 
 type Props = {
   value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  setValue: (val: string) => void;
   error?: string;
   setError?: React.Dispatch<React.SetStateAction<string>>;
   placeholder?: string;

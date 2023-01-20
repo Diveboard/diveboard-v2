@@ -2,182 +2,288 @@ import React, { FC } from 'react';
 import { CategoryWrapper } from '../../formWrappers/CategoryWrapper';
 import { FormItemWrapper } from '../../formWrappers/FormItemWrapper';
 import { Dropdown } from '../../../../../../../../../Dropdown/Dropdawn';
-import { FormPropsType, getFormProps } from '../../helpers/getFormProps';
 import { Input } from '../../../../../../../../../Input/CommonInput';
 import { FormErrorsType } from '../../helpers/useFormSubmit';
-import { DanSurveyType } from '../../../../../../../../../../types';
+import { SurveyDanType } from '../../../../../../../../../../types';
+import { SexVariants } from '../../initialDANFormState';
 
 type Props = {
-  identification: DanSurveyType['identification'];
-  setFormData: React.Dispatch<React.SetStateAction<DanSurveyType>>
+  formData: SurveyDanType;
+  setFormData: React.Dispatch<React.SetStateAction<SurveyDanType>>;
   errors: Pick<FormErrorsType
   , 'familyName' | 'givenName' | 'sex' | 'birth'>
 };
 
 export const Identification: FC<Props> = ({
-  identification,
+  formData,
   setFormData,
   errors,
-}) => {
-  const {
-    projectId,
-    birthDate,
-    cityBirth,
-    countryBirth,
-    regionBirth,
-    degree,
-    sex,
-    familyName,
-    givenName,
-    middleName,
-    mothersMaidenName,
-    prefix,
-    suffix,
-    memberId,
-    alias,
-  } = getFormProps('identification', setFormData) as FormPropsType<'identification'>;
+}) => (
+  <CategoryWrapper title="Diver identification">
+    <FormItemWrapper title="DAN Project Dive Exploration ID">
+      <Input
+        value={formData.diver.dan_pde_id || ''}
+        setValue={(val) => setFormData({
+          ...formData,
+          diver: {
+            ...formData.diver,
+            dan_pde_id: val,
+          },
+        })}
+        height={48}
+        width={419}
+      />
+    </FormItemWrapper>
 
-  return (
-    <CategoryWrapper title="Diver identification">
-      <FormItemWrapper title="DAN Project Dive Exploration ID">
-        <Input
-          value={identification.DANProjectDiveExplorationID}
-          setValue={projectId.setItems}
-          height={48}
-          width={419}
-        />
-      </FormItemWrapper>
+    <FormItemWrapper title="DAN member ID">
+      <Input
+        value={formData.diver.dan_id || ''}
+        setValue={(val) => setFormData({
+          ...formData,
+          diver: {
+            ...formData.diver,
+            dan_id: val,
+          },
+        })}
+        height={48}
+        width={419}
+      />
+    </FormItemWrapper>
 
-      <FormItemWrapper title="DAN member ID">
-        <Input
-          value={identification.DANMemberID}
-          setValue={memberId.setItems}
-          height={48}
-          width={419}
-        />
-      </FormItemWrapper>
+    <FormItemWrapper title="Family name" required>
+      <Input
+        value={formData.diver.name ? formData.diver.name[0] : ''}
+        setValue={(val) => {
+          const newName = formData.diver.name || ['', '', '', '', '', ''];
+          newName[0] = val;
+          return setFormData({
+            ...formData,
+            diver: {
+              ...formData.diver,
+              name: newName,
+            },
+          });
+        }}
+        height={48}
+        width={419}
+        error={errors.familyName}
+      />
+    </FormItemWrapper>
 
-      <FormItemWrapper title="Family name" required>
-        <Input
-          value={identification.familyName}
-          setValue={familyName.setItems}
-          height={48}
-          width={419}
-          error={errors.familyName}
-        />
-      </FormItemWrapper>
+    <FormItemWrapper title="Given name" required>
+      <Input
+        value={formData.diver.name ? formData.diver.name[1] : ''}
+        setValue={(val) => {
+          const newName = formData.diver.name || ['', '', '', '', '', ''];
+          newName[1] = val;
+          return setFormData({
+            ...formData,
+            diver: {
+              ...formData.diver,
+              name: newName,
+            },
+          });
+        }}
+        height={48}
+        width={419}
+        error={errors.givenName}
+      />
+    </FormItemWrapper>
 
-      <FormItemWrapper title="Given name" required>
-        <Input
-          value={identification.givenName}
-          setValue={givenName.setItems}
-          height={48}
-          width={419}
-          error={errors.givenName}
-        />
-      </FormItemWrapper>
+    <FormItemWrapper title="Middle name">
+      <Input
+        value={formData.diver.name ? formData.diver.name[2] : ''}
+        setValue={(val) => {
+          const newName = formData.diver.name || ['', '', '', '', '', ''];
+          newName[2] = val;
+          return setFormData({
+            ...formData,
+            diver: {
+              ...formData.diver,
+              name: newName,
+            },
+          });
+        }}
+        height={48}
+        width={419}
+      />
+    </FormItemWrapper>
 
-      <FormItemWrapper title="Middle name">
-        <Input
-          value={identification.middleName}
-          setValue={middleName.setItems}
-          height={48}
-          width={419}
-        />
-      </FormItemWrapper>
+    <FormItemWrapper title="Suffix">
+      <Input
+        value={formData.diver.name ? formData.diver.name[3] : ''}
+        setValue={(val) => {
+          const newName = formData.diver.name || ['', '', '', '', '', ''];
+          newName[3] = val;
+          return setFormData({
+            ...formData,
+            diver: {
+              ...formData.diver,
+              name: newName,
+            },
+          });
+        }}
+        height={48}
+        width={419}
+      />
+    </FormItemWrapper>
 
-      <FormItemWrapper title="Suffix">
-        <Input
-          value={identification.suffix}
-          setValue={suffix.setItems}
-          height={48}
-          width={419}
-        />
-      </FormItemWrapper>
+    <FormItemWrapper title="Prefix">
+      <Input
+        value={formData.diver.name ? formData.diver.name[4] : ''}
+        setValue={(val) => {
+          const newName = formData.diver.name || ['', '', '', '', '', ''];
+          newName[4] = val;
+          return setFormData({
+            ...formData,
+            diver: {
+              ...formData.diver,
+              name: newName,
+            },
+          });
+        }}
+        height={48}
+        width={419}
+      />
+    </FormItemWrapper>
 
-      <FormItemWrapper title="Prefix">
-        <Input
-          value={identification.prefix}
-          setValue={prefix.setItems}
-          height={48}
-          width={419}
-        />
-      </FormItemWrapper>
+    <FormItemWrapper title="Degree">
+      <Input
+        value={formData.diver.name ? formData.diver.name[5] : ''}
+        setValue={(val) => {
+          const newName = formData.diver.name || ['', '', '', '', '', ''];
+          newName[5] = val;
+          return setFormData({
+            ...formData,
+            diver: {
+              ...formData.diver,
+              name: newName,
+            },
+          });
+        }}
+        height={48}
+        width={419}
+      />
+    </FormItemWrapper>
 
-      <FormItemWrapper title="Degree">
-        <Input
-          value={identification.degree}
-          setValue={degree.setItems}
-          height={48}
-          width={419}
-        />
-      </FormItemWrapper>
+    <FormItemWrapper title="Alias">
+      <Input
+        value={formData.diver.alias || ''}
+        setValue={(val) => setFormData({
+          ...formData,
+          diver: {
+            ...formData.diver,
+            alias: val,
+          },
+        })}
+        height={48}
+        width={419}
+      />
+    </FormItemWrapper>
 
-      <FormItemWrapper title="Alias">
-        <Input
-          value={identification.alias}
-          setValue={alias.setItems}
-          height={48}
-          width={419}
-        />
-      </FormItemWrapper>
+    <FormItemWrapper title="Mother's maiden name">
+      <Input
+        value={formData.diver.mother || ''}
+        setValue={(val) => setFormData({
+          ...formData,
+          diver: {
+            ...formData.diver,
+            mother: val,
+          },
+        })}
+        height={48}
+        width={419}
+      />
+    </FormItemWrapper>
 
-      <FormItemWrapper title="Mother's maiden name">
-        <Input
-          value={identification.mothersMaidenName}
-          setValue={mothersMaidenName.setItems}
-          height={48}
-          width={419}
-        />
-      </FormItemWrapper>
+    <FormItemWrapper title="Sex" required>
+      <Dropdown
+        item={SexVariants[formData.diver.sex]}
+        setItem={(val) => setFormData({
+          ...formData,
+          diver: {
+            ...formData.diver,
+            sex: SexVariants.findIndex((i) => i === val).toString(),
+          },
+        })}
+        allItems={SexVariants}
+        width={419}
+        error={errors.sex}
+      />
+    </FormItemWrapper>
 
-      <FormItemWrapper title="Sex" required>
-        <Dropdown
-          item={identification.sex}
-          setItem={sex.setItems}
-          allItems={sex.items}
-          width={419}
-          error={errors.sex}
-        />
-      </FormItemWrapper>
+    <FormItemWrapper title="Date of birth" required>
+      <Input
+        type="date"
+        value={formData.diver.birthday ? `${formData.diver.birthday.slice(0, 4)}-${formData.diver.birthday.slice(4, 6)}-${formData.diver.birthday.slice(6)}` : ''}
+        setValue={(val) => setFormData({
+          ...formData,
+          diver: {
+            ...formData.diver,
+            birthday: val.replaceAll('-', ''),
+          },
+        })}
+        height={48}
+        width={419}
+        error={errors.birth}
+      />
+    </FormItemWrapper>
 
-      <FormItemWrapper title="Date of birth" required>
-        <Input
-          type="date"
-          value={identification.birth}
-          setValue={birthDate.setItems}
-          height={48}
-          width={419}
-          error={errors.birth}
-        />
-      </FormItemWrapper>
+    <FormItemWrapper title="Birthplace city">
+      <Input
+        value={formData.diver.birthplace ? formData.diver.birthplace[0] : ''}
+        setValue={(val) => {
+          const newBirthplace = formData.diver.birthplace || ['', '', ''];
+          newBirthplace[0] = val;
+          return setFormData({
+            ...formData,
+            diver: {
+              ...formData.diver,
+              birthplace: newBirthplace,
+            },
+          });
+        }}
+        height={48}
+        width={419}
+      />
+    </FormItemWrapper>
 
-      <FormItemWrapper title="Birthplace city">
-        <Input
-          value={identification.birthplaceCity}
-          setValue={cityBirth.setItems}
-          height={48}
-          width={419}
-        />
-      </FormItemWrapper>
+    <FormItemWrapper title="Birthplace region">
+      <Input
+        value={formData.diver.birthplace ? formData.diver.birthplace[1] : ''}
+        setValue={(val) => {
+          const newBirthplace = formData.diver.birthplace || ['', '', ''];
+          newBirthplace[1] = val;
+          return setFormData({
+            ...formData,
+            diver: {
+              ...formData.diver,
+              birthplace: newBirthplace,
+            },
+          });
+        }}
+        height={48}
+        width={419}
+      />
+    </FormItemWrapper>
 
-      <FormItemWrapper title="Birthplace region">
-        <Input
-          value={identification.birthplaceRegion}
-          setValue={regionBirth.setItems}
-          height={48}
-          width={419}
-        />
-      </FormItemWrapper>
-
-      <FormItemWrapper title="Birthplace country">
-        <Input
-          value={identification.birthplaceCountry}
-          setValue={countryBirth.setItems}
-          height={48}
-          width={419}
-        />
-      </FormItemWrapper>
-    </CategoryWrapper>
-  );
-};
+    <FormItemWrapper title="Birthplace country">
+      <Input
+        value={formData.diver.birthplace ? formData.diver.birthplace[2] : ''}
+        setValue={(val) => {
+          const newBirthplace = formData.diver.birthplace || ['', '', ''];
+          newBirthplace[2] = val;
+          return setFormData({
+            ...formData,
+            diver: {
+              ...formData.diver,
+              birthplace: newBirthplace,
+            },
+          });
+        }}
+        height={48}
+        width={419}
+      />
+    </FormItemWrapper>
+  </CategoryWrapper>
+);

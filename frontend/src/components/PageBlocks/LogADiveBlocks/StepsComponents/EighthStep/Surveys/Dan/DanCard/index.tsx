@@ -6,21 +6,21 @@ import { LogDiveDataContext } from '../../../../../LogDiveData/logDiveContext';
 import { StepType } from '../../../../../types/commonTypes';
 import MissingItems from './MissingItems';
 import { Progress } from '../Progress';
+import { Checkbox } from '../../../../../../../CheckBox';
 
 type Props = {
   progress: number
   setStep: React.Dispatch<React.SetStateAction<StepType>>
+  isSentToDAN: boolean;
+  sendToDAN: boolean;
+  setSendTODAN: (val: boolean) => void;
 };
 
-export const DanCard: FC<Props> = ({ progress, setStep }) => {
+export const DanCard: FC<Props> = ({
+  progress, setStep, sendToDAN, setSendTODAN, isSentToDAN,
+}) => {
   const { getAllStepsData } = useContext(LogDiveDataContext);
-  const [missingFields, setMissingFields] = useState<{
-    title: string;
-    step: StepType;
-    text: string;
-    block: string
-  }[]>([]);
-
+  const [missingFields, setMissingFields] = useState([]);
   useEffect(() => {
     const data = getAllStepsData();
     const {
@@ -47,8 +47,9 @@ export const DanCard: FC<Props> = ({ progress, setStep }) => {
         block: 'Profile',
       });
     }
-
-    if (!gears || (gears.length <= 1 && !gears[0]?.typeOfGear)) {
+    if (!gears.length
+        || (gears.length >= 1 && !gears.some((gear) => gear.typeOfGear === 'Dive skin' || gear.typeOfGear === 'Wet suit' || gear.typeOfGear === 'Dry Suit'))
+    ) {
       missed.push({
         title: 'Kind of suit used',
         step: 7,
@@ -69,22 +70,40 @@ export const DanCard: FC<Props> = ({ progress, setStep }) => {
       setStep={setStep}
     />
   ));
+  useEffect(() => {
+    if (progress < 100 || missingFields.length > 0) {
+      setSendTODAN(false);
+    }
+  }, [progress, missingFields]);
 
   return (
     <div className={styles.card}>
-      <div className={styles.topLine} style={{ borderRadius: !missingFields.length ? '20px' : '20px 20px 0 0' }}>
+
+      <div className={styles.topLine} style={{ borderRadius: !missingFields.length || isSentToDAN ? '20px' : '20px 20px 0 0' }}>
         <div className={styles.wrapper}>
-          <span className={styles.title}>Mandatory field completion rate:</span>
-          <Progress progress={progress} />
+          <span className={styles.title}>
+            {isSentToDAN
+              ? 'The data for this dive has been sent to DAN. Thanks for your cooperation!'
+              : 'Mandatory field completion rate:'}
+          </span>
+          {!isSentToDAN && <Progress progress={progress} /> }
         </div>
-
-        <span className={styles.text}>
-          Once all mandatory fields are filled-in you will
-          have the ability to send the form to DAN.
-        </span>
-
+        {!isSentToDAN && (
+          <div>
+            {(progress < 100 || missingFields.length > 0) ? (
+              <span className={styles.text}>
+                Once all mandatory fields are filled-in you will
+                have the ability to send the form to DAN.
+              </span>
+            ) : (
+              <Checkbox name="sendToDan" onChecked={setSendTODAN} checked={sendToDAN}>
+                <span className={styles.text}>Send this form to DAN when saving this dive</span>
+              </Checkbox>
+            )}
+          </div>
+        )}
       </div>
-      {!!missingFields.length && (
+      {!!missingFields.length && !isSentToDAN && (
       <div className={styles.bottomLine}>
         <span className={styles.title}>Missing fields:</span>
         {missingItemsComponents}
