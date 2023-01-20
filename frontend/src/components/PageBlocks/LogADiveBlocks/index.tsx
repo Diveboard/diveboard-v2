@@ -87,8 +87,8 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
   };
 
   return (
-    <div className={styles.diveWrapper}>
-      <Loader loading={isLoading} />
+    <div className={styles.diveWrapper} style={{ display: step === 0 ? 'block' : 'flex' }}>
+      {isLoading && <Loader loading={isLoading} /> }
       {step !== 10 && (
       <div className={styles.header}>
         <h1>{diveId ? `Dive ${diveId}` : 'New Dive'}</h1>

@@ -147,6 +147,7 @@ export type SurveyDanType = {
   },
   sent?: boolean,
   previous?: null,
+  diveId?: string,
 };
 
 export type DanSurveyType = {
