@@ -1,4 +1,4 @@
-import { Coords, DanSurveyType } from '../../types';
+import { Coords } from '../../types';
 import {
   EighthStepType,
   FifthStepType,
@@ -206,8 +206,7 @@ export type ShopLatestNews = {
   description: string;
 };
 
-export type Comment =
-{
+export type Comment = {
   userId: string;
   commentText: string;
   liked: string[] // users id
@@ -229,64 +228,10 @@ export type ShopType = {
   email: string;
   website: string;
   phone: string;
-  reviews:{
+  reviews: {
     boatAndEquipment: ScoreType;
     guidingAndSafety: ScoreType;
     service:ScoreType;
   }
   dives: string[];// dives id
 };
-
-export type SurveyDataDANType = {
-  beforeDive: {
-    divePlan: 'none' | 'table' | 'computer' | 'another diver' | '';
-    tablesUsed: 'PADI' | 'NAUI' | 'BSAC' | 'Beuhlman' | 'US NAVY' | 'CSIEMD' | 'CSMD' | 'COMEX' | 'MN90' | ' Other' | 'none' | '';
-    rest: 'rested' | 'tired' | 'exhausted' | '';
-    drinks: number;
-    exercise: 'none' | 'light' | 'moderate' | 'severe' | 'exhausting' | '';
-    medication: string;
-  }
-  afterDive:{
-    feelSymptoms: 'yes' | 'no' | '';
-    comments: string;
-    exposeToAltitude:'none' | 'commercial aircraft' | 'unpressurized aircraft' | 'medevac aircraft' | 'group transportation' | 'helicopter' | '';
-    hoursBeforeExposeAltitude: number;
-    dateOfFlight: Date;
-    totalHoursOfExpose: number;
-    altitudeOfExpose: number;
-    treatedInHyperbaricChamber: 'yes' | 'no' | '';
-  }
-
-  identification:{
-    DANProjectDiveExplorationID: string ;
-    DANMemberID: string ;
-    familyName: string;
-    givenName: string;
-    middleName: string;
-    suffix: string;
-    prefix: string;
-    alias: string;
-    degree: string;
-    mothersMaidenName: string;
-    sex: 'male' | 'female' | 'other' | '';
-    birth: Date;
-    birthplaceCity: string;
-    birthplaceRegion: string;
-    birthplaceCountry: string;
-  }
-  divingExperience:{
-    license: string ;
-    issueAgency: string;
-    firstDateOfCertification: Date;
-    level: 'student' | 'basic' | 'advanced/speciality' | 'rescue' | 'dive master' | 'instructor' | 'technical/cave/deep diving' | 'scientific' | 'commercial' | 'military' | ''
-    numberOfDivesInYear: number;
-    numberOfDivesInFiveYears: number;
-  }
-  medicalCondition:{
-    weight: { value:number, measures: 'kg' | 'lb' };
-    height: { value:number, measures: 'cm' | 'in' };
-    conditions: string;
-    medications: string;
-    cigarettes: 'yes' | 'no' | '';
-  }
-} & DanSurveyType['duringDive'] & DanSurveyType['contactInfo'];
