@@ -7,6 +7,8 @@ import { StepType } from '../../../../../types/commonTypes';
 import MissingItems from './MissingItems';
 import { Progress } from '../Progress';
 import { Checkbox } from '../../../../../../../CheckBox';
+import { SurveyDanType } from '../../../../../../../../types';
+import { CurrentVariants } from '../../../../SecondStep/dropdownItems';
 
 type Props = {
   progress: number
@@ -14,22 +16,25 @@ type Props = {
   isSentToDAN: boolean;
   sendToDAN: boolean;
   setSendTODAN: (val: boolean) => void;
+  survey: SurveyDanType;
+  setSurvey: (val: SurveyDanType) => void;
 };
 
 export const DanCard: FC<Props> = ({
-  progress, setStep, sendToDAN, setSendTODAN, isSentToDAN,
+  progress, setStep, sendToDAN, setSendTODAN, isSentToDAN, setSurvey, survey,
 }) => {
   const { getAllStepsData } = useContext(LogDiveDataContext);
   const [missingFields, setMissingFields] = useState([]);
-  useEffect(() => {
-    const data = getAllStepsData();
-    const {
-      parameters,
-      tanks,
-    } = data.secondStep;
-    const { gears } = data.seventhStep;
-    const missed = [];
+  const data = getAllStepsData();
+  const {
+    parameters,
+    tanks,
+    advancedParameters,
+  } = data.secondStep;
+  const { gears } = data.seventhStep;
 
+  useEffect(() => {
+    const missed = [];
     if (!parameters || !parameters.duration) {
       missed.push({
         title: 'Dive duration',
@@ -47,6 +52,7 @@ export const DanCard: FC<Props> = ({
         block: 'Profile',
       });
     }
+    let dress = '5';
     if (!gears.length
         || (gears.length >= 1 && !gears.some((gear) => gear.typeOfGear === 'Dive skin' || gear.typeOfGear === 'Wet suit' || gear.typeOfGear === 'Dry Suit'))
     ) {
@@ -56,9 +62,58 @@ export const DanCard: FC<Props> = ({
         text: 'dive skin, a wet suit or a dry suit item',
         block: 'Gear',
       });
+    } else {
+      const gear = gears.findIndex((g) => g.typeOfGear === 'Dive skin' || g.typeOfGear === 'Wet suit' || g.typeOfGear === 'Dry Suit');
+      if (gears[gear].typeOfGear === 'Dive skin') {
+        dress = '1';
+      } else if (gears[gear].typeOfGear === 'Wet suit') {
+        dress = '2';
+      } else if (gears[gear].typeOfGear === 'Dry Suit') {
+        dress = '3';
+      }
     }
+
+    const current = CurrentVariants.findIndex((v) => v === advancedParameters?.current);
+
+    let visibility = 0;
+    if (advancedParameters?.waterVisibility === 'bad') {
+      visibility = 5;
+    } else if (advancedParameters?.waterVisibility === 'average') {
+      visibility = 10;
+    } else if (advancedParameters?.waterVisibility === 'good') {
+      visibility = 25;
+    } else if (advancedParameters.waterVisibility === 'excellent') {
+      visibility = 50;
+    }
+
+    let gases = [];
+    if (tanks.length === 1) {
+      gases.push(`<1><><undefined><><${parameters.duration}>`);
+    } else {
+      gases = tanks.map((tank, idx) => {
+        if (idx === 0) {
+          return '<1><><undefined><><undefined>';
+        }
+        if (idx === tanks.length - 1) {
+          return `<undefined><><undefined><><${parameters.duration}>`;
+        }
+        return '<undefined><><undefined><><undefined>';
+      });
+    }
+    setSurvey({
+      ...survey,
+      dive: {
+        ...survey.dive,
+        dress,
+        gases_number: tanks?.length || 0,
+        bottom_gas: tanks.findIndex((t) => t.mixture === 'air') ? '1' : '0',
+        gases,
+        visibility,
+        current: current || 0,
+      },
+    });
     setMissingFields(missed);
-  }, []);
+  }, [data]);
 
   const missingItemsComponents = missingFields.map((item) => (
     <MissingItems

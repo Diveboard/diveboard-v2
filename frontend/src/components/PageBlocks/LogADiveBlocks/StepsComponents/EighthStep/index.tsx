@@ -79,6 +79,7 @@ export const EighthStep: FC<StepProps> = ({
             sendToDAN={sendToDAN}
             setSendTODAN={setSendTODAN}
             setSaveDAN={setSaveDAN}
+            setSurveyMode={setCurrentSurveyMode}
           />
           )}
       </div>

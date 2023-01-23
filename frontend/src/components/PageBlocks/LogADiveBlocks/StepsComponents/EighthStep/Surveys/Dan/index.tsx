@@ -1,4 +1,6 @@
-import React, { FC, useRef, useState } from 'react';
+import React, {
+  FC, useContext, useEffect, useRef, useState,
+} from 'react';
 import Image from 'next/image';
 import styles from './styles.module.scss';
 import { DanCard } from './DanCard';
@@ -7,6 +9,10 @@ import { DanForm } from './DanForm';
 import { useIsInViewport } from '../../../../../../../hooks/useInViewport';
 import { Progress } from './Progress';
 import { SurveyDanType } from '../../../../../../../types';
+import { LogDiveDataContext } from '../../../../LogDiveData/logDiveContext';
+import { EighthStepType } from '../../../../types/stepTypes';
+import { firestoreSurveyService } from '../../../../../../../firebase/firestore/firestoreServices/firestoreSurveyService';
+import { AuthStatusContext } from '../../../../../../../layouts/AuthLayout';
 
 type Props = {
   setSurvey: React.Dispatch<React.SetStateAction<SurveyDanType>>;
@@ -16,14 +22,32 @@ type Props = {
   setSendTODAN: (val: boolean) => void;
   survey: SurveyDanType;
   setSaveDAN: (val: boolean) => void;
+  setSurveyMode: (val: string) => void;
 };
 
 export const DanSurvey: FC<Props> = ({
   survey, setSurvey, setStep, surveyId, sendToDAN, setSendTODAN, setSaveDAN,
+  setSurveyMode,
 }) => {
   const [progress, setProgress] = useState(0);
   const cardRef = useRef<HTMLDivElement>(null);
   const inView = useIsInViewport(cardRef);
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const { userAuth } = useContext(AuthStatusContext);
+
+  const { getStepData } = useContext(LogDiveDataContext);
+
+  useEffect(() => {
+    (async () => {
+      const data = getStepData(8) as EighthStepType;
+      if (surveyId && !data.danSurvey) {
+        setLoading(true);
+        const danSurvey = await firestoreSurveyService.getSurveyById(userAuth.uid, surveyId);
+        setSurvey(danSurvey as SurveyDanType);
+        setLoading(false);
+      }
+    })();
+  }, []);
 
   return (
     <div className={styles.survey}>
@@ -109,6 +133,8 @@ export const DanSurvey: FC<Props> = ({
           isSentToDAN={survey.sent || false}
           sendToDAN={sendToDAN}
           setSendTODAN={setSendTODAN}
+          survey={survey}
+          setSurvey={setSurvey}
         />
       </div>
 
@@ -116,8 +142,9 @@ export const DanSurvey: FC<Props> = ({
         setProgress={setProgress}
         setSurvey={setSurvey}
         survey={survey}
-        surveyId={surveyId}
         setSaveDAN={setSaveDAN}
+        isLoading={isLoading}
+        setSurveyMode={setSurveyMode}
       />
 
     </div>

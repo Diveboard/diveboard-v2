@@ -7,6 +7,7 @@ import { SecondStepType } from '../../../types/stepTypes';
 import styles from './styles.module.scss';
 import { useWindowWidth } from '../../../../../../hooks/useWindowWidth';
 import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
+import { CurrentVariants, VisibilityVariants } from '../dropdownItems';
 
 type Props = {
   advancedParameters: SecondStepType['advancedParameters'];
@@ -71,7 +72,7 @@ export const AdvancedParameters: FC<Props> = ({
               'waterVisibility',
               val as typeof advancedParameters.waterVisibility,
             )}
-            allItems={['bad', 'average', 'good', 'excellent']}
+            allItems={VisibilityVariants}
             width={isMobile ? 768 : 165}
           />
         </InputLabelWrapper>
@@ -85,7 +86,7 @@ export const AdvancedParameters: FC<Props> = ({
                 val as typeof advancedParameters.current,
               )
             }
-            allItems={['none', 'light', 'medium', ' strong', 'extreme']}
+            allItems={CurrentVariants}
             width={isMobile ? 768 : 165}
           />
         </InputLabelWrapper>

@@ -61,7 +61,7 @@ export type SecondStepType = {
     bottomTemp: number;
     weights: number;
     waterVisibility: 'bad' | 'average' | 'good' | 'excellent';
-    current: 'none' | 'light' | 'medium' | ' strong' | 'extreme';
+    current: 'none' | 'light' | 'medium' | 'strong' | 'extreme';
     altitude: number;
     waterType: 'salt' | 'fresh';
   };

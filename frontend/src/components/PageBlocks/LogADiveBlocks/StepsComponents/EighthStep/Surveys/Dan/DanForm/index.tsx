@@ -1,5 +1,5 @@
 import React, {
-  FC, useContext, useEffect, useState,
+  FC, useEffect,
 } from 'react';
 import { Before } from './Specific/Before';
 import { BlockWrapper } from './formWrappers/BlockWrapper';
@@ -15,27 +15,20 @@ import { useFormSubmit } from './helpers/useFormSubmit';
 import { Loader } from '../../../../../../../Loader';
 import { SurveyDanType } from '../../../../../../../../types';
 import styles from './styles.module.scss';
-import {
-  firestoreSurveyService,
-} from '../../../../../../../../firebase/firestore/firestoreServices/firestoreSurveyService';
-import { AuthStatusContext } from '../../../../../../../../layouts/AuthLayout';
 import { Button } from '../../../../../../../Buttons/Button';
-import { EighthStepType } from '../../../../../types/stepTypes';
-import { LogDiveDataContext } from '../../../../../LogDiveData/logDiveContext';
 
 type Props = {
   setProgress: React.Dispatch<React.SetStateAction<number>>
   setSurvey: React.Dispatch<React.SetStateAction<SurveyDanType>>;
   survey: SurveyDanType;
-  surveyId?: string;
+  isLoading?: boolean;
   setSaveDAN: (val: boolean) => void;
+  setSurveyMode: (val: string) => void;
 };
 
 export const DanForm: FC<Props> = ({
-  setProgress, setSurvey, surveyId, survey, setSaveDAN,
+  setProgress, setSurvey, isLoading, survey, setSaveDAN, setSurveyMode,
 }) => {
-  const [isLoading, setLoading] = useState<boolean>(false);
-  const { userAuth } = useContext(AuthStatusContext);
   const {
     errors, onSaveDataHandler,
   } = useFormSubmit(survey);
@@ -64,20 +57,6 @@ export const DanForm: FC<Props> = ({
     const progress = getProgress(requiredData);
     setProgress(progress);
   }, [survey]);
-
-  const { getStepData } = useContext(LogDiveDataContext);
-
-  useEffect(() => {
-    (async () => {
-      const data = getStepData(8) as EighthStepType;
-      if (surveyId && !data.danSurvey) {
-        setLoading(true);
-        const danSurvey = await firestoreSurveyService.getSurveyById(userAuth.uid, surveyId);
-        setSurvey(danSurvey as SurveyDanType);
-        setLoading(false);
-      }
-    })();
-  }, []);
 
   return (
     <div>
@@ -143,7 +122,7 @@ export const DanForm: FC<Props> = ({
             borderRadius={30}
             backgroundColor="#0059DE"
             border="none"
-            onClick={() => onSaveDataHandler(setSaveDAN)}
+            onClick={() => onSaveDataHandler(setSaveDAN, setSurveyMode)}
           >
             <span style={{
               color: 'white',

@@ -56,7 +56,7 @@ export const useFormSubmit = (formData: SurveyDanType) => {
     setErrors(newErrors);
   }, [formData]);
 
-  const onSaveDataHandler = (setSaveDAN: (val: boolean) => void) => {
+  const onSaveDataHandler = (setSaveDAN: (val: boolean) => void, setSurveyMode) => {
     const requiredData = getRequiredFields(formData);
     const emptyFields = getEmptyRequiredFields(requiredData);
     const newErrors = { ...errors };
@@ -69,8 +69,11 @@ export const useFormSubmit = (formData: SurveyDanType) => {
     }
 
     setErrors(newErrors);
-    setSaveDAN(!Object.values(newErrors).some((val) => val));
-    // setSurveyMode('');
+    const noErrors = !Object.values(newErrors).some((val) => val);
+    setSaveDAN(noErrors);
+    if (noErrors) {
+      setSurveyMode('');
+    }
   };
 
   return { errors, onSaveDataHandler };
