@@ -205,11 +205,9 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     }
   }, [inputRegion]);
 
-  const searchHandler = async (item) => {
-    setRegions([]);
-    setSearchQuery(item.name);
+  const searchArea = async (geo, item) => {
     let area;
-    const geo = await firestoreGeoDataService.getGeonameById(item.geonameRef);
+
     if (item.name) {
       setRegion({ ...region, name: item.name });
     }
@@ -232,13 +230,25 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     setIsFetch(false);
   };
 
+  const searchHandler = async (item) => {
+    setRegions([]);
+    setSearchQuery(item.name);
+    const geo = await firestoreGeoDataService.getGeonameById(item.geonameRef);
+    searchArea(geo, item);
+  };
+
   useEffect(() => {
     (async () => {
       if (location && type) {
         const tab = type as string;
         setActiveTab(tab.charAt(0).toUpperCase() + tab.slice(1));
-        const res = await firestoreGeoDataService.getRegionById(location);
-        await searchHandler(res);
+        try {
+          const res = await firestoreGeoDataService.getGeonameById(location as string);
+          await searchArea(res, { name: res.name });
+        } catch (e) {
+          // eslint-disable-next-line no-alert
+          alert('Location is not found');
+        }
       }
     })();
   }, [location, type]);

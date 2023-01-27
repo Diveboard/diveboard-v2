@@ -246,9 +246,13 @@ export const firestoreGeoDataService = {
     }
   },
 
-  getGeonameById: async (geonameRef: DocumentReference) => {
+  getGeonameById: async (geonameRef: DocumentReference | string) => {
     try {
-      const docSnap = await getDoc(geonameRef);
+      let docRef = geonameRef;
+      if (typeof geonameRef === 'string') {
+        docRef = doc(db, '_geoname', geonameRef);
+      }
+      const docSnap = await getDoc(docRef as DocumentReference);
       const {
         lat, lng, asciName, areaRef,
       } = docSnap.data();

@@ -61,7 +61,7 @@ export const MainBannerBlock = () => {
   const clickRegionHandler = async (item) => {
     setRegions([]);
     if (item.id) {
-      router.push(`/explore?location=${item.id}&type=${activeTab}`);
+      router.push(`/explore?location=${item.geonameRef.id}&type=${activeTab}`);
     }
     setIsFetch(false);
   };
