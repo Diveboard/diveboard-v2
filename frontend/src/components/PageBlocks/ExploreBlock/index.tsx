@@ -300,24 +300,24 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
 
   const convertTempSystem = (value: number): string => {
     if (!userAuth) {
-      return `${value?.toFixed(2)} ºC`;
+      return `${value ? value?.toFixed(2) : 0} ºC`;
     }
     const userUnitSystem = userAuth.settings.preferences.unitSystem;
     if (userUnitSystem === 'IMPERIAL') {
-      return `${convertCalToFar(value)?.toFixed(2)} ºF`;
+      return `${value ? convertCalToFar(value)?.toFixed(2) : 0} ºF`;
     }
-    return `${value?.toFixed(2)} ºC`;
+    return `${value ? value?.toFixed(2) : 0} ºC`;
   };
 
   const convertDepth = (value): string => {
     if (!userAuth) {
-      return `${value?.toFixed(2)} m`;
+      return `${value ? value?.toFixed(2) : 0} m`;
     }
     const userUnitSystem = userAuth.settings.preferences.unitSystem;
     if (userUnitSystem === 'IMPERIAL') {
-      return `${convertMetersToFeet(value)?.toFixed(2)} ft`;
+      return `${value ? convertMetersToFeet(value)?.toFixed(2) : 0} ft`;
     }
-    return `${value?.toFixed(2)} m`;
+    return `${value ? value?.toFixed(2) : 0} m`;
   };
 
   return (
