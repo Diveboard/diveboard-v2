@@ -468,7 +468,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
           zoom={7}
           points={markerPoints}
           isMobile={isMobile}
-          renderInput={renderInput}
+          renderInput={<div ref={searchRef}>{renderInput}</div>}
           onMapChange={onMapChange}
         />
         {/* {typeof chosenSpot === 'number' && ( */}
