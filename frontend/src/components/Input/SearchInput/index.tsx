@@ -1,6 +1,4 @@
-import React, {
-  FC, useState,
-} from 'react';
+import React, { FC } from 'react';
 import { Icon } from '../../Icons/Icon';
 import { Input } from '../CommonInput';
 import { useDebounce } from '../../../hooks/useDebounce';
