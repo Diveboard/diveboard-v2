@@ -35,9 +35,6 @@ const StepItem: FC<StepItemProps> = ({
         if (step === 1 && !data[objectKey][currentDataKey]) {
           setStep(2);
         }
-        if (step === 2 && !data[objectKey][currentDataKey]) {
-          setStep(3);
-        }
       }
     } else {
       setStepData();

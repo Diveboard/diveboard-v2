@@ -1,8 +1,8 @@
 import {
-  collection, getDocs, query, orderBy, startAt, limit, where, doc, getDoc,
+  collection, getDocs, query, orderBy, startAt, limit, where, doc, getDoc, DocumentReference,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
-import { Bounds, Coords } from '../../../types';
+import { Coords, SearchedLocationType } from '../../../types';
 import { firestorePaths } from '../firestorePaths';
 
 export const firestoreGeoDataService = {
@@ -11,7 +11,7 @@ export const firestoreGeoDataService = {
     const lowCaseCountryName = countryName.trim()
       .toLowerCase();
     try {
-      const docRef = collection(db, firestorePaths.countries.path);
+      const docRef = collection(db, '_country');
       const q = query(
         docRef,
         orderBy('blob'),
@@ -20,33 +20,27 @@ export const firestoreGeoDataService = {
       );
       const querySnapshot = await getDocs(q);
 
-      const countries: {
-        id: string | number,
-        name: string,
-        coords: Bounds,
-        countryId?: string
-      }[] = [];
+      const countries: SearchedLocationType[] = [];
 
       querySnapshot.forEach((document) => {
         const {
-          cname,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          nesw_bounds,
-          countryId,
+          blob,
+          bounds,
+          geonameRef,
         } = document.data();
         const { id } = document;
-        const name = cname.trim().toLowerCase();
+        const name = blob.trim().toLowerCase();
         if (name.startsWith(lowCaseCountryName)) {
-          const { northeast: ne, southwest: sw } = JSON.parse(nesw_bounds);
+          const { northeast: ne, southwest: sw } = bounds;
           const coords = {
             ne,
             sw,
           };
           countries.push({
             id,
-            name: cname,
-            coords,
-            countryId,
+            name: name.charAt(0).toUpperCase() + name.slice(1).replaceAll('-', ' '),
+            bounds: coords,
+            geonameRef,
           });
         }
       });
@@ -219,6 +213,93 @@ export const firestoreGeoDataService = {
     }
   },
 
+  getGeonames: async (queryName: string) => {
+    const upperLocation = queryName.trim()
+      .charAt(0)
+      .toUpperCase() + queryName.slice(1);
+    try {
+      const docRef = collection(db, '_geoname_alternative');
+      const q = query(
+        docRef,
+        where('value', '>=', upperLocation),
+        limit(15),
+      );
+
+      const locations: SearchedLocationType[] = [];
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((document) => {
+        const {
+          value, geonameRef,
+        } = document.data();
+
+        locations.push({
+          id: document.id,
+          geonameRef,
+          name: value,
+        });
+      });
+      return locations;
+    } catch (e) {
+      console.log(e);
+      throw new Error('get geonames by name error');
+    }
+  },
+
+  getGeonameById: async (geonameRef: DocumentReference) => {
+    try {
+      const docSnap = await getDoc(geonameRef);
+      const {
+        lat, lng, asciName, areaRef,
+      } = docSnap.data();
+      return {
+        id: docSnap.id,
+        name: asciName,
+        coords: {
+          lat,
+          lng,
+        },
+        areaRef,
+      };
+    } catch (e) {
+      console.log(e);
+      throw new Error('get geoname by ID error');
+    }
+  },
+
+  getAreaByRef: async (areaRef: DocumentReference) => {
+    try {
+      const docSnap = await getDoc(areaRef);
+      return docSnap.data();
+    } catch (e) {
+      console.log(e);
+      throw new Error('get geoname coords by name error');
+    }
+  },
+
+  getAreaByCoords: async (coords: Coords) => {
+    try {
+      const docRef = collection(db, '_area');
+      const querySnapshot = await getDocs(docRef);
+      let res;
+      querySnapshot.forEach((document) => {
+        const data = document.data();
+        if (
+          data.minLat < coords.lat
+            && data.maxLat > coords.lat
+            && data.minLng < coords.lng
+            && data.maxLng > coords.lng
+        ) {
+          res = data;
+        }
+      });
+      return res;
+    } catch (e) {
+      console.log(e);
+      throw new Error('get geoname coords by name error');
+    }
+  },
+
   getRegionById: async (regionId) => {
     try {
       const docRef = doc(db, firestorePaths.regions.path, regionId);
@@ -246,51 +327,36 @@ export const firestoreGeoDataService = {
     }
   },
 
-  getRegions: async (locationName, countryId, limitRegions = 5) => {
+  getRegions: async (locationName) => {
     const upperLocation = locationName.trim()
       .charAt(0)
       .toUpperCase() + locationName.slice(1);
     try {
-      const docRef = collection(db, firestorePaths.regions.path);
+      const docRef = collection(db, '_region');
       const q = query(
         docRef,
         where('name', '>=', upperLocation),
-        limit(limitRegions || 5),
+        limit(10),
       );
-      // if (countryId) {
-      //   q = query(
-      //     docRef,
-      //     where('name', '>=', upperLocation),
-      //     // Add to region collection country name
-      //     where('countryId', '==', countryId),
-      //     limit(limitRegions || 5),
-      //   );
-      // }
-      const locations: {
-        id: string | number,
-        name: string,
-        coords?: Bounds,
-        regionId?: string
-      }[] = [];
+      const locations: SearchedLocationType[] = [];
 
       const querySnapshot = await getDocs(q);
 
       querySnapshot.forEach((document) => {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        const { name, nesw_bounds, id } = document.data();
+        const { name, bounds, geonameRef } = document.data();
         let coords;
-        if (nesw_bounds) {
-          const { northeast: ne, southwest: sw } = JSON.parse(nesw_bounds);
+        if (bounds) {
+          const { northeast: ne, southwest: sw } = bounds;
           coords = {
             ne,
             sw,
           };
         }
         locations.push({
+          geonameRef,
           id: document.id,
-          regionId: id,
           name,
-          coords,
+          bounds: coords,
         });
       });
       return locations;

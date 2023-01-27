@@ -67,6 +67,7 @@ export const ExploreMap: FC<Props> = ({
         defaultCenter={coords}
         center={{ lat: coords.lat - 1, lng: coords.lng }}
         defaultZoom={zoom}
+        zoom={zoom}
         options={(maps: Maps) => getMapOptions(maps)}
         onGoogleApiLoaded={({
           map,

@@ -9,7 +9,7 @@ import {
 import { Button } from '../../../../../Buttons/Button';
 import { createNewSpotData, createNewSpotHandler } from '../thirdStepHelpers';
 import { Loader } from '../../../../../Loader';
-import { Bounds } from '../../../../../../types';
+import { Bounds, Coords } from '../../../../../../types';
 
 type Props = {
   newSpotName: string;
@@ -19,6 +19,8 @@ type Props = {
   newPointCoords: { lat: number, lng: number };
   zoom: number;
   setBounds?: (bounds: Bounds) => void;
+  setLocation?: (bounds: Coords) => void;
+  setData: (id: string) => void;
 };
 
 export const CreateNewSpot: FC<Props> = ({
@@ -29,6 +31,8 @@ export const CreateNewSpot: FC<Props> = ({
   zoom,
   createdNewSpotId,
   setBounds,
+  setLocation,
+  setData,
 }) => {
   const [newSpotNameError, setNewSpotNameError] = useState('');
 
@@ -110,7 +114,6 @@ export const CreateNewSpot: FC<Props> = ({
               searchRef={regionDropdownRef}
               value={newSpotRegion}
               setValue={setNewSpotRegion}
-              // @ts-ignore
               onSearchHandler={firestoreGeoDataService.getRegions}
               setBounds={setBounds}
             />
@@ -130,7 +133,8 @@ export const CreateNewSpot: FC<Props> = ({
               searchRef={locationDropdownRef}
               value={newSpotLocation}
               setValue={setNewSpotLocation}
-              onSearchHandler={firestoreGeoDataService.getGeonamesPredictions}
+              onSearchHandler={firestoreGeoDataService.getGeonames}
+              setLocation={setLocation}
             />
           </div>
 
@@ -150,10 +154,23 @@ export const CreateNewSpot: FC<Props> = ({
             backgroundColor="#F4BF00"
             border="none"
             onClick={async () => {
-              if (!newSpotCountryError
-                && !newSpotRegionError
-                && !newSpotLocationError
-                && !newSpotNameError
+              if (!newSpotName) {
+                setNewSpotNameError('This field is required');
+              }
+              if (!newSpotCountry) {
+                setNewSpotCountryError('This field is required');
+              }
+              if (!newSpotLocation) {
+                setNewSpotLocationError('This field is required');
+              }
+              if (!newSpotRegion) {
+                setNewSpotRegionError('This field is required');
+              }
+              if (newSpotName
+                  && newSpotCountry
+                  && newSpotLocation
+                  && newSpotRegion
+                  && newPointCoords
               ) {
                 createdNewSpotId.current = await newSpotHandler(
                   createNewSpotData(
@@ -165,10 +182,8 @@ export const CreateNewSpot: FC<Props> = ({
                     zoom,
                   ),
                 );
+                setData(createdNewSpotId.current);
                 setNewSpotName('');
-                setNewSpotCountry('');
-                setNewSpotRegion('');
-                setNewSpotLocation('');
               }
             }}
           >

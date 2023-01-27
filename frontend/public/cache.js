@@ -102,7 +102,7 @@ module.exports = [
     },
   },
   {
-    urlPattern: /\/_next\/data\/.+\/.+\.json$/i,
+    urlPattern: /\/_next\/data\/.+\/.+\.json?([^\?]+)(\?.*)?/i,
     handler: 'NetworkFirst',
     options: {
       cacheName: 'next-data',

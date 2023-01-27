@@ -3,18 +3,19 @@ import React, {
 } from 'react';
 import { SearchDropdownPanel } from './SearchDropdownPanel';
 import { useDebounced } from '../../../hooks/useDebounced';
-import { Bounds } from '../../../types';
+import { Bounds, Coords, SearchedLocationType } from '../../../types';
 import { useOutsideClick } from '../../../hooks/useOutsideClick';
+import { firestoreGeoDataService } from '../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
 
 type Props = {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
-  onSearchHandler: (value: string) =>
-  Promise<{ id: string | number, name: string, coords?: Bounds }[]>;
-  onSearchedItemClicked?: (item: { id: string | number, name: string, coords?: Bounds }) => void;
+  onSearchHandler: (value: string) => Promise<SearchedLocationType[]>;
+  onSearchedItemClicked?: (item: SearchedLocationType) => void;
   focus?: boolean;
   setBounds?: (bounds: Bounds) => void;
   searchRef?: React.RefObject<HTMLDivElement>;
+  setLocation?: (bounds: Coords) => void;
 };
 
 export const SearchedItems: FC<Props> = ({
@@ -25,8 +26,9 @@ export const SearchedItems: FC<Props> = ({
   focus = true,
   setBounds,
   searchRef,
+  setLocation,
 }) => {
-  const [items, setItems] = useState<{ id:string | number, name:string }[]>([]);
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const clickedValue = useRef(false);
@@ -66,13 +68,19 @@ export const SearchedItems: FC<Props> = ({
   return (
     <SearchDropdownPanel
       loading={loading}
-      onItemClick={(item) => {
+      onItemClick={async (item) => {
         clickedValue.current = true;
         setItems([]);
         setOpen(false);
         setValue(item.name);
-        if (item.coords && setBounds) {
-          setBounds(item.coords);
+        if (item.bounds && setBounds) {
+          setBounds(item.bounds);
+        }
+        if (item.geonameRef && setLocation) {
+          const loc = await firestoreGeoDataService.getGeonameById(item.geonameRef);
+          if (loc.coords) {
+            setLocation(loc.coords);
+          }
         }
         if (onSearchedItemClicked) {
           onSearchedItemClicked(item);

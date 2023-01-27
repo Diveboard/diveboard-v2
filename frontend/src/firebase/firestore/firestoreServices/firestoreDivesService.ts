@@ -212,6 +212,9 @@ export const firestoreDivesService = {
         if (properties.Spot && copyFromDive.spotId) {
           newProperties.spotId = copyFromDive.spotId;
         }
+        if (properties['Water Type'] && copyFromDive.diveData.waterType) {
+          newProperties.diveData.waterType = copyFromDive.diveData.waterType;
+        }
         if (properties['Tanks user'] && copyFromDive.tanks?.length) {
           newProperties.tanks = copyFromDive.tanks;
         }

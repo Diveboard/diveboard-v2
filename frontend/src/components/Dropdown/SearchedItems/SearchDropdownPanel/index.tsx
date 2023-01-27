@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 import styles from './styles.module.scss';
 import { Loader } from '../../../Loader';
-import { Bounds } from '../../../../types';
+import { SearchedLocationType } from '../../../../types';
 
 type Props = {
   loading: boolean;
-  items: { id:string | number, name: string }[];
-  onItemClick: (itemName: { id:string | number, name: string, coords?: Bounds }) => void;
+  items: SearchedLocationType[];
+  onItemClick: (itemName: SearchedLocationType) => void;
 };
 
 export const SearchDropdownPanel: FC<Props> = ({

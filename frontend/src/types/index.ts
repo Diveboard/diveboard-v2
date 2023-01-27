@@ -1,3 +1,4 @@
+import { DocumentReference } from '@firebase/firestore';
 import {
   FirstStepType,
   SecondStepType,
@@ -70,6 +71,13 @@ type SpeciesType = {
     maxLat: number,
     maxLng: number,
   }
+};
+
+export type SearchedLocationType = {
+  id: string,
+  name: string,
+  bounds?: Bounds,
+  geonameRef: DocumentReference
 };
 
 export type Bounds = {

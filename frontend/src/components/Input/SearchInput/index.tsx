@@ -10,14 +10,17 @@ type Props = {
   setQueryData: React.Dispatch<React.SetStateAction<string>>;
   ms: number;
   placeholder?: string;
+  value: string;
+  setValue: (val: string) => void;
 };
 
 export const SearchInput: FC<Props> = ({
   setQueryData,
   ms,
   placeholder,
+  value,
+  setValue,
 }) => {
-  const [value, setValue] = useState('');
   useDebounce(value, setQueryData, ms);
 
   return (
@@ -31,9 +34,7 @@ export const SearchInput: FC<Props> = ({
       <Input
         type="text"
         value={value}
-        setValue={(val) => {
-          setValue(val);
-        }}
+        setValue={setValue}
         placeholder={placeholder}
         height={48}
       />

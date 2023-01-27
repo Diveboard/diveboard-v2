@@ -41,7 +41,7 @@ export const MainBannerBlock = () => {
 
   const fetchRegions = async () => {
     if (inputRegion && isFetch) {
-      const res = await firestoreGeoDataService.getRegions(inputRegion, null, 15);
+      const res = await firestoreGeoDataService.getGeonames(inputRegion);
       setRegions(res);
     }
   };

@@ -193,7 +193,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
 
   const fetchRegions = async () => {
     if (inputRegion && isFetch) {
-      const res = await firestoreGeoDataService.getRegions(inputRegion, null, 15);
+      const res = await firestoreGeoDataService.getGeonames(inputRegion);
       setRegions(res);
     }
   };
@@ -208,28 +208,28 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const searchHandler = async (item) => {
     setRegions([]);
     setSearchQuery(item.name);
-    if (item.regionId) {
-      const reg = await firestoreGeoDataService.getRegionArea(item.regionId);
-      setRegion({ area: reg, name: item.name });
+    let area;
+    const geo = await firestoreGeoDataService.getGeonameById(item.geonameRef);
+    if (item.name) {
+      setRegion({ ...region, name: item.name });
     }
-    if (item?.coords) {
-      const lat = (item.coords.sw.lat + item.coords.ne.lat) / 2;
-      const lng = (item.coords.sw.lng + item.coords.ne.lng) / 2;
+    if (geo.areaRef) {
+      area = await firestoreGeoDataService.getAreaByRef(geo.areaRef);
+      setRegion({ area, name: item.name });
+    }
+    if (geo?.coords) {
+      const { lat } = geo.coords;
+      const { lng } = geo.coords;
       setMapsCoords({
         lat,
         lng,
       });
+      if (!area) {
+        area = await firestoreGeoDataService.getAreaByCoords(geo.coords);
+      }
     }
+    setRegion({ area, name: item.name });
     setIsFetch(false);
-    const res = await firestoreSpotsService.getSpotsByRegion(item.name);
-    setMarkerPoints(res.map((s) => ({
-      id: s.id,
-      lat: s.lat,
-      lng: s.lng,
-      divesCount: s.dives?.length,
-      diveName: s.name,
-    })));
-    setSpots(res);
   };
 
   useEffect(() => {
@@ -290,24 +290,24 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
 
   const convertTempSystem = (value: number): string => {
     if (!userAuth) {
-      return `${value} ºC`;
+      return `${value?.toFixed(2)} ºC`;
     }
     const userUnitSystem = userAuth.settings.preferences.unitSystem;
     if (userUnitSystem === 'IMPERIAL') {
-      return `${convertCalToFar(value)} ºF`;
+      return `${convertCalToFar(value)?.toFixed(2)} ºF`;
     }
-    return `${value} ºC`;
+    return `${value?.toFixed(2)} ºC`;
   };
 
   const convertDepth = (value): string => {
     if (!userAuth) {
-      return `${value} m`;
+      return `${value?.toFixed(2)} m`;
     }
     const userUnitSystem = userAuth.settings.preferences.unitSystem;
     if (userUnitSystem === 'IMPERIAL') {
-      return `${convertMetersToFeet(value)} ft`;
+      return `${convertMetersToFeet(value)?.toFixed(2)} ft`;
     }
-    return `${value} m`;
+    return `${value?.toFixed(2)} m`;
   };
 
   return (
@@ -376,27 +376,31 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
               <h1>{region?.name}</h1>
               <FavoritesBlock isFavorite={false} count={0} />
             </div>
+            { region?.area && (
             <div className={styles.subtitle}>
               <Icon iconName="stats" size={24} />
               Stats
             </div>
+            ) }
+            {region?.area && (
             <div className={styles.stats}>
               <span>
                 Average depth:
                 {' '}
-                <b>{convertDepth(20.78)}</b>
+                <b>{convertDepth(region.area.averageDepth)}</b>
               </span>
               <span>
                 Average temperature on bottom:
                 {' '}
-                <b>{convertTempSystem(25)}</b>
+                <b>{convertTempSystem(region.area.averageTemperatureOnBottom)}</b>
               </span>
               <span>
                 Average temperature on surface:
                 {' '}
-                <b>{convertTempSystem(27)}</b>
+                <b>{convertTempSystem(region.area.averageTemperatureOnSurface)}</b>
               </span>
             </div>
+            )}
             {region?.area && (
             <>
               <div className={styles.subtitle}>
@@ -426,18 +430,24 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
               />
             </>
             )}
-            <div className={styles.subtitle}>
-              <Icon iconName="species-octopus" size={24} />
-              Species
-            </div>
-            <div>
-              <Image
-                src="/images/Species.svg"
-                layout="intrinsic"
-                height={70}
-                width={420}
-              />
-            </div>
+            {!!region?.area?.species?.length && (
+            <>
+              <div className={styles.subtitle}>
+                <Icon iconName="species-octopus" size={24} />
+                Species
+              </div>
+              <div className={styles.species}>
+                {region.area.species.slice(0, 4).map((fish) => (
+                  <Image
+                    src={`/species/${fish.category}.svg`}
+                    layout="intrinsic"
+                    height={85}
+                    width={75}
+                  />
+                ))}
+              </div>
+            </>
+            )}
           </>
           )}
         </div>

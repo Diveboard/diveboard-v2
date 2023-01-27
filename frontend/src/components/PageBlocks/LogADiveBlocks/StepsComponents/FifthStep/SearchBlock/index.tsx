@@ -2,13 +2,14 @@ import React, { FC, useState } from 'react';
 import { Input } from '../../../../../Input/CommonInput';
 import { SearchedItems } from '../../../../../Dropdown/SearchedItems';
 import { ButtonGroup } from '../../../../../ButtonGroup';
+import { SearchedLocationType } from '../../../../../../types';
 
 type Props = {
   title: string;
   inputValue: string;
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
   recommendedItems: { text: string, connectedMode: string, imgSrc?: string }[]
-  onSearchHandler: (value: string) => Promise<{ id: string | number, name: string }[]>;
+  onSearchHandler: (value: string) => Promise<SearchedLocationType[]>;
 };
 
 export const SearchBlock: FC<Props> = (

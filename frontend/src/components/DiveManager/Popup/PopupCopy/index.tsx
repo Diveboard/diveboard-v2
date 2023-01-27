@@ -12,15 +12,15 @@ type Props = {
 export const PopupCopy: FC<Props> = ({ copyButtonHandler }) => {
   const [count, setCount] = useState(0);
   const [checkboxValues, setCheckboxValues] = useState({
-    'Tanks user': true,
-    'Water Type': true,
-    'Dive type': true,
-    Visibility: true,
-    Ratings: true,
-    Spot: true,
-    'Dive Shop': true,
-    'Gear used': true,
-    Buddies: true,
+    'Tanks user': false,
+    'Water Type': false,
+    'Dive type': false,
+    Visibility: false,
+    Ratings: false,
+    Spot: false,
+    'Dive Shop': false,
+    'Gear used': false,
+    Buddies: false,
     Guide: false,
   });
 
