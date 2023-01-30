@@ -56,9 +56,7 @@ module.exports = withPWA({
     disable: process.env.NODE_ENV === 'development',
     publicExcludes: ['!assets/**/*'],
     runtimeCaching,
-    // dynamicStartUrlRedirect: true,
-    // cacheOnFrontEndNav: true,
-    // register:false,
+    cacheOnFrontEndNav: true,
     fallbacks: {
       image: '/appIcons/diveboard-logo.svg',
     }
