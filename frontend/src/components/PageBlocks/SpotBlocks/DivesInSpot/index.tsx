@@ -26,7 +26,6 @@ export const DivesInSpot = ({ dives }: Props) => {
             deepness={dive.diveData?.maxDepth}
             diversCount={dive.buddies?.length}
             diveUnitSystem={dive.unitSystem}
-            onClick={() => {}}
           />
         ))}
       </div>
