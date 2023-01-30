@@ -120,7 +120,7 @@ export const ProfileBlock = ({
       {/* <CertificationBlock certifications={certifications} />* /}
       {/* <CentersVisitedBlock /> */}
       {!!buddies?.length && <DiveBuddies buddies={buddies} /> }
-      {surveysNumber && <SurveysBlock surveysNumber={surveysNumber} />}
+      {!!surveysNumber && <SurveysBlock surveysNumber={surveysNumber} />}
     </div>
   );
 };

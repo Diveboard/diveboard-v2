@@ -33,16 +33,16 @@ export const SmallDiveCard: FC<Props> = ({
 
   const displayDeepness = (): string => {
     if (!userAuth) {
-      return `${deepness} m`;
+      return `${deepness || 0} m`;
     }
     const userUnitSystem = userAuth.settings.preferences.unitSystem;
     if (diveUnitSystem === userUnitSystem) {
-      return `${deepness} ${userUnitSystem === 'METRIC' ? 'm' : 'ft'}`;
+      return `${deepness || 0} ${userUnitSystem === 'METRIC' ? 'm' : 'ft'}`;
     }
     if (userUnitSystem === 'METRIC') {
-      return `${convertFeetToMeters(deepness)} m`;
+      return `${deepness ? convertFeetToMeters(deepness) : 0} m`;
     }
-    return `${convertMetersToFeet(deepness)} ft`;
+    return `${deepness ? convertMetersToFeet(deepness) : 0} ft`;
   };
 
   return (

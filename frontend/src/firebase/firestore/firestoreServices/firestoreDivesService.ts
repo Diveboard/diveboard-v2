@@ -330,7 +330,7 @@ export const firestoreDivesService = {
       if (withDraft) {
         return data;
       }
-      return !data.draft || data.publishMode === 'public' ? data : undefined;
+      return data && (!data.draft || data.publishMode === 'public') ? data : undefined;
     } catch (e) {
       console.log(e.message);
       throw new Error('get dive data error');
