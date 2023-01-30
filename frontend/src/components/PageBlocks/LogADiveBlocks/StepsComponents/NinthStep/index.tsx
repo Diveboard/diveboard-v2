@@ -89,6 +89,7 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
         await firestoreDivesService.setDiveData(data, userAuth.uid, sendToDAN);
       }
       setLoading(false);
+      setStep(10);
     } catch (e) {
       notify('Something went wrong');
     }
