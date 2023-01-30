@@ -5,6 +5,7 @@ import ExploreBlock from '../src/components/PageBlocks/ExploreBlock';
 import { useWindowWidth } from '../src/hooks/useWindowWidth';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { firestorePublicProfileService } from '../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Explore: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => {
   const isMobile = useWindowWidth(500, 769);

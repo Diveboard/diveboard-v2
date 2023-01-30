@@ -2,6 +2,7 @@ import React, {
   FC, useContext, useEffect, useState,
 } from 'react';
 
+import { toast, ToastContainer } from 'react-toastify';
 import { ButtonGroup } from '../../../../ButtonGroup';
 import { Button } from '../../../../Buttons/Button';
 import { DisabledNext } from '../../StepsNavigation/DisabledNext';
@@ -47,6 +48,8 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
   const [publishingMode, setPublishingMode] = useState('public');
   const [isLoading, setLoading] = useState(false);
 
+  const notify = (text) => toast(text);
+
   const ninthStepData: NinthStepType = {
     publishingMode: publishingMode as NinthStepType['publishingMode'],
   };
@@ -67,30 +70,34 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
   }
 
   const publishStepsData = async () => {
-    const data = await convertAllStepsData(
-      allStepsData,
-      userId,
-      userAuth.settings.preferences.unitSystem,
-    );
-    const { sendToDAN, saveDAN } = getStepData(8) as EighthStepType;
-    if (!saveDAN) {
-      data.danSurvey = null;
+    try {
+      const data = await convertAllStepsData(
+        allStepsData,
+        userId,
+        userAuth.settings.preferences.unitSystem,
+      );
+      const { sendToDAN, saveDAN } = getStepData(8) as EighthStepType;
+      if (!saveDAN) {
+        data.danSurvey = null;
+      }
+      setLoading(true);
+      if (diveId) {
+        // @ts-ignore
+        await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data, sendToDAN);
+      } else {
+        // @ts-ignore
+        await firestoreDivesService.setDiveData(data, userAuth.uid, sendToDAN);
+      }
+      setLoading(false);
+    } catch (e) {
+      notify('Something went wrong');
     }
-    setLoading(true);
-    if (diveId) {
-      // @ts-ignore
-      await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data, sendToDAN);
-    } else {
-      // @ts-ignore
-      await firestoreDivesService.setDiveData(data, userAuth.uid, sendToDAN);
-    }
-    setLoading(false);
-    setStep(10);
   };
 
   return (
     <>
       <StepsIndicator step={step} setStep={setStep} setStepData={() => {}} />
+      <ToastContainer />
       <div className={containerStyle.container}>
         <div className={styles.ninthStep}>
           <Loader loading={isLoading} />

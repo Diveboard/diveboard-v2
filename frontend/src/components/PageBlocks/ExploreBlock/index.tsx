@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import GoogleMapReact from 'google-map-react';
+import { ToastContainer, toast } from 'react-toastify';
 import styles from './styles.module.scss';
 import { SearchAnimatedInput } from '../../Input/SearchAnimatedInput';
 import SpotCard from './SpotCard';
@@ -135,6 +136,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const router = useRouter();
 
   const { location, type } = router.query;
+  const notify = (text) => toast(text);
 
   const handleSidebar = (e): void => {
     // setChosenSpot(null);
@@ -193,8 +195,12 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
 
   const fetchRegions = async () => {
     if (inputRegion && isFetch) {
-      const res = await firestoreGeoDataService.getGeonames(inputRegion);
-      setRegions(res);
+      try {
+        const res = await firestoreGeoDataService.getGeonames(inputRegion);
+        setRegions(res);
+      } catch (e) {
+        notify('Geonames is not found');
+      }
     }
   };
 
@@ -212,8 +218,12 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
       setRegion({ ...region, name: item.name });
     }
     if (geo.areaRef) {
-      area = await firestoreGeoDataService.getAreaByRef(geo.areaRef);
-      setRegion({ area, name: item.name });
+      try {
+        area = await firestoreGeoDataService.getAreaByRef(geo.areaRef);
+        setRegion({ area, name: item.name });
+      } catch (e) {
+        notify('Area is not found');
+      }
     }
     if (geo?.coords) {
       const { lat } = geo.coords;
@@ -223,7 +233,11 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
         lng,
       });
       if (!area) {
-        area = await firestoreGeoDataService.getAreaByCoords(geo.coords);
+        try {
+          area = await firestoreGeoDataService.getAreaByCoords(geo.coords);
+        } catch (e) {
+          notify('Area is not found');
+        }
       }
     }
     setRegion({ area, name: item.name });
@@ -233,8 +247,12 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const searchHandler = async (item) => {
     setRegions([]);
     setSearchQuery(item.name);
-    const geo = await firestoreGeoDataService.getGeonameById(item.geonameRef);
-    searchArea(geo, item);
+    try {
+      const geo = await firestoreGeoDataService.getGeonameById(item.geonameRef);
+      searchArea(geo, item);
+    } catch (e) {
+      notify('Geoname is not found');
+    }
   };
 
   useEffect(() => {
@@ -246,8 +264,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
           const res = await firestoreGeoDataService.getGeonameById(location as string);
           await searchArea(res, { name: res.name });
         } catch (e) {
-          // eslint-disable-next-line no-alert
-          alert('Location is not found');
+          notify('Location is not found');
         }
       }
     })();
@@ -276,19 +293,23 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   );
 
   const onMapChange = async (e: GoogleMapReact.ChangeEventValue) => {
-    const markersItems = await firestoreSpotsService
-      .getAllSpotsInMapViewport({
-        ne: e.bounds.ne,
-        sw: e.bounds.sw,
-      });
-    setMarkerPoints(markersItems.map((s) => ({
-      id: s.id,
-      lat: s.lat,
-      lng: s.lng,
-      divesCount: s.dives,
-      diveName: s.name,
-    })));
-    setSpots(markersItems);
+    try {
+      const markersItems = await firestoreSpotsService
+        .getAllSpotsInMapViewport({
+          ne: e.bounds.ne,
+          sw: e.bounds.sw,
+        });
+      setMarkerPoints(markersItems.map((s) => ({
+        id: s.id,
+        lat: s.lat,
+        lng: s.lng,
+        divesCount: s.dives,
+        diveName: s.name,
+      })));
+      setSpots(markersItems);
+    } catch (ev) {
+      notify('Something went wrong');
+    }
   };
   const searchRef = useRef(null);
 
@@ -322,6 +343,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
 
   return (
     <div className={`${styles.wrapper} ${styles['min-height-wrapper']}`}>
+      <ToastContainer />
       <div className={styles.sidebar} id="sidebar" onTouchEnd={handleSidebar}>
         {!isMobile && <div ref={searchRef}>{renderInput}</div>}
         <div

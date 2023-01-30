@@ -2,6 +2,7 @@ import React, {
   FC, useEffect, useRef, useState,
 } from 'react';
 import GoogleMapReact from 'google-map-react';
+import { toast, ToastContainer } from 'react-toastify';
 import { getMapOptions } from '../../../../../../utils/getMapOptions';
 import { DivePoint } from '../../../../../Point';
 import { SearchInput } from '../../../../../Input/SearchInput';
@@ -163,8 +164,11 @@ export const LogADiveDiveMap: FC<Props> = ({
   const searchRef = useRef(null);
   const [value, setValue] = useState('');
 
+  const notify = (text) => toast(text);
+
   return (
     <div className={styles.mapWrapper}>
+      <ToastContainer />
       <div className={styles.searchWrapper}>
         {!newPoint && (
           <>
@@ -200,7 +204,7 @@ export const LogADiveDiveMap: FC<Props> = ({
                 if (userLocation) {
                   setLocation(userLocation);
                 } else {
-                  checkGeolocationAccess();
+                  checkGeolocationAccess(() => notify('Site need permission for access to geolocation, check this in browser settings'));
                 }
               }}
             >

@@ -7,6 +7,7 @@ import { LogDiveBlock } from '../src/components/PageBlocks/LogADiveBlocks';
 import { LogDiveProvider } from '../src/components/PageBlocks/LogADiveBlocks/LogDiveData/LogDiveProvider';
 import pageRoutes from '../src/routes/pagesRoutes.json';
 import { firestorePublicProfileService } from '../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LogDive: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   user,

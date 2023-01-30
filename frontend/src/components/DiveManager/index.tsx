@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/router';
 import { Timestamp } from '@firebase/firestore';
+import { toast, ToastContainer } from 'react-toastify';
 import { ButtonGroup } from '../ButtonGroup';
 import KebabButton from '../Buttons/KebabButton';
 import { Checkbox } from '../CheckBox';
@@ -65,18 +66,32 @@ const DiveManager = ({ userId, userDives }: Props) => {
   const titleUnpublish = 'This Dive will not be visible for other users and will be saved as a draft';
   const titleDeleted = 'This dive will be deleted';
 
+  const notify = (text) => toast(text);
+
   const fetchDives = async () => {
-    if (userId) {
-      setLoading(true);
-      const data = await firestoreDivesService.getDivesByUserId(userId, 7, 'desc');
-      if (!Array.isArray(data) || data.length === 0) {
-        setError('No dives');
-      } else {
-        const newDives = data.map((item) => ({ dive: item, checked: false }));
-        setDives(newDives);
-        setRecentDives(newDives);
+    try {
+      if (userId) {
+        setLoading(true);
+        const data = await firestoreDivesService.getDivesByUserId(userId, 7, sortType === 'recent' ? 'desc' : 'asc', null, sortType === 'drafts');
+        if (!Array.isArray(data) || data.length === 0) {
+          setError('No dives');
+        } else {
+          const newDives = data.map((item) => ({ dive: item, checked: false }));
+          if (sortType === 'recent') {
+            setRecentDives(newDives);
+          }
+          if (sortType === 'oldest') {
+            setOldestDives(newDives);
+          }
+          if (sortType === 'drafts') {
+            setDraftDives(newDives);
+          }
+          setDives(newDives);
+        }
+        setLoading(false);
       }
-      setLoading(false);
+    } catch (e) {
+      notify('Something went wrong');
     }
   };
 
@@ -101,8 +116,7 @@ const DiveManager = ({ userId, userDives }: Props) => {
         document.body.style.overflow = 'unset';
         const diveForEdit = dives.filter((i) => i.checked);
         if (diveForEdit.length !== 1) {
-          // eslint-disable-next-line no-alert
-          alert('Choose one item for edit');
+          notify('Choose one item for edit');
         } else {
           router.push(`edit-dive/${diveForEdit[0].dive.id}`);
         }
@@ -119,13 +133,18 @@ const DiveManager = ({ userId, userDives }: Props) => {
       title: 'Paste properties',
       svgItem: <Paste />,
       onClick: async () => {
-        await firestoreDivesService.updateDiveProperties(
-          userId,
-          copiestData.dive,
-          dives.filter((i) => i.checked).map((item) => item.dive.id),
-          copiestData.values,
-        );
-        await fetchDives();
+        try {
+          await firestoreDivesService.updateDiveProperties(
+            userId,
+            copiestData.dive,
+            dives.filter((i) => i.checked).map((item) => item.dive.id),
+            copiestData.values,
+          );
+          notify('Successfully saved');
+          await fetchDives();
+        } catch (e) {
+          notify('Something went wrong');
+        }
       },
     },
     {
@@ -174,8 +193,7 @@ const DiveManager = ({ userId, userDives }: Props) => {
   const copyButtonHandler = (values) => {
     const divesForCopy = dives.filter((i) => i.checked);
     if (divesForCopy.length !== 1) {
-      // eslint-disable-next-line no-alert
-      alert('Choose one dive');
+      notify('Choose one dive');
     } else {
       const selectedDive = divesForCopy[0].dive;
       setCopiestData({ dive: selectedDive, values });
@@ -186,25 +204,36 @@ const DiveManager = ({ userId, userDives }: Props) => {
   const deleteButtonHandler = async () => {
     document.body.style.overflow = 'unset';
     const divesIds = dives.filter((i) => i.checked).map((item) => item.dive.id);
-    if (divesIds.length >= 1) {
-      await firestoreDivesService.deleteDives(userId, divesIds);
-      closePopup();
-      await fetchDives();
-    } else {
-      // eslint-disable-next-line no-alert
-      alert('Choose at least one dive');
+    try {
+      if (divesIds.length >= 1) {
+        await firestoreDivesService.deleteDives(userId, divesIds);
+        closePopup();
+        notify('Successfully deleted');
+        await fetchDives();
+      } else {
+        notify('Choose at least one dive');
+      }
+    } catch (e) {
+      notify('Something went wrong');
     }
   };
 
   const unpublishButtonHandler = async () => {
-    const diveIds = dives.filter((item) => item.checked).map((i) => i.dive.id);
-    if (diveIds.length >= 1) {
-      await firestoreDivesService.unpublishDives(userId, diveIds);
-      closePopup();
-      await fetchDives();
-    } else {
-      // eslint-disable-next-line no-alert
-      alert('Choose at least one dive');
+    try {
+      const diveIds = [...dives].filter((item) => item.checked).map((i) => i.dive.id);
+      if (diveIds.length >= 1) {
+        await firestoreDivesService.unpublishDives(userId, diveIds);
+        const data = await firestoreDivesService.getDivesByUserId(userId, 7, 'asc', null, true);
+        closePopup();
+        const newDraftDives = data.map((item) => ({ dive: item, checked: false }));
+        setDraftDives(newDraftDives);
+        await fetchDives();
+        notify('Successfully unpublished');
+      } else {
+        notify('Choose at least one dive');
+      }
+    } catch (e) {
+      notify('Something went wrong');
     }
   };
 
@@ -235,18 +264,22 @@ const DiveManager = ({ userId, userDives }: Props) => {
   }, [userId]);
 
   const fetchMoreDives = async () => {
-    setFetching(true);
-    const last = dives[dives.length - 1].dive.diveData.date;
-    const lastDate = new Timestamp(last.seconds, last.nanoseconds);
-    const data = await firestoreDivesService.getDivesByUserId(userId, 7, sortType === 'recent' ? 'desc' : 'asc', lastDate);
-    const newDives = data.map((item) => ({ dive: item, checked: false }));
-    setDives([...dives, ...newDives]);
-    if (sortType === 'recent') {
-      setRecentDives([...dives, ...newDives]);
-    } else {
-      setOldestDives([...dives, ...newDives]);
+    try {
+      setFetching(true);
+      const last = dives[dives.length - 1].dive.diveData.date;
+      const lastDate = new Timestamp(last.seconds, last.nanoseconds);
+      const data = await firestoreDivesService.getDivesByUserId(userId, 7, sortType === 'recent' ? 'desc' : 'asc', lastDate);
+      const newDives = data.map((item) => ({ dive: item, checked: false }));
+      setDives([...dives, ...newDives]);
+      if (sortType === 'recent') {
+        setRecentDives([...dives, ...newDives]);
+      } else {
+        setOldestDives([...dives, ...newDives]);
+      }
+      setFetching(false);
+    } catch (e) {
+      notify('Something went wrong');
     }
-    setFetching(false);
   };
 
   const sortDives = async (sortT) => {
@@ -258,24 +291,32 @@ const DiveManager = ({ userId, userDives }: Props) => {
       if (oldestDives.length) {
         setDives(oldestDives);
       } else {
-        setLoading(true);
-        const data = await firestoreDivesService.getDivesByUserId(userId, 7, 'asc');
-        const newDives = data.map((item) => ({ dive: item, checked: false }));
-        setDives(newDives);
-        setOldestDives(newDives);
-        setLoading(false);
+        try {
+          setLoading(true);
+          const data = await firestoreDivesService.getDivesByUserId(userId, 7, 'asc');
+          const newDives = data.map((item) => ({ dive: item, checked: false }));
+          setDives(newDives);
+          setOldestDives(newDives);
+          setLoading(false);
+        } catch (e) {
+          notify('Something went wrong');
+        }
       }
     }
     if (sortT === 'drafts') {
       if (draftDives.length) {
         setDives(draftDives);
       } else {
-        setLoading(true);
-        const data = await firestoreDivesService.getDivesByUserId(userId, 7, 'asc', null, true);
-        const newDives = data.map((item) => ({ dive: item, checked: false }));
-        setDives(newDives);
-        setDraftDives(newDives);
-        setLoading(false);
+        try {
+          setLoading(true);
+          const data = await firestoreDivesService.getDivesByUserId(userId, 7, 'asc', null, true);
+          const newDives = data.map((item) => ({ dive: item, checked: false }));
+          setDives(newDives);
+          setDraftDives(newDives);
+          setLoading(false);
+        } catch (e) {
+          notify('Something went wrong');
+        }
       }
     }
   };
@@ -303,6 +344,7 @@ const DiveManager = ({ userId, userDives }: Props) => {
 
   return (
     <section className={`${styles.wrapper} ${styles['min-height-wrapper']}`}>
+      <ToastContainer />
       <div className={styles.subheader}>
         <div className={styles.title}>Dive Manager</div>
         <div ref={dropdownKebab}>

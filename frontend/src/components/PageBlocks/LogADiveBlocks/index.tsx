@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { toast, ToastContainer } from 'react-toastify';
 import { PreStep } from './StepsComponents/PreStep';
 import { FirstStep } from './StepsComponents/FirstStep';
 import { SecondStep } from './StepsComponents/SecondStep';
@@ -66,28 +67,34 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
       }
     }
   }, [dive]);
+  const notify = (text) => toast(text);
 
   const saveDraft = async () => {
-    const allStepsData = getAllStepsData();
-    setLoading(true);
-    const data = await convertAllStepsData(
-      allStepsData,
-      userId,
-      userAuth.settings.preferences.unitSystem,
-      true,
-    );
-    if (diveId) {
-      // @ts-ignore
-      await firestoreDivesService.updateDiveData(userId, diveId, data);
-    } else {
-      // @ts-ignore
-      await firestoreDivesService.setDiveData(data, userId);
+    try {
+      const allStepsData = getAllStepsData();
+      setLoading(true);
+      const data = await convertAllStepsData(
+        allStepsData,
+        userId,
+        userAuth.settings.preferences.unitSystem,
+        true,
+      );
+      if (diveId) {
+        // @ts-ignore
+        await firestoreDivesService.updateDiveData(userId, diveId, data);
+      } else {
+        // @ts-ignore
+        await firestoreDivesService.setDiveData(data, userId);
+      }
+      router.push('/dive-manager');
+    } catch (e) {
+      notify('Something went wrong');
     }
-    router.push('/dive-manager');
   };
 
   return (
     <div className={styles.diveWrapper} style={{ display: step === 0 ? 'block' : 'flex' }}>
+      <ToastContainer />
       {isLoading && <Loader loading={isLoading} /> }
       {step !== 10 && (
       <div className={styles.header}>

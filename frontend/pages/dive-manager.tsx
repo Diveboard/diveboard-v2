@@ -7,6 +7,7 @@ import DiveManagerBlock from '../src/components/DiveManager';
 import { firestoreDivesService } from '../src/firebase/firestore/firestoreServices/firestoreDivesService';
 import pageRoutes from '../src/routes/pagesRoutes.json';
 import { firestorePublicProfileService } from '../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
+import 'react-toastify/dist/ReactToastify.css';
 
 const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   user,
