@@ -245,19 +245,15 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   };
 
   const searchHandler = async (item) => {
-    setRegions([]);
     setSearchQuery(item.name);
-    try {
-      const geo = await firestoreGeoDataService.getGeonameById(item.geonameRef);
-      searchArea(geo, item);
-    } catch (e) {
-      notify('Geoname is not found');
-    }
+    setRegions([]);
+    router.push(`/explore?location=${item.geonameRef.id}&type=${activeTab}`);
   };
 
   useEffect(() => {
     (async () => {
       if (location && type) {
+        setRegions([]);
         const tab = type as string;
         setActiveTab(tab.charAt(0).toUpperCase() + tab.slice(1));
         try {
@@ -281,6 +277,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
         setIsFetch(true);
         fetchRegions();
       }}
+      onBackClick={() => router.back()}
     >
       {!!regions?.length && (
       <SearchDropdownPanel
