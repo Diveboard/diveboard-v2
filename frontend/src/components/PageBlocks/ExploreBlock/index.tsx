@@ -370,7 +370,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
           // eslint-disable-next-line react/jsx-no-useless-fragment
           <>
             {!!spots.length && spots.map((spot) => (
-              <a
+              <span
                 key={spot.id}
                 onClick={() => router.push(`spot/${spot.id}`)}
               >
@@ -382,7 +382,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
                   favorite={false}
                   country={spot.location?.country}
                 />
-              </a>
+              </span>
             ))}
           </>
           )}

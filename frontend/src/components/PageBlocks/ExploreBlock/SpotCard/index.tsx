@@ -28,6 +28,7 @@ const SpotCard: FC<Props> = ({
       width={94}
       height={94}
       objectFit="cover"
+      alt="spot"
     />
     <div className={styles.description}>
       <div className={styles.region}>
