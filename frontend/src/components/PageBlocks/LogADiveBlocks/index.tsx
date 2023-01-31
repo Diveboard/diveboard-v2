@@ -93,15 +93,15 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
   };
 
   return (
-    <div className={styles.diveWrapper} style={{ display: step === 0 ? 'block' : 'flex' }}>
+    <div className={styles.diveWrapper} style={{ display: (step === 0 || isLoading) ? 'block' : 'flex' }}>
       <ToastContainer />
-      {isLoading && <Loader loading={isLoading} /> }
       {step !== 10 && (
       <div className={styles.header}>
         <h1>{diveId ? `Dive ${diveId}` : 'New Dive'}</h1>
         <span onClick={saveDraft}>SAVE DRAFT</span>
       </div>
       )}
+      {isLoading && <Loader loading={isLoading} /> }
       {!isLoading && (
       <>
         {step === 0 && <PreStep setStep={setStep} />}

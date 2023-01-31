@@ -415,7 +415,7 @@ const DiveManager = ({ userId, userDives }: Props) => {
             : (
               <>
                 <div className={styles.divelist}>{renderDives}</div>
-                {!!dives?.length && dives.length % 7 === 0 && (
+                {!!dives?.length && dives.length % 7 === 0 && sortType !== 'drafts' && (
                   <div
                     className={styles.viewMore}
                     onClick={fetchMoreDives}

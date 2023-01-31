@@ -22,7 +22,7 @@ const Offline: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user 
             color: '#000345',
           }}
           >
-            You are offline!!!
+            You are offline!
           </h1>
           <h2 style={{
             textAlign: 'center',

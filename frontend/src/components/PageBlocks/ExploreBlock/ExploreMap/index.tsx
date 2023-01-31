@@ -31,10 +31,6 @@ export const ExploreMap: FC<Props> = ({
   renderInput,
   onMapChange,
 }) => {
-  const handleApiLoaded = (map, maps) => {
-    console.log({ maps });
-  };
-
   const router = useRouter();
 
   const markers = points.map((point) => (
@@ -69,10 +65,6 @@ export const ExploreMap: FC<Props> = ({
         defaultZoom={zoom}
         zoom={zoom}
         options={(maps: Maps) => getMapOptions(maps)}
-        onGoogleApiLoaded={({
-          map,
-          maps,
-        }) => handleApiLoaded(map, maps)}
         onChange={onMapChange}
       >
         {markers}

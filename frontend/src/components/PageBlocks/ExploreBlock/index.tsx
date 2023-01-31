@@ -377,7 +377,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
                 <SpotCard
                   region={spot.location?.region}
                   name={spot.name}
-                // Check it
                   depth={spot.stats?.averageDepth?.metric}
                   imgSrc={spot.bestPictures?.length ? spot.bestPictures[0] : '/images/fish.jpg'}
                   favorite={false}

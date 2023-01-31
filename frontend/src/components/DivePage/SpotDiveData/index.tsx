@@ -3,7 +3,6 @@ import { flag } from 'country-emoji';
 
 import { useRouter } from 'next/router';
 import KebabButton from '../../Buttons/KebabButton';
-import { LinkedButton } from '../../Buttons/LinkedButton';
 import { Icon } from '../../Icons/Icon';
 import { ProfileImage } from '../../PageBlocks/SettingsBlocks/SettingsItemContent/NotEditedContent/ProfileImage';
 import { DivePageMobContainer } from '../DivePageMobContainer';
@@ -34,7 +33,7 @@ export const SpotDiveData: FC<Props> = ({
   const router = useRouter();
   const diveTypeList = () => dive.diveActivities.join(', ');
 
-  const spotName = `${spot.location?.location}, ${spot.location?.country}, ${spot.location?.region}`;
+  const spotName = spot ? `${spot.location?.location || ''}, ${spot.location?.country || ''}, ${spot.location?.region || ''}` : '';
 
   const moreButtonHandler = () => {
     setShowMore(true);
@@ -127,8 +126,8 @@ export const SpotDiveData: FC<Props> = ({
         <div className={styles.spotDataSubWrapper}>
           <div className={styles.leftContent}>
             <div className={styles.leftContentSubwrapper}>
-              <div className={styles.backBtnWrapper}>
-                <LinkedButton link="/" iconName="back-button" iconSize={40} />
+              <div className={styles.backBtnWrapper} onClick={() => router.back()}>
+                <Icon size={40} iconName="back-button" />
               </div>
               <div className={styles.rightContentMob}>
                 <span className={styles.share} onClick={shareButtonHandler}>
@@ -153,7 +152,7 @@ export const SpotDiveData: FC<Props> = ({
                   {spot?.name}
                 </div>
                 <div className={styles.spotCountryWrapper}>
-                  <div>{flag(spot.location?.country)}</div>
+                  <div>{spot && flag(spot.location?.country)}</div>
                   <div className={styles.spotLocation}>{spotName}</div>
                 </div>
               </div>

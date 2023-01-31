@@ -44,8 +44,9 @@ export const SearchAnimatedInput: FC<Props> = ({
         onClick={() => {
           if (onBackClick) {
             onBackClick();
+          } else {
+            setOpened(false);
           }
-          setOpened(false);
         }}
         className={styles.closeButton}
         style={withBackArrow ? { transform: 'none', top: '7px' } : {}}

@@ -166,8 +166,8 @@ export const firestoreDivesService = {
         where('draft', '==', true),
       );
 
-      // eslint-disable-next-line no-nested-ternary
-      const querySnapshot = await getDocs(draft ? drafts : lastDate ? next : first);
+      const q = lastDate ? next : first;
+      const querySnapshot = await getDocs(draft ? drafts : q);
 
       // eslint-disable-next-line @typescript-eslint/no-shadow
       querySnapshot.forEach((doc) => {
