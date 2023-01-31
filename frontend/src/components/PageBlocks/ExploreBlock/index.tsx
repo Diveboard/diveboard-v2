@@ -387,7 +387,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
             ))}
           </>
           )}
-          {/* {activeTab === 'Shops' && fakeShops.map((shop, index) => (* /}
+          {/* {activeTab === 'Shops' && fakeShops.map((shop, index) => ( */}
           {/*  <ShopCard */}
           {/*        /* eslint-disable-next-line react/no-array-index-key */}
           {/*    key={index} */}
