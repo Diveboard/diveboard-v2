@@ -7,6 +7,7 @@ import { EditContext } from '../../../EditContextWrapper';
 import {
   firestorePreferencesService,
 } from '../../../../../../firebase/firestore/firestoreServices/firestorePreferencesService';
+import { notify } from '../../../../../../utils/notify';
 
 type Props = {
   lang: string;
@@ -22,14 +23,18 @@ export const EditedPreferencesLanguage: FC<Props> = ({
   const [language, setLanguage] = useState(lang);
 
   const setLanguagePreferences = () => {
-    setLoading(true);
-    firestorePreferencesService.setLanguage(language, userAuth.uid);
-    setLang(language);
-    setLoading(false);
-    setEditedSettings({
-      settingsBlock: '',
-      settingsItem: '',
-    });
+    try {
+      setLoading(true);
+      firestorePreferencesService.setLanguage(language, userAuth.uid);
+      setLang(language);
+      setLoading(false);
+      setEditedSettings({
+        settingsBlock: '',
+        settingsItem: '',
+      });
+    } catch (e) {
+      notify('Something went wrong');
+    }
   };
 
   return (

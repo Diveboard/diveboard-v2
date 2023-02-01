@@ -10,6 +10,7 @@ import {
 } from '../../../../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
 import styles from './styles.module.scss';
 import { UserSettingsType } from '../../../../../../firebase/firestore/models';
+import { notify } from '../../../../../../utils/notify';
 
 type Props = {
   imgSrc: string;
@@ -32,19 +33,23 @@ export const EditedProfileImage: FC<Props> = ({ imgSrc, setUserInfo }) => {
 
   const uploadFileAvatar = async () => {
     if (userAuth.uid) {
-      setLoading(true);
-      const res = await uploadAvatar(userAuth.uid, avatarFile);
-      const url = await getAvatarUrl(res.ref);
-      await updateUserAvatar(url);
-      if (res) {
-        setUserAuth({ ...userAuth, photoUrl: url });
-        await firestorePublicProfileService.setPhotoURL(url, userAuth.uid);
-        setUserInfo((prev) => ({ ...prev, photoUrl: url }));
-        setLoading(false);
-        setEditedSettings({ settingsBlock: '', settingsItem: '' });
+      try {
+        setLoading(true);
+        const res = await uploadAvatar(userAuth.uid, avatarFile);
+        const url = await getAvatarUrl(res.ref);
+        await updateUserAvatar(url);
+        if (res) {
+          setUserAuth({ ...userAuth, photoUrl: url });
+          await firestorePublicProfileService.setPhotoURL(url, userAuth.uid);
+          setUserInfo((prev) => ({ ...prev, photoUrl: url }));
+          setLoading(false);
+          setEditedSettings({ settingsBlock: '', settingsItem: '' });
+        }
+      } catch (e) {
+        notify('Something went wrong');
       }
     } else {
-      throw new Error('you are not authorized');
+      notify('You are not authorized');
     }
   };
 

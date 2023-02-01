@@ -1,5 +1,6 @@
 import React from 'react';
 import { GetServerSideProps, NextPage } from 'next';
+import { ToastContainer } from 'react-toastify';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { useWindowWidth } from '../src/hooks/useWindowWidth';
@@ -11,6 +12,7 @@ import {
 } from '../src/components/PageBlocks/SettingsBlocks/SettingsModes/MobileSettings';
 import { firestorePublicProfileService } from '../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
 import { UserSettingsType } from '../src/firebase/firestore/models';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Settings: NextPage<{ user: UserSettingsType }> = (props) => {
   const isWidth = useWindowWidth(500, 769);
@@ -19,6 +21,7 @@ const Settings: NextPage<{ user: UserSettingsType }> = (props) => {
 
   return (
     <AuthLayout user={user}>
+      <ToastContainer />
       <MainLayout>
         {!isWidth
           ? <DesktopSettings user={user} />

@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import GoogleMapReact from 'google-map-react';
-import { ToastContainer, toast } from 'react-toastify';
 import styles from './styles.module.scss';
 import { SearchAnimatedInput } from '../../Input/SearchAnimatedInput';
 import SpotCard from './SpotCard';
@@ -19,6 +18,7 @@ import { firestoreSpotsService } from '../../../firebase/firestore/firestoreServ
 import { useOutsideClick } from '../../../hooks/useOutsideClick';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
 import { convertCalToFar, convertMetersToFeet } from '../../../utils/unitSystemConverter';
+import { notify } from '../../../utils/notify';
 // import { ShopCard } from '../../Cards/ShopsCard';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
@@ -136,7 +136,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const router = useRouter();
 
   const { location, type } = router.query;
-  const notify = (text) => toast(text);
 
   const handleSidebar = (e): void => {
     // setChosenSpot(null);
@@ -340,7 +339,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
 
   return (
     <div className={`${styles.wrapper} ${styles['min-height-wrapper']}`}>
-      <ToastContainer />
       <div className={styles.sidebar} id="sidebar" onTouchEnd={handleSidebar}>
         {!isMobile && <div ref={searchRef}>{renderInput}</div>}
         <div

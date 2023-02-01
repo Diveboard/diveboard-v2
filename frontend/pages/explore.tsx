@@ -1,4 +1,5 @@
 import React from 'react';
+import { ToastContainer } from 'react-toastify';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import ExploreBlock from '../src/components/PageBlocks/ExploreBlock';
@@ -12,6 +13,7 @@ const Explore: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user 
   return (
     <AuthLayout user={user}>
       <MainLayout isHideMobileHeader>
+        <ToastContainer />
         <ExploreBlock isMobile={isMobile} />
       </MainLayout>
     </AuthLayout>

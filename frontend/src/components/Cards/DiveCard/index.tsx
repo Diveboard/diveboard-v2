@@ -17,7 +17,7 @@ type Props = {
   deepness: number;
   diversCount: number;
   onClick: () => void;
-  diveUnitSystem: UnitSystem
+  diveUnitSystem: UnitSystem;
 };
 
 export const DiveCard: FC<Props> = ({

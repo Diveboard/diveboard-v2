@@ -1,5 +1,6 @@
 import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { ToastContainer } from 'react-toastify';
 import { MainLayout } from '../../src/layouts/MainLayout';
 import { AuthLayout } from '../../src/layouts/AuthLayout';
 import { LogDiveBlock } from '../../src/components/PageBlocks/LogADiveBlocks';
@@ -9,6 +10,7 @@ import { firestoreDivesService } from '../../src/firebase/firestore/firestoreSer
 import {
   firestorePublicProfileService,
 } from '../../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Dive: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   user,
@@ -18,6 +20,7 @@ const Dive: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   <AuthLayout user={user}>
     <MainLayout>
       <LogDiveProvider>
+        <ToastContainer />
         <LogDiveBlock diveId={diveId} dive={dive} userId={user.uid} />
       </LogDiveProvider>
     </MainLayout>

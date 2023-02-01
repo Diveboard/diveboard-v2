@@ -2,7 +2,6 @@ import React, {
   FC, useContext, useEffect, useState,
 } from 'react';
 
-import { toast, ToastContainer } from 'react-toastify';
 import { Search } from './SearchBlock';
 import { SpeciesList } from './SpeciesList';
 import { Loader } from '../../../../Loader';
@@ -15,6 +14,7 @@ import { StepProps } from '../../types/commonTypes';
 import { FourthStepType, ThirdStepType } from '../../types/stepTypes';
 import styles from './styles.module.scss';
 import { StepsIndicator } from '../../StepsIndicator';
+import { notify } from '../../../../../utils/notify';
 
 export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, userId }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
@@ -34,8 +34,6 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
   const [loading, setLoading] = useState(false);
 
   const { spotId } = getStepData(3) as ThirdStepType;
-
-  const notify = (text) => toast(text);
 
   const onSearchHandler = async (val: string) => {
     setCurrentSpeciesMode('');
@@ -103,7 +101,6 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
         setStep={setStep}
         setStepData={() => setStepData(4, fourthStepData)}
       />
-      <ToastContainer />
       <div className={styles.fourthStep}>
         <div className={styles.container}>
           <div className={styles.title}>Species</div>

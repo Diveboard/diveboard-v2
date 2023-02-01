@@ -10,6 +10,7 @@ import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
 import { RadioButton } from '../../../../../RadioButton';
 import { Checkbox } from '../../../../../CheckBox';
+import { notify } from '../../../../../../utils/notify';
 
 type Props = {
   preferences: PreferencesType;
@@ -41,12 +42,16 @@ export const EditedPreferencesScientificData: FC<Props> = ({ preferences, setPre
   const [loading, setLoading] = useState(false);
 
   const setScientificDataPreferences = async () => {
-    setLoading(true);
-    await firestorePreferencesService
-      .setScientificData({ shareData, shareNotes }, userAuth.uid);
-    setPreferences({ ...preferences, scientificData: { shareData, shareNotes } });
-    setLoading(false);
-    setEditedSettings({ settingsBlock: '', settingsItem: '' });
+    try {
+      setLoading(true);
+      await firestorePreferencesService
+        .setScientificData({ shareData, shareNotes }, userAuth.uid);
+      setPreferences({ ...preferences, scientificData: { shareData, shareNotes } });
+      setLoading(false);
+      setEditedSettings({ settingsBlock: '', settingsItem: '' });
+    } catch (e) {
+      notify('Something went wrong');
+    }
   };
 
   return (

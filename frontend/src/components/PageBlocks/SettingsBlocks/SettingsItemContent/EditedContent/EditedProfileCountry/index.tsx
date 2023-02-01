@@ -13,6 +13,7 @@ import {
 } from '../../../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
 import styles from '../EditedProfileName/styles.module.scss';
 import { UserSettingsType } from '../../../../../../firebase/firestore/models';
+import { notify } from '../../../../../../utils/notify';
 
 type Props = {
   userCountry: string;
@@ -27,15 +28,19 @@ export const EditedProfileCountry: FC<Props> = ({ userCountry, setUserInfo }) =>
 
   const saveUsersCountry = async () => {
     if (!userAuth.uid) {
-      throw new Error('you are not authorized');
+      notify('You are not authorized');
     }
-    setLoading(true);
-    setUserAuth({ ...userAuth, country: code(country) });
-    await firestorePublicProfileService.setCountry(code(country), userAuth.uid);
-    setUserInfo((prev) => ({ ...prev, country: code(country) }));
+    try {
+      setLoading(true);
+      setUserAuth({ ...userAuth, country: code(country) });
+      await firestorePublicProfileService.setCountry(code(country), userAuth.uid);
+      setUserInfo((prev) => ({ ...prev, country: code(country) }));
 
-    setLoading(false);
-    setEditedSettings({ settingsBlock: '', settingsItem: '' });
+      setLoading(false);
+      setEditedSettings({ settingsBlock: '', settingsItem: '' });
+    } catch (e) {
+      notify('Something went wrong');
+    }
   };
 
   return (

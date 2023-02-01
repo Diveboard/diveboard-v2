@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
 import { name } from 'country-emoji';
 import { PersonalProfileData } from './PersonalProfileData';
 import { DivesMap } from './DivesMap';
@@ -16,47 +15,17 @@ import {
 } from '../../../firebase/firestore/models';
 import { SurveysBlock } from './SurveysBlock';
 
-// const certifications = [
-//   {
-//     certificateName: 'CMAS 3* VDST / N4 ',
-//     obtainingDate: '(Aug 2012)',
-//   },
-//   {
-//     certificateName: 'CMAS Nitrox 1',
-//     obtainingDate: '(Aug 2012)',
-//   },
-//   {
-//     certificateName: 'PADI Ice Diver',
-//     obtainingDate: '(Jan 2012)',
-//   },
-//   {
-//     certificateName: 'Self-assessed Photography',
-//     obtainingDate: '(Mar 2011)',
-//   },
-//   {
-//     certificateName: 'CMAS 2 Star',
-//     obtainingDate: '(Jul 2006)',
-//   },
-//   {
-//     certificateName: 'FFESSM Level 2',
-//     obtainingDate: '(Jul 2006)',
-//   },
-//   {
-//     certificateName: 'CMAS 1 Star',
-//     obtainingDate: '(Jul 2005)',
-//   },
-// ];
-
 type Props = {
   dives: Array<DiveType & { spot: SpotType, date: string }>
   species: Array<SpeciesType>
   buddies: Array<BuddiesType>
   logbookUser: UserSettingsType
+  user: UserSettingsType
   surveysNumber: number
 };
 
 export const ProfileBlock = ({
-  dives, species, buddies, logbookUser, surveysNumber,
+  dives, species, buddies, logbookUser, surveysNumber, user,
 }: Props) => {
   const mapCoords = {
     lat: 40.95,
@@ -75,17 +44,15 @@ export const ProfileBlock = ({
     ? dives.flatMap((dive) => [...dive.externalImgsUrls].map((img) => img))
     : [];
 
-  const uid = Cookies.get('__session');
-
-  const [isItOwnProfile, setOwnProfile] = useState(uid === logbookUser.uid);
+  const [isItOwnProfile, setOwnProfile] = useState(user?.uid === logbookUser.uid);
 
   useEffect(() => {
-    setOwnProfile(uid === logbookUser.uid);
+    setOwnProfile(user.uid === logbookUser.uid);
   }, [logbookUser.uid]);
 
   return (
     <div className={styles.profileBlockWrapper}>
-      {uid && (
+      {user.uid && (
         <MobileAddButton
           iconName="new-dive-white"
           link={pagesRoutes.logDivePageRout}

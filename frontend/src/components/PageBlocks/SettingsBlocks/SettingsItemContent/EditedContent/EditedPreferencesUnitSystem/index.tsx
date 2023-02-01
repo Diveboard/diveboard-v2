@@ -8,6 +8,7 @@ import { EditContext } from '../../../EditContextWrapper';
 import {
   firestorePreferencesService,
 } from '../../../../../../firebase/firestore/firestoreServices/firestorePreferencesService';
+import { notify } from '../../../../../../utils/notify';
 
 type Props = {
   preferences: PreferencesType;
@@ -21,11 +22,15 @@ export const EditedPreferencesUnitSystem: FC<Props> = ({ preferences, setPrefere
   const { setEditedSettings } = useContext(EditContext);
 
   const setMetricPreferences = () => {
-    setLoading(true);
-    firestorePreferencesService.setUnitSystem(checkedRadio as UnitSystem, userAuth.uid);
-    setPreferences({ ...preferences, unitSystem: checkedRadio });
-    setLoading(false);
-    setEditedSettings({ settingsBlock: '', settingsItem: '' });
+    try {
+      setLoading(true);
+      firestorePreferencesService.setUnitSystem(checkedRadio as UnitSystem, userAuth.uid);
+      setPreferences({ ...preferences, unitSystem: checkedRadio });
+      setLoading(false);
+      setEditedSettings({ settingsBlock: '', settingsItem: '' });
+    } catch (e) {
+      notify('Something went wrong');
+    }
   };
 
   return (

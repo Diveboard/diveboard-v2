@@ -2,7 +2,6 @@ import React, {
   FC, useEffect, useRef, useState,
 } from 'react';
 import GoogleMapReact from 'google-map-react';
-import { toast, ToastContainer } from 'react-toastify';
 import { getMapOptions } from '../../../../../../utils/getMapOptions';
 import { DivePoint } from '../../../../../Point';
 import { SearchInput } from '../../../../../Input/SearchInput';
@@ -20,6 +19,7 @@ import {
   firestoreGeoDataService,
 } from '../../../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
 import { Bounds } from '../../../../../../types';
+import { notify } from '../../../../../../utils/notify';
 
 type Props = {
   location: { lat: number, lng: number };
@@ -164,11 +164,8 @@ export const LogADiveDiveMap: FC<Props> = ({
   const searchRef = useRef(null);
   const [value, setValue] = useState('');
 
-  const notify = (text) => toast(text);
-
   return (
     <div className={styles.mapWrapper}>
-      <ToastContainer />
       <div className={styles.searchWrapper}>
         {!newPoint && (
           <>

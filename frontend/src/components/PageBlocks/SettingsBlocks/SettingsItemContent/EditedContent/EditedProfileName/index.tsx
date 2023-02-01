@@ -9,6 +9,7 @@ import {
   firestorePublicProfileService,
 } from '../../../../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
 import { UserSettingsType } from '../../../../../../firebase/firestore/models';
+import { notify } from '../../../../../../utils/notify';
 
 type Props = {
   userName: string;
@@ -23,21 +24,25 @@ export const EditedProfileName: FC<Props> = ({ userName, setUserInfo }) => {
 
   const saveUserName = async () => {
     if (!userAuth.uid) {
-      throw new Error('you are not authorized');
+      notify('You are not authorized');
     }
-    setLoading(true);
-    let firstName = nameValue;
-    let lastName = '';
-    if (nameValue.trim().includes(' ')) {
-      firstName = nameValue.substring(0, nameValue.indexOf(' '));
-      lastName = nameValue.substring(nameValue.indexOf(' ') + 1);
+    try {
+      setLoading(true);
+      let firstName = nameValue;
+      let lastName = '';
+      if (nameValue.trim().includes(' ')) {
+        firstName = nameValue.substring(0, nameValue.indexOf(' '));
+        lastName = nameValue.substring(nameValue.indexOf(' ') + 1);
+      }
+      await updateUserName(nameValue);
+      setUserAuth({ ...userAuth, firstName, lastName });
+      setUserInfo((prev) => ({ ...prev, firstName, lastName }));
+      await firestorePublicProfileService.setName(firstName, lastName, userAuth.uid);
+      setLoading(false);
+      setEditedSettings({ settingsBlock: '', settingsItem: '' });
+    } catch (e) {
+      notify('Something went wrong');
     }
-    await updateUserName(nameValue);
-    setUserAuth({ ...userAuth, firstName, lastName });
-    setUserInfo((prev) => ({ ...prev, firstName, lastName }));
-    await firestorePublicProfileService.setName(firstName, lastName, userAuth.uid);
-    setLoading(false);
-    setEditedSettings({ settingsBlock: '', settingsItem: '' });
   };
 
   return (

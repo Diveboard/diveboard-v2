@@ -1,5 +1,6 @@
 import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { ToastContainer } from 'react-toastify';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 
@@ -15,6 +16,7 @@ const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
 }) => (
   <AuthLayout user={user}>
     <MainLayout>
+      <ToastContainer />
       <DiveManagerBlock userId={user.uid} userDives={dives} />
     </MainLayout>
   </AuthLayout>

@@ -27,10 +27,6 @@ export const DivesMap: FC<Props> = ({
 }) => {
   const [navigate, setNavigate] = useState(false);
 
-  const handleApiLoaded = (map, maps) => {
-    console.log({ maps });
-  };
-
   const markers = points.map((point) => (
     <DivePoint
       key={point.id}
@@ -70,10 +66,6 @@ export const DivesMap: FC<Props> = ({
           defaultZoom={zoom}
           // @ts-ignore
           options={getMapOptions}
-          onGoogleApiLoaded={({
-            map,
-            maps,
-          }) => handleApiLoaded(map, maps)}
         >
           {markers}
         </GoogleMapReact>

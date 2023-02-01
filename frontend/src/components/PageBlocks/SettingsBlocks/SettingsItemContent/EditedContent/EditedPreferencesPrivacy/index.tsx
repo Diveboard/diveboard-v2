@@ -9,6 +9,7 @@ import {
 } from '../../../../../../firebase/firestore/firestoreServices/firestorePreferencesService';
 import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
+import { notify } from '../../../../../../utils/notify';
 
 type Props = {
   preferences: PreferencesType;
@@ -22,11 +23,15 @@ export const EditedPreferencesPrivacy: FC<Props> = ({ preferences, setPreference
   const { setEditedSettings } = useContext(EditContext);
 
   const setPrivacyPreferences = () => {
-    setLoading(true);
-    firestorePreferencesService.setPrivacy(makePublic, userAuth.uid);
-    setPreferences({ ...preferences, privacy: { divesPublic: makePublic } });
-    setLoading(false);
-    setEditedSettings({ settingsBlock: '', settingsItem: '' });
+    try {
+      setLoading(true);
+      firestorePreferencesService.setPrivacy(makePublic, userAuth.uid);
+      setPreferences({ ...preferences, privacy: { divesPublic: makePublic } });
+      setLoading(false);
+      setEditedSettings({ settingsBlock: '', settingsItem: '' });
+    } catch (e) {
+      notify('Something went wrong');
+    }
   };
 
   return (

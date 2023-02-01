@@ -17,11 +17,6 @@ import {
   EditedPreferencesUnitSystem,
 } from '../SettingsItemContent/EditedContent/EditedPreferencesUnitSystem';
 import { LanguageEnum, PreferencesType, ShareData } from '../../../../firebase/firestore/models';
-// import {
-//   firestorePreferencesService,
-// } from '../../../../firebase/firestore/firestoreServices/firestorePreferencesService';
-// import { AuthStatusContext } from '../../../../layouts/AuthLayout';
-// import { sameServerData } from '../../../../utils/sameServerData';
 
 type Props = {
   preferences: PreferencesType
@@ -32,19 +27,6 @@ type Props = {
 export const Preferences: FC<Props> = ({ language, preferences, title = true }) => {
   const [preferencesData, setPreferencesData] = useState(preferences);
   const [lang, setLang] = useState(LanguageEnum[language]);
-  // const { userAuth } = useContext(AuthStatusContext);
-  //
-  // useEffect(() => {
-  //   (async () => {
-  //     const userSettings = await firestorePreferencesService.getUserSettings(userAuth.uid);
-  //     if (!sameServerData(preferences, userSettings.preferences)) {
-  //       setPreferencesData(userSettings.preferences as PreferencesType);
-  //     }
-  //     if (language !== userSettings.language) {
-  //       setLang(LanguageEnum[userSettings.language]);
-  //     }
-  //   })();
-  // }, []);
 
   const displayShareData = (shareData: ShareData): string => {
     if (shareData === 'OPEN_SHARE') {

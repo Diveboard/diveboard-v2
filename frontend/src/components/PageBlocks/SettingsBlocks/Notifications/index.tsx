@@ -12,6 +12,7 @@ import {
 import { AuthStatusContext } from '../../../../layouts/AuthLayout';
 import { EditContext } from '../EditContextWrapper';
 import editedStyles from '../editidStyle.module.scss';
+import { notify } from '../../../../utils/notify';
 
 type Props = {
   notifications: NotificationsType
@@ -36,35 +37,21 @@ export const Notification: FC<Props> = ({
 
   const styles = editedSettings.settingsBlock ? editedStyles.edited : editedStyles.active;
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const clientNotifications = await firestoreNotificationService
-  //       .getNotifications(userAuth.uid) as NotificationsType;
-  //
-  //     if (!sameServerData(notifications, clientNotifications)) {
-  //       setInstant(clientNotifications.instant);
-  //       setBiWeeklyNotifications(clientNotifications.biWeeklyNotifications);
-  //       setBiWeeklyDigest(clientNotifications.biWeeklyDigest);
-  //       setNewsletters(clientNotifications.newsletters);
-  //     }
-  //   })();
-  // }, []);
-
   const setNotifications = async () => {
-    setLoading(true);
-    const notificationData: NotificationsType = {
-      instant,
-      biWeeklyNotifications,
-      biWeeklyDigest,
-      newsletters,
-    };
-    await firestoreNotificationService.setNotifications(notificationData, userAuth.uid);
-    // await new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve('');
-    //   }, 700);
-    // });
-    setLoading(false);
+    try {
+      setLoading(true);
+      const notificationData: NotificationsType = {
+        instant,
+        biWeeklyNotifications,
+        biWeeklyDigest,
+        newsletters,
+      };
+      await firestoreNotificationService.setNotifications(notificationData, userAuth.uid);
+      setLoading(false);
+      notify('Successfully saved');
+    } catch (e) {
+      notify('Something went wrong');
+    }
   };
 
   return (

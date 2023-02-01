@@ -1,5 +1,6 @@
 import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { ToastContainer } from 'react-toastify';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import { LogDiveBlock } from '../src/components/PageBlocks/LogADiveBlocks';
@@ -15,6 +16,7 @@ const LogDive: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   <AuthLayout user={user}>
     <MainLayout>
       <LogDiveProvider>
+        <ToastContainer />
         <LogDiveBlock userId={user.uid} />
       </LogDiveProvider>
     </MainLayout>

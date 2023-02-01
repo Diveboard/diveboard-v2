@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { toast, ToastContainer } from 'react-toastify';
 import { PreStep } from './StepsComponents/PreStep';
 import { FirstStep } from './StepsComponents/FirstStep';
 import { SecondStep } from './StepsComponents/SecondStep';
@@ -20,6 +19,7 @@ import { Loader } from '../../Loader';
 import { convertAllStepsData } from './LogDiveHelpers/convertAllStepsData';
 import { DiveType } from '../../../types';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
+import { notify } from '../../../utils/notify';
 
 type Props = {
   dive?: DiveType;
@@ -67,7 +67,6 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
       }
     }
   }, [dive]);
-  const notify = (text) => toast(text);
 
   const saveDraft = async () => {
     try {
@@ -94,7 +93,6 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
 
   return (
     <div className={styles.diveWrapper} style={{ display: (step === 0 || isLoading) ? 'block' : 'flex' }}>
-      <ToastContainer />
       {step !== 10 && (
       <div className={styles.header}>
         <h1>{diveId ? `Dive ${diveId}` : 'New Dive'}</h1>

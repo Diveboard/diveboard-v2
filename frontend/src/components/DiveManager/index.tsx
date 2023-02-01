@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/router';
 import { Timestamp } from '@firebase/firestore';
-import { toast, ToastContainer } from 'react-toastify';
 import { ButtonGroup } from '../ButtonGroup';
 import KebabButton from '../Buttons/KebabButton';
 import { Checkbox } from '../CheckBox';
@@ -27,6 +26,7 @@ import styles from './styles.module.scss';
 import { firestoreDivesService } from '../../firebase/firestore/firestoreServices/firestoreDivesService';
 import { Loader } from '../Loader';
 import { DiveType } from '../../types';
+import { notify } from '../../utils/notify';
 
 type Props = {
   userId: string;
@@ -65,8 +65,6 @@ const DiveManager = ({ userId, userDives }: Props) => {
   const titleCopy = 'Select Properties to Copy';
   const titleUnpublish = 'This Dive will not be visible for other users and will be saved as a draft';
   const titleDeleted = 'This dive will be deleted';
-
-  const notify = (text) => toast(text);
 
   const fetchDives = async () => {
     try {
@@ -344,7 +342,6 @@ const DiveManager = ({ userId, userDives }: Props) => {
 
   return (
     <section className={`${styles.wrapper} ${styles['min-height-wrapper']}`}>
-      <ToastContainer />
       <div className={styles.subheader}>
         <div className={styles.title}>Dive Manager</div>
         <div ref={dropdownKebab}>

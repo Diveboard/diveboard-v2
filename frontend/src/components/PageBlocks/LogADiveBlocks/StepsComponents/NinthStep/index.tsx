@@ -2,7 +2,6 @@ import React, {
   FC, useContext, useEffect, useState,
 } from 'react';
 
-import { toast, ToastContainer } from 'react-toastify';
 import { ButtonGroup } from '../../../../ButtonGroup';
 import { Button } from '../../../../Buttons/Button';
 import { DisabledNext } from '../../StepsNavigation/DisabledNext';
@@ -19,6 +18,7 @@ import { firestoreDivesService } from '../../../../../firebase/firestore/firesto
 import { AuthStatusContext } from '../../../../../layouts/AuthLayout';
 import { Loader } from '../../../../Loader';
 import { StepsIndicator } from '../../StepsIndicator';
+import { notify } from '../../../../../utils/notify';
 
 export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
   step,
@@ -47,8 +47,6 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
   const isMobile = useWindowWidth(500, 768);
   const [publishingMode, setPublishingMode] = useState('public');
   const [isLoading, setLoading] = useState(false);
-
-  const notify = (text) => toast(text);
 
   const ninthStepData: NinthStepType = {
     publishingMode: publishingMode as NinthStepType['publishingMode'],
@@ -98,7 +96,6 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
   return (
     <>
       <StepsIndicator step={step} setStep={setStep} setStepData={() => {}} />
-      <ToastContainer />
       <div className={containerStyle.container}>
         <div className={styles.ninthStep}>
           <Loader loading={isLoading} />

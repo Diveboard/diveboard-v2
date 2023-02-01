@@ -8,6 +8,7 @@ import { SaveThisButton } from '../SaveThisButton';
 import { TextArea } from '../../../../../Input/TextArea';
 import { MarginWrapper } from '../../../../../MarginWrapper';
 import { UserSettingsType } from '../../../../../../firebase/firestore/models';
+import { notify } from '../../../../../../utils/notify';
 
 type Props = {
   userAbout: string;
@@ -22,14 +23,18 @@ export const EditedProfileAbout: FC<Props> = ({ userAbout, setUserInfo }) => {
 
   const saveUsersAbout = async () => {
     if (!userAuth.uid) {
-      throw new Error('you are not authorized');
+      notify('You are not authorized');
     }
-    setLoading(true);
-    setUserAuth({ ...userAuth, about });
-    await firestorePublicProfileService.setAbout(about, userAuth.uid);
-    setUserInfo((prev) => ({ ...prev, about }));
-    setLoading(false);
-    setEditedSettings({ settingsBlock: '', settingsItem: '' });
+    try {
+      setLoading(true);
+      setUserAuth({ ...userAuth, about });
+      await firestorePublicProfileService.setAbout(about, userAuth.uid);
+      setUserInfo((prev) => ({ ...prev, about }));
+      setLoading(false);
+      setEditedSettings({ settingsBlock: '', settingsItem: '' });
+    } catch (e) {
+      notify('Something went wrong');
+    }
   };
   return (
     <div>
