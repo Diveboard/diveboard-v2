@@ -22,7 +22,7 @@ export const firestoreSpotsService = {
     }
   },
 
-  updateSpotById: async (spotId: string, data: { [p: string]: any }) => {
+  updateSpotById: async (spotId: string, data: Partial<SpotType>) => {
     try {
       const docRef = doc(db, firestorePaths.spots.path, spotId);
       await setDoc(docRef, { ...data }, { merge: true });

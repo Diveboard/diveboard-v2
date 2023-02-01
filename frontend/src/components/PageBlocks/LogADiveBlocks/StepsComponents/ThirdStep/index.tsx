@@ -11,8 +11,6 @@ import { ThirdStepType } from '../../types/stepTypes';
 import { CreateNewSpot } from './CreateNewSpot';
 import styles from './styles.module.scss';
 import { firestoreSpotsService } from '../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
-import { setStepErrors } from '../../LogDiveHelpers/stepsErrors/setStepErrors';
-import { ThirdStepErrors } from '../../types/errorTypes';
 import { StepsIndicator } from '../../StepsIndicator';
 import { Bounds } from '../../../../../types';
 
@@ -78,17 +76,6 @@ export const ThirdStep: FC<StepProps> = ({
     })();
   }, [step]);
 
-  const [spotError, setSpotError] = useState<ThirdStepErrors>({
-    spotError: '',
-  });
-
-  const setErrors = () => setStepErrors({
-    stepType: 3,
-    data: data.spotId,
-    errors: spotError,
-    setErrors: setSpotError,
-  });
-
   if (step !== 3) {
     return null;
   }
@@ -98,7 +85,6 @@ export const ThirdStep: FC<StepProps> = ({
       <StepsIndicator
         step={step}
         setStep={setStep}
-        setErrors={setErrors}
         setStepData={() => setStepData(3, data)}
       />
       <div className={styles.thirdStep}>
@@ -112,15 +98,14 @@ export const ThirdStep: FC<StepProps> = ({
           setMarkers={setMarkers}
           zoom={zoom}
           setZoom={setZoom}
+          newPointCoords={newPointCoords}
           newPoint={createSpotMode}
           setNewPoint={setCreateSpotMode}
           setNewPointCoords={setNewPointCoords}
           createdNewSpotId={createdNewSpotId.current}
           setChosenPointId={(res) => setData({ spotId: res })}
           setButton={setClickedPoint}
-          disableError={() => setSpotError({ spotError: '' })}
         />
-        {spotError.spotError && <span className="error-text">Choose spot</span>}
         {!createSpotMode && (
           <div className={styles.pointsBtnGroup}>
             <ButtonGroup
@@ -128,7 +113,6 @@ export const ThirdStep: FC<StepProps> = ({
               onClick={(buttonName) => {
                 const spot = markers.find((item) => item.name === buttonName);
                 setData({ spotId: spot.id });
-                setSpotError({ spotError: '' });
               }}
               defaultChecked={newSpotName || clickedPoint}
             />
@@ -144,12 +128,19 @@ export const ThirdStep: FC<StepProps> = ({
             newPointCoords={newPointCoords}
             zoom={zoom}
             setBounds={setBounds}
+            setLocation={(loc) => {
+              setNewPointCoords(loc);
+              setLocation(loc);
+              setClickedPoint(newSpotName);
+            }}
+            setData={(id) => {
+              setData({ spotId: id });
+            }}
           />
         )}
       </div>
       <StepsNavigation
         setStep={setStep}
-        setErrors={setErrors}
         setStepData={() => setStepData(3, data)}
       />
     </>

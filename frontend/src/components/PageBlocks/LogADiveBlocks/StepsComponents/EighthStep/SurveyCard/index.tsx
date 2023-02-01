@@ -8,7 +8,7 @@ type Props = {
   title: string;
   description: string;
   contributions: number;
-  setCurrentSurvey: (survey: string)=>void;
+  setCurrentSurvey?: (survey: string)=>void;
 };
 export const SurveyCard: FC<Props> = ({
   surveyType, title, description, contributions, setCurrentSurvey,
@@ -28,7 +28,7 @@ export const SurveyCard: FC<Props> = ({
         </span>
       </div>
 
-      <span className={styles.icon} onClick={() => { setCurrentSurvey(title); }}>
+      <span className={styles.icon} onClick={() => setCurrentSurvey && setCurrentSurvey(title)}>
         <Icon iconName="back-button" size={36} />
       </span>
     </div>

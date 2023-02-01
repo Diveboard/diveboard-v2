@@ -11,13 +11,14 @@ import { convertAllStepsData } from '../../LogDiveHelpers/convertAllStepsData';
 
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { StepProps } from '../../types/commonTypes';
-import { NinthStepType } from '../../types/stepTypes';
+import { EighthStepType, NinthStepType } from '../../types/stepTypes';
 import containerStyle from '../../styles.module.scss';
 import styles from './styles.module.scss';
 import { firestoreDivesService } from '../../../../../firebase/firestore/firestoreServices/firestoreDivesService';
 import { AuthStatusContext } from '../../../../../layouts/AuthLayout';
 import { Loader } from '../../../../Loader';
 import { StepsIndicator } from '../../StepsIndicator';
+import { notify } from '../../../../../utils/notify';
 
 export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
   step,
@@ -67,17 +68,29 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
   }
 
   const publishStepsData = async () => {
-    const data = await convertAllStepsData(allStepsData, userId);
-    setLoading(true);
-    if (diveId) {
-      // @ts-ignore
-      await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data);
-    } else {
-      // @ts-ignore
-      await firestoreDivesService.setDiveData(data, userAuth.uid);
+    try {
+      const data = await convertAllStepsData(
+        allStepsData,
+        userId,
+        userAuth.settings.preferences.unitSystem,
+      );
+      const { sendToDAN, saveDAN } = getStepData(8) as EighthStepType;
+      if (!saveDAN) {
+        data.danSurvey = null;
+      }
+      setLoading(true);
+      if (diveId) {
+        // @ts-ignore
+        await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data, sendToDAN);
+      } else {
+        // @ts-ignore
+        await firestoreDivesService.setDiveData(data, userAuth.uid, sendToDAN);
+      }
+      setLoading(false);
+      setStep(10);
+    } catch (e) {
+      notify('Something went wrong');
     }
-    setLoading(false);
-    setStep(10);
   };
 
   return (

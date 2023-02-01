@@ -1,6 +1,4 @@
-import React, {
-  FC, useState,
-} from 'react';
+import React, { FC } from 'react';
 import { Icon } from '../../Icons/Icon';
 import { Input } from '../CommonInput';
 import { useDebounce } from '../../../hooks/useDebounce';
@@ -10,14 +8,17 @@ type Props = {
   setQueryData: React.Dispatch<React.SetStateAction<string>>;
   ms: number;
   placeholder?: string;
+  value: string;
+  setValue: (val: string) => void;
 };
 
 export const SearchInput: FC<Props> = ({
   setQueryData,
   ms,
   placeholder,
+  value,
+  setValue,
 }) => {
-  const [value, setValue] = useState('');
   useDebounce(value, setQueryData, ms);
 
   return (
@@ -31,9 +32,7 @@ export const SearchInput: FC<Props> = ({
       <Input
         type="text"
         value={value}
-        setValue={(val) => {
-          setValue(val);
-        }}
+        setValue={setValue}
         placeholder={placeholder}
         height={48}
       />

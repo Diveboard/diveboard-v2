@@ -4,7 +4,7 @@ import stylesTextArea from './styles.module.scss';
 
 type Props = {
   value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  setValue: (val: string) => void;
   error?: string;
   setError?: React.Dispatch<React.SetStateAction<string>>;
   disabled?: boolean

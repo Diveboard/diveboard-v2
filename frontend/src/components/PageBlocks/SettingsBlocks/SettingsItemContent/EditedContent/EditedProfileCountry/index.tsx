@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
+import { code, name } from 'country-emoji';
 import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
 import { Input } from '../../../../../Input/CommonInput';
@@ -11,22 +12,35 @@ import {
   firestoreGeoDataService,
 } from '../../../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
 import styles from '../EditedProfileName/styles.module.scss';
+import { UserSettingsType } from '../../../../../../firebase/firestore/models';
+import { notify } from '../../../../../../utils/notify';
 
-export const EditedProfileCountry = () => {
+type Props = {
+  userCountry: string;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserSettingsType>>
+};
+
+export const EditedProfileCountry: FC<Props> = ({ userCountry, setUserInfo }) => {
   const { userAuth, setUserAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
-  const [country, setCountry] = useState('');
+  const [country, setCountry] = useState(name(userCountry || ''));
   const [loading, setLoading] = useState(false);
 
   const saveUsersCountry = async () => {
     if (!userAuth.uid) {
-      throw new Error('you are not authorized');
+      notify('You are not authorized');
     }
-    setLoading(true);
-    setUserAuth({ ...userAuth, country });
-    await firestorePublicProfileService.setCountry(country, userAuth.uid);
-    setLoading(false);
-    setEditedSettings({ settingsBlock: '', settingsItem: '' });
+    try {
+      setLoading(true);
+      setUserAuth({ ...userAuth, country: code(country) });
+      await firestorePublicProfileService.setCountry(code(country), userAuth.uid);
+      setUserInfo((prev) => ({ ...prev, country: code(country) }));
+
+      setLoading(false);
+      setEditedSettings({ settingsBlock: '', settingsItem: '' });
+    } catch (e) {
+      notify('Something went wrong');
+    }
   };
 
   return (

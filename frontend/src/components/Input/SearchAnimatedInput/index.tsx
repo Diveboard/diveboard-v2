@@ -8,6 +8,7 @@ type Props = {
   setValue: React.Dispatch<React.SetStateAction<string>>;
   withBackArrow?: boolean;
   onClick?: () => void;
+  onBackClick?: () => void;
   children?: any
 };
 
@@ -16,6 +17,7 @@ export const SearchAnimatedInput: FC<Props> = ({
   setValue,
   withBackArrow,
   onClick,
+  onBackClick,
   children,
 }) => {
   const isMobile = useWindowWidth(500, 768);
@@ -40,7 +42,11 @@ export const SearchAnimatedInput: FC<Props> = ({
     <div className={styles.inputWrapper}>
       <span
         onClick={() => {
-          setOpened(false);
+          if (onBackClick) {
+            onBackClick();
+          } else {
+            setOpened(false);
+          }
         }}
         className={styles.closeButton}
         style={withBackArrow ? { transform: 'none', top: '7px' } : {}}
@@ -61,7 +67,7 @@ export const SearchAnimatedInput: FC<Props> = ({
       />
       <span
         onClick={() => {
-          onClick();
+          onClick && onClick();
           setOpened(true);
         }}
         className={styles.searchButton}

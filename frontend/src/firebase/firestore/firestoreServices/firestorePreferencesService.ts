@@ -1,25 +1,26 @@
 import { doc, getDoc, setDoc } from '@firebase/firestore';
-import { PreferencesType } from '../models';
+import { PreferencesType, UnitSystem, ShareData } from '../models';
 import { db } from '../firebaseFirestore';
 import { firestorePaths } from '../firestorePaths';
 
-const preferencesSegment = firestorePaths.users.settings.preferences.segment;
-const getPath = (userId: string) => `${firestorePaths.users.path}/${userId}/${firestorePaths.users.settings.segment}`;
+// const preferencesSegment = firestorePaths.users; //.settings.preferences.segment;
+const getPath = (userId: string) => `${firestorePaths.users.path}/${userId}`; // ${firestorePaths.users.settings.segment}`;
 
 export const firestorePreferencesService = {
   setDefaultPreferences: async (userId: string) => {
     try {
-      const ref = doc(db, getPath(userId), preferencesSegment);
+      const ref = doc(db, getPath(userId));
       const defaultPreferences: PreferencesType = {
         privacy: { divesPublic: true },
         scientificData: {
-          shareData: true,
+          shareData: 'OPEN_SHARE',
           shareNotes: false,
         },
-        language: 'English',
-        unitSystem: 'metric',
+        unitSystem: 'METRIC',
       };
-      await setDoc(ref, { ...defaultPreferences }, { merge: true });
+      await setDoc(ref, {
+        settings: { preferences: { ...defaultPreferences }, language: 'en' },
+      }, { merge: true });
     } catch (e) {
       throw new Error('set default preferences error');
     }
@@ -27,43 +28,48 @@ export const firestorePreferencesService = {
 
   setPrivacy: (divesPublic: boolean, userId: string) => {
     try {
-      const ref = doc(db, getPath(userId), preferencesSegment);
-      setDoc(ref, { privacy: { divesPublic } }, { merge: true });
+      const ref = doc(db, getPath(userId));
+      setDoc(ref, { settings: { preferences: { privacy: { divesPublic } } } }, { merge: true });
     } catch (e) {
       throw new Error('set privacy error');
     }
   },
 
-  setScientificData: (scientificData: Pick<PreferencesType, 'scientificData'>, userId: string) => {
+  setScientificData: (
+    scientificData: { shareData: ShareData, shareNotes: boolean },
+    userId: string,
+  ) => {
     try {
-      const ref = doc(db, getPath(userId), preferencesSegment);
-      setDoc(ref, { ...scientificData }, { merge: true });
+      const ref = doc(db, getPath(userId));
+      setDoc(ref, {
+        settings: { preferences: { scientificData: { ...scientificData } } },
+      }, { merge: true });
     } catch (e) {
       throw new Error('set scientific data error');
     }
   },
 
-  setLanguage: (language: 'English' | 'Italian' | 'Spanish' | 'German', userId: string) => {
+  setLanguage: (language: string, userId: string) => {
     try {
-      const ref = doc(db, getPath(userId), preferencesSegment);
-      setDoc(ref, { language }, { merge: true });
+      const ref = doc(db, getPath(userId));
+      setDoc(ref, { settings: { language: language.slice(0, 2).toLowerCase() } }, { merge: true });
     } catch (e) {
       throw new Error('set language error');
     }
   },
 
-  setUnitSystem: (unitSystem: 'metric' | 'imperial', userId: string) => {
+  setUnitSystem: (unitSystem: UnitSystem, userId: string) => {
     try {
-      const ref = doc(db, getPath(userId), preferencesSegment);
-      setDoc(ref, { unitSystem }, { merge: true });
+      const ref = doc(db, getPath(userId));
+      setDoc(ref, { settings: { preferences: { unitSystem } } }, { merge: true });
     } catch (e) {
       throw new Error('set unit system error');
     }
   },
 
-  getAllPreferences: async (userId: string) => {
-    const docRef = doc(db, getPath(userId), preferencesSegment);
+  getUserSettings: async (userId: string) => {
+    const docRef = doc(db, getPath(userId));
     const docSnap = await getDoc(docRef);
-    return docSnap.data();
+    return docSnap.data().settings;
   },
 };

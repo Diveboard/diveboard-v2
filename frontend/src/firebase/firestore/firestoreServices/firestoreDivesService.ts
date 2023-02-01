@@ -1,21 +1,45 @@
 import {
-  collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  setDoc,
+  startAfter,
+  Timestamp,
+  where,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { DiveType } from '../models';
 import { convertTimestampDate } from '../../../utils/convertTimestampDate';
 import { firestoreSpotsService } from './firestoreSpotsService';
 import { PropertiesType } from '../../../types';
+import { firestoreSurveyService } from './firestoreSurveyService';
 
 export const firestoreDivesService = {
-  setDiveData: async (diveData: DiveType, userId: string) => {
+  setDiveData: async (diveData: DiveType, userId: string, saveDan: boolean = false) => {
     try {
       const ref = doc(collection(db, `Test_Dives/${userId}`, 'userDives'));
+      if (diveData.danSurvey) {
+        diveData.surveyId = await firestoreSurveyService.addSurvey(
+          userId,
+          ref.id,
+          diveData.danSurvey,
+          saveDan,
+        );
+      } else {
+        diveData.surveyId = null;
+      }
+      delete diveData.danSurvey;
       await setDoc(ref, { ...diveData }, { merge: true });
       if (diveData.spotId) {
         const spot = await firestoreSpotsService.getSpotById(diveData.spotId);
         const newSpot = { ...spot };
-        newSpot.dives.push({ diveId: ref.id, userId });
+        newSpot.dives.push(ref.id);
+        newSpot.dive?.push({ diveId: ref.id, userId });
         // TODO: Add to spot data
         await firestoreSpotsService.updateSpotById(diveData.spotId, newSpot);
       }
@@ -29,20 +53,32 @@ export const firestoreDivesService = {
     userId: string,
     diveId: string,
     dive: DiveType,
+    saveDan: boolean = false,
   ) => {
     try {
       const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveId);
       const docSnap = await getDoc(docRef);
+      if (dive.danSurvey) {
+        const surveyId = await firestoreSurveyService.updateSurvey(
+          userId,
+          dive.surveyId,
+          diveId,
+          dive.danSurvey,
+          saveDan,
+        );
+        dive.surveyId = surveyId;
+      }
+      delete dive.danSurvey;
       const { spotId } = await docSnap.data();
       if (dive.spotId !== spotId) {
         // Add dive to new spot
         const spot = await firestoreSpotsService.getSpotById(dive.spotId);
         if (spot) {
           const newSpot = { ...spot };
-          newSpot.dives?.push({ diveId, userId });
+          newSpot.dive?.push({ diveId, userId });
+          newSpot.dives?.push(diveId);
           await firestoreSpotsService.updateSpotById(dive.spotId, newSpot);
         }
-
         // Delete dive from old spot
         const spotO = await firestoreSpotsService.getSpotById(spotId);
         const oldSpot = { ...spotO };
@@ -103,14 +139,35 @@ export const firestoreDivesService = {
 
   getDivesByUserId: async (
     userId: string,
+    divesLimit: number = 4,
+    sort: 'desc' | 'asc' = 'desc',
+    lastDate: Timestamp = null,
+    draft: boolean = false,
   ) => {
     try {
       const dives = [];
       const docRef = collection(db, `Test_Dives/${userId}/userDives`);
-      const q = query(
+
+      const first = query(
         docRef,
+        orderBy('diveData.date', sort),
+        limit(divesLimit),
       );
-      const querySnapshot = await getDocs(q);
+
+      const next = query(
+        docRef,
+        orderBy('diveData.date', sort),
+        startAfter(lastDate),
+        limit(divesLimit),
+      );
+
+      const drafts = query(
+        docRef,
+        where('draft', '==', true),
+      );
+
+      const q = lastDate ? next : first;
+      const querySnapshot = await getDocs(draft ? drafts : q);
 
       // eslint-disable-next-line @typescript-eslint/no-shadow
       querySnapshot.forEach((doc) => {
@@ -154,6 +211,9 @@ export const firestoreDivesService = {
         }
         if (properties.Spot && copyFromDive.spotId) {
           newProperties.spotId = copyFromDive.spotId;
+        }
+        if (properties['Water Type'] && copyFromDive.diveData.waterType) {
+          newProperties.diveData.waterType = copyFromDive.diveData.waterType;
         }
         if (properties['Tanks user'] && copyFromDive.tanks?.length) {
           newProperties.tanks = copyFromDive.tanks;
@@ -261,11 +321,16 @@ export const firestoreDivesService = {
   getDiveData: async (
     userId: string,
     diveId: string,
+    withDraft: boolean = false,
   ) => {
     try {
       const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveId);
       const docSnap = await getDoc(docRef);
-      return docSnap.data();
+      const data = docSnap.data();
+      if (withDraft) {
+        return data;
+      }
+      return data && (!data.draft || data.publishMode === 'public') ? data : undefined;
     } catch (e) {
       console.log(e.message);
       throw new Error('get dive data error');
@@ -294,6 +359,7 @@ export const firestoreDivesService = {
   ) => {
     try {
       const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveId);
+      // TODO: Delete this dive in spot
       await deleteDoc(docRef);
       return true;
     } catch (e) {

@@ -18,6 +18,8 @@ import { firestoreDivesService } from '../../../firebase/firestore/firestoreServ
 import { Loader } from '../../Loader';
 import { convertAllStepsData } from './LogDiveHelpers/convertAllStepsData';
 import { DiveType } from '../../../types';
+import { AuthStatusContext } from '../../../layouts/AuthLayout';
+import { notify } from '../../../utils/notify';
 
 type Props = {
   dive?: DiveType;
@@ -32,8 +34,17 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
     setCurrentStep, setData, getAllStepsData, setEmptyData,
   } = useContext(LogDiveDataContext);
 
+  const { userAuth } = useContext(AuthStatusContext);
+
   const router = useRouter();
   const { isNew } = router.query;
+  const [, anchor] = router.asPath.split('#');
+
+  useEffect(() => {
+    if (+anchor !== step && +anchor >= 1 && +anchor < 10) {
+      setStep(+anchor as StepType);
+    }
+  }, [anchor]);
 
   useEffect(() => {
     if (isNew) {
@@ -48,34 +59,47 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
   useEffect(() => {
     if (dive) {
       // @ts-ignore
-      setData(dive);
-      setStep(1);
+      setData(dive, userAuth.settings.preferences.unitSystem);
+      if (anchor && +anchor !== step && +anchor >= 1 && +anchor < 10) {
+        setStep(+anchor as StepType);
+      } else {
+        setStep(1);
+      }
     }
   }, [dive]);
 
   const saveDraft = async () => {
-    const allStepsData = getAllStepsData();
-    setLoading(true);
-    const data = await convertAllStepsData(allStepsData, userId, true);
-    if (diveId) {
-      // @ts-ignore
-      await firestoreDivesService.updateDiveData(userId, diveId, data);
-    } else {
-      // @ts-ignore
-      await firestoreDivesService.setDiveData(data, userId);
+    try {
+      const allStepsData = getAllStepsData();
+      setLoading(true);
+      const data = await convertAllStepsData(
+        allStepsData,
+        userId,
+        userAuth.settings.preferences.unitSystem,
+        true,
+      );
+      if (diveId) {
+        // @ts-ignore
+        await firestoreDivesService.updateDiveData(userId, diveId, data);
+      } else {
+        // @ts-ignore
+        await firestoreDivesService.setDiveData(data, userId);
+      }
+      router.push('/dive-manager');
+    } catch (e) {
+      notify('Something went wrong');
     }
-    router.push('/dive-manager');
   };
 
   return (
-    <div className={styles.diveWrapper}>
-      <Loader loading={isLoading} />
+    <div className={styles.diveWrapper} style={{ display: (step === 0 || isLoading) ? 'block' : 'flex' }}>
       {step !== 10 && (
       <div className={styles.header}>
         <h1>{diveId ? `Dive ${diveId}` : 'New Dive'}</h1>
         <span onClick={saveDraft}>SAVE DRAFT</span>
       </div>
       )}
+      {isLoading && <Loader loading={isLoading} /> }
       {!isLoading && (
       <>
         {step === 0 && <PreStep setStep={setStep} />}

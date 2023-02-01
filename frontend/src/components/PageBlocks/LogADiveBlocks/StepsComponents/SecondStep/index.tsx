@@ -17,7 +17,9 @@ import { SecondStepErrors } from '../../types/errorTypes';
 import styles from './styles.module.scss';
 import { StepsIndicator } from '../../StepsIndicator';
 
-export const SecondStep: FC<StepProps> = ({ step, setStep }) => {
+export const SecondStep: FC<StepProps> = (
+  { step, setStep },
+) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
   const [data, setData] = useState<SecondStepType>(undefined);
   const [showChart, setShowChart] = useState(false);

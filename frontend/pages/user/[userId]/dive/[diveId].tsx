@@ -2,7 +2,6 @@ import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { MainLayout } from '../../../../src/layouts/MainLayout';
 import { AuthLayout } from '../../../../src/layouts/AuthLayout';
-import { firebaseAdmin } from '../../../../src/firebase/firebaseAdmin';
 import { DivePageBlock } from '../../../../src/components/DivePage/divePageBlock';
 import { firestoreDivesService } from '../../../../src/firebase/firestore/firestoreServices/firestoreDivesService';
 import { firestoreSpotsService } from '../../../../src/firebase/firestore/firestoreServices/firestoreSpotsService';
@@ -31,12 +30,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { diveId, userId } = context.query;
   let user = null;
   if (uid) {
-    const data = await firebaseAdmin.auth().getUser(uid);
-    user = {
-      email: data.email,
-      photoURL: data.photoURL,
-      displayName: data.displayName,
-    };
+    user = await firestorePublicProfileService.getUserById(uid);
   }
 
   const data = await firestoreDivesService.getDiveData(userId as string, diveId as string);
@@ -53,7 +47,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   if (data?.buddies.length) {
-    buddies = await firestorePublicProfileService.getUsersInfo(data.buddies, data?.spotId);
+    buddies = await firestorePublicProfileService.getBuddiesInfo(data.buddies, data?.spotId);
   }
 
   const diveUser = await firestorePublicProfileService.getUserById(userId as string);

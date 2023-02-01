@@ -10,7 +10,7 @@ import styles from './styles.module.scss';
 export const FooterMobile: FC = () => {
   const router = useRouter();
 
-  if (router.pathname !== pageRoutes.mainPageGuest
+  if (router.pathname !== pageRoutes.mainPageRoute
     && router.pathname !== pageRoutes.aboutPageRout) {
     return null;
   }
@@ -31,7 +31,7 @@ export const FooterMobile: FC = () => {
             on your generous support to keep the platform running.
           </span>
 
-          <ArrowLink text="Donate" color="#FFFFFF" link="/" />
+          <ArrowLink text="Donate" color="#FFFFFF" link="/donate" />
         </div>
 
         <div className={styles.contentGroup}>

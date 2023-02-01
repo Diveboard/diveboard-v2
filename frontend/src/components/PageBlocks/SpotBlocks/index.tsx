@@ -74,7 +74,7 @@ export const SpotBlocks = ({ spot, dives, species }: Props) => {
         <>
           <div className={styles.header}>
             <div className={styles.left}>
-              <div className={styles.backBtnWrapper} onClick={() => router.back()}>
+              <div className={styles.left} onClick={() => router.back()}>
                 <Icon iconName="back-button" size={40} />
               </div>
               <h1>

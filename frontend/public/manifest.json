@@ -1,22 +1,71 @@
 {
-  "name": "PWA App",
-  "short_name": "App",
-  "icons": [
-    {
-      "src": "/icons/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
+  "name": "Diveboard",
+  "short_name": "Diveboard",
   "theme_color": "#FFFFFF",
   "background_color": "#FFFFFF",
   "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait"
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/diveboard-logo32x32.svg",
+      "sizes": "32x32",
+      "type": "image/svg",
+      "purpose": "any"
+    },
+    {
+      "src": "/diveboard-logo64x64.svg",
+      "sizes": "64x64",
+      "type": "image/svg",
+      "purpose": "any"
+    },
+    {
+      "src": "/diveboard-logo144x144.svg",
+      "sizes": "144x144",
+      "type": "image/svg",
+      "purpose": "any"
+    },
+    {
+      "src": "/diveboard-logo144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/diveboard-logo192x192.svg",
+      "sizes": "192x192",
+      "type": "image/svg",
+      "purpose": "any"
+    },
+    {
+      "src": "/diveboard-logo192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/diveboard-logo256x256.svg",
+      "sizes": "256x256",
+      "type": "image/svg",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/diveboard-logo384x384.svg",
+      "sizes": "384x384",
+      "type": "image/svg",
+      "purpose": "any"
+    },
+    {
+      "src": "/diveboard-logo512x512.svg",
+      "sizes": "512x512",
+      "type": "image/svg",
+      "purpose": "any"
+    },
+    {
+      "src": "/diveboard-logo512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
 }

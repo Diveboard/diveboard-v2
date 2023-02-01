@@ -81,7 +81,7 @@ export const Burger: FC = () => {
     await logOut();
     await Cookies.remove('__session');
     setUserAuth(undefined);
-    router.push('/');
+    router.push(pageRoutes.mainPageRoute);
   };
 
   const dropdownElements = burgerItems.map((item) => {
@@ -91,7 +91,6 @@ export const Burger: FC = () => {
           <LogbookDropdownItem
             key={item.id}
             title={item.title}
-            link={item.link}
           >
             {item.svgItem}
           </LogbookDropdownItem>

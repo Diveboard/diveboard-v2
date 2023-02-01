@@ -21,14 +21,14 @@ class MyDocument extends Document {
             rel="stylesheet"
           />
 
-          <meta name="application-name" content="PWA App" />
+          <meta name="application-name" content="Diveboard" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta
             name="apple-mobile-web-app-status-bar-style"
             content="default"
           />
-          <meta name="apple-mobile-web-app-title" content="PWA App" />
-          <meta name="description" content="Best PWA App in the world" />
+          <meta name="apple-mobile-web-app-title" content="Diveboard" />
+          <meta name="description" content="Diveboard" />
           <meta name="format-detection" content="telephone=no" />
           <meta name="mobile-web-app-capable" content="yes" />
           <meta
@@ -39,30 +39,30 @@ class MyDocument extends Document {
           <meta name="msapplication-tap-highlight" content="no" />
           <meta name="theme-color" content="#000000" />
 
-          <link rel="apple-touch-icon" href="/icons/touch-icon-iphone.png" />
           <link rel="manifest" href="/manifest.json" />
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="icon" type="image/svg" sizes="32x32" href="/diveboard-logo32x32.svg" />
+          <link rel="apple-touch-icon" sizes="192x192" href="/diveboard-logo192x192.png" />
 
           <meta name="twitter:card" content="summary" />
-          <meta name="twitter:url" content="https://yourdomain.com" />
-          <meta name="twitter:title" content="PWA App" />
+          <meta name="twitter:url" content="https://diveboard-org.web.app" />
+          <meta name="twitter:title" content="Diveboard" />
           <meta
             name="twitter:description"
-            content="Best PWA App in the world"
+            content="Diveboard"
           />
           <meta
             name="twitter:image"
-            content="https://yourdomain.com/icons/android-chrome-192x192.png"
+            content="/diveboard-logo144x144.svg"
           />
           <meta name="twitter:creator" content="@DavidWShadow" />
           <meta property="og:type" content="website" />
-          <meta property="og:title" content="PWA App" />
-          <meta property="og:description" content="Best PWA App in the world" />
-          <meta property="og:site_name" content="PWA App" />
-          <meta property="og:url" content="https://yourdomain.com" />
+          <meta property="og:title" content="Diveboard" />
+          <meta property="og:description" content="Diveboard" />
+          <meta property="og:site_name" content="Diveboard" />
+          <meta property="og:url" content="https://diveboard-org.web.app" />
           <meta
             property="og:image"
-            content="https://yourdomain.com/icons/apple-touch-icon.png"
+            content="/diveboard-logo144x144.svg"
           />
         </Head>
         <body>

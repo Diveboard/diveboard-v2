@@ -14,6 +14,7 @@ import { StepProps } from '../../types/commonTypes';
 import { FourthStepType, ThirdStepType } from '../../types/stepTypes';
 import styles from './styles.module.scss';
 import { StepsIndicator } from '../../StepsIndicator';
+import { notify } from '../../../../../utils/notify';
 
 export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, userId }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
@@ -119,10 +120,7 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
               id="local species"
               onChange={() => {
                 if (!spotId) {
-                  // eslint-disable-next-line no-alert
-                  alert(
-                    "you can't choose local species because you didn't choose spot location",
-                  );
+                  notify('Choose spot location on previous step');
                 } else {
                   setSpeciesMode('local');
                   setCurrentSpeciesMode('');

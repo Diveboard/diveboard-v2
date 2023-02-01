@@ -1,4 +1,7 @@
-import React, { FC, useContext } from 'react';
+import React, {
+  FC, useContext, useState,
+} from 'react';
+import { name } from 'country-emoji';
 import { SettingsGroup } from '../SettingsGroup';
 import { SettingsItem } from '../SettingsItem';
 import { ProfileImage } from '../SettingsItemContent/NotEditedContent/ProfileImage';
@@ -7,21 +10,20 @@ import { EditedProfileName } from '../SettingsItemContent/EditedContent/EditedPr
 import { EditedProfileEmail } from '../SettingsItemContent/EditedContent/EditedProfileEmail';
 import { EditedProfileCountry } from '../SettingsItemContent/EditedContent/EditedProfileCountry';
 import { EditedProfileAbout } from '../SettingsItemContent/EditedContent/EditedProfileAbout';
-import { AuthStatusContext } from '../../../../layouts/AuthLayout';
 import { NetworkStatusContext } from '../../../../layouts/NetworkStatus';
 import coverStyles from './styles.module.scss';
 import styles from '../itemContentStyle.module.scss';
+import { UserSettingsType } from '../../../../firebase/firestore/models';
 
 type Props = {
+  user: UserSettingsType;
   title?: boolean
 };
 
-export const PersonalInfo: FC<Props> = ({ title = true }) => {
-  const {
-    userAuth,
-  } = useContext(AuthStatusContext);
-
+export const PersonalInfo: FC<Props> = ({ user, title = true }) => {
   const isOffline = useContext(NetworkStatusContext);
+
+  const [userInfo, setUserInfo] = useState(user);
 
   return (
     <div className={coverStyles.opacityWrapper}>
@@ -31,8 +33,8 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <ProfileImage imgSrc={userAuth?.photoURL} />
-          <EditedProfileImage imgSrc={userAuth?.photoURL} />
+          <ProfileImage imgSrc={userInfo?.photoUrl} />
+          <EditedProfileImage imgSrc={userInfo?.photoUrl} setUserInfo={setUserInfo} />
         </SettingsItem>
 
         <SettingsItem
@@ -40,8 +42,8 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <span className={styles.primaryItemContent}>{userAuth?.name}</span>
-          <EditedProfileName />
+          <span className={styles.primaryItemContent}>{`${userInfo.firstName || ''} ${userInfo.lastName || ''}`}</span>
+          <EditedProfileName userName={`${userInfo.firstName || ''} ${userInfo.lastName || ''}`} setUserInfo={setUserInfo} />
         </SettingsItem>
 
         <SettingsItem
@@ -49,8 +51,8 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <span className={styles.primaryItemContent}>{userAuth?.email}</span>
-          <EditedProfileEmail />
+          <span className={styles.primaryItemContent}>{userInfo?.email}</span>
+          <EditedProfileEmail userEmail={userInfo?.email} setUserInfo={setUserInfo} />
         </SettingsItem>
 
         <SettingsItem
@@ -58,8 +60,8 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <span className={styles.primaryItemContent}>{userAuth?.country}</span>
-          <EditedProfileCountry />
+          <span className={styles.primaryItemContent}>{name(userInfo?.country)}</span>
+          <EditedProfileCountry userCountry={userInfo?.country} setUserInfo={setUserInfo} />
         </SettingsItem>
 
         <SettingsItem
@@ -67,8 +69,8 @@ export const PersonalInfo: FC<Props> = ({ title = true }) => {
           titleBlock="Personal Info"
           titleMuted
         >
-          <span className={styles.primaryItemContent}>{userAuth?.about}</span>
-          <EditedProfileAbout />
+          <span className={styles.primaryItemContent}>{userInfo?.about}</span>
+          <EditedProfileAbout userAbout={userInfo?.about} setUserInfo={setUserInfo} />
         </SettingsItem>
       </SettingsGroup>
       <div className={`${coverStyles.opacityCover} ${!isOffline && coverStyles.hidden}`}>

@@ -1,14 +1,14 @@
 .mobileSpotHeader {
   .wrapper {
     position: relative;
+    padding-top: 50px;
 
     .header {
-      margin-top: 10px;
       position: absolute;
-      top: 0;
+      top: 55px;
       left: 0;
       right: 0;
-      z-index: 100;
+      z-index: 8;
       display: flex;
       justify-content: space-between;
 
@@ -30,7 +30,7 @@
       font-size: 10px;
       line-height: 12px;
       color: #FFFFFF;
-      z-index: 100;
+      z-index: 8;
       display: flex;
       justify-content: center;
       align-items: center;

@@ -1,4 +1,5 @@
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { StepType } from '../types/commonTypes';
 import styles from './styles.module.scss';
 import { LogDiveDataContext } from '../LogDiveData/logDiveContext';
@@ -34,9 +35,6 @@ const StepItem: FC<StepItemProps> = ({
         if (step === 1 && !data[objectKey][currentDataKey]) {
           setStep(2);
         }
-        if (step === 2 && !data[objectKey][currentDataKey]) {
-          setStep(3);
-        }
       }
     } else {
       setStepData();
@@ -61,6 +59,13 @@ export const StepsIndicator: FC<Props> = ({
   setErrors,
 }) => {
   const steps = Array.from({ length: 9 }, (_, i) => i + 1);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push(`${router.asPath.split('#')[0]}#${step}`);
+  }, [step]);
+
   return (
     <div className={styles.indicatorWrapper}>
       {steps.map((item) => (

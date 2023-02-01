@@ -1,0 +1,36 @@
+.blockWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 1440px) {
+  .blockWrapper {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 1024px) {
+  .blockWrapper {
+    justify-content: space-between;
+    gap: 10px;
+
+    > div {
+      max-width: calc(50% - 10px);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .blockWrapper {
+    > div {
+      max-width: 100%;
+
+      > div {
+        max-width: 100% !important;
+      }
+    }
+  }
+}

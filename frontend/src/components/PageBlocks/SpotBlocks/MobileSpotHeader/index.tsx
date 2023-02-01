@@ -1,9 +1,10 @@
 import React, { FC, useState } from 'react';
 import Slider from 'react-slick';
 import Image from 'next/image';
-import { LinkedButton } from '../../../Buttons/LinkedButton';
+import { useRouter } from 'next/router';
 import PictureSaves from './PictureSaves';
 import styles from './styles.module.scss';
+import { Icon } from '../../../Icons/Icon';
 
 type Props = {
   spotName: string;
@@ -39,6 +40,8 @@ export const MobileSpotHeader: FC<Props> = ({
     initialSlide: 0,
   };
 
+  const router = useRouter();
+
   const slides = images.map((slide) => (
     <div key={slide.id} className={styles.slide}>
       <Image src={slide.src} width={360} height={180} layout="fill" />
@@ -54,9 +57,11 @@ export const MobileSpotHeader: FC<Props> = ({
     <div className={styles.mobileSpotHeader}>
       <div className={styles.wrapper}>
         <div className={styles.header}>
-          <LinkedButton link="" iconName="back-button" iconSize={40} />
+          <div className={styles.right} onClick={() => router.back()}>
+            <Icon iconName="back-button" size={40} />
+          </div>
           <div className={styles.right}>
-            <LinkedButton link="" iconName="share-link" iconSize={40} />
+            <Icon iconName="share-link" size={40} />
             <PictureSaves saved={currentSlideData.saved} count={currentSlideData.savesNumber} />
           </div>
         </div>

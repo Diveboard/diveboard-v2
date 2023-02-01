@@ -25,7 +25,7 @@ export const UserHeader: FC = (): JSX.Element => {
           label="Wallet"
           iconName="wallet-mobile"
           labelColor={
-            router.pathname === pagesRoutes.mainPageGuest && !scrolled
+            router.pathname === pagesRoutes.mainPageRoute && !scrolled
               ? '#FFFFFF'
               : '#000345'
           }
@@ -43,7 +43,7 @@ export const UserHeader: FC = (): JSX.Element => {
           iconName="heart-gap"
         />
         <LinkedButton
-          link={pagesRoutes.mainPageUser}
+          link={pagesRoutes.mainPageRoute}
           iconName="community-small"
         />
 

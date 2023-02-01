@@ -1,14 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { isValidPhoneNumber } from 'react-phone-number-input';
 import { getRequiredFields } from './getRequiredFields';
 import { getEmptyRequiredFields } from './getEmptyRequiredFields';
-import { DanSurveyType } from '../../../../../../../../../types';
-import { transformFormData } from './transformFormData';
-import {
-  firestoreSurveysService,
-} from '../../../../../../../../../firebase/firestore/firestoreServices/firestoreSurveysService';
-import { SurveyDataDANType } from '../../../../../../../../../firebase/firestore/models';
-import { EighthStepType } from '../../../../../../types/stepTypes';
+import { SurveyDanType } from '../../../../../../../../../types';
 
 export type FormErrorsType = {
   divePlan: string,
@@ -30,7 +24,7 @@ export type FormErrorsType = {
   height: string,
 };
 
-export const useFormSubmit = (formData: DanSurveyType) => {
+export const useFormSubmit = (formData: SurveyDanType) => {
   const [errors, setErrors] = useState({
     divePlan: '',
     environment: '',
@@ -51,46 +45,36 @@ export const useFormSubmit = (formData: DanSurveyType) => {
     height: '',
   });
 
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     const requiredData = getRequiredFields(formData);
     const newErrors = { ...errors };
     for (const key in requiredData) {
-      if (requiredData[key]) {
+      if (requiredData[key] && requiredData[key] !== '0') {
         newErrors[key] = '';
       }
     }
     setErrors(newErrors);
   }, [formData]);
 
-  const onSaveDataHandler = async (
-    setSurvey: React.Dispatch<React.SetStateAction<EighthStepType>>,
-    setSurveyMode: React.Dispatch<React.SetStateAction<string>>,
-  ) => {
+  const onSaveDataHandler = (setSaveDAN: (val: boolean) => void, setSurveyMode) => {
     const requiredData = getRequiredFields(formData);
     const emptyFields = getEmptyRequiredFields(requiredData);
     const newErrors = { ...errors };
 
     emptyFields.forEach((emptyItem) => {
-      newErrors[emptyItem] = 'this field is required';
+      newErrors[emptyItem] = 'This field is required';
     });
     if (!isValidPhoneNumber(requiredData.phoneHome)) {
-      newErrors.phoneHome = 'invalid phone number';
+      newErrors.phoneHome = 'Invalid phone number';
     }
 
     setErrors(newErrors);
-
-    if (emptyFields.length === 0) {
-      setLoading(true);
-      const danData = transformFormData(formData);
-      const surveyId = await firestoreSurveysService.setSurveyData('DAN', danData as unknown as SurveyDataDANType);
-      // @ts-ignore
-      setSurvey((prevState) => [...prevState, { surveyId, surveyName: 'DAN', date: new Date() }]);
+    const noErrors = !Object.values(newErrors).some((val) => val);
+    setSaveDAN(noErrors);
+    if (noErrors) {
       setSurveyMode('');
-      setLoading(false);
     }
   };
 
-  return { errors, onSaveDataHandler, loading };
+  return { errors, onSaveDataHandler };
 };

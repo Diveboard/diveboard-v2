@@ -100,6 +100,12 @@
   color: #000345;
 }
 
+.species {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .stats {
   font-weight: 300;
   font-size: 14px;

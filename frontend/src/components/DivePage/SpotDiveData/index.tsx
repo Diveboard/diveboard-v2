@@ -1,20 +1,26 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { flag } from 'country-emoji';
 
+import { useRouter } from 'next/router';
 import KebabButton from '../../Buttons/KebabButton';
-import { LinkedButton } from '../../Buttons/LinkedButton';
 import { Icon } from '../../Icons/Icon';
 import { ProfileImage } from '../../PageBlocks/SettingsBlocks/SettingsItemContent/NotEditedContent/ProfileImage';
 import { DivePageMobContainer } from '../DivePageMobContainer';
 
 import styles from './styles.module.scss';
-import { DiveType, SpotType } from '../../../firebase/firestore/models';
-import { UserType } from '../../../types';
+import { DiveType, SpotType, UserSettingsType } from '../../../firebase/firestore/models';
 import { convertTimestampDate } from '../../../utils/convertTimestampDate';
 import { parseDate } from '../../../utils/parseDate';
+import {
+  convertCalToFar,
+  convertFarToCal,
+  convertFeetToMeters,
+  convertMetersToFeet,
+} from '../../../utils/unitSystemConverter';
+import { AuthStatusContext } from '../../../layouts/AuthLayout';
 
 type Props = {
-  user?: UserType,
+  user?: UserSettingsType,
   dive: DiveType,
   spot: SpotType
 };
@@ -24,9 +30,10 @@ export const SpotDiveData: FC<Props> = ({
 }): JSX.Element => {
   const [isShowNote, setShowMore] = useState(false);
 
+  const router = useRouter();
   const diveTypeList = () => dive.diveActivities.join(', ');
 
-  const spotName = `${spot.location?.location}, ${spot.location?.country}, ${spot.location?.region}`;
+  const spotName = spot ? `${spot.location?.location || ''}, ${spot.location?.country || ''}, ${spot.location?.region || ''}` : '';
 
   const moreButtonHandler = () => {
     setShowMore(true);
@@ -71,14 +78,56 @@ export const SpotDiveData: FC<Props> = ({
     </div>
   );
 
+  const {
+    userAuth,
+  } = useContext(AuthStatusContext);
+
+  const convertTempSystem = (value: number): string => {
+    if (!userAuth) {
+      return `${value} m`;
+    }
+    const userUnitSystem = userAuth.settings.preferences.unitSystem;
+    if (dive.unitSystem === userUnitSystem) {
+      return `${value} ${userUnitSystem === 'METRIC' ? 'ºC' : 'ºF'}`;
+    }
+    if (userUnitSystem === 'METRIC') {
+      return `${convertFarToCal(value)} ºC`;
+    }
+    return `${convertCalToFar(value)} ºF`;
+  };
+
+  const convertDepth = (): string => {
+    if (!userAuth) {
+      return `${dive.diveData?.maxDepth} m`;
+    }
+    const userUnitSystem = userAuth.settings.preferences.unitSystem;
+    if (dive.unitSystem === userUnitSystem) {
+      return `${dive.diveData?.maxDepth} ${userUnitSystem === 'METRIC' ? 'm' : 'ft'}`;
+    }
+    if (userUnitSystem === 'METRIC') {
+      return `${convertFeetToMeters(dive.diveData?.maxDepth)} m`;
+    }
+    return `${convertMetersToFeet(dive.diveData?.maxDepth)} ft`;
+  };
+
+  const isNoteAvailable = () => {
+    if (!dive.aboutDive?.notes) {
+      return false;
+    }
+    if (userAuth && userAuth.uid === user.uid) {
+      return true;
+    }
+    return user?.settings?.preferences?.scientificData?.shareNotes;
+  };
+
   return (
     <DivePageMobContainer>
       <div className={styles.spotDataWrapper}>
         <div className={styles.spotDataSubWrapper}>
           <div className={styles.leftContent}>
             <div className={styles.leftContentSubwrapper}>
-              <div className={styles.backBtnWrapper}>
-                <LinkedButton link="/" iconName="back-button" iconSize={40} />
+              <div className={styles.backBtnWrapper} onClick={() => router.back()}>
+                <Icon size={40} iconName="back-button" />
               </div>
               <div className={styles.rightContentMob}>
                 <span className={styles.share} onClick={shareButtonHandler}>
@@ -92,18 +141,18 @@ export const SpotDiveData: FC<Props> = ({
                 </KebabButton>
               </div>
             </div>
-            <div className={styles.leftContentWrapper}>
-              <ProfileImage imgSrc={user?.photoURL} size={74} />
+            <div className={styles.leftContentWrapper} onClick={() => router.push(`/logbook/${user.uid}`)}>
+              <ProfileImage imgSrc={user?.photoUrl} size={74} />
               <div className={styles.spotTitleWrapper}>
                 <div className={styles.spotTitle}>
-                  {user?.name}
+                  {user?.firstName}
                   {' '}
                   in
                   {' '}
                   {spot?.name}
                 </div>
                 <div className={styles.spotCountryWrapper}>
-                  <div>{flag(spot.location?.country)}</div>
+                  <div>{spot && flag(spot.location?.country)}</div>
                   <div className={styles.spotLocation}>{spotName}</div>
                 </div>
               </div>
@@ -143,9 +192,7 @@ export const SpotDiveData: FC<Props> = ({
                 Max depth:
                 {' '}
                 <span>
-                  {dive.diveData.maxDepth}
-                  {' '}
-                  m
+                  {convertDepth()}
                 </span>
               </li>
               )}
@@ -167,23 +214,23 @@ export const SpotDiveData: FC<Props> = ({
                 <span>{dive.diveData.waterType}</span>
               </li>
               )}
-              {dive.diveData?.surfaceTemp && (
+              {!!dive.diveData?.surfaceTemp && (
               <li>
                 Temperature on surface:
                 {' '}
                 <span>
-                  {dive.diveData.surfaceTemp}
+                  {convertTempSystem(dive.diveData.surfaceTemp)}
                   {/* <sup>o</sup> */}
                   {/* C */}
                 </span>
               </li>
               )}
-              {dive.diveData?.bottomTemp && (
+              {!!dive.diveData?.bottomTemp && (
               <li>
                 Temperature on bottom:
                 {' '}
                 <span>
-                  {dive.diveData.bottomTemp}
+                  {convertTempSystem(dive.diveData.bottomTemp)}
                   {/* <sup>o</sup> */}
                   {/* C */}
                 </span>
@@ -205,7 +252,7 @@ export const SpotDiveData: FC<Props> = ({
               )}
             </ul>
           </div>
-          { dive.aboutDive?.notes && (
+          { isNoteAvailable() && (
           <div>
             {!isShowNote ? renderNotes(dive.aboutDive?.notes) : showMore(dive.aboutDive?.notes)}
           </div>

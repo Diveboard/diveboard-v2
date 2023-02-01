@@ -8,12 +8,15 @@ import {
   collection,
   query,
   getDocs,
-  orderBy, startAt, where,
+  orderBy,
+  startAt,
+  limit,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { firestorePaths } from '../firestorePaths';
 import { UserType } from '../../../types';
 import { firestoreDivesService } from './firestoreDivesService';
+import { UserSettingsType } from '../models';
 
 export const firestorePublicProfileService = {
   setEmail: async (email: string, userId: string) => {
@@ -25,19 +28,19 @@ export const firestorePublicProfileService = {
     }
   },
 
-  setPhotoURL: async (photoURL: string, userId: string) => {
+  setPhotoURL: async (photoUrl: string, userId: string) => {
     try {
       const ref = doc(db, firestorePaths.users.path, userId);
-      await setDoc(ref, { photoURL }, { merge: true });
+      await setDoc(ref, { photoUrl }, { merge: true });
     } catch (e) {
       throw new Error('set photo error');
     }
   },
 
-  setName: async (name: string, userId: string) => {
+  setName: async (firstName: string, lastName: string, userId: string) => {
     try {
       const ref = doc(db, firestorePaths.users.path, userId);
-      await setDoc(ref, { name }, { merge: true });
+      await setDoc(ref, { firstName, lastName }, { merge: true });
     } catch (e) {
       throw new Error('set name error');
     }
@@ -82,13 +85,13 @@ export const firestorePublicProfileService = {
     try {
       const docRef = doc(db, firestorePaths.users.path, userId);
       const docSnap = await getDoc(docRef);
-      return { ...docSnap.data(), uid: docSnap.id } as UserType | undefined;
+      return { ...docSnap.data(), uid: docSnap.id } as UserSettingsType | undefined;
     } catch (e) {
       throw new Error('get user data error');
     }
   },
 
-  getUsersInfo: async (usersIds: Array<{ id?: string, name?: string }>, spotId?: string) => {
+  getBuddiesInfo: async (usersIds: Array<{ id?: string, name?: string }>, spotId?: string) => {
     try {
       const users = [];
       for (let i = 0; i < usersIds.length; i++) {
@@ -96,18 +99,26 @@ export const firestorePublicProfileService = {
           const docRef = doc(db, firestorePaths.users.path, usersIds[i].id);
           // eslint-disable-next-line no-await-in-loop
           const docSnap = await getDoc(docRef);
-          const { name, photoURL } = docSnap.data();
-          // eslint-disable-next-line no-await-in-loop
-          const diveTotal = await firestoreDivesService.getDivesCountByUserId(usersIds[i].id);
-          // eslint-disable-next-line no-await-in-loop
-          const divesOnSpot = spotId ? await firestoreDivesService
-            .getDivesCountByUserIdInSpot(usersIds[i].id, spotId) : 0;
-          users.push({
-            id: usersIds[i].id, name, photoURL, diveTotal, divesOnSpot,
-          });
+          if (docSnap.data()) {
+            const { firstName, lastName, photoUrl } = docSnap.data();
+            // eslint-disable-next-line no-await-in-loop
+            const diveTotal = await firestoreDivesService.getDivesCountByUserId(usersIds[i].id);
+            // eslint-disable-next-line no-await-in-loop
+            const divesOnSpot = spotId ? await firestoreDivesService
+              .getDivesCountByUserIdInSpot(usersIds[i].id, spotId) : 0;
+            users.push({
+              id: usersIds[i].id,
+              firstName,
+              lastName,
+              photoUrl,
+              diveTotal,
+              divesOnSpot,
+            });
+          }
         } else {
           users.push({
-            name: usersIds[i]?.name,
+            id: usersIds[i]?.id,
+            firstName: usersIds[i]?.name,
             diveTotal: 1,
             divesOnSpot: 0,
           });
@@ -127,14 +138,17 @@ export const firestorePublicProfileService = {
       const docRef = collection(db, firestorePaths.users.path);
       const q = query(
         docRef,
-        orderBy('name'),
+        orderBy('firstName'),
         startAt(predictionName.trim()),
+        limit(15),
       );
       const querySnapshot = await getDocs(q);
 
       querySnapshot.forEach((document) => {
-        const { name, photoURL } = document.data() as Omit<UserType, 'uid'>;
-        users.push({ uid: document.id, name, photoURL });
+        const { firstName, photoUrl, lastName } = document.data() as Omit<UserType, 'uid'>;
+        users.push({
+          uid: document.id, firstName, lastName, photoUrl,
+        });
       });
       return users;
     } catch (e) {

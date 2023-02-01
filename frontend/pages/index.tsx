@@ -1,42 +1,34 @@
-import React, { useEffect } from 'react';
-import { GetServerSideProps, NextPage } from 'next';
-import { useRouter } from 'next/router';
-import Cookies from 'js-cookie';
-import pageRoutes from '../src/routes/pagesRoutes.json';
+import React from 'react';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { AuthLayout } from '../src/layouts/AuthLayout';
+import { MainLayout } from '../src/layouts/MainLayout';
+import Guest from '../src/components/PageBlocks/HomePageBlocks/Guest';
 
-const Home: NextPage = () => {
-  const router = useRouter();
-
-  useEffect(() => {
-    const uid = Cookies.get('__session');
-    if (uid) {
-      router.push(`${pageRoutes.mainPageUser}/${uid}`);
-    } else {
-      router.push(pageRoutes.mainPageGuest);
-    }
-  }, []);
-
-  return <div />;
-};
+const Home:
+InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
+  <AuthLayout user={user}>
+    <MainLayout isFilled>
+      <Guest />
+    </MainLayout>
+  </AuthLayout>
+);
 
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const uid = context.req.cookies.__session;
-
-  if (!uid) {
+  if (uid) {
     return {
       redirect: {
-        destination: pageRoutes.mainPageGuest,
+        destination: `/logbook/${uid}`,
         permanent: false,
       },
     };
   }
 
   return {
-    redirect: {
-      destination: `${pageRoutes.mainPageUser}/${uid}`,
-      permanent: false,
+    props: {
+      user: null,
     },
   };
 };

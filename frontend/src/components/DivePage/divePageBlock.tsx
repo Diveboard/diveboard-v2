@@ -16,16 +16,18 @@ import { allComments } from './DIVE_PAGE_DUMMY_DATA';
 
 import styles from './divePageBlock.module.scss';
 import { NoDive } from '../DiveManager/NoData';
-import { UserType } from '../../types';
-import { DiveType, SpeciesType, SpotType } from '../../firebase/firestore/models';
+import {
+  BuddiesType,
+  DiveType, SpeciesType, SpotType, UserSettingsType,
+} from '../../firebase/firestore/models';
 import { DiveBuddyCard } from '../Cards/DiveBuddyCard';
 
 type Props = {
-  user?: UserType,
+  user?: UserSettingsType,
   dive: DiveType,
   spot: SpotType,
   species?: Array<SpeciesType>
-  buddies: Array<any>
+  buddies: Array<BuddiesType>
 };
 
 export const DivePageBlock = ({
@@ -54,8 +56,12 @@ export const DivePageBlock = ({
               <ChartBlock diveData={{ points: dive.diveData?.safetySpots, tanks: dive?.tanks }} />
             )}
             <div className={styles.thirdWrapper}>
-              {(!!dive.gears.length || dive.diveData?.weights) && (
-                <GearUsed gears={dive.gears} weight={dive.diveData?.weights} />
+              {!!(dive.gears.length || dive.diveData?.weights) && (
+                <GearUsed
+                  gears={dive.gears}
+                  weight={dive.diveData?.weights}
+                  diveUnitSystem={dive.unitSystem}
+                />
               )}
               {!!species.length && (
               <div className={styles.speciesWrapper}>
@@ -76,9 +82,9 @@ export const DivePageBlock = ({
               {buddies.map((buddy) => (
                 <DiveBuddyCard
                   onClick={() => buddy.id && router.push(`/logbook/${buddy.id}`)}
-                  key={buddy.id || buddy.name}
-                  imgSrc={buddy?.photoURL || '/appIcons/no-photo.svg'}
-                  name={buddy?.name}
+                  key={buddy.id || buddy.firstName}
+                  imgSrc={buddy?.photoUrl || '/appIcons/no-photo.svg'}
+                  name={`${buddy?.firstName || ''} ${buddy?.lastName || ''}`}
                   onDiveBoard={buddy?.diveTotal}
                   total={buddy?.diveTotal}
                   onSpot={buddy?.divesOnSpot}

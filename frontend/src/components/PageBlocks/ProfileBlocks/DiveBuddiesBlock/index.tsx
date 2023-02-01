@@ -4,9 +4,10 @@ import { Title } from '../Title';
 import { DiveBuddyCard } from '../../../Cards/DiveBuddyCard';
 import { ArrowLink } from '../../../ArrowLink';
 import style from './styles.module.scss';
+import { BuddiesType } from '../../../../firebase/firestore/models';
 
 type Props = {
-  buddies: Array<any>
+  buddies: Array<BuddiesType>
 };
 
 export const DiveBuddies: FC<Props> = ({ buddies }) => {
@@ -19,8 +20,8 @@ export const DiveBuddies: FC<Props> = ({ buddies }) => {
           <DiveBuddyCard
             onClick={() => buddy.id && router.push(`/logbook/${buddy.id}`)}
             key={buddy.id || key}
-            imgSrc={buddy.photoURL || '/TEST_IMG_THEN_DELETE/photo4.jpg'}
-            name={buddy.name}
+            imgSrc={buddy.photoUrl || '/appIcons/no-photo.svg'}
+            name={`${buddy?.firstName || ''} ${buddy?.lastName || ''}`}
             onDiveBoard={buddy.diveTotal}
             total={buddy.diveTotal}
             onSpot={0}

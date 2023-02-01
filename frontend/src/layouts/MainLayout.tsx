@@ -19,13 +19,13 @@ export const MainLayout: FC<Props> = ({ isHideMobileHeader = false, isFilled, ch
 
   const headerComponent = () => {
     if (userAuth) {
-      if (!isMobile) {
+      if (isMobile === false) {
         return <UserHeader />;
       } if (!isHideMobileHeader) {
         return <MobileUserHeader />;
       }
     } else {
-      if (!isMobile) {
+      if (isMobile === false) {
         return <GuestHeader isFilled={isFilled} />;
       } if (!isHideMobileHeader) {
         return <MobileGuestHeader />;
@@ -39,8 +39,9 @@ export const MainLayout: FC<Props> = ({ isHideMobileHeader = false, isFilled, ch
         {headerComponent()}
       </LogDiveProvider>
       {children}
-      {!isMobile ? <Footer /> : <FooterMobile />}
-      {isMobile && <MobileNavBar loggedIn={!!userAuth} />}
+      {isMobile === false && <Footer /> }
+      {isMobile === true && <FooterMobile /> }
+      {isMobile === true && <MobileNavBar loggedIn={!!userAuth} />}
     </>
   );
 };

@@ -8,33 +8,18 @@ import styles from './styles.module.scss';
 
 type Props = {
   value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  setValue: (val: string) => void;
+  setCountryCode: (val: string) => void;
   error?: string;
-  setError?: React.Dispatch<React.SetStateAction<string>>;
-  placeholder?: string;
-  height?: number;
-  width?: number
 };
 
 export const PhoneInput: FC<Props> = ({
   value,
   setValue,
   error,
-  setError,
-  placeholder,
-  height,
-  width,
+  setCountryCode,
 }) => {
-  const i = 0;
   const [countryValue, setCountryValue] = useState('');
-
-  console.log({
-    setError,
-    placeholder,
-    height,
-    width,
-    i,
-  });
 
   useEffect(() => {
     if (countryValue && value) {
@@ -42,13 +27,16 @@ export const PhoneInput: FC<Props> = ({
     }
     if (countryValue) {
       const code = getCountryCallingCode(countryValue as CountryCode);
+      setCountryCode(code);
       setValue(`+${code}`);
     }
   }, [countryValue]);
 
   useEffect(() => {
-    const valid = isValidPhoneNumber(value);
-    console.log({ valid });
+    if (value) {
+      const valid = isValidPhoneNumber(value);
+      console.log({ valid });
+    }
   }, [value]);
 
   return (
@@ -58,6 +46,7 @@ export const PhoneInput: FC<Props> = ({
         value={value}
         onChange={setValue}
         className={!error ? styles.phone : `${styles.phone} ${styles.error}`}
+        onCountryChange={(v) => v && setCountryCode(getCountryCallingCode(v))}
         countrySelectComponent={(data) => (
           <div className={styles.wrapper}>
             <FlagIco country={data.value || countryValue} />

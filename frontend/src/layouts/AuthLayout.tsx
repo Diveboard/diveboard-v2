@@ -1,21 +1,21 @@
 import React, {
   FC, useMemo, useState,
 } from 'react';
-import { UserType } from '../types';
+import { UserSettingsType } from '../firebase/firestore/models';
 
 type UserContext = {
-  userAuth: UserType;
-  setUserAuth: React.Dispatch<React.SetStateAction<UserType>>;
+  userAuth: UserSettingsType;
+  setUserAuth: React.Dispatch<React.SetStateAction<UserSettingsType>>;
 };
 
 export const AuthStatusContext = React.createContext<UserContext>(undefined);
 
 type Props = {
-  user?: UserType
+  user?: UserSettingsType
 };
 
 export const AuthLayout: FC<Props> = ({ user, children }) => {
-  const [userData, setUserData] = useState<UserType>(user);
+  const [userData, setUserData] = useState<UserSettingsType>(user);
 
   const authMemoizedState = useMemo(() => ({
     userAuth: userData,

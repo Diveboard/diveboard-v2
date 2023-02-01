@@ -1,44 +1,66 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { CategoryWrapper } from '../../formWrappers/CategoryWrapper';
 import { FormItemWrapper } from '../../formWrappers/FormItemWrapper';
-import { FormPropsType, getFormProps } from '../../helpers/getFormProps';
 import { Input } from '../../../../../../../../../Input/CommonInput';
 import { FormErrorsType } from '../../helpers/useFormSubmit';
-import { DanSurveyType } from '../../../../../../../../../../types';
+import { SurveyDanType } from '../../../../../../../../../../types';
 import styles from '../../styles.module.scss';
 import PhoneInput from '../../../../../../../../../Input/PhoneInput';
 
 type Props = {
-  contacts: DanSurveyType['contactInfo'];
-  setFormData: React.Dispatch<React.SetStateAction<DanSurveyType>>
+  formData: SurveyDanType;
+  setFormData: React.Dispatch<React.SetStateAction<SurveyDanType>>;
   error: FormErrorsType['phoneHome']
 };
 
 export const Contacts: FC<Props> = ({
-  contacts,
+  formData,
   setFormData,
   error,
 }) => {
-  const {
-    street,
-    city,
-    country,
-    email,
-    address,
-    homePhone,
-    workPhone,
-    state,
-    zipCode,
-    language,
-    citizenship,
-  } = getFormProps('contactInfo', setFormData) as FormPropsType<'contacts'>;
+  const [homeCode, setHomeCode] = useState(formData.diver.phone_home ? formData.diver.phone_home[0] : '');
+  const [workCode, setWorkCode] = useState(formData.diver.phone_work ? formData.diver.phone_work[0] : '');
+
+  useEffect(() => {
+    const newPhoneHome = formData.diver.phone_home || ['', ''];
+    newPhoneHome[0] = homeCode;
+    setFormData({
+      ...formData,
+      diver: {
+        ...formData.diver,
+        phone_home: newPhoneHome,
+      },
+    });
+  }, [homeCode]);
+
+  useEffect(() => {
+    const newPhoneWork = formData.diver.phone_work || ['', ''];
+    newPhoneWork[0] = workCode;
+    setFormData({
+      ...formData,
+      diver: {
+        ...formData.diver,
+        phone_work: newPhoneWork,
+      },
+    });
+  }, [workCode]);
 
   return (
     <CategoryWrapper title="Contact information">
       <FormItemWrapper title="Street address">
         <Input
-          value={contacts.streetAddress}
-          setValue={street.setItems}
+          value={formData.diver.address ? formData.diver.address[0] : ''}
+          setValue={(val) => {
+            const newAddress = formData.diver.address || ['', '', '', '', '', ''];
+            newAddress[0] = val;
+            return setFormData({
+              ...formData,
+              diver: {
+                ...formData.diver,
+                address: newAddress,
+              },
+            });
+          }}
           height={48}
           width={419}
         />
@@ -46,8 +68,18 @@ export const Contacts: FC<Props> = ({
 
       <FormItemWrapper title="Address complement">
         <Input
-          value={contacts.addressComplement}
-          setValue={address.setItems}
+          value={formData.diver.address ? formData.diver.address[1] : ''}
+          setValue={(val) => {
+            const newAddress = formData.diver.address || ['', '', '', '', '', ''];
+            newAddress[1] = val;
+            return setFormData({
+              ...formData,
+              diver: {
+                ...formData.diver,
+                address: newAddress,
+              },
+            });
+          }}
           height={48}
           width={419}
         />
@@ -55,8 +87,18 @@ export const Contacts: FC<Props> = ({
 
       <FormItemWrapper title="City">
         <Input
-          value={contacts.city}
-          setValue={city.setItems}
+          value={formData.diver.address ? formData.diver.address[2] : ''}
+          setValue={(val) => {
+            const newAddress = formData.diver.address || ['', '', '', '', '', ''];
+            newAddress[2] = val;
+            return setFormData({
+              ...formData,
+              diver: {
+                ...formData.diver,
+                address: newAddress,
+              },
+            });
+          }}
           height={48}
           width={419}
         />
@@ -65,8 +107,18 @@ export const Contacts: FC<Props> = ({
       <div className={styles.medicalGroup}>
         <FormItemWrapper title="State">
           <Input
-            value={contacts.state}
-            setValue={state.setItems}
+            value={formData.diver.address ? formData.diver.address[3] : ''}
+            setValue={(val) => {
+              const newAddress = formData.diver.address || ['', '', '', '', '', ''];
+              newAddress[3] = val;
+              return setFormData({
+                ...formData,
+                diver: {
+                  ...formData.diver,
+                  address: newAddress,
+                },
+              });
+            }}
             height={48}
             width={270}
           />
@@ -74,8 +126,18 @@ export const Contacts: FC<Props> = ({
 
         <FormItemWrapper title="ZIP code">
           <Input
-            value={contacts.zipCode}
-            setValue={zipCode.setItems}
+            value={formData.diver.address ? formData.diver.address[4] : ''}
+            setValue={(val) => {
+              const newAddress = formData.diver.address || ['', '', '', '', '', ''];
+              newAddress[4] = val;
+              return setFormData({
+                ...formData,
+                diver: {
+                  ...formData.diver,
+                  address: newAddress,
+                },
+              });
+            }}
             height={48}
             width={140}
           />
@@ -85,25 +147,66 @@ export const Contacts: FC<Props> = ({
 
       <FormItemWrapper title="Country">
         <Input
-          value={contacts.country}
-          setValue={country.setItems}
+          value={formData.diver.address ? formData.diver.address[5] : ''}
+          setValue={(val) => {
+            const newAddress = formData.diver.address || ['', '', '', '', '', ''];
+            newAddress[5] = val;
+            return setFormData({
+              ...formData,
+              diver: {
+                ...formData.diver,
+                address: newAddress,
+              },
+            });
+          }}
           height={48}
           width={419}
         />
       </FormItemWrapper>
 
       <FormItemWrapper title="Phone number (home)" required>
-        <PhoneInput value={contacts.phoneHome} setValue={homePhone.setItems} error={error} />
+        <PhoneInput
+          value={formData.diver.phone_home ? `+${formData.diver.phone_home.join(' ')}` : ''}
+          setCountryCode={setHomeCode}
+          setValue={(val) => {
+            setFormData({
+              ...formData,
+              diver: {
+                ...formData.diver,
+                phone_home: [homeCode, val ? val.split(homeCode)[1] : ''],
+              },
+            });
+          }}
+          error={error}
+        />
       </FormItemWrapper>
 
       <FormItemWrapper title="Phone number (work)">
-        <PhoneInput value={contacts.phoneWork} setValue={workPhone.setItems} />
+        <PhoneInput
+          value={formData.diver.phone_work ? `+${formData.diver.phone_work.join(' ')}` : ''}
+          setCountryCode={setWorkCode}
+          setValue={(val) => {
+            setFormData({
+              ...formData,
+              diver: {
+                ...formData.diver,
+                phone_work: [workCode, val ? val.split(workCode)[1] : ''],
+              },
+            });
+          }}
+        />
       </FormItemWrapper>
 
       <FormItemWrapper title="Email">
         <Input
-          value={contacts.email}
-          setValue={email.setItems}
+          value={formData.diver.email || ''}
+          setValue={(val) => setFormData({
+            ...formData,
+            diver: {
+              ...formData.diver,
+              email: val,
+            },
+          })}
           height={48}
           width={419}
         />
@@ -111,8 +214,14 @@ export const Contacts: FC<Props> = ({
 
       <FormItemWrapper title="Primary language">
         <Input
-          value={contacts.language}
-          setValue={language.setItems}
+          value={formData.diver.language || ''}
+          setValue={(val) => setFormData({
+            ...formData,
+            diver: {
+              ...formData.diver,
+              language: val,
+            },
+          })}
           height={48}
           width={419}
         />
@@ -120,8 +229,14 @@ export const Contacts: FC<Props> = ({
 
       <FormItemWrapper title="Citizenship">
         <Input
-          value={contacts.citizenship}
-          setValue={citizenship.setItems}
+          value={formData.diver.citizenship || ''}
+          setValue={(val) => setFormData({
+            ...formData,
+            diver: {
+              ...formData.diver,
+              citizenship: val,
+            },
+          })}
           height={48}
           width={419}
         />

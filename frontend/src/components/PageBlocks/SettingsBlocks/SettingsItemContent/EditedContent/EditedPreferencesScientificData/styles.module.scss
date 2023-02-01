@@ -1,9 +1,9 @@
 .label{
-  font-weight: 300;
-  font-size: 14px;
-  line-height: 20px;
-  color: #000345;
+  font-weight: 300 !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+  color: #000345 !important;
   &:hover{
-    cursor: pointer;
+    cursor: pointer !important;
   }
 }

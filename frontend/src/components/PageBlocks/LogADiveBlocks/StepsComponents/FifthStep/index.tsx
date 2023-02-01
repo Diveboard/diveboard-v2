@@ -124,6 +124,7 @@ export const FifthStep: FC<StepProps> = ({
             inputValue={diveCenter}
             setInputValue={setDiveCenter}
             recommendedItems={shops}
+            // @ts-ignore
             onSearchHandler={firestoreShopsService.getShopsByName}
           />
 
@@ -141,6 +142,7 @@ export const FifthStep: FC<StepProps> = ({
             inputValue={guideName}
             setInputValue={setGuideName}
             recommendedItems={guides}
+            // @ts-ignore
             onSearchHandler={firestoreGuidesService.getGuidesByGuideName}
           />
 

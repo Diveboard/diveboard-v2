@@ -1,7 +1,6 @@
 {
   "mainPageRoute": "/",
-  "mainPageGuest": "/main/home-guest",
-  "mainPageUser": "/logbook",
+  "logbookPageRoute": "/logbook",
   "authPageRout": "/auth",
   "explorePageRout": "/explore",
   "walletPageRout": "/wallet",

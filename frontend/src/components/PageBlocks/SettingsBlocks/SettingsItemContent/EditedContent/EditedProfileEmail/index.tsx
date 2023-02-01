@@ -21,15 +21,22 @@ import {
 
 import styles from './styles.module.scss';
 import editedStyle from '../../../editidStyle.module.scss';
+import { UserSettingsType } from '../../../../../../firebase/firestore/models';
+import { notify } from '../../../../../../utils/notify';
 
-export const EditedProfileEmail: FC = () => {
+type Props = {
+  userEmail: string;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserSettingsType>>
+};
+
+export const EditedProfileEmail: FC<Props> = ({ userEmail, setUserInfo }) => {
   const {
     userAuth,
     setUserAuth,
   } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
   const { availableCode, setExpiresTime } = useContext(AuthCodeContext);
-  const [emailValue, setEmailValue] = useState('');
+  const [emailValue, setEmailValue] = useState(userEmail);
   const [mailError, setMailError] = useState('');
   const [codeValue, setCodeValue] = useState('');
   const [codeError, setCodeError] = useState('');
@@ -46,14 +53,17 @@ export const EditedProfileEmail: FC = () => {
     if (!emailValue.match(mailRegexp)) {
       return setMailError('invalid mail value');
     }
-    setMailLoading(true);
-
-    const { expiresAfter } = await sendCodeOnNewEmail(emailValue) as { expiresAfter: number };
-    if (expiresAfter) {
-      setExpiresTime(expiresAfter);
+    try {
+      setMailLoading(true);
+      const { expiresAfter } = await sendCodeOnNewEmail(emailValue) as { expiresAfter: number };
+      if (expiresAfter) {
+        setExpiresTime(expiresAfter);
+      }
+      setMailLoading(false);
+      setMode('code');
+    } catch (e) {
+      notify('Something went wrong');
     }
-    setMailLoading(false);
-    setMode('code');
   };
 
   const confirmCode = async () => {
@@ -61,25 +71,30 @@ export const EditedProfileEmail: FC = () => {
     if (!codeValue.match(codeRegexp)) {
       return setCodeError('invalid code value');
     }
-    setCodeLoading(true);
-    const { token } = await confirmCodeOfNewEmail(emailValue, codeValue) as { token: string };
+    try {
+      setCodeLoading(true);
+      const { token } = await confirmCodeOfNewEmail(emailValue, codeValue) as { token: string };
 
-    const user = await getAuthorizedUserWithToken(token);
-    if (user) {
-      setUserAuth({
-        ...userAuth,
-        email: emailValue,
-      });
+      const user = await getAuthorizedUserWithToken(token);
+      if (user) {
+        setUserAuth({
+          ...userAuth,
+          email: emailValue,
+        });
 
-      await firestorePublicProfileService.setEmail(emailValue, userAuth.uid);
-      setCodeLoading(false);
-      setExpiresTime(null);
-      setEditedSettings({
-        settingsBlock: '',
-        settingsItem: '',
-      });
-    } else {
-      setCodeError('update user email error');
+        await firestorePublicProfileService.setEmail(emailValue, userAuth.uid);
+        setUserInfo((prev) => ({ ...prev, email: emailValue }));
+        setCodeLoading(false);
+        setExpiresTime(null);
+        setEditedSettings({
+          settingsBlock: '',
+          settingsItem: '',
+        });
+      } else {
+        notify('update user email error');
+      }
+    } catch (e) {
+      notify('Something went wrong');
     }
   };
 

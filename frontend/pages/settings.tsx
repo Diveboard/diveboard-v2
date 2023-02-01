@@ -1,5 +1,6 @@
 import React from 'react';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
+import { ToastContainer } from 'react-toastify';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { useWindowWidth } from '../src/hooks/useWindowWidth';
@@ -9,31 +10,22 @@ import {
 import {
   MobileSettings,
 } from '../src/components/PageBlocks/SettingsBlocks/SettingsModes/MobileSettings';
-import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
-import { firestorePaths } from '../src/firebase/firestore/firestorePaths';
+import { firestorePublicProfileService } from '../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
+import { UserSettingsType } from '../src/firebase/firestore/models';
+import 'react-toastify/dist/ReactToastify.css';
 
-const Settings:
-InferGetServerSidePropsType<typeof getServerSideProps> = (
-  { user, preferences, notifications },
-) => {
+const Settings: NextPage<{ user: UserSettingsType }> = (props) => {
   const isWidth = useWindowWidth(500, 769);
+
+  const { user } = props;
 
   return (
     <AuthLayout user={user}>
+      <ToastContainer />
       <MainLayout>
         {!isWidth
-          ? (
-            <DesktopSettings
-              preferences={preferences}
-              notifications={notifications}
-            />
-          )
-          : (
-            <MobileSettings
-              preferences={preferences}
-              notifications={notifications}
-            />
-          )}
+          ? <DesktopSettings user={user} />
+          : <MobileSettings user={user} />}
       </MainLayout>
     </AuthLayout>
   );
@@ -47,41 +39,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       throw new Error('no user uid');
     }
 
-    // TODO: Add to service
-    const snapshotUser = await firebaseAdmin
-      .firestore().doc(`${firestorePaths.users.path}/${uid}`).get();
-    const {
-      email, photoURL = '', name = '', country = '', about = '',
-    } = await snapshotUser.data();
+    const user = await firestorePublicProfileService.getUserById(uid);
 
-    const notificationSegment = firestorePaths.users.settings.notifications.segment;
-    const preferencesSegment = firestorePaths.users.settings.preferences.segment;
-    const getPath = (userId: string) => `${firestorePaths.users.path}/${userId}/${firestorePaths.users.settings.segment}`;
-
-    const snapshotPreferences = await firebaseAdmin
-      .firestore().doc(`${getPath(uid)}/${preferencesSegment}`).get();
-    const preferences = await snapshotPreferences.data();
-
-    const snapshotNotifications = await firebaseAdmin
-      .firestore().doc(`${getPath(uid)}/${notificationSegment}`).get();
-    const notifications = await snapshotNotifications.data();
+    if (!user) {
+      throw new Error('no user');
+    }
 
     return {
       props: {
-        user: {
-          uid,
-          email,
-          photoURL,
-          name,
-          country,
-          about,
-        },
-        preferences,
-        notifications,
+        user,
       },
     };
   } catch (e) {
-    console.log(e);
     return {
       redirect: {
         destination: '/auth',

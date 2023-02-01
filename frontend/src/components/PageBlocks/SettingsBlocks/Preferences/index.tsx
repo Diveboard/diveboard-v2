@@ -1,5 +1,5 @@
 import React, {
-  FC, useContext, useEffect, useState,
+  FC, useState,
 } from 'react';
 import { SettingsGroup } from '../SettingsGroup';
 import { SettingsItem } from '../SettingsItem';
@@ -16,30 +16,26 @@ import {
 import {
   EditedPreferencesUnitSystem,
 } from '../SettingsItemContent/EditedContent/EditedPreferencesUnitSystem';
-import { PreferencesType } from '../../../../firebase/firestore/models';
-import {
-  firestorePreferencesService,
-} from '../../../../firebase/firestore/firestoreServices/firestorePreferencesService';
-import { AuthStatusContext } from '../../../../layouts/AuthLayout';
-import { sameServerData } from '../../../../utils/sameServerData';
+import { LanguageEnum, PreferencesType, ShareData } from '../../../../firebase/firestore/models';
 
 type Props = {
   preferences: PreferencesType
   title?: boolean;
+  language: string
 };
 
-export const Preferences:FC<Props> = ({ preferences, title = true }) => {
+export const Preferences: FC<Props> = ({ language, preferences, title = true }) => {
   const [preferencesData, setPreferencesData] = useState(preferences);
-  const { userAuth } = useContext(AuthStatusContext);
+  const [lang, setLang] = useState(LanguageEnum[language]);
 
-  useEffect(() => {
-    (async () => {
-      const clientPreferences = await firestorePreferencesService.getAllPreferences(userAuth.uid);
-      if (!sameServerData(preferences, clientPreferences)) {
-        setPreferencesData(clientPreferences as PreferencesType);
-      }
-    })();
-  }, []);
+  const displayShareData = (shareData: ShareData): string => {
+    if (shareData === 'OPEN_SHARE') {
+      return 'I want to share my data and have my name be mentioned as author';
+    } if (shareData === 'NOT_SHARE') {
+      return 'I don\'t want to share my data';
+    }
+    return 'I want to share my data anonymously';
+  };
 
   return (
     <SettingsGroup title={title && 'Preferences'}>
@@ -65,26 +61,12 @@ export const Preferences:FC<Props> = ({ preferences, title = true }) => {
         titleBlock="Preferences"
       >
         <>
-          {preferencesData.scientificData.shareData
-            ? (
-              <div className={styles.secondaryItemContent}>
-                I want to share my data and have my name be mentioned as author
-              </div>
-            ) : (
-              <div className={styles.secondaryItemContent}>
-                I don't want to share my data and have my name be mentioned as author
-              </div>
-            )}
-          {preferencesData.scientificData.shareNotes
-            ? (
-              <div className={styles.secondaryItemContent}>
-                Share your dive notes
-              </div>
-            ) : (
-              <div className={styles.secondaryItemContent}>
-                Don't share your dive notes
-              </div>
-            )}
+          <div className={styles.secondaryItemContent}>
+            {displayShareData(preferencesData.scientificData.shareData)}
+          </div>
+          <div className={styles.secondaryItemContent}>
+            {preferencesData.scientificData.shareNotes ? 'Share your dive notes' : 'Don\'t share your dive notes'}
+          </div>
         </>
         <EditedPreferencesScientificData
           preferences={preferencesData}
@@ -96,10 +78,10 @@ export const Preferences:FC<Props> = ({ preferences, title = true }) => {
         title="Language"
         titleBlock="Preferences"
       >
-        <span className={styles.secondaryItemContent}>{preferencesData.language}</span>
+        <span className={styles.secondaryItemContent}>{lang}</span>
         <EditedPreferencesLanguage
-          preferences={preferencesData}
-          setPreferences={setPreferencesData}
+          setLang={setLang}
+          lang={lang}
         />
       </SettingsItem>
       <SettingsItem

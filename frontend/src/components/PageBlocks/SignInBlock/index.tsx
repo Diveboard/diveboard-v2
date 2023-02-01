@@ -81,16 +81,8 @@ export const SignInBlock: FC = () => {
 
       if (user) {
         setCookiesLogin(isKeepLogged, user.uid);
-
-        setUserAuth({
-          uid: user.uid,
-          email: user.email,
-          photoURL: user.photoURL,
-          name: user.displayName,
-          country: '',
-          qualifications: [],
-          about: '',
-        });
+        const userData = await firestorePublicProfileService.getUserById(user.uid);
+        setUserAuth(userData);
 
         await firestorePublicProfileService.setEmail(user.email, user.uid);
         await firestorePreferencesService.setDefaultPreferences(user.uid);
@@ -98,7 +90,7 @@ export const SignInBlock: FC = () => {
 
         precachePages(['/logbook', '/settings', '/log-dive']);
 
-        await statusUserRedirect(mode, router.push, setMode);
+        await statusUserRedirect(mode, router.push, setMode, userData.uid);
       }
     } catch (e) {
       setError('invalid or expired code');

@@ -4,15 +4,14 @@ import { PersonalInfo } from '../../PersonalInfo';
 import { Preferences } from '../../Preferences';
 import { Notification } from '../../Notifications';
 import { EditContextWrapper } from '../../EditContextWrapper';
-import { NotificationsType, PreferencesType } from '../../../../../firebase/firestore/models';
+import { UserSettingsType } from '../../../../../firebase/firestore/models';
 import { MarginWrapper } from '../../../../MarginWrapper';
 
 type Props = {
-  preferences: PreferencesType
-  notifications: NotificationsType
+  user: UserSettingsType;
 };
 
-export const MobileSettings: FC<Props> = ({ preferences, notifications }) => {
+export const MobileSettings: FC<Props> = ({ user }) => {
   const [mode, setMode] = useState <
   'personal info' | 'preferences' | 'notifications'
   >('personal info');
@@ -23,21 +22,25 @@ export const MobileSettings: FC<Props> = ({ preferences, notifications }) => {
 
         {mode === 'personal info' && (
         <>
-          <PersonalInfo title={false} />
+          <PersonalInfo user={user} title={false} />
           <MarginWrapper bottom={60} display="inline-block" />
         </>
         )}
 
         {mode === 'preferences' && (
         <>
-          <Preferences preferences={preferences} title={false} />
+          <Preferences
+            preferences={user.settings.preferences}
+            title={false}
+            language={user.settings.language}
+          />
           <MarginWrapper bottom={60} display="inline-block" />
         </>
         )}
 
         {mode === 'notifications' && (
         <>
-          <Notification notifications={notifications} title={false} />
+          <Notification notifications={user.settings.notifications} title={false} />
           <MarginWrapper bottom={60} display="inline-block" />
         </>
         )}

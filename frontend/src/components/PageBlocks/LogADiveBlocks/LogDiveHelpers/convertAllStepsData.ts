@@ -1,5 +1,5 @@
 import { AllStepsDataType } from '../types/stepTypes';
-import { DiveType } from '../../../../firebase/firestore/models';
+import { DiveType, UnitSystem } from '../../../../firebase/firestore/models';
 import {
   convertDiveActivities,
   convertToDiveActivities,
@@ -7,10 +7,17 @@ import {
 import { convertTimestampDate } from '../../../../utils/convertTimestampDate';
 import { SafetySpot } from '../types/commonTypes';
 import { firestoreGalleryService } from '../../../../firebase/firestore/firestoreServices/firestoreGalleryService';
+import {
+  convertCalToFar,
+  convertFarToCal,
+  convertFeetToMeters, convertKgToLbs, convertLbsToKg,
+  convertMetersToFeet,
+} from '../../../../utils/unitSystemConverter';
 
 export const convertAllStepsData = async (
   stepsData: AllStepsDataType,
   userId: string,
+  unitSystem: UnitSystem,
   draft: boolean = false,
 ) => {
   const replaceUndefinedToNull = (obj) => {
@@ -51,7 +58,8 @@ export const convertAllStepsData = async (
 
   return {
     buddies: stepsData.fifthStep.buddies || [],
-    danSend: false,
+    danSurvey: stepsData.eighthStep.danSurvey,
+    surveyId: stepsData.eighthStep.surveyId,
     diveActivities: convertDiveActivities(stepsData.firstStep.diveActivities),
     // TODO: Implement dive center logic
     diveCenter: {
@@ -61,8 +69,9 @@ export const convertAllStepsData = async (
     diveData: {
       ...replaceUndefinedToNull(stepsData.secondStep.parameters),
       ...replaceUndefinedToNull(stepsData.secondStep.advancedParameters),
-      // eslint-disable-next-line max-len
-      safetySpots: stepsData.secondStep.parameters?.safetySpots ? checkSafetySpots(stepsData.secondStep.parameters.safetySpots) : [],
+      safetySpots: stepsData.secondStep.parameters?.safetySpots
+        ? checkSafetySpots(stepsData.secondStep.parameters.safetySpots)
+        : [],
     },
     aboutDive: {
       ...replaceUndefinedToNull(stepsData.firstStep.overview),
@@ -76,12 +85,51 @@ export const convertAllStepsData = async (
     spotId: stepsData.thirdStep.spotId,
     tanks: stepsData.secondStep.tanks?.map((tank) => replaceUndefinedToNull(tank)) || [],
     oldId: null,
-    unitSystem: 'metric',
+    unitSystem,
     saves: 0,
   };
 };
 
-export const convertToStepsData = (data: DiveType) => ({
+const convertDistanceSystem = (
+  userUnitSystem: UnitSystem,
+  value: number,
+): number => {
+  if (!value) {
+    return 0;
+  }
+  if (userUnitSystem === 'METRIC') {
+    return convertFeetToMeters(value);
+  }
+  return convertMetersToFeet(value);
+};
+
+const convertTempSystem = (
+  userUnitSystem: UnitSystem,
+  value: number,
+): number => {
+  if (!value) {
+    return 0;
+  }
+  if (userUnitSystem === 'METRIC') {
+    return convertFarToCal(value);
+  }
+  return convertCalToFar(value);
+};
+
+const convertWeightSystem = (
+  userUnitSystem: UnitSystem,
+  value: number,
+): number => {
+  if (!value) {
+    return 0;
+  }
+  if (userUnitSystem === 'METRIC') {
+    return convertLbsToKg(value);
+  }
+  return convertKgToLbs(value);
+};
+
+export const convertToStepsData = (data: DiveType, unitSystem: UnitSystem) => ({
   firstStep: {
     overview: {
       diveNumber: data.aboutDive?.diveNumber,
@@ -105,18 +153,33 @@ export const convertToStepsData = (data: DiveType) => ({
       date: data.diveData.date
         ? convertTimestampDate(data.diveData.date)
         : null,
-      maxDepth: data.diveData?.maxDepth,
+      maxDepth: unitSystem === data.unitSystem
+        ? data.diveData?.maxDepth
+        : convertDistanceSystem(unitSystem, data.diveData?.maxDepth),
       duration: data.diveData?.duration,
       surfaceInterval: data.diveData?.surfaceInterval,
-      safetySpots: data.diveData?.safetySpots,
+      safetySpots: unitSystem === data.unitSystem
+        ? data.diveData?.safetySpots
+        : data.diveData?.safetySpots.map((spot) => (
+          { ...spot, depth: convertDistanceSystem(unitSystem, spot.depth) }
+        ))
+      ,
     },
     advancedParameters: {
-      surfaceTemp: data.diveData?.surfaceTemp,
-      bottomTemp: data.diveData?.bottomTemp,
-      weights: data.diveData?.weights,
+      surfaceTemp: unitSystem === data.unitSystem
+        ? data.diveData?.surfaceTemp
+        : convertTempSystem(unitSystem, data.diveData?.surfaceTemp),
+      bottomTemp: unitSystem === data.unitSystem
+        ? data.diveData?.bottomTemp
+        : convertTempSystem(unitSystem, data.diveData?.bottomTemp),
+      weights: unitSystem === data.unitSystem
+        ? data.diveData?.weights
+        : convertWeightSystem(unitSystem, data.diveData?.weights),
       waterVisibility: data.diveData?.waterVisibility,
       current: data.diveData?.current,
-      altitude: data.diveData?.altitude,
+      altitude: unitSystem === data.unitSystem
+        ? data.diveData?.altitude
+        : convertDistanceSystem(unitSystem, data.diveData?.altitude),
       waterType: data.diveData?.waterType,
     },
     tanks: data.tanks,
@@ -144,7 +207,7 @@ export const convertToStepsData = (data: DiveType) => ({
     })),
     save: true,
   },
-  eighthStep: {},
+  eighthStep: { surveyId: data.surveyId || null },
   ninthStep: {
     publishingMode: data.publishingMode,
   },

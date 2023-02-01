@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import landingLabel from '../../../../../../public/images/landing-label.png';
@@ -11,6 +11,7 @@ import { ButtonGroup } from '../../../../ButtonGroup';
 import { SearchDropdownPanel } from '../../../../Dropdown/SearchedItems/SearchDropdownPanel';
 import { firestoreGeoDataService } from '../../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
 import { useDebounce } from '../../../../../hooks/useDebounce';
+import { useOutsideClick } from '../../../../../hooks/useOutsideClick';
 
 export const MainBannerBlock = () => {
   const isWidth = useWindowWidth(500, 768);
@@ -37,11 +38,16 @@ export const MainBannerBlock = () => {
   const [regions, setRegions] = useState([]);
 
   const [searchQuery, setSearchQuery] = useState('');
+
   useDebounce(searchQuery, setInputRegion, 1000);
+
+  const searchRef = useRef(null);
+
+  useOutsideClick(() => setRegions([]), searchRef);
 
   const fetchRegions = async () => {
     if (inputRegion && isFetch) {
-      const res = await firestoreGeoDataService.getRegions(inputRegion, null, 15);
+      const res = await firestoreGeoDataService.getGeonames(inputRegion);
       setRegions(res);
     }
   };
@@ -61,7 +67,7 @@ export const MainBannerBlock = () => {
   const clickRegionHandler = async (item) => {
     setRegions([]);
     if (item.id) {
-      router.push(`/explore?location=${item.id}&type=${activeTab}`);
+      router.push(`/explore?location=${item.geonameRef.id}&type=${activeTab}`);
     }
     setIsFetch(false);
   };
@@ -88,7 +94,7 @@ export const MainBannerBlock = () => {
         </p>
 
         <div className={styles.inputBlock}>
-          <div className={styles.inputWrapper}>
+          <div className={styles.inputWrapper} ref={searchRef}>
             <Input
               value={searchQuery}
               setValue={(val) => {

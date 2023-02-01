@@ -19,6 +19,7 @@ import {
   firestoreGeoDataService,
 } from '../../../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
 import { Bounds } from '../../../../../../types';
+import { notify } from '../../../../../../utils/notify';
 
 type Props = {
   location: { lat: number, lng: number };
@@ -33,8 +34,8 @@ type Props = {
   createdNewSpotId: string;
   setChosenPointId: (res: string) => void;
   setButton:React.Dispatch<React.SetStateAction<string>>;
-  disableError?: () => void;
   boundsCoors?: Bounds;
+  newPointCoords?: { lat: number, lng: number };
 };
 
 export const LogADiveDiveMap: FC<Props> = ({
@@ -50,8 +51,8 @@ export const LogADiveDiveMap: FC<Props> = ({
   createdNewSpotId,
   setChosenPointId,
   setButton,
-  disableError,
   boundsCoors,
+  newPointCoords,
 }) => {
   const [region, setRegion] = useState('');
   const userLocation = useUserLocation();
@@ -68,7 +69,6 @@ export const LogADiveDiveMap: FC<Props> = ({
         const spotId = markers.find((item) => item.name === name);
         setChosenPointId(spotId.id);
         setButton(name);
-        disableError();
       }}
     />
   ));
@@ -142,6 +142,12 @@ export const LogADiveDiveMap: FC<Props> = ({
   }, [userLocation]);
 
   useEffect(() => {
+    if (newPointCoords && setNewPositionMarker.current) {
+      setNewPositionMarker?.current(newPointCoords);
+    }
+  }, [newPointCoords]);
+
+  useEffect(() => {
     if (setVisible.current) {
       setVisible.current(newPoint);
       setNewPositionMarker.current(location);
@@ -155,26 +161,36 @@ export const LogADiveDiveMap: FC<Props> = ({
       })();
     }
   }, [newPoint]);
+  const searchRef = useRef(null);
+  const [value, setValue] = useState('');
 
   return (
     <div className={styles.mapWrapper}>
-
       <div className={styles.searchWrapper}>
         {!newPoint && (
           <>
-
-            <SearchInput setQueryData={setRegion} ms={500} placeholder="Region" />
-            <SearchedItems
-              value={region}
-              setValue={setRegion}
-              onSearchHandler={firestoreGeoDataService.getGeonamesPredictions}
-              onSearchedItemClicked={async (item) => {
-                const coords = await firestoreGeoDataService
-                  .getGeonamesCoordsById(item.id as string);
-                setLocation(coords);
-                setRegion('');
-              }}
-            />
+            <div ref={searchRef} className={styles.searchInputWrapper}>
+              <SearchInput
+                value={value}
+                setValue={setValue}
+                setQueryData={setRegion}
+                ms={500}
+                placeholder="Region"
+              />
+              <SearchedItems
+                value={region}
+                searchRef={searchRef}
+                setValue={setRegion}
+                onSearchHandler={firestoreGeoDataService.getGeonames}
+                onSearchedItemClicked={async (item) => {
+                  const { coords } = await firestoreGeoDataService
+                    .getGeonameById(item.geonameRef);
+                  setValue(item.name);
+                  setLocation(coords);
+                  setRegion('');
+                }}
+              />
+            </div>
             <Button
               width={71}
               height={48}
@@ -185,7 +201,7 @@ export const LogADiveDiveMap: FC<Props> = ({
                 if (userLocation) {
                   setLocation(userLocation);
                 } else {
-                  checkGeolocationAccess();
+                  checkGeolocationAccess(() => notify('Site need permission for access to geolocation, check this in browser settings'));
                 }
               }}
             >

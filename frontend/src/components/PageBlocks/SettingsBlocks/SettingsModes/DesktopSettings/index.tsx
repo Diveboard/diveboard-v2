@@ -4,27 +4,26 @@ import { EditContextWrapper } from '../../EditContextWrapper';
 import { PersonalInfo } from '../../PersonalInfo';
 import { Preferences } from '../../Preferences';
 import { Notification } from '../../Notifications';
-import { NotificationsType, PreferencesType } from '../../../../../firebase/firestore/models';
+import { UserSettingsType } from '../../../../../firebase/firestore/models';
 import { MarginWrapper } from '../../../../MarginWrapper';
 
 type Props = {
-  preferences: PreferencesType
-  notifications: NotificationsType
+  user: UserSettingsType
 };
 
-export const DesktopSettings: FC <Props> = ({ preferences, notifications }) => (
+export const DesktopSettings: FC <Props> = ({ user }) => (
   <SettingsBlock>
     <EditContextWrapper>
       <MarginWrapper top={20} display="block">
-        <PersonalInfo />
+        <PersonalInfo user={user} />
       </MarginWrapper>
 
       <MarginWrapper top={20} display="block">
-        <Preferences preferences={preferences} />
+        <Preferences preferences={user.settings.preferences} language={user.settings.language} />
       </MarginWrapper>
 
       <MarginWrapper top={20} display="block">
-        <Notification notifications={notifications} />
+        <Notification notifications={user.settings.notifications} />
       </MarginWrapper>
 
     </EditContextWrapper>

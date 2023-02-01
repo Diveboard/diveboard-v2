@@ -1,4 +1,6 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, {
+  FC, useContext, useEffect, useRef, useState,
+} from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -13,6 +15,10 @@ import { firestoreGeoDataService } from '../../../firebase/firestore/firestoreSe
 import { useDebounce } from '../../../hooks/useDebounce';
 import { SearchDropdownPanel } from '../../Dropdown/SearchedItems/SearchDropdownPanel';
 import { firestoreSpotsService } from '../../../firebase/firestore/firestoreServices/firestoreSpotsService';
+import { useOutsideClick } from '../../../hooks/useOutsideClick';
+import { AuthStatusContext } from '../../../layouts/AuthLayout';
+import { convertCalToFar, convertMetersToFeet } from '../../../utils/unitSystemConverter';
+import { notify } from '../../../utils/notify';
 // import { ShopCard } from '../../Cards/ShopsCard';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
@@ -188,8 +194,12 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
 
   const fetchRegions = async () => {
     if (inputRegion && isFetch) {
-      const res = await firestoreGeoDataService.getRegions(inputRegion, null, 15);
-      setRegions(res);
+      try {
+        const res = await firestoreGeoDataService.getGeonames(inputRegion);
+        setRegions(res);
+      } catch (e) {
+        notify('Geonames is not found');
+      }
     }
   };
 
@@ -200,40 +210,57 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     }
   }, [inputRegion]);
 
-  const searchHandler = async (item) => {
-    setRegions([]);
-    setSearchQuery(item.name);
-    if (item.regionId) {
-      const reg = await firestoreGeoDataService.getRegionArea(item.regionId);
-      setRegion({ area: reg, name: item.name });
+  const searchArea = async (geo, item) => {
+    let area;
+
+    if (item.name) {
+      setRegion({ ...region, name: item.name });
     }
-    if (item?.coords) {
-      const lat = (item.coords.sw.lat + item.coords.ne.lat) / 2;
-      const lng = (item.coords.sw.lng + item.coords.ne.lng) / 2;
+    if (geo.areaRef) {
+      try {
+        area = await firestoreGeoDataService.getAreaByRef(geo.areaRef);
+        setRegion({ area, name: item.name });
+      } catch (e) {
+        notify('Area is not found');
+      }
+    }
+    if (geo?.coords) {
+      const { lat } = geo.coords;
+      const { lng } = geo.coords;
       setMapsCoords({
         lat,
         lng,
       });
+      if (!area) {
+        try {
+          area = await firestoreGeoDataService.getAreaByCoords(geo.coords);
+        } catch (e) {
+          notify('Area is not found');
+        }
+      }
     }
+    setRegion({ area, name: item.name });
     setIsFetch(false);
-    const res = await firestoreSpotsService.getSpotsByRegion(item.name);
-    setMarkerPoints(res.map((s) => ({
-      id: s.id,
-      lat: s.lat,
-      lng: s.lng,
-      divesCount: s.dives?.length,
-      diveName: s.name,
-    })));
-    setSpots(res);
+  };
+
+  const searchHandler = async (item) => {
+    setSearchQuery(item.name);
+    setRegions([]);
+    router.push(`/explore?location=${item.geonameRef.id}&type=${activeTab}`);
   };
 
   useEffect(() => {
     (async () => {
       if (location && type) {
+        setRegions([]);
         const tab = type as string;
         setActiveTab(tab.charAt(0).toUpperCase() + tab.slice(1));
-        const res = await firestoreGeoDataService.getRegionById(location);
-        await searchHandler(res);
+        try {
+          const res = await firestoreGeoDataService.getGeonameById(location as string);
+          await searchArea(res, { name: res.name });
+        } catch (e) {
+          notify('Location is not found');
+        }
       }
     })();
   }, [location, type]);
@@ -249,6 +276,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
         setIsFetch(true);
         fetchRegions();
       }}
+      onBackClick={() => router.back()}
     >
       {!!regions?.length && (
       <SearchDropdownPanel
@@ -261,25 +289,58 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   );
 
   const onMapChange = async (e: GoogleMapReact.ChangeEventValue) => {
-    const markersItems = await firestoreSpotsService
-      .getAllSpotsInMapViewport({
-        ne: e.bounds.ne,
-        sw: e.bounds.sw,
-      });
-    setMarkerPoints(markersItems.map((s) => ({
-      id: s.id,
-      lat: s.lat,
-      lng: s.lng,
-      divesCount: s.dives,
-      diveName: s.name,
-    })));
-    setSpots(markersItems);
+    try {
+      const markersItems = await firestoreSpotsService
+        .getAllSpotsInMapViewport({
+          ne: e.bounds.ne,
+          sw: e.bounds.sw,
+        });
+      setMarkerPoints(markersItems.map((s) => ({
+        id: s.id,
+        lat: s.lat,
+        lng: s.lng,
+        divesCount: s.dives,
+        diveName: s.name,
+      })));
+      setSpots(markersItems);
+    } catch (ev) {
+      notify('Something went wrong');
+    }
+  };
+  const searchRef = useRef(null);
+
+  useOutsideClick(() => setRegions([]), searchRef);
+
+  const {
+    userAuth,
+  } = useContext(AuthStatusContext);
+
+  const convertTempSystem = (value: number): string => {
+    if (!userAuth) {
+      return `${value ? value?.toFixed(2) : 0} ºC`;
+    }
+    const userUnitSystem = userAuth.settings.preferences.unitSystem;
+    if (userUnitSystem === 'IMPERIAL') {
+      return `${value ? convertCalToFar(value)?.toFixed(2) : 0} ºF`;
+    }
+    return `${value ? value?.toFixed(2) : 0} ºC`;
+  };
+
+  const convertDepth = (value): string => {
+    if (!userAuth) {
+      return `${value ? value?.toFixed(2) : 0} m`;
+    }
+    const userUnitSystem = userAuth.settings.preferences.unitSystem;
+    if (userUnitSystem === 'IMPERIAL') {
+      return `${value ? convertMetersToFeet(value)?.toFixed(2) : 0} ft`;
+    }
+    return `${value ? value?.toFixed(2) : 0} m`;
   };
 
   return (
     <div className={`${styles.wrapper} ${styles['min-height-wrapper']}`}>
       <div className={styles.sidebar} id="sidebar" onTouchEnd={handleSidebar}>
-        {!isMobile && renderInput}
+        {!isMobile && <div ref={searchRef}>{renderInput}</div>}
         <div
           className={styles.tabs}
           onTouchStart={(e) => setTouchStartY(e.touches[0].screenY)}
@@ -307,24 +368,23 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
           // eslint-disable-next-line react/jsx-no-useless-fragment
           <>
             {!!spots.length && spots.map((spot) => (
-              <a
+              <span
                 key={spot.id}
                 onClick={() => router.push(`spot/${spot.id}`)}
               >
                 <SpotCard
                   region={spot.location?.region}
                   name={spot.name}
-                // Check it
                   depth={spot.stats?.averageDepth?.metric}
                   imgSrc={spot.bestPictures?.length ? spot.bestPictures[0] : '/images/fish.jpg'}
                   favorite={false}
                   country={spot.location?.country}
                 />
-              </a>
+              </span>
             ))}
           </>
           )}
-          {/* {activeTab === 'Shops' && fakeShops.map((shop, index) => (* /}
+          {/* {activeTab === 'Shops' && fakeShops.map((shop, index) => ( */}
           {/*  <ShopCard */}
           {/*        /* eslint-disable-next-line react/no-array-index-key */}
           {/*    key={index} */}
@@ -342,27 +402,31 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
               <h1>{region?.name}</h1>
               <FavoritesBlock isFavorite={false} count={0} />
             </div>
+            { region?.area && (
             <div className={styles.subtitle}>
               <Icon iconName="stats" size={24} />
               Stats
             </div>
+            ) }
+            {region?.area && (
             <div className={styles.stats}>
               <span>
                 Average depth:
                 {' '}
-                <b>20.78m</b>
+                <b>{convertDepth(region.area.averageDepth)}</b>
               </span>
               <span>
                 Average temperature on bottom:
                 {' '}
-                <b>25°C</b>
+                <b>{convertTempSystem(region.area.averageTemperatureOnBottom)}</b>
               </span>
               <span>
                 Average temperature on surface:
                 {' '}
-                <b>27ºC</b>
+                <b>{convertTempSystem(region.area.averageTemperatureOnSurface)}</b>
               </span>
             </div>
+            )}
             {region?.area && (
             <>
               <div className={styles.subtitle}>
@@ -392,18 +456,24 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
               />
             </>
             )}
-            <div className={styles.subtitle}>
-              <Icon iconName="species-octopus" size={24} />
-              Species
-            </div>
-            <div>
-              <Image
-                src="/images/Species.svg"
-                layout="intrinsic"
-                height={70}
-                width={420}
-              />
-            </div>
+            {!!region?.area?.species?.length && (
+            <>
+              <div className={styles.subtitle}>
+                <Icon iconName="species-octopus" size={24} />
+                Species
+              </div>
+              <div className={styles.species}>
+                {region.area.species.slice(0, 4).map((fish) => (
+                  <Image
+                    src={`/species/${fish.category}.svg`}
+                    layout="intrinsic"
+                    height={85}
+                    width={75}
+                  />
+                ))}
+              </div>
+            </>
+            )}
           </>
           )}
         </div>
@@ -414,7 +484,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
           zoom={7}
           points={markerPoints}
           isMobile={isMobile}
-          renderInput={renderInput}
+          renderInput={<div ref={searchRef}>{renderInput}</div>}
           onMapChange={onMapChange}
         />
         {/* {typeof chosenSpot === 'number' && ( */}

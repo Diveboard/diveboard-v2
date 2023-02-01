@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { TimePickerInput } from '../../../../../Input/TimePickerInput';
 import { DatePickerInput } from '../../../../../Input/DatePickerInput';
 import { InputLabelWrapper } from '../../../inputLabelWrapper';
@@ -8,6 +8,7 @@ import styles from './styles.module.scss';
 import { SecondStepErrors } from '../../../types/errorTypes';
 import { setParams } from '../../../LogDiveHelpers/setParams/setParams';
 import { useWindowWidth } from '../../../../../../hooks/useWindowWidth';
+import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 
 type Props = {
   parameters: SecondStepType['parameters'];
@@ -25,6 +26,10 @@ export const Parameters: FC<Props> = ({
   const isMobile = useWindowWidth(500, 768);
 
   const params = setParams(parameters, setParameters);
+
+  const {
+    userAuth,
+  } = useContext(AuthStatusContext);
 
   const errorsParams = setParams(errors, setErrors);
   return (
@@ -58,7 +63,7 @@ export const Parameters: FC<Props> = ({
           setValue={(val) => params('maxDepth', +(val as string))}
           height={48}
           width={isMobile ? 768 : 165}
-          placeholder="m"
+          placeholder={userAuth.settings.preferences.unitSystem === 'METRIC' ? 'm' : 'ft'}
           error={errors.maxDepthError}
           setError={(val) => {
             errorsParams('maxDepthError', val as string);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
+import { name } from 'country-emoji';
 import { PersonalProfileData } from './PersonalProfileData';
 import { DivesMap } from './DivesMap';
 import { DivesBlock } from './DivesBlock';
@@ -9,49 +9,23 @@ import { DiveBuddies } from './DiveBuddiesBlock';
 import { MobileAddButton } from '../../Buttons/MobileAddButton';
 import pagesRoutes from '../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
-import { DiveType, SpeciesType, SpotType } from '../../../firebase/firestore/models';
-import { UserType } from '../../../types';
-
-// const certifications = [
-//   {
-//     certificateName: 'CMAS 3* VDST / N4 ',
-//     obtainingDate: '(Aug 2012)',
-//   },
-//   {
-//     certificateName: 'CMAS Nitrox 1',
-//     obtainingDate: '(Aug 2012)',
-//   },
-//   {
-//     certificateName: 'PADI Ice Diver',
-//     obtainingDate: '(Jan 2012)',
-//   },
-//   {
-//     certificateName: 'Self-assessed Photography',
-//     obtainingDate: '(Mar 2011)',
-//   },
-//   {
-//     certificateName: 'CMAS 2 Star',
-//     obtainingDate: '(Jul 2006)',
-//   },
-//   {
-//     certificateName: 'FFESSM Level 2',
-//     obtainingDate: '(Jul 2006)',
-//   },
-//   {
-//     certificateName: 'CMAS 1 Star',
-//     obtainingDate: '(Jul 2005)',
-//   },
-// ];
+import {
+  BuddiesType,
+  DiveType, SpeciesType, SpotType, UserSettingsType,
+} from '../../../firebase/firestore/models';
+import { SurveysBlock } from './SurveysBlock';
 
 type Props = {
   dives: Array<DiveType & { spot: SpotType, date: string }>
   species: Array<SpeciesType>
-  buddies: Array<any>
-  logbookUser: UserType
+  buddies: Array<BuddiesType>
+  logbookUser: UserSettingsType
+  user: UserSettingsType
+  surveysNumber: number
 };
 
 export const ProfileBlock = ({
-  dives, species, buddies, logbookUser,
+  dives, species, buddies, logbookUser, surveysNumber, user,
 }: Props) => {
   const mapCoords = {
     lat: 40.95,
@@ -70,17 +44,15 @@ export const ProfileBlock = ({
     ? dives.flatMap((dive) => [...dive.externalImgsUrls].map((img) => img))
     : [];
 
-  const uid = Cookies.get('__session');
-
-  const [isItOwnProfile, setOwnProfile] = useState(uid === logbookUser.uid);
+  const [isItOwnProfile, setOwnProfile] = useState(user?.uid === logbookUser.uid);
 
   useEffect(() => {
-    setOwnProfile(uid === logbookUser.uid);
+    setOwnProfile(user.uid === logbookUser.uid);
   }, [logbookUser.uid]);
 
   return (
     <div className={styles.profileBlockWrapper}>
-      {uid && (
+      {user.uid && (
         <MobileAddButton
           iconName="new-dive-white"
           link={pagesRoutes.logDivePageRout}
@@ -88,19 +60,21 @@ export const ProfileBlock = ({
       )}
 
       <PersonalProfileData
-        imgSrc={logbookUser.photoURL}
-        name={logbookUser.name || ''}
-        country={logbookUser.country}
+        imgSrc={logbookUser.photoUrl}
+        name={`${logbookUser.firstName || ''} ${logbookUser.lastName || ''}`}
+        country={name(logbookUser.country)}
         about={logbookUser.about}
         isItOwnProfile={isItOwnProfile}
         followersCount={0}
         dives={dives}
       />
+      {!!dives?.length && (
       <DivesMap
         coords={mapCoords}
         zoom={7}
         points={markerPoints}
       />
+      )}
       {!!dives?.length && (
         <DivesBlock
           dives={isItOwnProfile ? dives : dives.filter((dive) => !dive.draft && dive.publishingMode === 'public')}
@@ -110,9 +84,10 @@ export const ProfileBlock = ({
       )}
       {!!pictures.length && <PicturesBlock pictures={pictures} /> }
       {!!species?.length && <LatestSpecies species={species} /> }
-      {/* <CertificationBlock certifications={certifications} /> */}
+      {/* <CertificationBlock certifications={certifications} />* /}
       {/* <CentersVisitedBlock /> */}
       {!!buddies?.length && <DiveBuddies buddies={buddies} /> }
+      {!!surveysNumber && <SurveysBlock surveysNumber={surveysNumber} />}
     </div>
   );
 };
