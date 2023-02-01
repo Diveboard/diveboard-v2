@@ -28,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!uid) {
     return {
       redirect: {
-        destination: pageRoutes.mainPageGuest,
+        destination: pageRoutes.mainPageRoute,
         permanent: false,
       },
     };
@@ -39,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!user) {
     return {
       redirect: {
-        destination: pageRoutes.mainPageGuest,
+        destination: pageRoutes.mainPageRoute,
         permanent: false,
       },
     };

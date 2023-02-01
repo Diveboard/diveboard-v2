@@ -31,12 +31,12 @@ export const GuestHeader: FC<{ isFilled?: boolean }> = ({ isFilled }): JSX.Eleme
           link="/"
           label="Logbook"
           iconName={
-            router.pathname === pagesRoutes.mainPageGuest && !scrolled
+            router.pathname === pagesRoutes.mainPageRoute && !scrolled
               ? 'logbook-white'
               : 'logbook'
           }
           labelColor={
-            router.pathname === pagesRoutes.mainPageGuest && !scrolled
+            router.pathname === pagesRoutes.mainPageRoute && !scrolled
               ? '#FFFFFF'
               : '#000345'
           }
@@ -45,12 +45,12 @@ export const GuestHeader: FC<{ isFilled?: boolean }> = ({ isFilled }): JSX.Eleme
           link="/"
           label="Wallet"
           iconName={
-            router.pathname === pagesRoutes.mainPageGuest && !scrolled
+            router.pathname === pagesRoutes.mainPageRoute && !scrolled
               ? 'wallet-white'
               : 'wallet-mobile'
           }
           labelColor={
-            router.pathname === pagesRoutes.mainPageGuest && !scrolled
+            router.pathname === pagesRoutes.mainPageRoute && !scrolled
               ? '#FFFFFF'
               : '#000345'
           }
@@ -61,7 +61,7 @@ export const GuestHeader: FC<{ isFilled?: boolean }> = ({ isFilled }): JSX.Eleme
         <LinkedButton
           link="/explore"
           iconName={
-            router.pathname === pagesRoutes.mainPageGuest && !scrolled
+            router.pathname === pagesRoutes.mainPageRoute && !scrolled
               ? 'search-white'
               : 'search'
           }
@@ -72,7 +72,7 @@ export const GuestHeader: FC<{ isFilled?: boolean }> = ({ isFilled }): JSX.Eleme
           height={56}
           borderRadius={30}
           border={`2px solid ${
-            router.pathname === pagesRoutes.mainPageGuest && !scrolled
+            router.pathname === pagesRoutes.mainPageRoute && !scrolled
               ? '#FFFFFF'
               : '#000345'
           }`}
@@ -84,7 +84,7 @@ export const GuestHeader: FC<{ isFilled?: boolean }> = ({ isFilled }): JSX.Eleme
           <span
             style={{
               color: `${
-                router.pathname === pagesRoutes.mainPageGuest && !scrolled
+                router.pathname === pagesRoutes.mainPageRoute && !scrolled
                   ? '#FFFFFF'
                   : '#000345'
               }`,

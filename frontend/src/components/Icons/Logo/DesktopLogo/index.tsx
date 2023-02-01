@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Icon } from '../../Icon';
 import styles from './styles.module.scss';
 import { AuthStatusContext } from '../../../../layouts/AuthLayout';
+import pagesRoutes from '../../../../routes/pagesRoutes.json';
 
 type Props = {
   filled?: boolean;
@@ -21,7 +22,7 @@ export const Logo: FC<Props> = ({ filled = true, size = 'large' }) => {
 
   return (
     <div className={logoSize}>
-      <Link href={userAuth?.uid ? `/logbook/${userAuth.uid}` : '/main/home-guest'}>
+      <Link href={userAuth?.uid ? `/logbook/${userAuth.uid}` : pagesRoutes.mainPageRoute}>
         <a className={logoStyle}>
           <Icon
             iconName="logo"
