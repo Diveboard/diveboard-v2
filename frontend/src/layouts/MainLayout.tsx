@@ -39,8 +39,9 @@ export const MainLayout: FC<Props> = ({ isHideMobileHeader = false, isFilled, ch
         {headerComponent()}
       </LogDiveProvider>
       {children}
-      {!isMobile ? <Footer /> : <FooterMobile />}
-      {isMobile && <MobileNavBar loggedIn={!!userAuth} />}
+      {isMobile === false && <Footer /> }
+      {isMobile === true && <FooterMobile /> }
+      {isMobile === true && <MobileNavBar loggedIn={!!userAuth} />}
     </>
   );
 };
