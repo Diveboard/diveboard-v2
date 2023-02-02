@@ -2,7 +2,6 @@ import React, { FC, useState } from 'react';
 import Slider from 'react-slick';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import PictureSaves from './PictureSaves';
 import styles from './styles.module.scss';
 import { Icon } from '../../../Icons/Icon';
 
@@ -60,10 +59,11 @@ export const MobileSpotHeader: FC<Props> = ({
           <div className={styles.right} onClick={() => router.back()}>
             <Icon iconName="back-button" size={40} />
           </div>
-          <div className={styles.right}>
-            <Icon iconName="share-link" size={40} />
-            <PictureSaves saved={currentSlideData.saved} count={currentSlideData.savesNumber} />
-          </div>
+          {/* <div className={styles.right}> */}
+          {/*  <Icon iconName="share-link" size={40} /> */}
+          {/*  <PictureSaves saved={currentSlideData.saved} */}
+          {/* count={currentSlideData.savesNumber} /> */}
+          {/* </div> */}
         </div>
         <div className={styles.pictureCount}>
           <span>{currentSlideData.slideNumber + 1}</span>

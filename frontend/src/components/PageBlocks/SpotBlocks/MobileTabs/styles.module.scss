@@ -21,6 +21,14 @@
     box-shadow: inset 0px -2px 0px #074EE8;
   }
 
+  .panelDisable {
+    font-weight: 400;
+    border-radius: 5px 5px 0 0;
+    cursor: not-allowed;
+    color: #9b9b9b;
+    border-bottom: 2px solid rgba(0, 3, 69, 0.05);
+  }
+
   .notActivePanel {
     font-weight: 400;
     color: #000345;

@@ -92,8 +92,8 @@ export const SpotBlocks = ({ spot, dives, species }: Props) => {
       <div className={styles.wrapper}>
         {isMobile ? tab === 'info'
             && <Info location={spot?.location} species={species} />
-          : <Info location={spot?.location} species={species} />}
-        {isMobile ? tab === 'dives' && <DivesInSpot dives={dives} /> : <DivesInSpot dives={dives} />}
+          : <Info location={spot?.location} species={species} /> }
+        {isMobile ? tab === 'dives' && <DivesInSpot dives={dives} /> : <DivesInSpot dives={dives} /> }
         {/* {isMobile ? tab === 'shops' && <ShopsInSpot /> : <ShopsInSpot />} */}
       </div>
 

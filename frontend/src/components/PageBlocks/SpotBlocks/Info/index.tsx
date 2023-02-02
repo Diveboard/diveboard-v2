@@ -59,7 +59,7 @@ export const Info = ({ location, species }: Props) => {
 
   return (
     <div className={styles.info}>
-      {!isMobile && <h2>Info</h2>}
+      {isMobile === false && <h2>Info</h2>}
       <div className={styles.itemsWrapper}>
         <div className={styles.item}>
           <div className={styles.header}>

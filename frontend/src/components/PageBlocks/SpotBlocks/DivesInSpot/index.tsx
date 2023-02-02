@@ -15,7 +15,7 @@ export const DivesInSpot = ({ dives }: Props) => {
   const [isMoreClicked, setMoreClicked] = useState(false);
   return (
     <div className={styles.divesInSpot}>
-      {!isMobile && <h2>Dives</h2>}
+      {isMobile === false && !!dives?.length && <h2>Dives</h2>}
       <div className={styles.divesInSpotWrapper}>
         {!!dives?.length && dives.map((dive) => (
           <SmallDiveCard
