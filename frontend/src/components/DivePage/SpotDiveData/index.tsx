@@ -129,17 +129,17 @@ export const SpotDiveData: FC<Props> = ({
               <div className={styles.backBtnWrapper} onClick={() => router.back()}>
                 <Icon size={40} iconName="back-button" />
               </div>
-              <div className={styles.rightContentMob}>
-                <span className={styles.share} onClick={shareButtonHandler}>
-                  <Icon iconName="share-dive" size={16} />
-                </span>
-                <KebabButton className="saves">
-                  <span>
-                    0 Saves
-                  </span>
-                  <Icon iconName="heart" size={16} />
-                </KebabButton>
-              </div>
+              {/* <div className={styles.rightContentMob}> */}
+              {/*  <span className={styles.share} onClick={shareButtonHandler}> */}
+              {/*    <Icon iconName="share-dive" size={16} /> */}
+              {/*  </span> */}
+              {/* <KebabButton className="saves"> */}
+              {/*  <span> */}
+              {/*    0 Saves */}
+              {/*  </span> */}
+              {/*  <Icon iconName="heart" size={16} /> */}
+              {/* </KebabButton> */}
+              {/* </div> */}
             </div>
             <div className={styles.leftContentWrapper} onClick={() => router.push(`/logbook/${user.uid}`)}>
               <ProfileImage imgSrc={user?.photoUrl} size={74} />

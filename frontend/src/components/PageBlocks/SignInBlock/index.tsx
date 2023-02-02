@@ -93,19 +93,19 @@ export const SignInBlock: FC = () => {
         await statusUserRedirect(mode, router.push, setMode, userData.uid);
       }
     } catch (e) {
-      setError('invalid or expired code');
+      setError('Invalid or expired code');
     }
   };
 
   const submit = async () => {
     if (!inputValue.length) {
-      return setError('empty value');
+      return setError('Empty value');
     }
 
     if (mode === 'login/signup') {
       const mailRegexp = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
       if (!inputValue.match(mailRegexp)) {
-        return setError('invalid mail value');
+        return setError('Invalid mail value');
       }
       setLoading(true);
       await authCode();
@@ -114,7 +114,7 @@ export const SignInBlock: FC = () => {
     } else {
       const codeRegexp = /[0-9]{6}/;
       if (!inputValue.match(codeRegexp)) {
-        return setError('invalid code value');
+        return setError('Invalid code value');
       }
       setLoading(true);
       await authUser();

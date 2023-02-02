@@ -5,7 +5,6 @@ import {
   ProfileImage,
 } from '../../SettingsBlocks/SettingsItemContent/NotEditedContent/ProfileImage';
 import { Icon } from '../../../Icons/Icon';
-import { LinkedButton } from '../../../Buttons/LinkedButton';
 import { Button } from '../../../Buttons/Button';
 import { DiveData } from './DiveData';
 import pageRoutes from '../../../../routes/pagesRoutes.json';
@@ -18,7 +17,6 @@ type Props = {
   imgSrc: string;
   name: string;
   country: string;
-  followersCount: number;
   about: string;
   dives: Array<DiveType & { spot: SpotType, date: string }>;
   isItOwnProfile: boolean;
@@ -29,7 +27,6 @@ export const PersonalProfileData: FC<Props> = ({
   name,
   imgSrc,
   country,
-  followersCount,
   dives,
   isItOwnProfile,
 }) => {
@@ -137,23 +134,23 @@ export const PersonalProfileData: FC<Props> = ({
               </div>
               )}
 
-              <div className={styles.followersWrapper}>
-                <span className={styles.thinText}>Followers:</span>
-                <span className={styles.thinText}>{followersCount}</span>
-              </div>
+              {/* <div className={styles.followersWrapper}> */}
+              {/*  <span className={styles.thinText}>Followers:</span> */}
+              {/*  <span className={styles.thinText}>{followersCount}</span> */}
+              {/* </div> */}
             </div>
           </div>
         </div>
 
-        <div className={styles.rightContent}>
-          {!isItOwnProfile && (
-          <Button backgroundColor="transparent" border="none" borderRadius={30}>
-            <span className={styles.followText}>Follow</span>
-            <Icon iconName="plus" size={14} />
-          </Button>
-          )}
-          <LinkedButton link="/" iconName="share" iconSize={40} />
-        </div>
+        {/* <div className={styles.rightContent}> */}
+        {/* {!isItOwnProfile && ( */}
+        {/* <Button backgroundColor="transparent" border="none" borderRadius={30}> */}
+        {/*  <span className={styles.followText}>Follow</span> */}
+        {/*  <Icon iconName="plus" size={14} /> */}
+        {/* </Button> */}
+        {/* )} */}
+        {/* <LinkedButton link="/" iconName="share" iconSize={40} /> */}
+        {/* </div> */}
       </div>
 
       <div className={styles.diveDataWrapper}>

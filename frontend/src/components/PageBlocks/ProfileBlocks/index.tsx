@@ -47,12 +47,12 @@ export const ProfileBlock = ({
   const [isItOwnProfile, setOwnProfile] = useState(user?.uid === logbookUser.uid);
 
   useEffect(() => {
-    setOwnProfile(user.uid === logbookUser.uid);
+    setOwnProfile(user?.uid === logbookUser.uid);
   }, [logbookUser.uid]);
 
   return (
     <div className={styles.profileBlockWrapper}>
-      {user.uid && (
+      {user?.uid && (
         <MobileAddButton
           iconName="new-dive-white"
           link={pagesRoutes.logDivePageRout}
@@ -65,7 +65,6 @@ export const ProfileBlock = ({
         country={name(logbookUser.country)}
         about={logbookUser.about}
         isItOwnProfile={isItOwnProfile}
-        followersCount={0}
         dives={dives}
       />
       {!!dives?.length && (

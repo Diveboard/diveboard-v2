@@ -21,7 +21,7 @@ export const UserHeader: FC = (): JSX.Element => {
         <Logo size={!isWidth ? 'large' : 'medium'} />
         <LogbookDropdown />
         <LinkedButton
-          link="/"
+          link={pagesRoutes.walletPageRout}
           label="Wallet"
           iconName="wallet-mobile"
           labelColor={
@@ -34,16 +34,16 @@ export const UserHeader: FC = (): JSX.Element => {
 
       <div className={styles.rightGroup}>
         <LinkedButton
-          link="/explore"
+          link={pagesRoutes.explorePageRout}
           iconName="search"
         />
 
         <LinkedButton
-          link="/"
+          link={pagesRoutes.favouritesPageRout}
           iconName="heart-gap"
         />
         <LinkedButton
-          link={pagesRoutes.mainPageRoute}
+          link={pagesRoutes.communityPageRout}
           iconName="community-small"
         />
 

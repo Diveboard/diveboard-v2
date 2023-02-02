@@ -1,12 +1,12 @@
 import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import pageRoutes from '../src/routes/pagesRoutes.json';
-import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
-import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
+import { MainLayout } from '../src/layouts/MainLayout';
+import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
+import pageRoutes from '../src/routes/pagesRoutes.json';
 import { Icon } from '../src/components/Icons/Icon';
 
-const Wallet: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
+const Community: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
     <MainLayout>
       <div style={{
@@ -24,7 +24,7 @@ const Wallet: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }
             color: '#000345',
           }}
           >
-            Wallet page is coming soon
+            Community page is coming soon
           </h1>
         </div>
       </div>
@@ -59,5 +59,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   };
 };
-
-export default Wallet;
+export default Community;

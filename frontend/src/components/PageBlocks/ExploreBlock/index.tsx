@@ -8,7 +8,6 @@ import GoogleMapReact from 'google-map-react';
 import styles from './styles.module.scss';
 import { SearchAnimatedInput } from '../../Input/SearchAnimatedInput';
 import SpotCard from './SpotCard';
-import FavoritesBlock from '../../Cards/PhotoCard/FavoritesBlock';
 import { Icon } from '../../Icons/Icon';
 import { ExploreMap } from './ExploreMap';
 import { firestoreGeoDataService } from '../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
@@ -377,7 +376,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
                   name={spot.name}
                   depth={spot.stats?.averageDepth?.metric}
                   imgSrc={spot.bestPictures?.length ? spot.bestPictures[0] : '/images/fish.jpg'}
-                  favorite={false}
                   country={spot.location?.country}
                 />
               </span>
@@ -400,7 +398,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
           <>
             <div className={styles.regionTitle}>
               <h1>{region?.name}</h1>
-              <FavoritesBlock isFavorite={false} count={0} />
+              {/* <FavoritesBlock isFavorite={false} count={0} /> */}
             </div>
             { region?.area && (
             <div className={styles.subtitle}>

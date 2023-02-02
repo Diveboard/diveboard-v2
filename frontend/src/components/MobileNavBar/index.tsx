@@ -4,19 +4,17 @@ import styles from './styles.module.scss';
 import { NavItem, NavType } from './NavItem';
 
 type Props = {
-  loggedIn: boolean
+  uid: string | null
 };
 
-export const MobileNavBar: FC<Props> = ({ loggedIn }) => (
+export const MobileNavBar: FC<Props> = ({ uid }) => (
   <nav className={styles.navbar} id="navbar">
-    {loggedIn && (
     <NavItem
       activeIconName="feed-mobile-colored"
       mainIconName="feed-mobile"
       navItemName="Feed"
       navLink={pagesRoutes.feedsPageRout as NavType}
     />
-    )}
 
     <NavItem
       activeIconName="explore-mobile-colored"
@@ -25,12 +23,14 @@ export const MobileNavBar: FC<Props> = ({ loggedIn }) => (
       navLink={pagesRoutes.explorePageRout as NavType}
     />
 
+    {uid && (
     <NavItem
       activeIconName="logbook-mobile-colored"
       mainIconName="logbook-mobile"
       navItemName="Logbook"
-      navLink={'/' as NavType}
+      navLink={`${pagesRoutes.logbookPageRoute}/${uid}` as NavType}
     />
+    )}
 
     <NavItem
       activeIconName="wallet-mobile-colored"
@@ -39,7 +39,7 @@ export const MobileNavBar: FC<Props> = ({ loggedIn }) => (
       navLink={pagesRoutes.walletPageRout as NavType}
     />
 
-    {!loggedIn && (
+    {!uid && (
     <NavItem
       activeIconName="login-mobile-colored"
       mainIconName="login-mobile"
@@ -48,7 +48,7 @@ export const MobileNavBar: FC<Props> = ({ loggedIn }) => (
     />
     )}
 
-    {loggedIn && (
+    {uid && (
       <NavItem
         activeIconName="favorites-mobile-colored"
         mainIconName="favorites-mobile"

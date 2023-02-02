@@ -47,7 +47,7 @@ export const GalleryBlock = ({ images, user }: Props) => {
       <h1>Gallery</h1>
       <div className={styles.sortBar}>
         <ButtonGroup
-          buttons={buttons}
+          buttons={buttons.slice(0, 2)}
           onClick={(val) => setSortType(val)}
           defaultChecked={sortType}
         />
@@ -70,7 +70,6 @@ export const GalleryBlock = ({ images, user }: Props) => {
           >
             <PhotoCard
               imgUrl={photo.img}
-              favourites={0}
               authorName={user?.firstName}
             />
           </div>

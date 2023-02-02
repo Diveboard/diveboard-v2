@@ -28,7 +28,7 @@ export const GuestHeader: FC<{ isFilled?: boolean }> = ({ isFilled }): JSX.Eleme
       <div className={styles.leftGroup}>
         <Logo size={!isWidth ? 'large' : 'medium'} />
         <LinkedButton
-          link="/"
+          link={pagesRoutes.authPageRout}
           label="Logbook"
           iconName={
             router.pathname === pagesRoutes.mainPageRoute && !scrolled
@@ -42,7 +42,7 @@ export const GuestHeader: FC<{ isFilled?: boolean }> = ({ isFilled }): JSX.Eleme
           }
         />
         <LinkedButton
-          link="/"
+          link={pagesRoutes.authPageRout}
           label="Wallet"
           iconName={
             router.pathname === pagesRoutes.mainPageRoute && !scrolled
@@ -59,7 +59,7 @@ export const GuestHeader: FC<{ isFilled?: boolean }> = ({ isFilled }): JSX.Eleme
 
       <div className={styles.rightGroup}>
         <LinkedButton
-          link="/explore"
+          link={pagesRoutes.explorePageRout}
           iconName={
             router.pathname === pagesRoutes.mainPageRoute && !scrolled
               ? 'search-white'

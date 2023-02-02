@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 
 import KebabButton from '../../../Buttons/KebabButton';
-import { Icon } from '../../../Icons/Icon';
 import { ProfileImage } from '../../../PageBlocks/SettingsBlocks/SettingsItemContent/NotEditedContent/ProfileImage';
 
 import styles from './styles.module.scss';
@@ -20,7 +19,7 @@ export const CommentItem: FC <Props> = ({
 
   const replyButtonHandler = () => {};
 
-  const likeButtonHandler = () => {};
+  // const likeButtonHandler = () => {};
 
   return (
     <div className={styles.itemWrapper}>
@@ -39,9 +38,9 @@ export const CommentItem: FC <Props> = ({
           <KebabButton onClick={reportButtonHandler} className="more">Report</KebabButton>
           <KebabButton onClick={replyButtonHandler} className="more">Reply</KebabButton>
         </div>
-        <KebabButton className="more" onClick={likeButtonHandler}>
-          <Icon iconName="like-outline" size={16} />
-        </KebabButton>
+        {/* <KebabButton className="more" onClick={likeButtonHandler}> */}
+        {/*  <Icon iconName="like-outline" size={16} /> */}
+        {/* </KebabButton> */}
       </div>
     </div>
   );

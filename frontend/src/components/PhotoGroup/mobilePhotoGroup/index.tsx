@@ -11,7 +11,6 @@ export const MobilePhotoGroup: FC<Props> = ({ photos }) => {
     <div key={photo}>
       <PhotoCard
         imgUrl={photo}
-        favourites={0}
         size="mobileScroll"
         authorName="Author"
       />

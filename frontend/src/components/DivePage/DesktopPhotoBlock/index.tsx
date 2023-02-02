@@ -21,7 +21,7 @@ export const DesktopPhotoBlock: FC<Props> = ({ photos }) => {
       if (i % 3 === 0) {
         newPhotoArray.push(
           <div key={i} className={styles.column}>
-            <PhotoCard imgUrl={curr} favourites={0} size="normal" authorName="Author" />
+            <PhotoCard imgUrl={curr} size="normal" authorName="Author" />
           </div>,
         );
         i++;
@@ -33,13 +33,13 @@ export const DesktopPhotoBlock: FC<Props> = ({ photos }) => {
         next
           ? [
             <div key={curr} className={styles.column}>
-              <PhotoCard imgUrl={curr} favourites={0} size="small" authorName="Author" />
-              <PhotoCard imgUrl={next} favourites={0} size="small" authorName="Author" />
+              <PhotoCard imgUrl={curr} size="small" authorName="Author" />
+              <PhotoCard imgUrl={next} size="small" authorName="Author" />
             </div>,
           ]
           : [
             <div key={curr} className={styles.column}>
-              <PhotoCard imgUrl={curr} favourites={0} size="normal" authorName="Author" />
+              <PhotoCard imgUrl={curr} size="normal" authorName="Author" />
             </div>,
           ],
       );

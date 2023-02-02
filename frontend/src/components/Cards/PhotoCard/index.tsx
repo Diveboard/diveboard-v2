@@ -2,11 +2,9 @@ import React, { FC } from 'react';
 import Image from 'next/image';
 import { imageLoader } from '../../Icons/Icon';
 import styles from './styles.module.scss';
-import FavoritesBlock from './FavoritesBlock';
 
 type Props = {
   imgUrl?: string;
-  favourites: number;
   addedToFavourite?: boolean;
   size?: 'normal' | 'small' | 'mobileScroll';
   onToggle?: () => void;
@@ -15,7 +13,6 @@ type Props = {
 
 export const PhotoCard: FC<Props> = ({
   addedToFavourite,
-  favourites,
   size,
   onToggle,
   authorName,
@@ -57,7 +54,7 @@ export const PhotoCard: FC<Props> = ({
         />
       )}
 
-      <FavoritesBlock isFavorite={addedToFavourite} count={favourites} />
+      {/* <FavoritesBlock isFavorite={addedToFavourite} count={favourites} /> */}
       {authorName && (
       <span className={styles.author}>
         added by:

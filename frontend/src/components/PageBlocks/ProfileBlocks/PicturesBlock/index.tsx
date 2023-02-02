@@ -12,12 +12,7 @@ export const PicturesBlock = ({ pictures }: Props) => {
   const buttons = [{
     connectedMode: 'all',
     text: 'All pictures',
-  },
-  {
-    connectedMode: 'favourites',
-    text: 'Favourites',
-  },
-  ];
+  }];
 
   // const photos = [
   //   {

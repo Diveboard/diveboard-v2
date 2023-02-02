@@ -25,23 +25,32 @@ const Logbook: InferGetServerSidePropsType<typeof getServerSideProps> = ({
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const uid = context.req.cookies.__session;
-  const { userId } = context.query;
+  try {
+    const uid = context.req.cookies.__session;
+    const { userId } = context.query;
 
-  let user = null;
+    let user = null;
 
-  if (uid) {
-    user = await firestorePublicProfileService.getUserById(uid);
+    if (uid) {
+      user = await firestorePublicProfileService.getUserById(uid);
+    }
+
+    const data = await firestoreLogbookService.getLogbookData(userId as string);
+
+    return {
+      props: {
+        user,
+        ...data,
+      },
+    };
+  } catch (e) {
+    return {
+      redirect: {
+        destination: '/_error',
+        permanent: false,
+      },
+    };
   }
-
-  const data = await firestoreLogbookService.getLogbookData(userId as string);
-
-  return {
-    props: {
-      user,
-      ...data,
-    },
-  };
 };
 
 export default Logbook;

@@ -33,12 +33,7 @@ export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
   const buttons = [{
     connectedMode: 'all',
     text: 'All dives',
-  },
-  {
-    connectedMode: 'favourite',
-    text: 'Favourite',
-  },
-  ];
+  }];
 
   useEffect(() => {
     setDiveForRender(dives);

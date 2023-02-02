@@ -33,8 +33,8 @@ export const NavItem: FC<Props> = ({
 
   return (
     <Link href={navLink}>
-      <a className={getItemStyles(router.pathname, navLink)}>
-        {router.pathname === navLink ? (
+      <a className={getItemStyles(router.asPath, navLink)}>
+        {router.asPath === navLink ? (
           <Icon iconName={activeIconName} />
         ) : (
           <Icon iconName={mainIconName} />

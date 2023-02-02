@@ -4,7 +4,6 @@ import { useWindowWidth } from '../../../hooks/useWindowWidth';
 import { MobilePhotoGroup } from '../../PhotoGroup/mobilePhotoGroup';
 import { photos } from '../../DivePage/DIVE_PAGE_DUMMY_DATA';
 import { DesktopPhotoBlock } from '../../DivePage/DesktopPhotoBlock';
-import { LinkedButton } from '../../Buttons/LinkedButton';
 import { Info } from './Info';
 import { DivesInSpot } from './DivesInSpot';
 import { MobileTabs } from './MobileTabs';
@@ -81,7 +80,7 @@ export const SpotBlocks = ({ spot, dives, species }: Props) => {
                 {spot?.name}
               </h1>
             </div>
-            <LinkedButton link="" iconName="share-link" iconSize={40} />
+            {/* <LinkedButton link="" iconName="share-link" iconSize={40} /> */}
           </div>
           {renderPhotoBlock}
         </>

@@ -85,7 +85,11 @@ export const firestorePublicProfileService = {
     try {
       const docRef = doc(db, firestorePaths.users.path, userId);
       const docSnap = await getDoc(docRef);
-      return { ...docSnap.data(), uid: docSnap.id } as UserSettingsType | undefined;
+      const data = docSnap.data();
+      if (!data) {
+        return null;
+      }
+      return { ...data, uid: docSnap.id } as UserSettingsType | undefined;
     } catch (e) {
       throw new Error('get user data error');
     }

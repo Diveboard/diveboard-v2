@@ -14,24 +14,20 @@ export const PhotoDivesBlock = () => (
         <div className={styles.column}>
           <PhotoCard
             imgUrl={photos[0].img}
-            favourites={136}
             size="normal"
           />
           <PhotoCard
             imgUrl={photos[1].img}
-            favourites={136}
             size="small"
           />
         </div>
         <div className={styles.column}>
           <PhotoCard
             imgUrl={photos[2].img}
-            favourites={136}
             size="small"
           />
           <PhotoCard
             imgUrl={photos[3].img}
-            favourites={136}
             size="normal"
           />
         </div>
@@ -40,24 +36,20 @@ export const PhotoDivesBlock = () => (
         <div className={styles.column}>
           <PhotoCard
             imgUrl={photos[4].img}
-            favourites={136}
             size="normal"
           />
           <PhotoCard
             imgUrl={photos[5].img}
-            favourites={136}
             size="small"
           />
         </div>
         <div className={styles.column}>
           <PhotoCard
             imgUrl={photos[2].img}
-            favourites={136}
             size="small"
           />
           <PhotoCard
             imgUrl={photos[3].img}
-            favourites={136}
             size="normal"
           />
         </div>

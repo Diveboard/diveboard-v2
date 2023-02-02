@@ -4,6 +4,7 @@ import { MarginWrapper } from '../../../MarginWrapper';
 import { LinkedButton } from '../../../Buttons/LinkedButton';
 import { Burger } from '../../../Dropdown/Burger';
 import styles from './styles.module.scss';
+import pagesRoutes from '../../../../routes/pagesRoutes.json';
 
 export const MobileUserHeader: FC = () => (
   <header className={styles.header}>
@@ -12,7 +13,7 @@ export const MobileUserHeader: FC = () => (
     <div className={styles.rightGroup}>
       <MarginWrapper right={20}>
         <LinkedButton
-          link="/"
+          link={pagesRoutes.communityPageRout}
           iconName="community-small"
         />
       </MarginWrapper>
