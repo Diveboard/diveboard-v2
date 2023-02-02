@@ -24,7 +24,7 @@ const Feed: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) 
             color: '#000345',
           }}
           >
-            This page is coming soon
+            Feed page is coming soon
           </h1>
         </div>
       </div>

@@ -6,14 +6,14 @@
 
   .itemsWrapper {
     position: absolute;
-    top: 60px;
-    left: -150px;
+    top: 40px;
+    right: -15px;
     z-index: 10;
     display: flex;
     flex-direction: column;
-    width: 244px;
+    width: 100vw;
     border-radius: 5px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
     background-color: #FFFFFF;
   }
 }

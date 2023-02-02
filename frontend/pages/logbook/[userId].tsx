@@ -21,7 +21,6 @@ const Logbook: InferGetServerSidePropsType<typeof getServerSideProps> = ({
       />
     </MainLayout>
   </AuthLayout>
-
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
