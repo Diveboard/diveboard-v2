@@ -86,7 +86,6 @@ export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
               diveName={dive.aboutDive?.tripName}
               imgSrc={dive.externalImgsUrls[0] || '/TEST_IMG_THEN_DELETE/fish.jpg'}
               tagsNumber={dive.aboutDive?.diveNumber?.toString()}
-              addedToFavourite={false}
               // @ts-ignore
               date={new Date(dive.date)}
               diveTime={dive.diveData?.time}

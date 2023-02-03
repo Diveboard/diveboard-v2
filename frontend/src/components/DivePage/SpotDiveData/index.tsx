@@ -43,15 +43,15 @@ export const SpotDiveData: FC<Props> = ({
     setShowMore(false);
   };
 
-  const shareButtonHandler = async () => {
-    const data = {
-      title: 'DiveBoard',
-      url: location.href,
-      text: 'Share your dive',
-    };
-    console.log(data);
-    // if (navigator.canShare(data)) await navigator.share(data);
-  };
+  // const shareButtonHandler = async () => {
+  //   const data = {
+  //     title: 'DiveBoard',
+  //     url: location.href,
+  //     text: 'Share your dive',
+  //   };
+  //   console.log(data);
+  //   // if (navigator.canShare(data)) await navigator.share(data);
+  // };
 
   const renderNotes = (text: string) => {
     if (text.length > 180) {
@@ -158,17 +158,17 @@ export const SpotDiveData: FC<Props> = ({
               </div>
             </div>
           </div>
-          <div className={styles.rightContent}>
-            <span className={styles.share} onClick={shareButtonHandler}>
-              <Icon iconName="share-dive" size={16} />
-            </span>
-            <KebabButton className="saves">
-              <span>
-                0 Saves
-              </span>
-              <Icon iconName="heart" size={16} />
-            </KebabButton>
-          </div>
+          {/* <div className={styles.rightContent}> */}
+          {/*  <span className={styles.share} onClick={shareButtonHandler}> */}
+          {/*    <Icon iconName="share-dive" size={16} /> */}
+          {/*  </span> */}
+          {/*  <KebabButton className="saves"> */}
+          {/*    <span> */}
+          {/*      0 Saves */}
+          {/*    </span> */}
+          {/*    <Icon iconName="heart" size={16} /> */}
+          {/*  </KebabButton> */}
+          {/* </div> */}
         </div>
         <div className={styles.diveDataWrapper}>
           <div className={styles.diveInfo}>

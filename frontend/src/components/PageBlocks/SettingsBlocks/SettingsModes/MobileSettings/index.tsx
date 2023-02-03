@@ -6,6 +6,7 @@ import { Notification } from '../../Notifications';
 import { EditContextWrapper } from '../../EditContextWrapper';
 import { UserSettingsType } from '../../../../../firebase/firestore/models';
 import { MarginWrapper } from '../../../../MarginWrapper';
+import styles from './styles.module.scss';
 
 type Props = {
   user: UserSettingsType;
@@ -16,7 +17,7 @@ export const MobileSettings: FC<Props> = ({ user }) => {
   'personal info' | 'preferences' | 'notifications'
   >('personal info');
   return (
-    <>
+    <div className={styles.settingsWrapper}>
       <MobileSettingsTabs mode={mode} setMode={setMode} />
       <EditContextWrapper>
 
@@ -45,6 +46,6 @@ export const MobileSettings: FC<Props> = ({ user }) => {
         </>
         )}
       </EditContextWrapper>
-    </>
+    </div>
   );
 };

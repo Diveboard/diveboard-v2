@@ -37,6 +37,10 @@ export const DivePageBlock = ({
 
   const router = useRouter();
 
+  const isGearsExist = () => dive.diveData?.weights
+      || (dive.gears?.length
+      && dive.gears.some((gear) => gear.typeOfGear));
+
   const renderPhotoBlock = () => (isMobile
     ? <MobilePhotoGroup photos={dive.externalImgsUrls} />
     : <DesktopPhotoBlock photos={dive.externalImgsUrls} />);
@@ -56,7 +60,7 @@ export const DivePageBlock = ({
               <ChartBlock diveData={{ points: dive.diveData?.safetySpots, tanks: dive?.tanks }} />
             )}
             <div className={styles.thirdWrapper}>
-              {!!(dive.gears.length || dive.diveData?.weights) && (
+              {isGearsExist() && (
                 <GearUsed
                   gears={dive.gears}
                   weight={dive.diveData?.weights}

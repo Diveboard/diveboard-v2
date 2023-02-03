@@ -10,7 +10,6 @@ import { convertFeetToMeters, convertMetersToFeet } from '../../../utils/unitSys
 type Props = {
   imgSrc: string;
   tagsNumber: string;
-  addedToFavourite: boolean;
   date: Date;
   diveName;
   diveTime: string;
@@ -29,7 +28,6 @@ export const DiveCard: FC<Props> = ({
   diveName,
   diversCount,
   deepness,
-  addedToFavourite,
   diveUnitSystem,
 }) => {
   const diveDate = `${month[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
@@ -67,12 +65,12 @@ export const DiveCard: FC<Props> = ({
         #
         {tagsNumber}
       </span>
-      <span className={styles.favourite}>
-        <Icon
-          iconName={addedToFavourite ? 'heart filled in' : 'heart'}
-          size={16}
-        />
-      </span>
+      {/* <span className={styles.favourite}> */}
+      {/*  <Icon */}
+      {/*    iconName={addedToFavourite ? 'heart filled in' : 'heart'} */}
+      {/*    size={16} */}
+      {/*  /> */}
+      {/* </span> */}
 
       <div className={styles.footer}>
         <span className={styles.date}>{diveDate}</span>
