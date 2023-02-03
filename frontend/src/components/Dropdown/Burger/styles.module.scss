@@ -6,14 +6,26 @@
 
   .itemsWrapper {
     position: absolute;
-    top: 40px;
-    right: -15px;
+    top: 60px;
+    left: -150px;
     z-index: 10;
     display: flex;
     flex-direction: column;
-    width: 100vw;
+    width: 244px;
     border-radius: 5px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
     background-color: #FFFFFF;
   }
 }
+
+@media (max-width: 768px) {
+  .dropdown {
+    .itemsWrapper {
+      top: 40px;
+      right: -15px;
+      left: unset;
+      width: 100vw;
+    }
+  }
+}
+
