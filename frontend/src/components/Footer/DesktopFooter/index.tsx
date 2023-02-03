@@ -33,7 +33,7 @@ export const Footer = () => (
         <div className={styles.socialsWrapper}>
           <span className={styles.socialsTitle}>Join Us on Socials</span>
           <div className={styles.socials}>
-            <Link href="https://discord.gg/rkKFRjns">
+            <Link href="https://discord.gg/rmqJajR7">
               <a>
                 <Icon iconName="discord" />
               </a>
@@ -77,7 +77,7 @@ export const Footer = () => (
                     <span className={styles.linkText}>TOS / Privacy</span>
                   </a>
                 </Link>
-                <Link href="/">
+                <Link href={pageRoutes.supportPageRout}>
                   <a>
                     <span className={styles.linkText}>Contact Us</span>
                   </a>

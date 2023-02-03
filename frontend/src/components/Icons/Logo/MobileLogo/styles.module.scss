@@ -20,5 +20,20 @@
     align-items: center;
     background: transparent;
   }
+
+  .logoBtn {
+    margin-top: 5px;
+    margin-left: 10px;
+    background: #FDC90D;
+    border-radius: 30px;
+    padding: 12px 30px;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000345;
+  }
 }
 

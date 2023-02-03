@@ -64,7 +64,7 @@ export const FooterMobile: FC = () => {
           <div className={styles.socialsWrapper}>
             <span className={styles.socialsTitle}>Join Us on Socials</span>
             <div className={styles.socials}>
-              <Link href="https://discord.gg/rkKFRjns">
+              <Link href="https://discord.gg/rmqJajR7">
                 <a>
                   <Icon iconName="discord" size={34} />
                 </a>

@@ -16,9 +16,11 @@ export const LogoMobile: FC<Props> = ({ filled = true }) => {
   } = useContext(AuthStatusContext);
   return (
     <div className={styles.logo}>
-      <Link href={userAuth?.uid ? `/logbook/${userAuth.uid}` : pagesRoutes.mainPageRoute}>
-        <a className={logoStyle}>
-          <Icon iconName="logo" width={120} height={17} />
+      <Link href={!userAuth?.uid ? pagesRoutes.mainPageRoute : pagesRoutes.donatePageRoute}>
+        <a className={!userAuth?.uid ? logoStyle : styles.logoBtn}>
+          {!userAuth?.uid
+            ? <Icon iconName="logo" width={120} height={17} />
+            : <span>Donate</span>}
         </a>
       </Link>
     </div>

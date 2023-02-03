@@ -4,29 +4,23 @@ import { AuthLayout } from '../src/layouts/AuthLayout';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 import pageRoutes from '../src/routes/pagesRoutes.json';
-import { Icon } from '../src/components/Icons/Icon';
+import { Title } from '../src/components/PageBlocks/SignInBlock/Components/Title';
+import { LogoIcon } from '../src/components/PageBlocks/SignInBlock/Components/LogoIcon';
 
 const Community: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
     <MainLayout>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 'calc(100vh - 238px)',
-        margin: '0 40px',
-      }}
-      >
-        <div>
-          <Icon iconName="diveboard-logo" size={100} />
-          <h1 style={{
-            textAlign: 'center',
-            color: '#000345',
-          }}
-          >
-            Community page is coming soon
-          </h1>
-        </div>
+      <div className="community-wrapper">
+        <LogoIcon mode="community" />
+        <Title mode="community" />
+        <p>
+          Join our world’s biggest divers community to log your dives and find your next dive spot
+        </p>
+        <a href="https://discord.gg/rmqJajR7" target="_blank" rel="noreferrer">
+          <div className="community-btn">
+            Join on Discord
+          </div>
+        </a>
       </div>
     </MainLayout>
   </AuthLayout>

@@ -110,7 +110,7 @@ export const SignInBlock: FC = () => {
       setLoading(true);
       await authCode();
     } else if (mode === 'community') {
-      await router.push('https://discord.gg/rkKFRjns');
+      await router.push('https://discord.gg/rmqJajR7');
     } else {
       const codeRegexp = /[0-9]{6}/;
       if (!inputValue.match(codeRegexp)) {
