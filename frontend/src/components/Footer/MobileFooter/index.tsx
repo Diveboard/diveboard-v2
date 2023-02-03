@@ -31,7 +31,7 @@ export const FooterMobile: FC = () => {
             on your generous support to keep the platform running.
           </span>
 
-          <ArrowLink text="Donate" color="#FFFFFF" link="/donate" />
+          <ArrowLink text="Donate" color="#FFFFFF" link={pageRoutes.donatePageRoute} />
         </div>
 
         <div className={styles.contentGroup}>
@@ -41,19 +41,19 @@ export const FooterMobile: FC = () => {
             </a>
           </Link>
 
-          <Link href="/">
+          <Link href={pageRoutes.shopPageRout}>
             <a>
               <span className={styles.linkText}>Diveboard for Dive Shops</span>
             </a>
           </Link>
 
-          <Link href="/">
+          <Link href={pageRoutes.mainPageRoute}>
             <a>
               <span className={styles.linkText}>TOS / Privacy</span>
             </a>
           </Link>
 
-          <Link href="/">
+          <Link href={pageRoutes.supportPageRout}>
             <a>
               <span className={styles.linkText}>Contact Us</span>
             </a>
