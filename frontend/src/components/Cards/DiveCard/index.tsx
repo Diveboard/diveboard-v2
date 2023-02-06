@@ -77,18 +77,23 @@ export const DiveCard: FC<Props> = ({
         <span className={styles.diveName}>{diveName}</span>
 
         <div className={styles.dataWrapper}>
+          {!!diveTime && (
           <div className={styles.dataItem}>
             <Icon iconName="time" size={16} />
             <span>
               {diveTime}
             </span>
           </div>
+          ) }
+          {!!deepness && (
           <div className={styles.dataItem}>
             <Icon iconName="depth" size={16} />
             <span>
               {displayDeepness()}
             </span>
           </div>
+          )}
+          {!!diversCount && (
           <div className={styles.dataItem}>
             <Icon iconName="divers" size={16} />
             <span>
@@ -97,6 +102,7 @@ export const DiveCard: FC<Props> = ({
               divers
             </span>
           </div>
+          )}
         </div>
       </div>
     </div>

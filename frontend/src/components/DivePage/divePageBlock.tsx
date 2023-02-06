@@ -37,9 +37,9 @@ export const DivePageBlock = ({
 
   const router = useRouter();
 
-  const isGearsExist = () => dive.diveData?.weights
-      || (dive.gears?.length
-      && dive.gears.some((gear) => gear.typeOfGear));
+  const isGearsExist = !!dive.diveData?.weights
+      || (!!dive.gears?.length
+      && !!dive.gears.some((gear) => gear.typeOfGear));
 
   const renderPhotoBlock = () => (isMobile
     ? <MobilePhotoGroup photos={dive.externalImgsUrls} />
@@ -54,30 +54,33 @@ export const DivePageBlock = ({
       {dive && dive.publishingMode === 'public' && !dive.draft ? (
         <>
           <SpotDiveData user={user} dive={dive} spot={spot} />
-          {renderPhotoBlock()}
+          {!!dive.externalImgsUrls?.length && renderPhotoBlock()}
           <div className={styles.subwrapper}>
             {(!!dive.diveData?.safetySpots.length || !!dive?.tanks.length) && (
               <ChartBlock diveData={{ points: dive.diveData?.safetySpots, tanks: dive?.tanks }} />
             )}
-            <div className={styles.thirdWrapper}>
-              {isGearsExist() && (
-                <GearUsed
-                  gears={dive.gears}
-                  weight={dive.diveData?.weights}
-                  diveUnitSystem={dive.unitSystem}
-                />
-              )}
-              {!!species.length && (
-              <div className={styles.speciesWrapper}>
-                <DivePageMobContainer>
-                  <DivePageTitle title="Species Identified" />
-                  <div className={styles.cardsWrapper}>
-                    {renderSpeciesBlock()}
+            {(!!species.length || isGearsExist)
+                && (
+                <div className={styles.thirdWrapper}>
+                  {isGearsExist && (
+                  <GearUsed
+                    gears={dive.gears}
+                    weight={dive.diveData?.weights}
+                    diveUnitSystem={dive.unitSystem}
+                  />
+                  )}
+                  {!!species.length && (
+                  <div className={styles.speciesWrapper}>
+                    <DivePageMobContainer>
+                      <DivePageTitle title="Species Identified" />
+                      <div className={styles.cardsWrapper}>
+                        {renderSpeciesBlock()}
+                      </div>
+                    </DivePageMobContainer>
                   </div>
-                </DivePageMobContainer>
-              </div>
-              )}
-            </div>
+                  )}
+                </div>
+                )}
           </div>
           {!!buddies?.length && (
           <DivePageMobContainer>

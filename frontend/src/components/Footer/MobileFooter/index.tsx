@@ -27,7 +27,7 @@ export const FooterMobile: FC = () => {
           <Icon iconName="logo-gold" width={189} height={27} />
 
           <span className={styles.donateText}>
-            Help keep Diveboard kickin’ ! DIveboard is a non-profit and relies
+            Help keep Diveboard kickin’! Diveboard is a non-profit and relies
             on your generous support to keep the platform running.
           </span>
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { ToastContainer } from 'react-toastify';
 import { ProfileBlock } from '../../src/components/PageBlocks/ProfileBlocks';
 import { AuthLayout } from '../../src/layouts/AuthLayout';
 import { MainLayout } from '../../src/layouts/MainLayout';
@@ -11,6 +12,7 @@ const Logbook: InferGetServerSidePropsType<typeof getServerSideProps> = ({
 }) => (
   <AuthLayout user={user}>
     <MainLayout>
+      <ToastContainer />
       <ProfileBlock
         user={user}
         logbookUser={logbookUser}

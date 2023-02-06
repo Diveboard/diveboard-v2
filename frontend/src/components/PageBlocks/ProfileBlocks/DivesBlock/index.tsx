@@ -10,6 +10,7 @@ import { DiveType } from '../../../../firebase/firestore/models';
 import { AuthStatusContext } from '../../../../layouts/AuthLayout';
 import { firestoreDivesService } from '../../../../firebase/firestore/firestoreServices/firestoreDivesService';
 import { Loader } from '../../../Loader';
+import { notify } from '../../../../utils/notify';
 
 type Props = {
   dives: Array<DiveType>;
@@ -101,18 +102,22 @@ export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
       <span
         className={styles.viewMore}
         onClick={async () => {
-          setSortMode(buttons[0].connectedMode);
-          setFetching(true);
-          const last = diveForRender[diveForRender.length - 1].diveData.date;
-          // @ts-ignore
-          const lastDate = new Timestamp(last.seconds, last.nanoseconds);
-          const data = await firestoreDivesService.getDivesByUserId(userId, 8, 'desc', lastDate);
-          if (!data.length || data.length !== 8) {
-            setAllDataGet(true);
+          try {
+            setSortMode(buttons[0].connectedMode);
+            setFetching(true);
+            const last = diveForRender[diveForRender.length - 1].diveData.date;
+            // @ts-ignore
+            const lastDate = new Timestamp(last.seconds, last.nanoseconds);
+            const data = await firestoreDivesService.getDivesByUserId(userId, 8, 'desc', lastDate);
+            if (!data.length || data.length !== 8) {
+              setAllDataGet(true);
+            }
+            setDiveForRender([...diveForRender, ...data]);
+            setAllDives([...diveForRender, ...data]);
+            setFetching(false);
+          } catch (e) {
+            notify('Something went wrong');
           }
-          setDiveForRender([...diveForRender, ...data]);
-          setAllDives([...diveForRender, ...data]);
-          setFetching(false);
         }}
       >
         {isFetching ? <Loader loading={isFetching} /> : 'View More'}

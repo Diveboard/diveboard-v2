@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { name } from 'country-emoji';
 import { PersonalProfileData } from './PersonalProfileData';
 import { DivesMap } from './DivesMap';
@@ -14,6 +14,7 @@ import {
   DiveType, SpeciesType, SpotType, UserSettingsType,
 } from '../../../firebase/firestore/models';
 import { SurveysBlock } from './SurveysBlock';
+import { NetworkStatusContext } from '../../../layouts/NetworkStatus';
 
 type Props = {
   dives: Array<DiveType & { spot: SpotType, date: string }>
@@ -31,6 +32,8 @@ export const ProfileBlock = ({
     lat: 40.95,
     lng: 30.33,
   };
+
+  const isOffline = useContext(NetworkStatusContext);
 
   const markerPoints = dives.map((dive) => ({
     id: dive.id,
@@ -71,7 +74,7 @@ export const ProfileBlock = ({
       <DivesMap
         coords={mapCoords}
         zoom={7}
-        points={markerPoints}
+        points={isOffline ? [] : markerPoints}
       />
       )}
       {!!dives?.length && (
