@@ -3,11 +3,20 @@ import { firestoreSpeciesServices } from './firestoreSpeciesServices';
 import { firestorePublicProfileService } from './firestorePublicProfileService';
 import { firestoreSurveyService } from './firestoreSurveyService';
 import { firestoreSpotsService } from './firestoreSpotsService';
+import { firestoreCommentsService } from './firestoreCommentsService';
 
 export const firestoreLogbookService = {
-  getDive: async (userId: string, diveId: string) => {
+  getDive: async (userId: string, diveId: string, withComments: boolean = false) => {
     try {
-      const data = await firestoreDivesService.getDiveData(userId as string, diveId as string);
+      const data = await firestoreDivesService.getDiveData(
+        userId as string,
+        diveId as string,
+      );
+
+      const comments = withComments
+        ? await firestoreCommentsService.getComments(userId, diveId)
+        : [];
+
       if (!data) {
         throw new Error('Dive is not found');
       }
@@ -31,6 +40,7 @@ export const firestoreLogbookService = {
       return {
         diveUser: diveUser ? JSON.parse(JSON.stringify(diveUser)) : null,
         dive: data ? JSON.parse(JSON.stringify(data)) : null,
+        comments: JSON.parse(JSON.stringify(comments)),
         spot: spot ? JSON.parse(JSON.stringify(spot)) : null,
         species: JSON.parse(JSON.stringify(species)),
         buddies: JSON.parse(JSON.stringify(buddies)),

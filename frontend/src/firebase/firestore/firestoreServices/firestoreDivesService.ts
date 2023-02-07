@@ -314,8 +314,7 @@ export const firestoreDivesService = {
       const { species } = doc.data();
       speciesArray = [...speciesArray, ...species];
     });
-    // @ts-ignore
-    return [...new Set(speciesArray)];
+    return Array.from(speciesArray);
   },
 
   getDiveData: async (

@@ -6,6 +6,7 @@ import { AuthLayout } from '../../src/layouts/AuthLayout';
 import { MainLayout } from '../../src/layouts/MainLayout';
 import { firestorePublicProfileService } from '../../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
 import { firestoreLogbookService } from '../../src/firebase/firestore/firestoreServices/firestoreLogbookService';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Logbook: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   user, dives, species, buddies, logbookUser, surveysNumber,

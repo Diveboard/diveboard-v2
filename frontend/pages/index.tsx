@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import { MainLayout } from '../src/layouts/MainLayout';
 import Guest from '../src/components/PageBlocks/HomePageBlocks/Guest';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Home:
 InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (

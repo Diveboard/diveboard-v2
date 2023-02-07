@@ -52,78 +52,6 @@ export const firestoreGeoDataService = {
     }
   },
 
-  getCountryByCode: async (code: string) => {
-    try {
-      const docRef = collection(db, firestorePaths.countries.path);
-      const q = query(
-        docRef,
-        where('ccode', '==', code),
-      );
-      const querySnapshot = await getDocs(q);
-      let country: string;
-      querySnapshot.forEach((document) => {
-        const { cname } = document.data();
-        country = cname;
-      });
-      return country;
-    } catch (e) {
-      console.log(e);
-      throw new Error('get country by code error');
-    }
-  },
-
-  getCountryByCoordinates: async (coordinates: Coords) => {
-    try {
-      const docRef = collection(db, firestorePaths.countries.path);
-      const q = query(
-        docRef,
-      );
-      const querySnapshot = await getDocs(q);
-
-      const countries = [];
-
-      querySnapshot.forEach((document) => {
-        const {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          nesw_bounds,
-          cname,
-        } = document.data();
-        const bounds: { northeast: Coords, southwest: Coords } = JSON.parse(nesw_bounds);
-
-        if (bounds?.northeast.lat >= coordinates.lat
-          && bounds?.southwest.lat <= coordinates.lat
-          && bounds?.northeast.lng >= coordinates.lng
-          && bounds?.southwest.lng <= coordinates.lat) {
-          countries.push(cname);
-        }
-      });
-      return countries;
-    } catch (e) {
-      console.log(e.message);
-      throw new Error('get countries by coordinates error');
-    }
-  },
-
-  getGeoFeatureByCode: async (code: string) => {
-    try {
-      const docRef = collection(db, firestorePaths.featureCode.path);
-      const q = query(
-        docRef,
-        where('feature_code', '==', code),
-      );
-      const querySnapshot = await getDocs(q);
-      let featureName: string;
-      querySnapshot.forEach((document) => {
-        const { name } = document.data();
-        featureName = name;
-      });
-      return featureName;
-    } catch (e) {
-      console.log(e);
-      throw new Error('get feature by code error');
-    }
-  },
-
   getGeonamesCoreData: async (geoname: string) => {
     const upperGeonames = geoname.trim()
       .charAt(0)
@@ -173,43 +101,6 @@ export const firestoreGeoDataService = {
     } catch (e) {
       console.log(e.message);
       throw new Error('get geonames core data error');
-    }
-  },
-
-  getGeonamesPredictions: async (geoname: string) => {
-    const geonamesData = await firestoreGeoDataService.getGeonamesCoreData(geoname);
-    const predictions: { id:string | number, name: string }[] = [];
-    for (const geonamesDataItem of geonamesData) {
-      const {
-        id,
-        name,
-        featureClass,
-        featureCode,
-        countryCode,
-      } = geonamesDataItem;
-      // eslint-disable-next-line no-await-in-loop
-      const country = await firestoreGeoDataService.getCountryByCode(countryCode);
-      // eslint-disable-next-line no-await-in-loop
-      const featureObject = await firestoreGeoDataService.getGeoFeatureByCode(`${featureClass}.${featureCode}`);
-
-      predictions.push({ id, name: `${name}, ${country}, ${featureObject}` });
-    }
-
-    return predictions;
-  },
-
-  getGeonamesCoordsById: async (id: string) => {
-    try {
-      const docRef = doc(db, firestorePaths.geonames.path, id);
-      const docSnap = await getDoc(docRef);
-      const { latitude, longitude } = docSnap.data();
-      return {
-        lat: latitude,
-        lng: longitude,
-      };
-    } catch (e) {
-      console.log(e);
-      throw new Error('get geoname coords by name error');
     }
   },
 
@@ -304,33 +195,6 @@ export const firestoreGeoDataService = {
     }
   },
 
-  getRegionById: async (regionId) => {
-    try {
-      const docRef = doc(db, firestorePaths.regions.path, regionId);
-      const docSnap = await getDoc(docRef);
-
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { name, nesw_bounds, id } = docSnap.data();
-      let coords;
-      if (nesw_bounds) {
-        const { northeast: ne, southwest: sw } = JSON.parse(nesw_bounds);
-        coords = {
-          ne,
-          sw,
-        };
-      }
-      return {
-        id: docSnap.id,
-        regionId: id,
-        name,
-        coords,
-      };
-    } catch (e) {
-      console.log(e);
-      throw new Error('get regions error');
-    }
-  },
-
   getRegions: async (locationName) => {
     const upperLocation = locationName.trim()
       .charAt(0)
@@ -388,8 +252,4 @@ export const firestoreGeoDataService = {
       throw new Error('get geoname coords by name error');
     }
   },
-
-  getCountriesWithPhoneCodes: () => {
-  },
-
 };

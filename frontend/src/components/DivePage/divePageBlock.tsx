@@ -12,12 +12,11 @@ import { DivePageTitle } from './DivePageTitle';
 import { MobilePhotoGroup } from '../PhotoGroup/mobilePhotoGroup';
 import { DesktopPhotoBlock } from './DesktopPhotoBlock';
 import { DivePageMobContainer } from './DivePageMobContainer';
-import { allComments } from './DIVE_PAGE_DUMMY_DATA';
 
 import styles from './divePageBlock.module.scss';
 import { NoDive } from '../DiveManager/NoData';
 import {
-  BuddiesType,
+  BuddiesType, CommentType,
   DiveType, SpeciesType, SpotType, UserSettingsType,
 } from '../../firebase/firestore/models';
 import { DiveBuddyCard } from '../Cards/DiveBuddyCard';
@@ -28,10 +27,11 @@ type Props = {
   spot: SpotType,
   species?: Array<SpeciesType>
   buddies: Array<BuddiesType>
+  comments: Array<CommentType>
 };
 
 export const DivePageBlock = ({
-  user, dive, spot, species, buddies,
+  user, dive, spot, species, buddies, comments,
 }: Props): JSX.Element => {
   const isMobile = useWindowWidth(500, 769);
 
@@ -100,7 +100,7 @@ export const DivePageBlock = ({
             </div>
           </DivePageMobContainer>
           )}
-          <CommentsBlock allComments={allComments} />
+          <CommentsBlock comments={comments} />
         </>
       ) : <NoDive />}
     </section>

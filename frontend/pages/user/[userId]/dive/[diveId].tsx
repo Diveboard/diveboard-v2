@@ -1,5 +1,6 @@
 import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { ToastContainer } from 'react-toastify';
 import { MainLayout } from '../../../../src/layouts/MainLayout';
 import { AuthLayout } from '../../../../src/layouts/AuthLayout';
 import { DivePageBlock } from '../../../../src/components/DivePage/divePageBlock';
@@ -7,6 +8,7 @@ import {
   firestorePublicProfileService,
 } from '../../../../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
 import { firestoreLogbookService } from '../../../../src/firebase/firestore/firestoreServices/firestoreLogbookService';
+import 'react-toastify/dist/ReactToastify.css';
 
 const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   user,
@@ -15,10 +17,19 @@ const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   species,
   buddies,
   diveUser,
+  comments,
 }) => (
   <AuthLayout user={user}>
     <MainLayout>
-      <DivePageBlock dive={dive} user={diveUser} spot={spot} species={species} buddies={buddies} />
+      <ToastContainer />
+      <DivePageBlock
+        dive={dive}
+        user={diveUser}
+        spot={spot}
+        species={species}
+        buddies={buddies}
+        comments={comments}
+      />
     </MainLayout>
   </AuthLayout>
 );
@@ -32,7 +43,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       user = await firestorePublicProfileService.getUserById(uid);
     }
 
-    const data = await firestoreLogbookService.getDive(userId as string, diveId as string);
+    const data = await firestoreLogbookService.getDive(userId as string, diveId as string, true);
 
     return {
       props: {

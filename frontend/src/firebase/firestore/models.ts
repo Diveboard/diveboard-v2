@@ -1,3 +1,4 @@
+import { Timestamp } from '@firebase/firestore';
 import { Coords } from '../../types';
 import {
   EighthStepType,
@@ -81,6 +82,20 @@ export type SpeciesTypeWithoutId = Omit<SpeciesType, 'id'>;
 
 type DiveActivities = Capitalize<keyof Omit<FirstStepType['diveActivities'], 'other'>>[] | string[];
 
+export type UserCommentType = {
+  firstName: string;
+  lastName: string;
+  userId: string;
+  photoUrl: string;
+};
+
+export type CommentType = {
+  comment: string;
+  replyTo?: UserCommentType | null;
+  author: UserCommentType;
+  created_at: Timestamp;
+};
+
 export type DiveType = {
   id?: string;
   draft: boolean;
@@ -98,6 +113,7 @@ export type DiveType = {
   unitSystem: UnitSystem;
   saves: number;
   spotId: string | null;
+  comments?: Array<CommentType>;
 }
 & SeventhStepType
 & EighthStepType

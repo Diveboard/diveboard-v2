@@ -4,6 +4,7 @@
 
 .user {
   display: flex;
+  cursor: pointer;
 }
 
 .userWrapper {
@@ -17,6 +18,7 @@
   font-size: 16px;
   line-height: 24px;
   color: #000345;
+  cursor: pointer;
 }
 
 .datePublish {
@@ -44,4 +46,9 @@
   font-weight: 300;
   font-size: 14px;
   color: #000345;
+
+  .replyTo {
+    color: #0059DE;
+    font-weight: 500;
+  }
 }
