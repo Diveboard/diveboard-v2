@@ -9,7 +9,7 @@ import {
   query,
   setDoc,
   startAfter,
-  Timestamp,
+  Timestamp, updateDoc,
   where,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
@@ -36,18 +36,17 @@ export const firestoreDivesService = {
         diveData.surveyId = null;
       }
       delete diveData.danSurvey;
-      await setDoc(ref, { ...diveData }, { merge: true });
       if (diveData.spotId) {
         const spot = await firestoreSpotsService.getSpotById(diveData.spotId);
         const newSpot = { ...spot };
+        diveData.spotRef = spot.ref;
         newSpot.dives[ref.id] = ref;
-        // newSpot.dive?.push({ diveId: ref.id, userId });
         // TODO: Add to spot data
         await firestoreSpotsService.updateSpotById(diveData.spotId, newSpot);
       }
+      await setDoc(ref, { ...diveData }, { merge: true });
     } catch (e) {
-      console.log({ e });
-      throw new Error('set  dive data error');
+      throw new Error(e.message);
     }
   },
 
@@ -77,8 +76,8 @@ export const firestoreDivesService = {
         const spot = await firestoreSpotsService.getSpotById(dive.spotId);
         if (spot) {
           const newSpot = { ...spot };
-          newSpot.dive?.push({ diveId, userId });
-          newSpot.dives?.push({ diveId, userId });
+          newSpot.dives[docRef.id] = docRef;
+          dive.spotRef = spot.ref;
           await firestoreSpotsService.updateSpotById(dive.spotId, newSpot);
 
           if (spotId) {
@@ -93,8 +92,7 @@ export const firestoreDivesService = {
       await setDoc(docRef, { ...dive }, { merge: false });
       return true;
     } catch (e) {
-      console.log(e.message);
-      throw new Error('update dive data error');
+      throw new Error(e.message);
     }
   },
 
@@ -108,8 +106,7 @@ export const firestoreDivesService = {
         await setDoc(docRef, { ...docSnap.data(), draft: true }, { merge: true });
       }
     } catch (e) {
-      console.log({ e });
-      throw new Error('unpublish dive data error');
+      throw new Error(e.message);
     }
   },
 
@@ -123,8 +120,7 @@ export const firestoreDivesService = {
       const querySnapshot = await getDocs(q);
       return querySnapshot.size;
     } catch (e) {
-      console.log(e.message);
-      throw new Error('get dive data error');
+      throw new Error(e.message);
     }
   },
 
@@ -137,8 +133,7 @@ export const firestoreDivesService = {
       const querySnapshot = await getDocs(q);
       return querySnapshot.size;
     } catch (e) {
-      console.log(e.message);
-      throw new Error('get dive data error');
+      throw new Error(e.message);
     }
   },
 
@@ -192,8 +187,7 @@ export const firestoreDivesService = {
       }
       return dives;
     } catch (e) {
-      console.log(e.message);
-      throw new Error('get dive data error');
+      throw new Error(e.message);
     }
   },
 
@@ -259,69 +253,32 @@ export const firestoreDivesService = {
         await setDoc(docRef, { ...newProperties }, { merge: true });
       }
     } catch (e) {
-      console.log(e.message);
-      throw new Error('update dive properties error');
+      throw new Error(e.message);
     }
-  },
-
-  getImagesInDives: async (
-    userId: string,
-  ) => {
-    const docRef = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
-    const q = query(
-      docRef,
-      where('externalImgsUrls', '!=', []),
-    );
-    const querySnapshot = await getDocs(q);
-    const images = [];
-    const foundSpotsSet = new Set();
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    querySnapshot.forEach((doc) => {
-      const {
-        externalImgsUrls, diveData, draft, spotId,
-      } = doc.data();
-      externalImgsUrls.forEach((i) => {
-        images.push({
-          img: i,
-          date: diveData?.date ? convertTimestampDate(diveData.date) : null,
-          draft,
-          spot: spotId,
-        });
-        foundSpotsSet.add(spotId);
-      });
-    });
-    const spots: { [key: string]: string } = {};
-    // @ts-ignore Get spots names
-    const foundSpots = [...foundSpotsSet];
-    for (let i = 0; i < foundSpots.length; i++) {
-      // eslint-disable-next-line no-await-in-loop
-      spots[foundSpots[i]] = await firestoreSpotsService.getSpotNameById(foundSpots[i]);
-    }
-
-    return images.map((i) => ({
-      ...i,
-      spot: spots[i.spot],
-    }));
   },
 
   getUserSpeciesInDives: async (
     userId: string,
   ) => {
-    const docRef = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
-    const q = query(
-      docRef,
-      where('species', '!=', {}),
-    );
-    const querySnapshot = await getDocs(q);
-    let speciesSet = new Set();
-    querySnapshot.forEach((specDoc) => {
-      const { species } = specDoc.data();
-      if (species) {
-        // @ts-ignore
-        speciesSet = { ...speciesSet, species };
-      }
-    });
-    return speciesSet;
+    try {
+      const docRef = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
+      const q = query(
+        docRef,
+        where('species', '!=', {}),
+      );
+      const querySnapshot = await getDocs(q);
+      let speciesSet = new Set();
+      querySnapshot.forEach((specDoc) => {
+        const { species } = specDoc.data();
+        if (species) {
+          // @ts-ignore
+          speciesSet = { ...speciesSet, species };
+        }
+      });
+      return speciesSet;
+    } catch (e) {
+      throw new Error(e.message);
+    }
   },
 
   getDiveData: async (
@@ -338,8 +295,7 @@ export const firestoreDivesService = {
       }
       return data && (!data.draft || data.publishMode === 'PUBLIC') ? data : undefined;
     } catch (e) {
-      console.log(e.message);
-      throw new Error('get dive data error');
+      throw new Error(e.message);
     }
   },
 
@@ -354,8 +310,7 @@ export const firestoreDivesService = {
         await deleteDoc(docRef);
       }
     } catch (e) {
-      console.log(e.message);
-      throw new Error('delete dive data error');
+      throw new Error(e.message);
     }
   },
 
@@ -369,8 +324,7 @@ export const firestoreDivesService = {
       await deleteDoc(docRef);
       return true;
     } catch (e) {
-      console.log(e.message);
-      throw new Error('delete dive data error');
+      throw new Error(e.message);
     }
   },
 
@@ -391,6 +345,7 @@ export const firestoreDivesService = {
         if (data.pictures) {
           const key = Object.keys(data.pictures)[0];
           const value = Object.values(data.pictures)[0];
+          // @ts-ignore
           // eslint-disable-next-line no-await-in-loop
           externalImgsUrls = await firestoreGalleryService.getBestPictures({ [key]: value });
         }
@@ -399,6 +354,23 @@ export const firestoreDivesService = {
         });
       }
       return dives;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+  deletePictureFromDive: async (
+    userId: string,
+    diveId: string,
+    pictureId: string,
+  ) => {
+    try {
+      const docRef = doc(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`, diveId);
+      const docSnap = await getDoc(docRef);
+      const { pictures } = docSnap.data();
+      delete pictures[pictureId];
+      await updateDoc(docRef, {
+        pictures,
+      });
     } catch (e) {
       throw new Error(e.message);
     }

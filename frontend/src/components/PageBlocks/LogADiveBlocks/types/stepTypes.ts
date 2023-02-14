@@ -3,7 +3,7 @@ import {
 } from './commonTypes';
 import { initialDiveDataState } from '../LogDiveData/state';
 import { SurveyDanType } from '../../../../types';
-import { SpeciesType } from '../../../../firebase/firestore/models';
+import { MediaUrls, SpeciesType } from '../../../../firebase/firestore/models';
 
 export type FirstStepType = {
   overview: {
@@ -84,7 +84,7 @@ export type FifthStepType = {
 
 export type SixthStepType = {
   files: { tags: string; file: File }[];
-  mediaUrl: string[];
+  mediaUrl: MediaUrls[];
 };
 
 export type SeventhStepType = {

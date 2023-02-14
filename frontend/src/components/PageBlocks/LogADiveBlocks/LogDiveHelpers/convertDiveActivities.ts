@@ -32,7 +32,7 @@ export const convertToDiveActivities = (diveActivities: Array<string>) => {
   };
   diveActivities?.forEach((activity) => {
     const item = activity.charAt(0).toLowerCase() + activity.slice(1);
-    if (activities[item] === undefined) {
+    if (activities[item] === undefined || item === 'other') {
       activities.other.push(item);
     } else {
       activities[item] = !!item;

@@ -45,7 +45,7 @@ export const Tank: FC<Props> = ({
         />
 
         <Dropdown
-          item={size || 'curf'}
+          item={size || 'cuft'}
           setItem={
               setTankParameters.setSize
             }

@@ -7,7 +7,7 @@ import {
   getDocs,
   orderBy,
   startAt,
-  limit,
+  limit, DocumentReference,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { PathEnum } from '../firestorePaths';
@@ -62,8 +62,21 @@ export const firestorePublicProfileService = {
 
   getUserById: async (userId: string) => {
     try {
-      const docRef = doc(db,PathEnum.USERS, userId);
+      const docRef = doc(db, PathEnum.USERS, userId);
       const docSnap = await getDoc(docRef);
+      const data = docSnap.data();
+      if (!data) {
+        return null;
+      }
+      return { ...data, uid: docSnap.id } as UserSettingsType | undefined;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
+  getUserByRef: async (userRef: DocumentReference) => {
+    try {
+      const docSnap = await getDoc(userRef);
       const data = docSnap.data();
       if (!data) {
         return null;

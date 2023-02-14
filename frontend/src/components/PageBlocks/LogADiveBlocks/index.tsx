@@ -24,14 +24,18 @@ import { notify } from '../../../utils/notify';
 import { Backdrop } from '../../Backdrop';
 import { Popup } from '../../DiveManager/Popup';
 import KebabButton from '../../Buttons/KebabButton';
+import { MediaUrls } from '../../../firebase/firestore/models';
 
 type Props = {
   dive?: DiveType;
   diveId?: string;
   userId: string;
+  mediaUrls?: Array<MediaUrls>
 };
 
-export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
+export const LogDiveBlock = ({
+  dive, diveId, userId, mediaUrls,
+}: Props) => {
   const [step, setStep] = useState<StepType>(0);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isDraftPopupOpen, setDraftPopupOpen] = useState<boolean>(false);
@@ -41,7 +45,6 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
   } = useContext(LogDiveDataContext);
 
   const { userAuth } = useContext(AuthStatusContext);
-
   const router = useRouter();
   const { isNew } = router.query;
   const [, anchor] = router.asPath.split('#');
@@ -65,7 +68,7 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
   useEffect(() => {
     if (dive) {
       // @ts-ignore
-      setData(dive, userAuth.settings.preferences.unitSystem);
+      setData({ ...dive, mediaUrls }, userAuth.settings.preferences.unitSystem);
       if (anchor && +anchor !== step && +anchor >= 1 && +anchor < 10) {
         setStep(+anchor as StepType);
       } else {

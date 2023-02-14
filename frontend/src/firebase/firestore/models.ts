@@ -96,6 +96,12 @@ export type CommentType = {
   createdAt: Timestamp;
 };
 
+export type MediaUrls = {
+  url: string,
+  ref?: DocumentReference,
+  id?: string
+};
+
 export type DiveType = {
   id?: string;
   ref?: DocumentReference;
@@ -107,13 +113,14 @@ export type DiveType = {
   species: SpeciesType[];
   diveCenter: { id: string; guide: string };
   buddies: FifthStepType['buddies'];
-  externalImgsUrls: string[];
+  pictures: MediaUrls[];
   aboutDive: FirstStepType['overview']
   & FirstStepType['diveReviews']
   oldId: number | null
   unitSystem: UnitSystem;
   saves: number;
   spotId: string | null;
+  spotRef: DocumentReference;
   comments?: Array<CommentType>;
 }
 & SeventhStepType

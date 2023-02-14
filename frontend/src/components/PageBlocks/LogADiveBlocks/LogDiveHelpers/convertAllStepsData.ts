@@ -1,5 +1,7 @@
 import { AllStepsDataType } from '../types/stepTypes';
-import { DiveType, SpeciesType, UnitSystem } from '../../../../firebase/firestore/models';
+import {
+  DiveType, MediaUrls, SpeciesType, UnitSystem,
+} from '../../../../firebase/firestore/models';
 import {
   convertDiveActivities,
   convertToDiveActivities,
@@ -46,21 +48,26 @@ export const convertAllStepsData = async (
   };
 
   const uploadFiles = async () => {
-    const filesUrls = stepsData.sixthStep.mediaUrl;
+    const mediaUrls = stepsData.sixthStep.mediaUrl;
     const result = [];
-    if (filesUrls.length) {
-      for (let i = 0; i < filesUrls.length; i++) {
-        // eslint-disable-next-line no-await-in-loop
-        result.push(await firestoreGalleryService.addImgToGallery({
-          url: filesUrls[i],
-          user: userId,
-          created_at: new Date(),
-          media: 'image',
-          height: 0,
-          width: 0,
-          spot: stepsData.thirdStep.spotId,
-          videoUrl: null,
-        }));
+    if (mediaUrls.length) {
+      for (let i = 0; i < mediaUrls.length; i++) {
+        if (!mediaUrls[i].id) {
+          // eslint-disable-next-line no-await-in-loop
+          const newPic = await firestoreGalleryService.addImgToGallery({
+            url: mediaUrls[i].url,
+            user: userId,
+            createdAt: new Date(),
+            media: 'IMAGE',
+            height: 0,
+            width: 0,
+            spot: stepsData.thirdStep.spotId,
+            videoUrl: null,
+          });
+          result.push(newPic);
+        } else {
+          result.push([mediaUrls[i].id, mediaUrls[i].ref]);
+        }
       }
     }
 
@@ -76,8 +83,8 @@ export const convertAllStepsData = async (
           result.push(await firestoreGalleryService.addImgToGallery({
             url: imageRef,
             user: userId,
-            created_at: new Date(),
-            media: 'image',
+            createdAt: new Date(),
+            media: 'IMAGE',
             height: 0,
             width: 0,
             spot: stepsData.thirdStep.spotId,
@@ -88,7 +95,8 @@ export const convertAllStepsData = async (
         }
       }
     }
-    return result;
+    console.log(Object.fromEntries(result));
+    return Object.fromEntries(result);
   };
 
   return {
@@ -113,13 +121,13 @@ export const convertAllStepsData = async (
       ...replaceUndefinedToNull(stepsData.firstStep.diveReviews),
     },
     draft,
-    externalImgsUrls: await uploadFiles(),
+    pictures: await uploadFiles(),
     gears: stepsData.seventhStep.gears?.map((gear) => replaceUndefinedToNull(gear)) || [],
     publishingMode: stepsData.ninthStep.publishingMode.toUpperCase(),
     species: stepsData.fourthStep.species?.length
       ? convertSpecies(stepsData.fourthStep.species)
       : {},
-    spotId: stepsData.thirdStep.spotId,
+    spotId: stepsData.thirdStep.spotId, // Add spot ref
     tanks: stepsData.secondStep.tanks?.map((tank) => replaceUndefinedToNull(tank)) || [],
     oldId: null,
     unitSystem,
@@ -166,86 +174,90 @@ const convertWeightSystem = (
   return convertKgToLbs(value);
 };
 
-export const convertToStepsData = (data: DiveType, unitSystem: UnitSystem) => ({
-  firstStep: {
-    overview: {
-      diveNumber: data.aboutDive?.diveNumber,
-      notes: data.aboutDive?.notes,
-      tripName: data.aboutDive?.tripName,
+export const convertToStepsData = (
+  data: DiveType & { mediaUrls: Array<MediaUrls> },
+  unitSystem: UnitSystem,
+) => (
+  {
+    firstStep: {
+      overview: {
+        diveNumber: data.aboutDive?.diveNumber,
+        notes: data.aboutDive?.notes,
+        tripName: data.aboutDive?.tripName,
+      },
+      diveReviews: {
+        overReview: data.aboutDive?.overReview,
+        diveDifficulty: data.aboutDive?.diveDifficulty,
+        marineLifeQuality: data.aboutDive?.marineLifeQuality,
+        wreck: data.aboutDive?.wreck,
+        bigFish: data.aboutDive?.bigFish,
+      },
+      diveActivities: {
+        ...convertToDiveActivities(data.diveActivities),
+      },
     },
-    diveReviews: {
-      overReview: data.aboutDive?.overReview,
-      diveDifficulty: data.aboutDive?.diveDifficulty,
-      marineLifeQuality: data.aboutDive?.marineLifeQuality,
-      wreck: data.aboutDive?.wreck,
-      bigFish: data.aboutDive?.bigFish,
+    secondStep: {
+      parameters: {
+        time: data.diveData?.time,
+        date: data.diveData?.date
+          ? convertTimestampDate(data.diveData.date)
+          : null,
+        maxDepth: unitSystem === data.unitSystem
+          ? data.diveData?.maxDepth
+          : convertDistanceSystem(unitSystem, data.diveData?.maxDepth),
+        duration: data.diveData?.duration,
+        surfaceInterval: data.diveData?.surfaceInterval,
+        safetyStops: unitSystem === data.unitSystem
+          ? data.diveData?.safetyStops
+          : data.diveData?.safetyStops.map((spot) => (
+            { ...spot, depth: convertDistanceSystem(unitSystem, spot.depth) }
+          ))
+        ,
+      },
+      advancedParameters: {
+        surfaceTemp: unitSystem === data.unitSystem
+          ? data.diveData?.surfaceTemp
+          : convertTempSystem(unitSystem, data.diveData?.surfaceTemp),
+        bottomTemp: unitSystem === data.unitSystem
+          ? data.diveData?.bottomTemp
+          : convertTempSystem(unitSystem, data.diveData?.bottomTemp),
+        weights: unitSystem === data.unitSystem
+          ? data.diveData?.weights
+          : convertWeightSystem(unitSystem, data.diveData?.weights),
+        waterVisibility: data.diveData?.waterVisibility,
+        current: data.diveData?.current,
+        altitude: unitSystem === data.unitSystem
+          ? data.diveData?.altitude
+          : convertDistanceSystem(unitSystem, data.diveData?.altitude),
+        waterType: data.diveData?.waterType,
+      },
+      tanks: data.tanks,
     },
-    diveActivities: {
-      ...convertToDiveActivities(data.diveActivities),
+    thirdStep: {
+      spotId: data.spotId,
     },
-  },
-  secondStep: {
-    parameters: {
-      time: data.diveData?.time,
-      date: data.diveData?.date
-        ? convertTimestampDate(data.diveData.date)
-        : null,
-      maxDepth: unitSystem === data.unitSystem
-        ? data.diveData?.maxDepth
-        : convertDistanceSystem(unitSystem, data.diveData?.maxDepth),
-      duration: data.diveData?.duration,
-      surfaceInterval: data.diveData?.surfaceInterval,
-      safetyStops: unitSystem === data.unitSystem
-        ? data.diveData?.safetyStops
-        : data.diveData?.safetyStops.map((spot) => (
-          { ...spot, depth: convertDistanceSystem(unitSystem, spot.depth) }
-        ))
-      ,
+    fourthStep: {
+      species: data.species,
     },
-    advancedParameters: {
-      surfaceTemp: unitSystem === data.unitSystem
-        ? data.diveData?.surfaceTemp
-        : convertTempSystem(unitSystem, data.diveData?.surfaceTemp),
-      bottomTemp: unitSystem === data.unitSystem
-        ? data.diveData?.bottomTemp
-        : convertTempSystem(unitSystem, data.diveData?.bottomTemp),
-      weights: unitSystem === data.unitSystem
-        ? data.diveData?.weights
-        : convertWeightSystem(unitSystem, data.diveData?.weights),
-      waterVisibility: data.diveData?.waterVisibility,
-      current: data.diveData?.current,
-      altitude: unitSystem === data.unitSystem
-        ? data.diveData?.altitude
-        : convertDistanceSystem(unitSystem, data.diveData?.altitude),
-      waterType: data.diveData?.waterType,
+    fifthStep: {
+      buddies: data.buddies as { id : string }[],
+      diveCenter: data.diveCenter.id,
+      guideName: data.diveCenter.guide,
     },
-    tanks: data.tanks,
-  },
-  thirdStep: {
-    spotId: data.spotId,
-  },
-  fourthStep: {
-    species: data.species,
-  },
-  fifthStep: {
-    buddies: data.buddies as { id : string }[],
-    diveCenter: data.diveCenter.id,
-    guideName: data.diveCenter.guide,
-  },
-  sixthStep: {
-    mediaUrl: data.externalImgsUrls,
-    files: null,
-  },
-  seventhStep: {
-    gears: data.gears.map((gear) => ({
-      ...gear,
-      dateAcquired: gear.dateAcquired ? convertTimestampDate(gear.dateAcquired) : null,
-      lastMaintenance: gear.lastMaintenance ? convertTimestampDate(gear.lastMaintenance) : null,
-    })),
-    save: true,
-  },
-  eighthStep: { surveyId: data.surveyId || null },
-  ninthStep: {
-    publishingMode: data.publishingMode,
-  },
-});
+    sixthStep: {
+      mediaUrl: data.mediaUrls,
+      files: null,
+    },
+    seventhStep: {
+      gears: data.gears.map((gear) => ({
+        ...gear,
+        dateAcquired: gear.dateAcquired ? convertTimestampDate(gear.dateAcquired) : null,
+        lastMaintenance: gear.lastMaintenance ? convertTimestampDate(gear.lastMaintenance) : null,
+      })),
+      save: true,
+    },
+    eighthStep: { surveyId: data.surveyId || null },
+    ninthStep: {
+      publishingMode: data.publishingMode,
+    },
+  });

@@ -17,61 +17,10 @@ import { useOutsideClick } from '../../../hooks/useOutsideClick';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
 import { convertCalToFar, convertMetersToFeet } from '../../../utils/unitSystemConverter';
 import { notify } from '../../../utils/notify';
-// import { ShopCard } from '../../Cards/ShopsCard';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
 });
-
-// const markerPoints = [
-//   {
-//     id: 1,
-//     divesCount: 234,
-//     lat: 41.5,
-//     lng: 30.33,
-//     diveName: 'Aloha',
-//   }, {
-//     id: 2,
-//     divesCount: 2,
-//     lat: 41.95,
-//     lng: 29.33,
-//     diveName: 'Shark',
-//   }, {
-//     id: 3,
-//     divesCount: 34,
-//     lat: 41.7,
-//     lng: 28.33,
-//     diveName: 'YO',
-//   }, {
-//     id: 4,
-//     divesCount: 13,
-//     lat: 42.2,
-//     lng: 32.33,
-//     diveName: 'Miran',
-//   },
-// ];
-
-// const fakeSpot = {
-//   region: 'Egypt, Sharm El Shaikh',
-//   spotName: 'Shark and Yolana Reef',
-//   depth: '24 m',
-//   imgSrc: '/TEST_IMG_THEN_DELETE/egypt.png',
-//   favorite: false,
-// };
-
-// @ts-ignore
-// const fakeSpots: typeof fakeSpot[] = Array.from({ length: 10 }).fill(fakeSpot);
-
-// const fakeShop = {
-//   imgSrc: '/TEST_IMG_THEN_DELETE/fish.jpg',
-//   addedToFavourite: false,
-//   shopName: 'Dive Africa Sharm',
-//   place: 'Egypt, Sharm El Shaikh',
-//   score: 2.5,
-//   scoredCount: 112,
-// };
-
-// const fakeShops: typeof fakeShop[] = Array.from({ length: 10 }).fill(fakeShop);
 
 const tabs = ['Spots', 'Shops', 'Region'];
 
@@ -180,16 +129,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
       input.style.visibility = 'visible';
     }
   };
-
-  // const handleChoseSpot = (index: number): void => {
-  //   const sidebar = document.getElementById('sidebar');
-  //   const navbar = document.getElementById('navbar');
-  //   navbar.style.visibility = 'hidden';
-  //   sidebar.style.top = 'unset';
-  //   sidebar.style.bottom = '0';
-  //   sidebar.style.maxHeight = '60px';
-  //   setChosenSpot(index);
-  // };
 
   const onMapChange = async () => {
     try {
@@ -495,17 +434,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
           isLoading={isLoading}
           setZoom={setZoom}
         />
-        {/* {typeof chosenSpot === 'number' && ( */}
-        {/* <div className={styles.chosenSpot}> */}
-        {/*  <SpotCard */}
-        {/*    region={fakeSpots[chosenSpot].region} */}
-        {/*    name={fakeSpots[chosenSpot].spotName} */}
-        {/*    depth={fakeSpots[chosenSpot].depth} */}
-        {/*    imgSrc={fakeSpots[chosenSpot].imgSrc} */}
-        {/*    favorite={fakeSpots[chosenSpot].favorite} */}
-        {/*  /> */}
-        {/* </div> */}
-        {/* )} */}
       </div>
     </div>
   );

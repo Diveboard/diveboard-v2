@@ -3,7 +3,7 @@ import {
   FirstStepType,
   SecondStepType,
 } from '../components/PageBlocks/LogADiveBlocks/types/stepTypes';
-import { UnitSystem } from '../firebase/firestore/models';
+import { MediaUrls, UnitSystem } from '../firebase/firestore/models';
 
 export type UserType = {
   uid: null | string;
@@ -21,7 +21,7 @@ export type ImageInfo = {
   createdAt: Timestamp,
   updated_A?: Timestamp,
   videoUrl: string | null,
-  media: 'image' | 'video',
+  media: 'IMAGE' | 'VIDEO',
   spot: DocumentReference,
   user: {
     firstName: string,
@@ -49,6 +49,7 @@ export type DiveType =
     comments: CommentType[];
     species: SpeciesType[];
     unitSystem: UnitSystem;
+    pictures: MediaUrls[];
   }
   & FirstStepType['overview']
   & Omit<SecondStepType['parameters'], 'surfaceInterval'>

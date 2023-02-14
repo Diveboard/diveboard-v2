@@ -41,7 +41,7 @@ export const firestoreSpotsService = {
         country: data.countryName,
         location: data.locationName,
       };
-      return { ...data, location } as any;
+      return { ...data, location, ref: docSnap.ref } as any;
     } catch (e) {
       throw new Error(e.message);
     }
