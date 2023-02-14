@@ -24,17 +24,18 @@ import { notify } from '../../../utils/notify';
 import { Backdrop } from '../../Backdrop';
 import { Popup } from '../../DiveManager/Popup';
 import KebabButton from '../../Buttons/KebabButton';
-import { MediaUrls } from '../../../firebase/firestore/models';
+import { MediaUrls, SpeciesType } from '../../../firebase/firestore/models';
 
 type Props = {
   dive?: DiveType;
   diveId?: string;
   userId: string;
   mediaUrls?: Array<MediaUrls>
+  species?: Array<SpeciesType>
 };
 
 export const LogDiveBlock = ({
-  dive, diveId, userId, mediaUrls,
+  dive, diveId, userId, mediaUrls, species,
 }: Props) => {
   const [step, setStep] = useState<StepType>(0);
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -68,7 +69,7 @@ export const LogDiveBlock = ({
   useEffect(() => {
     if (dive) {
       // @ts-ignore
-      setData({ ...dive, mediaUrls }, userAuth.settings.preferences.unitSystem);
+      setData({ ...dive, mediaUrls, species }, userAuth.settings.preferences.unitSystem);
       if (anchor && +anchor !== step && +anchor >= 1 && +anchor < 10) {
         setStep(+anchor as StepType);
       } else {

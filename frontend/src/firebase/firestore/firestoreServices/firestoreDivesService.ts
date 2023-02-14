@@ -341,16 +341,16 @@ export const firestoreDivesService = {
         // eslint-disable-next-line no-await-in-loop
         const docSnap = await getDoc(divesIds[i]);
         const data = docSnap.data();
-        let externalImgsUrls = [];
+        let pictures = [];
         if (data.pictures) {
           const key = Object.keys(data.pictures)[0];
           const value = Object.values(data.pictures)[0];
           // @ts-ignore
           // eslint-disable-next-line no-await-in-loop
-          externalImgsUrls = await firestoreGalleryService.getBestPictures({ [key]: value });
+          pictures = await firestoreGalleryService.getBestPictures({ [key]: value });
         }
         dives.push({
-          ...data, id: docSnap.id, ref: docSnap.ref, externalImgsUrls,
+          ...data, id: docSnap.id, ref: docSnap.ref, pictures: [{ url: pictures[0] || '' }],
         });
       }
       return dives;

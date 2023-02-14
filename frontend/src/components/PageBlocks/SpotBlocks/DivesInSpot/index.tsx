@@ -33,7 +33,7 @@ export const DivesInSpot = ({ dives, spotDivesIds }: Props) => {
 
       // convert custom ref to document ref
       const resIds = Object.fromEntries(Object.entries(spotDivesIds)
-        .slice(fetchedDives.length, fetchedDives.length + 30)
+        .slice(fetchedDives.length, fetchedDives.length + 8)
         .map(([key, value]) => {
           // @ts-ignore
           const segments = value?._key?.path?.segments;

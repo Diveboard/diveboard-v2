@@ -47,22 +47,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       if (data.dives) {
         dives = await firestoreDivesService.getDivesByRefs(data.dives, 4);
       }
-      // if (data?.dive?.length) {
-      //   let speciesIds = [];
-      //   for (let i = 0; i < data.dive.length; i++) {
-      //     const dive = data.dive[i];
-      //     // eslint-disable-next-line no-await-in-loop
-      //     const divesData = await firestoreDivesService.getDiveData(dive.userId, dive.diveId);
-      //     if (divesData) {
-      //       speciesIds = [...speciesIds, ...divesData.species];
-      //       dives.push(divesData);
-      //     }
-      //   }
-      //   if (speciesIds.length) {
-      //     species = await firestoreSpeciesServices
-      //     .getSpeciesByIds(Array.from(new Set(speciesIds)));
-      //   }
-      // }
     }
   }
 

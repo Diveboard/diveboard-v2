@@ -56,13 +56,6 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
 
       if (data.species && Array.isArray(data.species)) {
         setSelectedSpecies(data.species);
-      } else {
-        try {
-          const specs = await firestoreSpeciesServices.getSpeciesByRefs(data.species);
-          setSelectedSpecies(specs);
-        } catch (ev) {
-          notify(ev);
-        }
       }
     })();
   }, [step]);
