@@ -1,46 +1,69 @@
 import React, { useEffect, useState } from 'react';
+import { Timestamp } from '@firebase/firestore';
 import styles from './styles.module.scss';
 import { ButtonGroup } from '../../ButtonGroup';
 import { buttons } from '../../DiveManager/diveData';
 import { SearchAnimatedInput } from '../../Input/SearchAnimatedInput';
 import { PhotoCard } from '../../Cards/PhotoCard';
 import { Lightbox } from './Lightbox';
-import { ImageInfo, UserType } from '../../../types';
+import { ImageInfo } from '../../../types';
+import { firestoreGalleryService } from '../../../firebase/firestore/firestoreServices/firestoreGalleryService';
+import { notify } from '../../../utils/notify';
+import { Loader } from '../../Loader';
 
 type Props = {
-  user?: UserType,
   images: Array<ImageInfo>
 };
 
-export const GalleryBlock = ({ images, user }: Props) => {
+export const GalleryBlock = ({ images }: Props) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [openLightbox, setOpenLightbox] = useState(false);
   const [imageIndex, setImageIndex] = useState<number>(null);
   const [sortType, setSortType] = useState('recent');
+  const [isLoading, setLoading] = useState(false);
+  const [fetchedImages, setFetchedImages] = useState(images);
+  const [allFethed, setAllFetched] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = 'overlay';
   }, []);
 
-  const filterBySearch = (gallery: Array<ImageInfo>) => {
-    if (searchQuery) {
-      return gallery.filter((img) => img.spot.toLowerCase().includes(searchQuery.toLowerCase()));
+  const filterBySearch = async () => {
+    try {
+      setLoading(true);
+      if (searchQuery) {
+        const res = await firestoreGalleryService.getGalleryByLocation(searchQuery);
+        setFetchedImages(res);
+        setSortType('search');
+      }
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      notify('Something went wrong');
     }
-    return gallery;
   };
 
-  const sortImages = (gallery: Array<ImageInfo>) => {
-    if (sortType === 'recent') {
-      return gallery.sort((a, b) => +new Date(b.date) - +new Date(a.date));
+  const loadMoreGallery = async (lastDate?: Timestamp) => {
+    try {
+      setAllFetched(false);
+      setLoading(true);
+      const res = await firestoreGalleryService.getGallery(sortType === 'oldest' ? 'asc' : 'desc', lastDate);
+      setLoading(false);
+      if (res.length < 20) {
+        setAllFetched(true);
+      }
+      setFetchedImages(lastDate ? [...fetchedImages, ...res] : res);
+    } catch (e) {
+      setLoading(false);
+      notify('Something went wrong');
     }
-    if (sortType === 'oldest') {
-      return gallery.sort((a, b) => +new Date(a.date) - +new Date(b.date));
-    }
-    if (sortType === 'drafts') {
-      return gallery.filter((img) => img.draft);
-    }
-    return gallery;
   };
+
+  useEffect(() => {
+    if (sortType !== 'search') {
+      loadMoreGallery();
+    }
+  }, [sortType]);
 
   return (
     <div className={`${styles.wrapper} ${styles['min-height-wrapper']}`}>
@@ -48,41 +71,55 @@ export const GalleryBlock = ({ images, user }: Props) => {
       <div className={styles.sortBar}>
         <ButtonGroup
           buttons={buttons.slice(0, 2)}
-          onClick={(val) => setSortType(val)}
+          onClick={setSortType}
           defaultChecked={sortType}
         />
         <SearchAnimatedInput
           value={searchQuery}
           setValue={setSearchQuery}
+          onClick={filterBySearch}
         />
       </div>
       <div
         className={styles.imageGrid}
       >
-        {!!images.length && filterBySearch(sortImages(images)).map((photo, index) => (
+        {!!fetchedImages.length && fetchedImages.map((photo, index) => (
           <div
-              /* eslint-disable-next-line react/no-array-index-key */
-            key={index}
+            key={photo.imageId}
             onClick={() => {
               setOpenLightbox(true);
               setImageIndex(index);
             }}
           >
             <PhotoCard
-              imgUrl={photo.img}
-              authorName={user?.firstName}
+              imgUrl={photo.url}
+              authorName={photo.user?.firstName || photo.user?.lastName ? `${photo.user?.firstName || ''} ${photo.user?.lastName || ''}` : 'Author'}
             />
           </div>
         ))}
       </div>
+      {(!allFethed && sortType !== 'search') && (
+      <div>
+        {isLoading
+          ? <Loader loading={isLoading} />
+          : (
+            <div
+              className={styles.viewMoreBtn}
+              onClick={() => loadMoreGallery(fetchedImages[fetchedImages.length - 1].createdAt)}
+            >
+              View more
+            </div>
+          )}
+      </div>
+      )}
       <Lightbox
         open={openLightbox}
-        image={images[imageIndex]}
-        user={user}
+        image={fetchedImages[imageIndex]}
+        user={fetchedImages[imageIndex]?.user}
         onClose={() => {
           setOpenLightbox(false);
         }}
-        handleNextSlide={() => (imageIndex < images.length - 1
+        handleNextSlide={() => (imageIndex < fetchedImages.length - 1
           ? setImageIndex((idx) => idx + 1)
           : setOpenLightbox(false))}
         handlePrevSlide={() => (imageIndex > 0

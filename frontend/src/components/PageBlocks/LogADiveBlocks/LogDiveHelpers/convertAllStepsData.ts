@@ -1,5 +1,5 @@
 import { AllStepsDataType } from '../types/stepTypes';
-import { DiveType, UnitSystem } from '../../../../firebase/firestore/models';
+import { DiveType, SpeciesType, UnitSystem } from '../../../../firebase/firestore/models';
 import {
   convertDiveActivities,
   convertToDiveActivities,
@@ -31,14 +31,39 @@ export const convertAllStepsData = async (
   };
 
   // eslint-disable-next-line array-callback-return
-  const checkSafetySpots = (safetySpots: Array<SafetySpot>) => safetySpots.filter((spot) => {
+  const checkSafetySpots = (safetyStops: Array<SafetySpot>) => safetyStops.filter((spot) => {
     if (spot.depth && spot.period) {
       return spot;
     }
   });
 
+  const convertSpecies = (species: SpeciesType[]) => {
+    const specs = {};
+    species.forEach((specie) => {
+      specs[specie.id] = specie.ref;
+    });
+    return specs;
+  };
+
   const uploadFiles = async () => {
     const filesUrls = stepsData.sixthStep.mediaUrl;
+    const result = [];
+    if (filesUrls.length) {
+      for (let i = 0; i < filesUrls.length; i++) {
+        // eslint-disable-next-line no-await-in-loop
+        result.push(await firestoreGalleryService.addImgToGallery({
+          url: filesUrls[i],
+          user: userId,
+          created_at: new Date(),
+          media: 'image',
+          height: 0,
+          width: 0,
+          spot: stepsData.thirdStep.spotId,
+          videoUrl: null,
+        }));
+      }
+    }
+
     const { files } = stepsData.sixthStep;
     if (files?.length) {
       for (let i = 0; i < files.length; i++) {
@@ -47,13 +72,23 @@ export const convertAllStepsData = async (
         // eslint-disable-next-line no-await-in-loop
         const imageRef = await firestoreGalleryService.getGalleryFile(res.ref);
         if (imageRef) {
-          filesUrls.push(imageRef);
+        // eslint-disable-next-line no-await-in-loop
+          result.push(await firestoreGalleryService.addImgToGallery({
+            url: imageRef,
+            user: userId,
+            created_at: new Date(),
+            media: 'image',
+            height: 0,
+            width: 0,
+            spot: stepsData.thirdStep.spotId,
+            videoUrl: null,
+          }));
         } else {
           throw new Error('Error');
         }
       }
     }
-    return filesUrls;
+    return result;
   };
 
   return {
@@ -69,8 +104,8 @@ export const convertAllStepsData = async (
     diveData: {
       ...replaceUndefinedToNull(stepsData.secondStep.parameters),
       ...replaceUndefinedToNull(stepsData.secondStep.advancedParameters),
-      safetySpots: stepsData.secondStep.parameters?.safetySpots
-        ? checkSafetySpots(stepsData.secondStep.parameters.safetySpots)
+      safetyStops: stepsData.secondStep.parameters?.safetyStops
+        ? checkSafetySpots(stepsData.secondStep.parameters.safetyStops)
         : [],
     },
     aboutDive: {
@@ -80,8 +115,10 @@ export const convertAllStepsData = async (
     draft,
     externalImgsUrls: await uploadFiles(),
     gears: stepsData.seventhStep.gears?.map((gear) => replaceUndefinedToNull(gear)) || [],
-    publishingMode: stepsData.ninthStep.publishingMode,
-    species: stepsData.fourthStep.species || [],
+    publishingMode: stepsData.ninthStep.publishingMode.toUpperCase(),
+    species: stepsData.fourthStep.species?.length
+      ? convertSpecies(stepsData.fourthStep.species)
+      : {},
     spotId: stepsData.thirdStep.spotId,
     tanks: stepsData.secondStep.tanks?.map((tank) => replaceUndefinedToNull(tank)) || [],
     oldId: null,
@@ -150,7 +187,7 @@ export const convertToStepsData = (data: DiveType, unitSystem: UnitSystem) => ({
   secondStep: {
     parameters: {
       time: data.diveData?.time,
-      date: data.diveData.date
+      date: data.diveData?.date
         ? convertTimestampDate(data.diveData.date)
         : null,
       maxDepth: unitSystem === data.unitSystem
@@ -158,9 +195,9 @@ export const convertToStepsData = (data: DiveType, unitSystem: UnitSystem) => ({
         : convertDistanceSystem(unitSystem, data.diveData?.maxDepth),
       duration: data.diveData?.duration,
       surfaceInterval: data.diveData?.surfaceInterval,
-      safetySpots: unitSystem === data.unitSystem
-        ? data.diveData?.safetySpots
-        : data.diveData?.safetySpots.map((spot) => (
+      safetyStops: unitSystem === data.unitSystem
+        ? data.diveData?.safetyStops
+        : data.diveData?.safetyStops.map((spot) => (
           { ...spot, depth: convertDistanceSystem(unitSystem, spot.depth) }
         ))
       ,

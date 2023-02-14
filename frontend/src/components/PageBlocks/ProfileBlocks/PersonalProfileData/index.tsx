@@ -49,7 +49,7 @@ export const PersonalProfileData: FC<Props> = ({
   const countries = dives.length ? getDiveCountries() : [];
 
   const getDivesPublished = () => {
-    const divesPublished = dives.filter((dive) => !dive.draft && dive.publishingMode === 'public');
+    const divesPublished = dives.filter((dive) => !dive.draft && dive.publishingMode === 'PUBLIC');
     return `${divesPublished.length} (Total: ${dives.length})`;
   };
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Title } from '../Title';
 import styles from './styles.module.scss';
 import { SpeciesCard } from '../../../Cards/SpeciesCard';
@@ -16,6 +16,10 @@ export const LatestSpecies = ({ species }: Props) => {
     isMobile ? species : species?.slice(0, 4),
   );
 
+  useEffect(() => {
+    setSpeciesForRender(isMobile ? species : species?.slice(0, 4));
+  }, [species]);
+
   return (
     <div className={styles.latestSpeciesWrapper}>
       <Title title="Latest Species Identified" />
@@ -24,7 +28,7 @@ export const LatestSpecies = ({ species }: Props) => {
           <SpeciesCard
             className={styles.speciesLogbookCard}
             key={fish.id}
-            imgSrc={fish.imgSrc || '/TEST_IMG_THEN_DELETE/photo2.jpg'}
+            imgSrc={fish.imgSrc}
             speciesName={fish.sname}
             scientificName={fish.category}
           />

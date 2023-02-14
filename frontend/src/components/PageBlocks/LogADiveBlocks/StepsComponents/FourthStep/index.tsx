@@ -8,7 +8,6 @@ import { Loader } from '../../../../Loader';
 import { StepsNavigation } from '../../StepsNavigation';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { firestoreSpeciesServices } from '../../../../../firebase/firestore/firestoreServices/firestoreSpeciesServices';
-import { firestoreSpotsService } from '../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
 import { SpeciesType } from '../../../../../firebase/firestore/models';
 import { StepProps } from '../../types/commonTypes';
 import { FourthStepType, ThirdStepType } from '../../types/stepTypes';
@@ -24,10 +23,6 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
 
   const [searchValue, setSearchValue] = useState('');
   const [searchedSpecies, setSearchedSpecies] = useState<SpeciesType[]>([]);
-  const [queriedAllSpecies, setQueriedAllSpecies] = useState<SpeciesType[]>([]);
-  const [queriedLocalSpecies, setQueriedLocalSpecies] = useState<SpeciesType[]>(
-    [],
-  );
   const [mySpecies, setMySpecies] = useState<SpeciesType[]>([]);
   const [selectedSpecies, setSelectedSpecies] = useState<SpeciesType[]>([]);
 
@@ -37,57 +32,62 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
 
   const onSearchHandler = async (val: string) => {
     setCurrentSpeciesMode('');
-    const searched = queriedAllSpecies.filter((item) => {
-      let matchSpecies = false;
-      item.cname.forEach((cname) => {
-        matchSpecies = cname.name.toLowerCase().includes(val.toLowerCase(), 0);
-      });
-      matchSpecies = item.sname.toLowerCase().includes(val.toLowerCase(), 0);
-      matchSpecies = item.category.toLowerCase().includes(val.toLowerCase(), 0);
-      return matchSpecies;
-    });
-    setSearchedSpecies(searched);
-    setSearchValue('');
+    try {
+      setLoading(true);
+      setSearchedSpecies([]);
+      const searched = await firestoreSpeciesServices.getSpeciesByName(val);
+      setSearchedSpecies(searched);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      notify(e.message);
+    }
   };
-  useEffect(() => {
-    (async () => {
-      const species = await firestoreSpeciesServices.getAllSpecies();
-      const data = await firestoreSpeciesServices.getMySpecies(userId);
-      setMySpecies(data);
-      setQueriedAllSpecies(species);
-    })();
-  }, []);
 
   useEffect(() => {
     (async () => {
       const data = getStepData(4) as FourthStepType;
-      if (data.species) {
-        setSelectedSpecies(
-          queriedAllSpecies.filter((fish) => data.species.some((s) => s === fish.id)),
-        );
+      try {
+        const mySpecs = await firestoreSpeciesServices.getMySpecies(userId);
+        setMySpecies(mySpecs);
+      } catch (ev) {
+        notify(ev);
+      }
+
+      if (data.species && Array.isArray(data.species)) {
+        setSelectedSpecies(data.species);
+      } else {
+        try {
+          const specs = await firestoreSpeciesServices.getSpeciesByRefs(data.species);
+          setSelectedSpecies(specs);
+        } catch (ev) {
+          notify(ev);
+        }
       }
     })();
-  }, [step, queriedAllSpecies]);
+  }, [step]);
 
   useEffect(() => {
     if (spotId) {
       (async () => {
         setSpeciesMode('local');
         setLoading(true);
-        const spotCoords = await firestoreSpotsService.getSpotCoordsById(
-          spotId,
-        );
-        const species = await firestoreSpeciesServices.getLocalSpecies(
-          spotCoords,
-        );
-        setQueriedLocalSpecies(species);
+        // const spotCoords = await firestoreSpotsService.getSpotCoordsById(
+        //   spotId,
+        // );
+        // const species = await firestoreSpeciesServices.getLocalSpecies(
+        //   spotCoords,
+        // );
+        // console.log(species)
+        // console.log(species)
+        // setQueriedLocalSpecies(species);
         setLoading(false);
       })();
     }
   }, [spotId]);
 
   const fourthStepData: FourthStepType = {
-    species: selectedSpecies.map((item) => item.id),
+    species: selectedSpecies,
   };
 
   if (step !== 4) {
@@ -150,9 +150,6 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
               currentSpeciesMode={currentSpeciesMode}
               setCurrentSpeciesMode={setCurrentSpeciesMode}
               mySpecies={mySpecies}
-              queriedSpecies={
-                speciesMode === 'all' ? queriedAllSpecies : queriedLocalSpecies
-              }
               searchedSpecies={searchedSpecies}
               selectedSpecies={selectedSpecies}
               setSelectedSpecies={setSelectedSpecies}

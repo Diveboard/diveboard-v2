@@ -10,6 +10,7 @@ import { Button } from '../../../../../Buttons/Button';
 import { createNewSpotData, createNewSpotHandler } from '../thirdStepHelpers';
 import { Loader } from '../../../../../Loader';
 import { Bounds, Coords } from '../../../../../../types';
+import { SpotType } from '../../../../../../firebase/firestore/models';
 
 type Props = {
   newSpotName: string;
@@ -19,7 +20,7 @@ type Props = {
   newPointCoords: { lat: number, lng: number };
   zoom: number;
   setBounds?: (bounds: Bounds) => void;
-  setLocation?: (bounds: Coords) => void;
+  setLocation?: (coords: Coords) => void;
   setData: (id: string) => void;
 };
 
@@ -133,7 +134,11 @@ export const CreateNewSpot: FC<Props> = ({
               searchRef={locationDropdownRef}
               value={newSpotLocation}
               setValue={setNewSpotLocation}
-              onSearchHandler={firestoreGeoDataService.getGeonames}
+              onSearchHandler={firestoreGeoDataService.getLocations}
+              setNewLocationCountry={(val) => {
+                val.bounds && setBounds(val.bounds);
+                setNewSpotCountry(val.name);
+              }}
               setLocation={setLocation}
             />
           </div>
@@ -155,16 +160,16 @@ export const CreateNewSpot: FC<Props> = ({
             border="none"
             onClick={async () => {
               if (!newSpotName) {
-                setNewSpotNameError('This field is required');
+                setNewSpotNameError('Spot name is required');
               }
               if (!newSpotCountry) {
-                setNewSpotCountryError('This field is required');
+                setNewSpotCountryError('Country is required');
               }
               if (!newSpotLocation) {
-                setNewSpotLocationError('This field is required');
+                setNewSpotLocationError('Location is required');
               }
               if (!newSpotRegion) {
-                setNewSpotRegionError('This field is required');
+                setNewSpotRegionError('Region is required');
               }
               if (newSpotName
                   && newSpotCountry
@@ -180,7 +185,7 @@ export const CreateNewSpot: FC<Props> = ({
                     newSpotLocation,
                     newPointCoords,
                     zoom,
-                  ),
+                  ) as unknown as SpotType,
                 );
                 setData(createdNewSpotId.current);
                 setNewSpotName('');

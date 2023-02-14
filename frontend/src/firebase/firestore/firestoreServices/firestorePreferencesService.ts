@@ -1,10 +1,9 @@
 import { doc, getDoc, setDoc } from '@firebase/firestore';
 import { PreferencesType, UnitSystem, ShareData } from '../models';
 import { db } from '../firebaseFirestore';
-import { firestorePaths } from '../firestorePaths';
+import { PathEnum } from '../firestorePaths';
 
-// const preferencesSegment = firestorePaths.users; //.settings.preferences.segment;
-const getPath = (userId: string) => `${firestorePaths.users.path}/${userId}`; // ${firestorePaths.users.settings.segment}`;
+const getPath = (userId: string) => `${PathEnum.USERS}/${userId}`;
 
 export const firestorePreferencesService = {
   setDefaultPreferences: async (userId: string) => {
@@ -22,7 +21,7 @@ export const firestorePreferencesService = {
         settings: { preferences: { ...defaultPreferences }, language: 'en' },
       }, { merge: true });
     } catch (e) {
-      throw new Error('set default preferences error');
+      throw new Error(e.message);
     }
   },
 
@@ -31,7 +30,7 @@ export const firestorePreferencesService = {
       const ref = doc(db, getPath(userId));
       setDoc(ref, { settings: { preferences: { privacy: { divesPublic } } } }, { merge: true });
     } catch (e) {
-      throw new Error('set privacy error');
+      throw new Error(e.message);
     }
   },
 
@@ -45,7 +44,7 @@ export const firestorePreferencesService = {
         settings: { preferences: { scientificData: { ...scientificData } } },
       }, { merge: true });
     } catch (e) {
-      throw new Error('set scientific data error');
+      throw new Error(e.message);
     }
   },
 
@@ -54,7 +53,7 @@ export const firestorePreferencesService = {
       const ref = doc(db, getPath(userId));
       setDoc(ref, { settings: { language: language.slice(0, 2).toLowerCase() } }, { merge: true });
     } catch (e) {
-      throw new Error('set language error');
+      throw new Error(e.message);
     }
   },
 
@@ -63,13 +62,17 @@ export const firestorePreferencesService = {
       const ref = doc(db, getPath(userId));
       setDoc(ref, { settings: { preferences: { unitSystem } } }, { merge: true });
     } catch (e) {
-      throw new Error('set unit system error');
+      throw new Error(e.message);
     }
   },
 
   getUserSettings: async (userId: string) => {
-    const docRef = doc(db, getPath(userId));
-    const docSnap = await getDoc(docRef);
-    return docSnap.data().settings;
+    try {
+      const docRef = doc(db, getPath(userId));
+      const docSnap = await getDoc(docRef);
+      return docSnap.data().settings;
+    } catch (e) {
+      throw new Error(e.message);
+    }
   },
 };

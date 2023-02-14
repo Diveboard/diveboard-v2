@@ -94,6 +94,7 @@ export const LogDiveBlock = ({ dive, diveId, userId }: Props) => {
       setDraftPopupOpen(false);
       router.push('/dive-manager');
     } catch (e) {
+      setLoading(false);
       notify('Something went wrong');
     }
   };

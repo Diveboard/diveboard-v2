@@ -1,15 +1,18 @@
 import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { ToastContainer } from 'react-toastify';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
-import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 import { GalleryBlock } from '../src/components/PageBlocks/GalleryBlock';
-import { firestoreDivesService } from '../src/firebase/firestore/firestoreServices/firestoreDivesService';
+import { firestoreGalleryService } from '../src/firebase/firestore/firestoreServices/firestoreGalleryService';
+import { firestorePublicProfileService } from '../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Gallery: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user, images }) => (
   <AuthLayout user={user}>
     <MainLayout>
-      <GalleryBlock images={images} user={user} />
+      <ToastContainer />
+      <GalleryBlock images={images} />
     </MainLayout>
   </AuthLayout>
 );
@@ -25,20 +28,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const {
-    email, photoURL = '', displayName = '',
-  } = await firebaseAdmin.auth().getUser(uid);
+  const user = await firestorePublicProfileService.getUserById(uid);
 
-  const images = await firestoreDivesService.getImagesInDives(uid);
+  const images = await firestoreGalleryService.getGallery();
 
   return {
     props: {
-      user: {
-        uid,
-        email,
-        photoURL,
-        name: displayName,
-      },
+      user,
       images: JSON.parse(JSON.stringify(images)),
     },
   };

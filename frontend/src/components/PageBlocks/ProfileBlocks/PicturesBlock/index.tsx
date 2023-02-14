@@ -14,39 +14,6 @@ export const PicturesBlock = ({ pictures }: Props) => {
     text: 'All pictures',
   }];
 
-  // const photos = [
-  //   {
-  //     imgScr: '/TEST_IMG_THEN_DELETE/photo2.jpg',
-  //     favorites: 150,
-  //     author: 'Ivan Kudrja',
-  //   },
-  //   {
-  //     imgScr: '/TEST_IMG_THEN_DELETE/photo3.jpg',
-  //     favorites: 150,
-  //     author: 'Ivan Kudrja',
-  //   },
-  //   {
-  //     imgScr: '/TEST_IMG_THEN_DELETE/photo4.jpg',
-  //     favorites: 150,
-  //     author: 'Ivan Kudrja',
-  //   },
-  //   {
-  //     imgScr: '/TEST_IMG_THEN_DELETE/shark.jpg',
-  //     favorites: 150,
-  //     author: 'Ivan Kudrja',
-  //   },
-  //   {
-  //     imgScr: '/TEST_IMG_THEN_DELETE/photo5.jpg',
-  //     favorites: 150,
-  //     author: 'Ivan Kudrja',
-  //   },
-  //   {
-  //     imgScr: '/TEST_IMG_THEN_DELETE/photo6.jpg',
-  //     favorites: 150,
-  //     author: 'Ivan Kudrja',
-  //   },
-  // ];
-
   return (
     <div className={styles.picturesWrapper}>
       <Title title="Pictures" />

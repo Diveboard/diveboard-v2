@@ -28,10 +28,11 @@ type Props = {
   species?: Array<SpeciesType>
   buddies: Array<BuddiesType>
   comments: Array<CommentType>
+  pictures: Array<string>
 };
 
 export const DivePageBlock = ({
-  user, dive, spot, species, buddies, comments,
+  user, dive, spot, species, buddies, comments, pictures,
 }: Props): JSX.Element => {
   const isMobile = useWindowWidth(500, 769);
 
@@ -42,8 +43,8 @@ export const DivePageBlock = ({
       && !!dive.gears.some((gear) => gear.typeOfGear));
 
   const renderPhotoBlock = () => (isMobile
-    ? <MobilePhotoGroup photos={dive.externalImgsUrls} />
-    : <DesktopPhotoBlock photos={dive.externalImgsUrls} />);
+    ? <MobilePhotoGroup photos={pictures} />
+    : <DesktopPhotoBlock photos={pictures} />);
 
   const renderSpeciesBlock = () => (isMobile
     ? <SpeciesMobile speciesList={species} />
@@ -51,13 +52,13 @@ export const DivePageBlock = ({
 
   return (
     <section className={styles.wrapper}>
-      {dive && dive.publishingMode === 'public' && !dive.draft ? (
+      {dive && dive.publishingMode === 'PUBLIC' && !dive.draft ? (
         <>
           <SpotDiveData user={user} dive={dive} spot={spot} />
-          {!!dive.externalImgsUrls?.length && renderPhotoBlock()}
+          {!!pictures?.length && renderPhotoBlock()}
           <div className={styles.subwrapper}>
-            {(!!dive.diveData?.safetySpots.length || !!dive?.tanks.length) && (
-              <ChartBlock diveData={{ points: dive.diveData?.safetySpots, tanks: dive?.tanks }} />
+            {(!!dive.diveData?.safetyStops?.length || !!dive?.tanks.length) && (
+              <ChartBlock diveData={{ points: dive.diveData?.safetyStops, tanks: dive?.tanks }} />
             )}
             {(!!species.length || isGearsExist)
                 && (

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useWindowWidth } from '../../../hooks/useWindowWidth';
 import { MobilePhotoGroup } from '../../PhotoGroup/mobilePhotoGroup';
-import { photos } from '../../DivePage/DIVE_PAGE_DUMMY_DATA';
 import { DesktopPhotoBlock } from '../../DivePage/DesktopPhotoBlock';
 import { Info } from './Info';
 import { DivesInSpot } from './DivesInSpot';
@@ -12,60 +11,23 @@ import styles from './styles.module.scss';
 import { DiveType, SpeciesType, SpotType } from '../../../firebase/firestore/models';
 import { Icon } from '../../Icons/Icon';
 
-const images: {
-  id: number;
-  src: string;
-  savesNumber: number;
-  saved: boolean;
-  author: string;
-}[] = [
-  {
-    id: 1,
-    src: '/TEST_IMG_THEN_DELETE/fish.jpg',
-    savesNumber: 100,
-    saved: false,
-    author: 'Kolja',
-  }, {
-    id: 2,
-    src: '/TEST_IMG_THEN_DELETE/photo3.jpg',
-    savesNumber: 50,
-    saved: true,
-    author: 'Kolja',
-  }, {
-    id: 3,
-    src: '/TEST_IMG_THEN_DELETE/photo6.jpg',
-    savesNumber: 30,
-    saved: true,
-    author: 'Kolja',
-  }, {
-    id: 4,
-    src: '/TEST_IMG_THEN_DELETE/photo7.jpg',
-    savesNumber: 12,
-    saved: false,
-    author: 'Kolja',
-  }, {
-    id: 5,
-    src: '/TEST_IMG_THEN_DELETE/photo8.jpg',
-    savesNumber: 33,
-    saved: true,
-    author: 'Kolja',
-  },
-];
-
 type Props = {
   spot: SpotType;
   dives: Array<DiveType>
   species: Array<SpeciesType>
+  pictures: Array<string>
 };
 
-export const SpotBlocks = ({ spot, dives, species }: Props) => {
+export const SpotBlocks = ({
+  spot, dives, species, pictures,
+}: Props) => {
   const router = useRouter();
   const isMobile = useWindowWidth(500, 769);
   const [tab, setTab] = useState<'info' | 'dives' | 'shops'>('info');
 
   const renderPhotoBlock = isMobile
-    ? <MobilePhotoGroup photos={photos.map((i) => i.img)} />
-    : <DesktopPhotoBlock photos={photos.map((i) => i.img)} />;
+    ? <MobilePhotoGroup photos={pictures} />
+    : <DesktopPhotoBlock photos={pictures} />;
 
   return (
     <div className={styles.spotBlock}>
@@ -86,14 +48,32 @@ export const SpotBlocks = ({ spot, dives, species }: Props) => {
         </>
       )}
 
-      {isMobile && <MobileSpotHeader spotName={spot?.name} images={images} />}
+      {isMobile && <MobileSpotHeader spotName={spot?.name} images={pictures} />}
 
       {isMobile && <MobileTabs mode={tab} setMode={setTab} />}
       <div className={styles.wrapper}>
         {isMobile ? tab === 'info'
-            && <Info location={spot?.location} species={species} />
-          : <Info location={spot?.location} species={species} /> }
-        {isMobile ? tab === 'dives' && <DivesInSpot dives={dives} /> : <DivesInSpot dives={dives} /> }
+            && (
+            <Info
+              location={spot?.location}
+              species={species}
+              coords={{ lat: spot.lat, lng: spot.lng }}
+              stats={spot.stats}
+              divesCount={Object.keys(spot.dives).length}
+            />
+            )
+          : (
+            <Info
+              location={spot?.location}
+              species={species}
+              coords={{ lat: spot.lat, lng: spot.lng }}
+              stats={spot.stats}
+              divesCount={Object.keys(spot.dives).length}
+            />
+          ) }
+        {isMobile ? tab === 'dives'
+            && <DivesInSpot spotDivesIds={spot.dives} dives={dives} />
+          : <DivesInSpot dives={dives} spotDivesIds={spot.dives} />}
         {/* {isMobile ? tab === 'shops' && <ShopsInSpot /> : <ShopsInSpot />} */}
       </div>
 

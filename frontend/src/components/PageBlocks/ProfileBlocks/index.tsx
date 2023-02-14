@@ -79,7 +79,7 @@ export const ProfileBlock = ({
       )}
       {!!dives?.length && (
         <DivesBlock
-          dives={isItOwnProfile ? dives : dives.filter((dive) => !dive.draft && dive.publishingMode === 'public')}
+          dives={isItOwnProfile ? dives : dives.filter((dive) => !dive.draft && dive.publishingMode === 'PUBLIC')}
           userId={logbookUser.uid}
           isItOwnProfile={isItOwnProfile}
         />

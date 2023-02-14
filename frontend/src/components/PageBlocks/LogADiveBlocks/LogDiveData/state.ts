@@ -47,7 +47,7 @@ const secondStep: SecondStepType = {
     maxDepth: undefined,
     duration: undefined,
     surfaceInterval: undefined,
-    safetySpots: [
+    safetyStops: [
       {
         id: 1,
         period: undefined,

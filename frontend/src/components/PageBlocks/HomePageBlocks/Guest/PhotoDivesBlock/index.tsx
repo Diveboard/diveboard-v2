@@ -2,8 +2,42 @@ import React from 'react';
 import { PhotoCard } from '../../../../Cards/PhotoCard';
 import { ArrowLink } from '../../../../ArrowLink';
 import styles from './styles.module.scss';
-import { photos } from '../../../../DivePage/DIVE_PAGE_DUMMY_DATA';
 import pagesRoutes from '../../../../../routes/pagesRoutes.json';
+
+export const photos = [
+  {
+    img: '/appIcons/no-photo.svg',
+    date: null,
+    draft: false,
+    spot: '',
+  }, {
+    img: '/appIcons/no-photo.svg',
+    date: null,
+    draft: false,
+    spot: '',
+  }, {
+    img: '/appIcons/no-photo.svg',
+    date: null,
+    draft: false,
+    spot: '',
+  }, {
+    img: '/appIcons/no-photo.svg',
+    date: null,
+    draft: false,
+    spot: '',
+  }, {
+    img: '/appIcons/no-photo.svg',
+    date: null,
+    draft: false,
+    spot: '',
+  },
+  {
+    img: '/appIcons/no-photo.svg',
+    date: null,
+    draft: false,
+    spot: '',
+  },
+];
 
 export const PhotoDivesBlock = () => (
   <div className={styles.photoDivesWrapper}>

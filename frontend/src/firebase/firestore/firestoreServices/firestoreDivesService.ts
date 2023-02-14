@@ -1,7 +1,7 @@
 import {
   collection,
   deleteDoc,
-  doc,
+  doc, DocumentReference,
   getDoc,
   getDocs,
   limit,
@@ -18,11 +18,13 @@ import { convertTimestampDate } from '../../../utils/convertTimestampDate';
 import { firestoreSpotsService } from './firestoreSpotsService';
 import { PropertiesType } from '../../../types';
 import { firestoreSurveyService } from './firestoreSurveyService';
+import { PathEnum } from '../firestorePaths';
+import { firestoreGalleryService } from './firestoreGalleryService';
 
 export const firestoreDivesService = {
   setDiveData: async (diveData: DiveType, userId: string, saveDan: boolean = false) => {
     try {
-      const ref = doc(collection(db, `Test_Dives/${userId}`, 'userDives'));
+      const ref = doc(collection(db, `${PathEnum.DIVES}/${userId}`, 'userDives'));
       if (diveData.danSurvey) {
         diveData.surveyId = await firestoreSurveyService.addSurvey(
           userId,
@@ -38,8 +40,8 @@ export const firestoreDivesService = {
       if (diveData.spotId) {
         const spot = await firestoreSpotsService.getSpotById(diveData.spotId);
         const newSpot = { ...spot };
-        newSpot.dives.push(ref.id);
-        newSpot.dive?.push({ diveId: ref.id, userId });
+        newSpot.dives[ref.id] = ref;
+        // newSpot.dive?.push({ diveId: ref.id, userId });
         // TODO: Add to spot data
         await firestoreSpotsService.updateSpotById(diveData.spotId, newSpot);
       }
@@ -56,7 +58,7 @@ export const firestoreDivesService = {
     saveDan: boolean = false,
   ) => {
     try {
-      const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveId);
+      const docRef = doc(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`, diveId);
       const docSnap = await getDoc(docRef);
       if (dive.danSurvey) {
         const surveyId = await firestoreSurveyService.updateSurvey(
@@ -76,14 +78,17 @@ export const firestoreDivesService = {
         if (spot) {
           const newSpot = { ...spot };
           newSpot.dive?.push({ diveId, userId });
-          newSpot.dives?.push(diveId);
+          newSpot.dives?.push({ diveId, userId });
           await firestoreSpotsService.updateSpotById(dive.spotId, newSpot);
+
+          if (spotId) {
+            // Delete dive from old spot
+            const spotO = await firestoreSpotsService.getSpotById(spotId);
+            const oldSpot = { ...spotO };
+            oldSpot.dives = oldSpot.dives.filter((i) => i !== diveId);
+            await firestoreSpotsService.updateSpotById(spotId, oldSpot);
+          }
         }
-        // Delete dive from old spot
-        const spotO = await firestoreSpotsService.getSpotById(spotId);
-        const oldSpot = { ...spotO };
-        oldSpot.dives = oldSpot.dives.filter((i) => i !== diveId);
-        await firestoreSpotsService.updateSpotById(spotId, oldSpot);
       }
       await setDoc(docRef, { ...dive }, { merge: false });
       return true;
@@ -96,7 +101,7 @@ export const firestoreDivesService = {
   unpublishDives: async (userId: string, diveIds: Array<string>) => {
     try {
       for (let i = 0; i < diveIds.length; i++) {
-        const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveIds[i]);
+        const docRef = doc(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`, diveIds[i]);
         // eslint-disable-next-line no-await-in-loop
         const docSnap = await getDoc(docRef);
         // eslint-disable-next-line no-await-in-loop
@@ -110,7 +115,7 @@ export const firestoreDivesService = {
 
   getDivesCountByUserIdInSpot: async (userId: string, spotId: string) => {
     try {
-      const docRef = collection(db, `Test_Dives/${userId}/userDives`);
+      const docRef = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
       const q = query(
         docRef,
         where('spotId', '==', spotId),
@@ -125,7 +130,7 @@ export const firestoreDivesService = {
 
   getDivesCountByUserId: async (userId: string) => {
     try {
-      const docRef = collection(db, `Test_Dives/${userId}/userDives`);
+      const docRef = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
       const q = query(
         docRef,
       );
@@ -146,7 +151,7 @@ export const firestoreDivesService = {
   ) => {
     try {
       const dives = [];
-      const docRef = collection(db, `Test_Dives/${userId}/userDives`);
+      const docRef = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
 
       const first = query(
         docRef,
@@ -200,7 +205,7 @@ export const firestoreDivesService = {
   ) => {
     try {
       for (let i = 0; i < copyToDiveIds.length; i++) {
-        const docRef = doc(db, `Test_Dives/${userId}/userDives`, copyToDiveIds[i]);
+        const docRef = doc(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`, copyToDiveIds[i]);
         // eslint-disable-next-line no-await-in-loop
         const docSnap = await getDoc(docRef);
         const newProperties = {
@@ -262,7 +267,7 @@ export const firestoreDivesService = {
   getImagesInDives: async (
     userId: string,
   ) => {
-    const docRef = collection(db, `Test_Dives/${userId}/userDives`);
+    const docRef = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
     const q = query(
       docRef,
       where('externalImgsUrls', '!=', []),
@@ -302,19 +307,21 @@ export const firestoreDivesService = {
   getUserSpeciesInDives: async (
     userId: string,
   ) => {
-    const docRef = collection(db, `Test_Dives/${userId}/userDives`);
+    const docRef = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
     const q = query(
       docRef,
-      where('species', '!=', []),
+      where('species', '!=', {}),
     );
     const querySnapshot = await getDocs(q);
-    let speciesArray = [];
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    querySnapshot.forEach((doc) => {
-      const { species } = doc.data();
-      speciesArray = [...speciesArray, ...species];
+    let speciesSet = new Set();
+    querySnapshot.forEach((specDoc) => {
+      const { species } = specDoc.data();
+      if (species) {
+        // @ts-ignore
+        speciesSet = { ...speciesSet, species };
+      }
     });
-    return Array.from(speciesArray);
+    return speciesSet;
   },
 
   getDiveData: async (
@@ -323,13 +330,13 @@ export const firestoreDivesService = {
     withDraft: boolean = false,
   ) => {
     try {
-      const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveId);
+      const docRef = doc(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`, diveId);
       const docSnap = await getDoc(docRef);
       const data = docSnap.data();
       if (withDraft) {
         return data;
       }
-      return data && (!data.draft || data.publishMode === 'public') ? data : undefined;
+      return data && (!data.draft || data.publishMode === 'PUBLIC') ? data : undefined;
     } catch (e) {
       console.log(e.message);
       throw new Error('get dive data error');
@@ -342,7 +349,7 @@ export const firestoreDivesService = {
   ) => {
     try {
       for (let i = 0; i < diveIds.length; i++) {
-        const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveIds[i]);
+        const docRef = doc(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`, diveIds[i]);
         // eslint-disable-next-line no-await-in-loop
         await deleteDoc(docRef);
       }
@@ -357,7 +364,7 @@ export const firestoreDivesService = {
     diveId: string,
   ) => {
     try {
-      const docRef = doc(db, `Test_Dives/${userId}/userDives`, diveId);
+      const docRef = doc(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`, diveId);
       // TODO: Delete this dive in spot
       await deleteDoc(docRef);
       return true;
@@ -367,10 +374,33 @@ export const firestoreDivesService = {
     }
   },
 
-  getDiveField: async (userId: string = '0HmlinuLc5Q6OyRywFWdiod6Ikt1') => {
-    const docRef = doc(db, 'Test_Dives', userId);
-    const docSnap = await getDoc(docRef);
-    console.log(docSnap.data());
-    return docSnap.data();
+  getDivesByRefs: async (
+    divesRefs: { [key: string]: DocumentReference },
+    slice: boolean | number = false,
+  ) => {
+    try {
+      const divesIds = typeof slice === 'number'
+        ? Object.values(divesRefs).slice(0, slice)
+        : Object.values(divesRefs);
+      const dives = [];
+      for (let i = 0; i < divesIds.length; i++) {
+        // eslint-disable-next-line no-await-in-loop
+        const docSnap = await getDoc(divesIds[i]);
+        const data = docSnap.data();
+        let externalImgsUrls = [];
+        if (data.pictures) {
+          const key = Object.keys(data.pictures)[0];
+          const value = Object.values(data.pictures)[0];
+          // eslint-disable-next-line no-await-in-loop
+          externalImgsUrls = await firestoreGalleryService.getBestPictures({ [key]: value });
+        }
+        dives.push({
+          ...data, id: docSnap.id, ref: docSnap.ref, externalImgsUrls,
+        });
+      }
+      return dives;
+    } catch (e) {
+      throw new Error(e.message);
+    }
   },
 };

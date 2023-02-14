@@ -33,12 +33,14 @@ const SpotCard: FC<Props> = ({
         {`${flag(country)} ${region}`}
       </div>
       <span className={styles.name}>{name}</span>
+      {depth && (
       <div className={styles.depth}>
         <Icon iconName="depth" size={16} />
         Depth:
         {' '}
         <b>{depth}</b>
       </div>
+      )}
     </div>
   </div>
 );

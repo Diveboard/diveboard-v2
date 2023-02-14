@@ -25,23 +25,6 @@ export const SecondStep: FC<StepProps> = (
   const [showChart, setShowChart] = useState(false);
   const showedChart = useRef(false);
 
-  // TODO: // For what
-  // const [spots, setSpots] = useState<{
-  //   depth: number;
-  //   diveTime: number;
-  //   temperature: number;
-  // }[]
-  // >([]);
-
-  // useEffect(() => {
-  //   const newSpots = data?.parameters?.safetySpots.map((spot) => ({
-  //     depth: spot.depth,
-  //     diveTime: spot.period,
-  //     temperature: 0,
-  //   }));
-  //   setSpots(newSpots);
-  // }, [data?.parameters?.safetySpots]);
-
   const [parametersErrors, setParametersErrors] = useState<SecondStepErrors>({
     timeError: '',
     dateError: '',
@@ -91,8 +74,8 @@ export const SecondStep: FC<StepProps> = (
           <h2>Profile</h2>
           {/* TODO: Check it */}
           {showChart
-              && data.parameters?.safetySpots
-              && <DepthChart points={data.parameters.safetySpots} />}
+              && data.parameters?.safetyStops
+              && <DepthChart points={data.parameters.safetyStops} />}
           {!showChart && (
           <>
             <MarginWrapper top={10} />

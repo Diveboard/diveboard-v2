@@ -85,7 +85,7 @@ export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
                 router.push(dive.draft && userId === userAuth.uid ? `/edit-dive/${dive.id}` : `/user/${userId}/dive/${dive.id}`);
               }}
               diveName={dive.aboutDive?.tripName}
-              imgSrc={dive.externalImgsUrls[0] || '/TEST_IMG_THEN_DELETE/fish.jpg'}
+              imgSrc={dive.externalImgsUrls[0] || '/appIcons/no-photo.svg'}
               tagsNumber={dive.aboutDive?.diveNumber?.toString()}
               // @ts-ignore
               date={new Date(dive.date)}

@@ -88,9 +88,8 @@ export const DesktopPhotoBlock: FC<Props> = ({ photos }) => {
 
   return (
     <Slider {...settings}>
-      {gallery.map((itm, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <div key={index}>
+      {gallery.map((itm) => (
+        <div key={itm.key}>
           {itm}
         </div>
       ))}

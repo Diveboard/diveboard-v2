@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { getMapOptions } from '../../../../utils/getMapOptions';
 import { DivePoint } from '../../../Point';
 import styles from './styles.module.scss';
+import { Loader } from '../../../Loader';
 
 type Props = {
   coords: {
@@ -11,16 +12,18 @@ type Props = {
     lng: number;
   };
   zoom: number;
+  setZoom: (zoom: number) => void;
   points: {
-    id: number;
+    id: string;
     divesCount: number;
     lat: number;
     lng: number;
-    diveName: string;
+    name: string;
   }[];
   isMobile?: boolean;
   renderInput?: JSX.Element;
   onMapChange: (e: GoogleMapReact.ChangeEventValue) => void;
+  isLoading?: boolean
 };
 
 export const ExploreMap: FC<Props> = ({
@@ -30,22 +33,27 @@ export const ExploreMap: FC<Props> = ({
   isMobile,
   renderInput,
   onMapChange,
+  setZoom,
+  isLoading = false,
 }) => {
   const router = useRouter();
-
+  console.log(points);
   const markers = points.map((point) => (
     <DivePoint
       key={point.id}
       divesCount={point.divesCount}
       lat={point.lat}
       lng={point.lng}
-      diveName={point.diveName}
+      diveName={point.name}
       onClick={() => router.push(`/spot/${point.id}`)}
     />
   ));
-
+  console.log(zoom);
   return (
     <div className={styles.mapWrapper}>
+      <div className={styles.loader}>
+        <Loader loading={isLoading} iconName="big-loader" />
+      </div>
       {isMobile && (
       <div className={styles.inputWrapper} id="mapInput">
         {renderInput}
@@ -64,8 +72,11 @@ export const ExploreMap: FC<Props> = ({
         center={{ lat: coords.lat - 1, lng: coords.lng }}
         defaultZoom={zoom}
         zoom={zoom}
+        onZoomAnimationEnd={(zo) => setZoom(zo)}
         options={(maps: Maps) => getMapOptions(maps)}
         onChange={onMapChange}
+        onClick={(e) => console.log(e)}
+        draggable={!isLoading}
       >
         {markers}
       </GoogleMapReact>

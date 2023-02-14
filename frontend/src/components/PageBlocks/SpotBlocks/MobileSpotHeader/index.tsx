@@ -7,28 +7,14 @@ import { Icon } from '../../../Icons/Icon';
 
 type Props = {
   spotName: string;
-  images: {
-    id: number;
-    src: string;
-    savesNumber: number;
-    saved: boolean;
-    author: string;
-  }[]
+  images: string[]
 };
 
 export const MobileSpotHeader: FC<Props> = ({
   spotName,
   images,
 }) => {
-  const [currentSlideData, setCurrentSlideData] = useState<{
-    slideNumber: number,
-    savesNumber: number,
-    saved: boolean
-  }>({
-    slideNumber: 0,
-    savesNumber: images[0].savesNumber,
-    saved: images[0].saved,
-  });
+  const [currentSlideData, setCurrentSlideData] = useState(0);
 
   const settings = {
     dots: false,
@@ -42,12 +28,10 @@ export const MobileSpotHeader: FC<Props> = ({
   const router = useRouter();
 
   const slides = images.map((slide) => (
-    <div key={slide.id} className={styles.slide}>
-      <Image src={slide.src} width={360} height={180} layout="fill" />
+    <div key={slide} className={styles.slide}>
+      <Image src={slide} width={360} height={180} layout="fill" unoptimized />
       <span className={styles.author}>
-        Added by:
-        {' '}
-        {slide.author}
+        Added by: Author
       </span>
     </div>
   ));
@@ -66,18 +50,14 @@ export const MobileSpotHeader: FC<Props> = ({
           {/* </div> */}
         </div>
         <div className={styles.pictureCount}>
-          <span>{currentSlideData.slideNumber + 1}</span>
+          <span>{currentSlideData + 1}</span>
           /
           <span>{images.length}</span>
         </div>
         <Slider
           {...settings}
           afterChange={(i) => {
-            setCurrentSlideData({
-              slideNumber: i,
-              savesNumber: images[i].savesNumber,
-              saved: images[i].saved,
-            });
+            setCurrentSlideData(i);
           }}
 
         >

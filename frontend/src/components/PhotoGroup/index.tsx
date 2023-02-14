@@ -9,7 +9,7 @@ export const PhotoGroup: FC<PhotoGroupProps> = ({ photos }) => {
   return (
     <div>
       { isMobile
-        ? <MobilePhotoGroup photos={photos.map((i) => i.img)} />
+        ? <MobilePhotoGroup photos={photos.map((i) => i.url)} />
         : <DeskTopPhotoGroup photos={photos} />}
     </div>
   );

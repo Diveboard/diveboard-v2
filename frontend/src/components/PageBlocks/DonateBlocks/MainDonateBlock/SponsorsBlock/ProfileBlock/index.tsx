@@ -2,13 +2,12 @@ import React, { FC } from 'react';
 import Image from 'next/image';
 import { imageLoader } from '../../../../../Icons/Icon';
 import styles from './styles.module.scss';
-import userImage from '../../../../../../../public/TEST_IMG_THEN_DELETE/Image.png';
 
 export const ProfileBlock: FC = () => (
   <div className={styles.block}>
     <div className={styles.imgWrapper}>
       <Image
-        src={userImage}
+        src="/appIcons/no-photo.svg"
         width={50}
         height={50}
         loader={imageLoader}

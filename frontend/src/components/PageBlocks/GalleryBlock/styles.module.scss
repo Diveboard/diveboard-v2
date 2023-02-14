@@ -11,6 +11,15 @@
   }
 }
 
+.viewMoreBtn {
+  margin-top: 20px;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  color: #0059DE;
+  cursor: pointer;
+}
+
 .min-height-wrapper {
   min-height: calc(100vh - 238px);
 }

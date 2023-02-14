@@ -12,8 +12,7 @@ export const firestoreSurveyService = {
       const docSnap = await getDoc(docRef);
       return docSnap.data();
     } catch (e) {
-      console.log(e.message);
-      throw new Error('get survey by id error');
+      throw new Error(e.message);
     }
   },
   addSurvey: async (userId: string, diveId: string, survey: SurveyDanType, saveToDAN: boolean) => {
@@ -59,8 +58,7 @@ export const firestoreSurveyService = {
       console.log(docRef.id);
       return docRef.id;
     } catch (e) {
-      console.log(e.message);
-      throw new Error('update survey by id error');
+      throw new Error(e.message);
     }
   },
 
@@ -73,8 +71,7 @@ export const firestoreSurveyService = {
       const querySnapshot = await getDocs(q);
       return querySnapshot.size;
     } catch (e) {
-      console.log(e.message);
-      throw new Error('add survey by id error');
+      throw new Error(e.message);
     }
   },
 };

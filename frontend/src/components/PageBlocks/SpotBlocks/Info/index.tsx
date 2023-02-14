@@ -11,21 +11,23 @@ import {
   convertCalToFar,
   convertMetersToFeet,
 } from '../../../../utils/unitSystemConverter';
+import { Coords } from '../../../../types';
 
 type Props = {
   location: {
     country: string;
     region: string;
     location: string;
-    coords?: {
-      lat: number;
-      lng: number;
-    }
   },
+  stats: any;
+  divesCount: number;
+  coords: Coords;
   species: Array<SpeciesType>
 };
 
-export const Info = ({ location, species }: Props) => {
+export const Info = ({
+  location, species, coords, stats, divesCount,
+}: Props) => {
   const isMobile = useWindowWidth(200, 769);
   const speciesBlock = isMobile
     ? <SpeciesMobile speciesList={species} />
@@ -37,24 +39,24 @@ export const Info = ({ location, species }: Props) => {
 
   const convertTempSystem = (value: number): string => {
     if (!userAuth) {
-      return `${value} ºC`;
+      return `${value.toFixed(2)} ºC`;
     }
     const userUnitSystem = userAuth.settings.preferences.unitSystem;
     if (userUnitSystem === 'IMPERIAL') {
-      return `${convertCalToFar(value)} ºF`;
+      return `${convertCalToFar(value).toFixed(2)} ºF`;
     }
-    return `${value} ºC`;
+    return `${value.toFixed(2)} ºC`;
   };
 
   const convertDepth = (value): string => {
-    if (!userAuth) {
-      return `${value} m`;
-    }
     const userUnitSystem = userAuth.settings.preferences.unitSystem;
-    if (userUnitSystem === 'IMPERIAL') {
-      return `${convertMetersToFeet(value)} ft`;
+    if (!userAuth) {
+      return `${value.toFixed(2)} m`;
     }
-    return `${value} m`;
+    if (userUnitSystem === 'IMPERIAL') {
+      return `${convertMetersToFeet(value).toFixed(2)} ft`;
+    }
+    return `${value.toFixed(2)} m`;
   };
 
   return (
@@ -67,13 +69,23 @@ export const Info = ({ location, species }: Props) => {
             <span>Stats</span>
           </div>
 
-          <InfoItem name="Average depth:" value={convertDepth(11)} />
-          <InfoItem name="Visibility:" value="good" />
-          <InfoItem name="Average current:" value="light" />
-          <InfoItem name="Average temperature on surface:" value={convertTempSystem(26)} />
-          <InfoItem name="Average temperature on bottom:" value={convertTempSystem(34)} />
-          <InfoItem name="Dives Logged:" value="60" />
-          <InfoItem name="Divers:" value="20" />
+          {stats.averageDepth?.depth && <InfoItem name="Average depth:" value={convertDepth(stats.averageDepth.depth)} /> }
+          {stats.visibility && <InfoItem name="Visibility:" value={stats.visibility.toLowerCase()} /> }
+          {stats.averageCurrent && <InfoItem name="Average current:" value={stats.averageCurrent.toLowerCase()} /> }
+          {stats.averageTemperatureOnSurface?.temperature && (
+          <InfoItem
+            name="Average temperature on surface:"
+            value={convertTempSystem(stats.averageTemperatureOnSurface.temperature)}
+          />
+          )}
+          {stats.averageTemperatureOnBottom?.temperature && (
+          <InfoItem
+            name="Average temperature on bottom:"
+            value={convertTempSystem(stats.averageTemperatureOnBottom.temperature)}
+          />
+          )}
+          {!!stats.divers && <InfoItem name="Dives Logged:" value={stats.divers} />}
+          {!!divesCount && <InfoItem name="Divers:" value={divesCount.toString()} /> }
 
         </div>
 
@@ -85,7 +97,7 @@ export const Info = ({ location, species }: Props) => {
           <InfoItem name="Country:" country={location.country} value={location.country} />
           <InfoItem name="Region:" value={location.region} />
           <InfoItem name="Location:" value={location.location} />
-          {location?.coords && <InfoItem name="Coordinates:" value={`${location.coords.lat}°; ${location.coords.lng}°`} /> }
+          {coords && <InfoItem name="Coordinates:" value={`${coords.lat}°; ${coords.lng}°`} /> }
         </div>
 
         { !!species?.length && (

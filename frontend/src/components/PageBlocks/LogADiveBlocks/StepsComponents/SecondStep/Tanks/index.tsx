@@ -21,7 +21,7 @@ export const Tanks:FC<Props> = ({ tanks, setTanks }) => {
       size: undefined,
       material: undefined,
       mixture: undefined,
-      pressureStart: 0,
+      pressureStart: undefined,
       pressureEnd: undefined,
       pressureMeasures: undefined,
       o2: undefined,

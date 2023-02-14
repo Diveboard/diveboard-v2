@@ -12,9 +12,9 @@ export const SpeciesMobile:FC <Props> = ({ speciesList }) => (
     { speciesList.map((itm) => (
       <SpeciesCard
         key={itm.id}
-        imgSrc={itm?.imgSrc || './images/default-species.svg'}
-        speciesName={itm?.cname.map((i) => i?.name).toString()}
-        scientificName={itm?.sname}
+        imgSrc={itm?.imgSrc || '/images/default-species.svg'}
+        speciesName={itm?.sname}
+        scientificName={itm?.category}
         className="smallCard"
       />
     ))}

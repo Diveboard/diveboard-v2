@@ -40,7 +40,7 @@ export const PhotoCard: FC<Props> = ({
     >
       {size ? (
         <Image
-          src={imgUrl}
+          src={imgUrl || '/appIcons/no-photo.svg'}
           layout="fill"
           loader={imageLoader}
           className={styles.img}
@@ -50,7 +50,7 @@ export const PhotoCard: FC<Props> = ({
       // eslint-disable-next-line jsx-a11y/img-redundant-alt
         <img
           src={imgUrl}
-          alt="photo"
+          alt="fish"
         />
       )}
 

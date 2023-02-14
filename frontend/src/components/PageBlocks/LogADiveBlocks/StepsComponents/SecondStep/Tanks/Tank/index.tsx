@@ -15,12 +15,12 @@ export const Tank: FC<Props> = ({
   cylinder,
   material,
   mixture,
-  o2,
+  o2 = 21,
   he,
   size,
-  volume,
-  pressureStart,
-  pressureEnd,
+  volume = 80.01,
+  pressureStart = 3000.0,
+  pressureEnd = 500.0,
   pressureMeasures,
   setTankParameters,
 }) => (
@@ -29,7 +29,7 @@ export const Tank: FC<Props> = ({
     <InputLabelWrapper label="Cylinder">
       <div className={styles.row}>
         <Dropdown
-          item={cylinder}
+          item={cylinder || '1x'}
           setItem={
               setTankParameters.setCylinder
             }
@@ -45,7 +45,7 @@ export const Tank: FC<Props> = ({
         />
 
         <Dropdown
-          item={size}
+          item={size || 'curf'}
           setItem={
               setTankParameters.setSize
             }
@@ -53,7 +53,7 @@ export const Tank: FC<Props> = ({
           width={112}
         />
         <Dropdown
-          item={material}
+          item={material || 'aluminum'}
           setItem={
               setTankParameters.setMaterial
             }
@@ -68,7 +68,7 @@ export const Tank: FC<Props> = ({
       <InputLabelWrapper label="Mixture">
         <div className={styles.mixture}>
           <Dropdown
-            item={mixture}
+            item={mixture || 'air'}
             setItem={
               setTankParameters.setMixture
             }
@@ -130,7 +130,7 @@ export const Tank: FC<Props> = ({
           </div>
 
           <Dropdown
-            item={pressureMeasures}
+            item={pressureMeasures || 'psi'}
             setItem={
                 setTankParameters.setMeasures
               }

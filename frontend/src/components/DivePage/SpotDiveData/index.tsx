@@ -87,7 +87,7 @@ export const SpotDiveData: FC<Props> = ({
       return `${value} m`;
     }
     const userUnitSystem = userAuth.settings.preferences.unitSystem;
-    if (dive.unitSystem === userUnitSystem) {
+    if (dive.unitSystem.toLowerCase() === userUnitSystem.toLowerCase()) {
       return `${value} ${userUnitSystem === 'METRIC' ? 'ºC' : 'ºF'}`;
     }
     if (userUnitSystem === 'METRIC') {
@@ -101,7 +101,7 @@ export const SpotDiveData: FC<Props> = ({
       return `${dive.diveData?.maxDepth} m`;
     }
     const userUnitSystem = userAuth.settings.preferences.unitSystem;
-    if (dive.unitSystem === userUnitSystem) {
+    if (dive.unitSystem.toLowerCase() === userUnitSystem) {
       return `${dive.diveData?.maxDepth} ${userUnitSystem === 'METRIC' ? 'm' : 'ft'}`;
     }
     if (userUnitSystem === 'METRIC') {

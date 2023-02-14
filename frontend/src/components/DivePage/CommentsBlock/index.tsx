@@ -68,7 +68,7 @@ export const CommentsBlock: FC<Props> = ({ comments }) => {
         author: userAuth.uid,
         replyTo: replyTo?.userId || null,
         comment: newComment,
-        created_at: Timestamp.fromDate(new Date()),
+        createdAt: Timestamp.fromDate(new Date()),
       };
       await firestoreCommentsService.addComment(userId as string, diveId as string, diveComment);
       setFetchedComments([{
@@ -100,10 +100,10 @@ export const CommentsBlock: FC<Props> = ({ comments }) => {
         <div className={styles.commentWrapper}>
           {!!fetchedComments?.length && fetchedComments.map((itm) => (
             <CommentItem
-              key={itm.created_at.nanoseconds}
+              key={itm.createdAt.nanoseconds}
               author={itm.author}
               replyTo={itm.replyTo}
-              datePublish={parseDate(convertTimestampDate(itm.created_at))}
+              datePublish={parseDate(convertTimestampDate(itm.createdAt))}
               text={itm.comment}
               replyButtonHandler={replyButtonHandler}
             />

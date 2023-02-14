@@ -19,14 +19,14 @@ export const SafetySpots: FC<Props> = ({
   setParameters,
 }) => {
   const isMobile = useWindowWidth(500, 768);
-  const findSpot = (id: number) => parameters.safetySpots.find((spot) => spot.id === id);
+  const findSpot = (id: number) => parameters.safetyStops.find((spot) => spot.id === id);
   const {
     userAuth,
   } = useContext(AuthStatusContext);
 
   const spotChange = (id: number, value: string, parameter: 'depth' | 'period') => {
     const foundSpot = findSpot(id);
-    const newSpots = parameters.safetySpots.map((spot) => {
+    const newSpots = parameters?.safetyStops?.map((spot) => {
       if (spot.id === id) {
         if (parameter === 'depth') {
           foundSpot.depth = +value;
@@ -39,7 +39,7 @@ export const SafetySpots: FC<Props> = ({
     });
     setParameters({
       ...parameters,
-      safetySpots: newSpots,
+      safetyStops: newSpots,
     });
   };
 
@@ -52,13 +52,14 @@ export const SafetySpots: FC<Props> = ({
   };
 
   const add = () => {
+    const safetyStops = parameters.safetyStops || [];
     setParameters(
       {
         ...parameters,
-        safetySpots: [
-          ...parameters.safetySpots,
+        safetyStops: [
+          ...safetyStops,
           {
-            id: incrementId(parameters.safetySpots),
+            id: incrementId(parameters.safetyStops),
             depth: undefined,
             period: undefined,
           }],
@@ -67,8 +68,8 @@ export const SafetySpots: FC<Props> = ({
   };
 
   const close = (id: number) => {
-    const newSpots = parameters.safetySpots.filter((spot) => spot.id !== id);
-    setParameters({ ...parameters, safetySpots: newSpots });
+    const newSpots = parameters.safetyStops.filter((spot) => spot.id !== id);
+    setParameters({ ...parameters, safetyStops: newSpots });
   };
 
   const getSpotData = (id: number | undefined, par: 'depth' | 'period') => {
@@ -76,7 +77,7 @@ export const SafetySpots: FC<Props> = ({
     return findSpot(id)[par] ? `${findSpot(id)[par]}` : empty;
   };
 
-  const spots = parameters.safetySpots.map((spot) => (
+  const spots = parameters?.safetyStops?.map((spot) => (
     <div className={styles.spot} key={spot.id}>
       <Input
         type="number"

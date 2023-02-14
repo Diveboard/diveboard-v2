@@ -12,7 +12,7 @@ export const ShopsInSpot = () => {
       <div className={styles.shopsWrapper}>
         <ShopCard
           addedToFavourite={false}
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
+          imgSrc="/appIcons/no-photo.svg"
           place="Egypt, Sharm El Shaikh"
           score={2.5}
           scoredCount={112}
@@ -20,7 +20,7 @@ export const ShopsInSpot = () => {
         />
         <ShopCard
           addedToFavourite
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
+          imgSrc="/appIcons/no-photo.svg"
           place="Egypt, Sharm El Shaikh"
           score={1.5}
           scoredCount={112}
@@ -28,7 +28,7 @@ export const ShopsInSpot = () => {
         />
         <ShopCard
           addedToFavourite={false}
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
+          imgSrc="/appIcons/no-photo.svg"
           place="Egypt, Sharm El Shaikh"
           score={2.5}
           scoredCount={112}
@@ -36,7 +36,7 @@ export const ShopsInSpot = () => {
         />
         <ShopCard
           addedToFavourite
-          imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
+          imgSrc="/appIcons/no-photo.svg"
           place="Egypt, Sharm El Shaikh"
           score={4.5}
           scoredCount={112}

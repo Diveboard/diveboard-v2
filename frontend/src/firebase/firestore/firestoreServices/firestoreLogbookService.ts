@@ -4,6 +4,7 @@ import { firestorePublicProfileService } from './firestorePublicProfileService';
 import { firestoreSurveyService } from './firestoreSurveyService';
 import { firestoreSpotsService } from './firestoreSpotsService';
 import { firestoreCommentsService } from './firestoreCommentsService';
+import { firestoreGalleryService } from './firestoreGalleryService';
 
 export const firestoreLogbookService = {
   getDive: async (userId: string, diveId: string, withComments: boolean = false) => {
@@ -23,17 +24,22 @@ export const firestoreLogbookService = {
       let spot = null;
       let species = [];
       let buddies = [];
+      let pictures = [];
 
       if (data?.spotId) {
         spot = await firestoreSpotsService.getSpotById(data.spotId);
       }
 
-      if (data?.species.length) {
-        species = await firestoreSpeciesServices.getSpeciesByIds(data.species);
+      if (data?.species) {
+        species = await firestoreSpeciesServices.getSpeciesByRefs(data.species);
       }
 
       if (data?.buddies.length) {
         buddies = await firestorePublicProfileService.getBuddiesInfo(data.buddies, data?.spotId);
+      }
+
+      if (data?.pictures) {
+        pictures = await firestoreGalleryService.getBestPictures(data.pictures);
       }
 
       const diveUser = await firestorePublicProfileService.getUserById(userId as string);
@@ -44,10 +50,10 @@ export const firestoreLogbookService = {
         spot: spot ? JSON.parse(JSON.stringify(spot)) : null,
         species: JSON.parse(JSON.stringify(species)),
         buddies: JSON.parse(JSON.stringify(buddies)),
+        pictures: JSON.parse(JSON.stringify(pictures)),
       };
     } catch (e) {
-      console.log(e.message);
-      throw new Error('get logbook dive data by id error');
+      throw new Error(e.message);
     }
   },
   getLogbookData: async (uid: string) => {
@@ -92,8 +98,7 @@ export const firestoreLogbookService = {
         surveysNumber,
       };
     } catch (e) {
-      console.log(e.message);
-      throw new Error('get logbook data by id error');
+      throw new Error(e.message);
     }
   },
 };

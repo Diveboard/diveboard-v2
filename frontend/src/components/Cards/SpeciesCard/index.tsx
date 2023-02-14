@@ -20,7 +20,7 @@ export const SpeciesCard: FC<Props> = ({
 
     <div className={styles.footer}>
       <span className={styles.name}>{speciesName}</span>
-      <span className={styles.scientificName}>{scientificName}</span>
+      {scientificName && <span className={styles.scientificName}>{scientificName}</span> }
     </div>
   </div>
 );

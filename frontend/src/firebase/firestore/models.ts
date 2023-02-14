@@ -1,4 +1,4 @@
-import { Timestamp } from '@firebase/firestore';
+import { DocumentReference, Timestamp } from '@firebase/firestore';
 import { Coords } from '../../types';
 import {
   EighthStepType,
@@ -60,13 +60,13 @@ export type NotificationsType = {
 };
 
 export type SpeciesType = {
-  id: string;
-  cname: { name: string, language: string }[];
-  sname: string;
   category: string;
-  coords: Coords[];
-  old_eolsnames_id: number;
+  id: string
   imgSrc: string
+  oldId: string
+  sname: string
+  ref: DocumentReference;
+  coords?: Coords[];
 };
 
 export type BuddiesType = {
@@ -93,17 +93,18 @@ export type CommentType = {
   comment: string;
   replyTo?: UserCommentType | null;
   author: UserCommentType;
-  created_at: Timestamp;
+  createdAt: Timestamp;
 };
 
 export type DiveType = {
   id?: string;
+  ref?: DocumentReference;
   draft: boolean;
   surveyId?: string;
   diveActivities: DiveActivities;
   diveData: SecondStepType['parameters'] & SecondStepType['advancedParameters'];
   tanks: SecondStepType['tanks'];
-  species: string[];
+  species: SpeciesType[];
   diveCenter: { id: string; guide: string };
   buddies: FifthStepType['buddies'];
   externalImgsUrls: string[];
@@ -138,11 +139,7 @@ export type SpotType = {
     pictureId: string;
   }[];
   species: string[] // species id
-  dives: {
-    id: number;
-    userId: string;
-    divesId: string[]
-  }[]
+  dives: { [key: string]: DocumentReference }
   shops: string[] // shops id
   stats: {
     averageDepth: {

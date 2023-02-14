@@ -1,4 +1,4 @@
-import { DocumentReference } from '@firebase/firestore';
+import { DocumentReference, Timestamp } from '@firebase/firestore';
 import {
   FirstStepType,
   SecondStepType,
@@ -17,10 +17,24 @@ export type UserType = {
 };
 
 export type ImageInfo = {
-  img: string,
-  date: Date | null,
-  draft: boolean,
-  spot: string
+  url: string,
+  createdAt: Timestamp,
+  updated_A?: Timestamp,
+  videoUrl: string | null,
+  media: 'image' | 'video',
+  spot: DocumentReference,
+  user: {
+    firstName: string,
+    lastName: string,
+    photoUrl?: string,
+    userId: string
+  },
+  locationName: string,
+  countryName: string,
+  regionName: string,
+  width: number,
+  height: number,
+  imageId: string,
 };
 
 export type DiveType =
@@ -78,6 +92,7 @@ export type SearchedLocationType = {
   name: string,
   bounds?: Bounds,
   geonameRef: DocumentReference
+  countryRef?: DocumentReference
 };
 
 export type Bounds = {

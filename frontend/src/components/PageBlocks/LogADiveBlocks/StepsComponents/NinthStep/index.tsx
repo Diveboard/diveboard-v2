@@ -59,7 +59,7 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
   useEffect(() => {
     const data = getStepData(9) as NinthStepType;
     if (data.publishingMode) {
-      setPublishingMode(data.publishingMode);
+      setPublishingMode(data.publishingMode.toLowerCase());
     }
   }, [step]);
 
@@ -89,6 +89,7 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
       setLoading(false);
       setStep(10);
     } catch (e) {
+      setLoading(false);
       notify('Something went wrong');
     }
   };

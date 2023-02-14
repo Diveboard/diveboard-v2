@@ -30,7 +30,6 @@ export const SpeciesCardList: FC<Props> = ({
     );
     return selectedSpeciesIndex !== -1;
   };
-
   const speciesCards = speciesList.map((species) => (
     <CSSTransition
       key={species.id}
@@ -41,7 +40,6 @@ export const SpeciesCardList: FC<Props> = ({
     >
       {/* <span>hello</span> */}
       <SpeciesCardItem
-        // key={species.id}
         check={isSelected(species.id)}
         species={species}
         selectedSpeciesHandler={selectedSpeciesHandler}

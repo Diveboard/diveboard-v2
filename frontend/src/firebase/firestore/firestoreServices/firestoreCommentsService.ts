@@ -1,17 +1,18 @@
 import {
-  collection, query, getDocs, orderBy, doc, setDoc, limit,
+  collection, query, getDocs, orderBy, doc, setDoc,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { firestorePublicProfileService } from './firestorePublicProfileService';
+import { PathEnum } from '../firestorePaths';
 
 export const firestoreCommentsService = {
   getComments: async (userId: string, diveId: string) => {
     try {
       const comments = [];
-      const commentsRef = collection(db, `Test_Dives/${userId}/userDives/${diveId}/comments`);
+      const commentsRef = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}/${diveId}/${PathEnum.DIVE_COMMENTS}`);
       const q = query(
         commentsRef,
-        orderBy('created_at', 'desc'),
+        orderBy('createdAt', 'desc'),
       );
       const commentsSnap = await getDocs(q);
       commentsSnap.forEach((commentDoc) => (
@@ -47,20 +48,18 @@ export const firestoreCommentsService = {
       }
       return comments;
     } catch (e) {
-      console.log({ e });
-      throw new Error('get comments error');
+      throw new Error(e.message);
     }
   },
 
   addComment: async (userId: string, diveId: string, comment) => {
     try {
-      const ref = doc(collection(db, `Test_Dives/${userId}/userDives/${diveId}/comments`));
+      const ref = doc(collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}/${diveId}/${PathEnum.DIVE_COMMENTS}`));
       const authorRef = doc(db, `users/${comment.author}`);
       const replyToRef = comment.replyTo ? doc(db, `users/${comment.replyTo}`) : null;
       await setDoc(ref, { ...comment, author: authorRef, replyTo: replyToRef }, { merge: true });
     } catch (e) {
-      console.log({ e });
-      throw new Error('add comment error');
+      throw new Error(e.message);
     }
   },
 };

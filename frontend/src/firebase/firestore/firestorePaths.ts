@@ -1,41 +1,9 @@
-// Users
-const usersSegment = 'users';
-// const settingsSegment = 'settings';
-// const notificationsSegment = 'notifications';
-// const preferencesSegment = 'preferences';
-const divesSegment = 'dives';
-const extraSegment = 'extra';
-
-const usersPath = usersSegment;
-// const settingsPath = `${usersPath}/${settingsSegment}`;
-// const notificationsPath = `${settingsPath}/${notificationsSegment}`;
-// const preferencesPath = `${settingsPath}/${preferencesSegment}`;
-const divesPath = `${usersPath}/${divesSegment}`;
-const extraPath = `${divesPath}/${extraSegment}`;
-// Spots
-const spotsSegment = 'test-spots';// 'spots'
-const spotsPath = spotsSegment;
 // Shops
 const shopsSegment = 'test-shops';
 const shopsPath = shopsSegment;
 // Guides
 const guidesSegment = 'guides';
 const guidesPath = `${shopsSegment}/guides`;
-// Countries
-const countriesSegment = 'countries';
-const countriesPath = countriesSegment;
-// Areas
-const areasSegment = 'areas';
-const areasPath = areasSegment;
-// Geonemes core
-const geonamesSegment = 'geonames_cores';
-const geonamesPath = geonamesSegment;
-// Regions
-const regionsSegment = 'regions';
-const regionsPath = regionsSegment;
-// Feature code
-const featureCodeSegment = 'geonames_featurecodes';
-const featureCodePath = featureCodeSegment;
 // Species
 const speciesSegment = 'test-species';
 const speciesPath = speciesSegment;
@@ -46,26 +14,33 @@ const surveysPath = surveysSegment;
 const DANSegment = 'DAN';
 const DANPath = `${surveysPath}/${DANSegment}`;
 
+export enum PathEnum {
+  GEONAMES_ALTERNATIVE = 'geoname_alternatives',
+  GEONAMES = 'geonames',
+
+  COUNTRIES = 'countries',
+  AREAS = 'areas',
+  REGIONS = 'regions',
+  LOCATIONS = 'locations',
+
+  USERS = 'users',
+
+  DIVES = 'dives',
+  DIVE_DATA = 'userDives',
+  DIVE_COMMENTS = 'comments',
+
+  SPECIES = 'species',
+  SPECIES_CNAMES = 'species',
+  SPECIES_COORDS = 'species_coords',
+
+  PICTURES = 'pictures',
+
+  SPOTS = 'spots',
+  SURVEYS = 'surveys',
+  SHOPS = 'shops',
+}
+
 export const firestorePaths = {
-  users: {
-    segment: usersSegment,
-    path: usersPath,
-    // settings: {
-    //   segment: settingsSegment,
-    //   path: settingsPath,
-    //   notifications: { path: notificationsPath, segment: notificationsSegment },
-    //   preferences: { path: preferencesPath, segment: preferencesSegment },
-    // },
-    dives: {
-      path: divesPath,
-      segment: divesSegment,
-      extra: { path: extraPath, segment: extraSegment },
-    },
-  },
-  spots: {
-    path: spotsPath,
-    segment: spotsSegment,
-  },
   shops: {
     path: shopsPath,
     segment: shopsSegment,
@@ -73,23 +48,6 @@ export const firestorePaths = {
       path: guidesPath,
       segment: guidesSegment,
     },
-  },
-  countries: { path: countriesPath, segment: countriesSegment },
-  geonames: {
-    path: geonamesPath,
-    segment: geonamesSegment,
-  },
-  regions: {
-    path: regionsPath,
-    segment: regionsSegment,
-  },
-  areas: {
-    path: areasPath,
-    segment: areasSegment,
-  },
-  featureCode: {
-    path: featureCodePath,
-    segment: featureCodeSegment,
   },
   species: {
     path: speciesPath,

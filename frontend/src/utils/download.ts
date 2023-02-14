@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { notify } from './notify';
 
 export const downloadFile = async (filename: string) => {
   axios({
@@ -14,5 +15,7 @@ export const downloadFile = async (filename: string) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }).catch((e) => {
+    notify(e.message);
   });
 };

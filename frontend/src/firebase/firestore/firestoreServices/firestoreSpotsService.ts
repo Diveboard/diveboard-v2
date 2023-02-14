@@ -1,15 +1,15 @@
 import {
-  addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where,
+  addDoc, collection, deleteDoc, doc, getDoc, getDocs, limit, query, setDoc, where,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { SpotType } from '../models';
-import { Coords } from '../../../types';
-import { firestorePaths } from '../firestorePaths';
+import { Bounds } from '../../../types';
+import { PathEnum } from '../firestorePaths';
 
 export const firestoreSpotsService = {
   getSpotCoordsById: async (spotId: string) => {
     try {
-      const docRef = doc(db, firestorePaths.spots.path, spotId);
+      const docRef = doc(db, PathEnum.SPOTS, spotId);
       const docSnap = await getDoc(docRef);
       const { lat, lng } = docSnap.data();
       return {
@@ -17,78 +17,67 @@ export const firestoreSpotsService = {
         lng,
       };
     } catch (e) {
-      console.log(e);
-      throw new Error('get spot by id error');
+      throw new Error(e.message);
     }
   },
 
   updateSpotById: async (spotId: string, data: Partial<SpotType>) => {
     try {
-      const docRef = doc(db, firestorePaths.spots.path, spotId);
+      const docRef = doc(db, PathEnum.SPOTS, spotId);
       await setDoc(docRef, { ...data }, { merge: true });
       return true;
     } catch (e) {
-      console.log(e);
-      throw new Error('get spot by id error');
+      throw new Error(e.message);
     }
   },
 
   getSpotById: async (spotId: string) => {
     try {
-      const docRef = doc(db, firestorePaths.spots.path, spotId);
+      const docRef = doc(db, PathEnum.SPOTS, spotId);
       const docSnap = await getDoc(docRef);
-      return docSnap.data();
+      const data = docSnap.data();
+      const location = {
+        region: data.regionName,
+        country: data.countryName,
+        location: data.locationName,
+      };
+      return { ...data, location } as any;
     } catch (e) {
-      console.log(e);
-      throw new Error('get spot by id error');
+      throw new Error(e.message);
     }
   },
 
   getSpotNameById: async (spotId: string) => {
     try {
-      const docRef = doc(db, firestorePaths.spots.path, spotId);
+      const docRef = doc(db, PathEnum.SPOTS, spotId);
       const docSnap = await getDoc(docRef);
       const { location } = docSnap.data();
       return `${location.location}, ${location.country}, ${location.region}`;
     } catch (e) {
-      console.log(e);
-      throw new Error('get spot by id error');
+      throw new Error(e.message);
     }
   },
 
   setNewSpot: async (newSpot: SpotType) => {
     try {
-      const res = await addDoc(collection(db, firestorePaths.spots.path), newSpot);
+      const res = await addDoc(collection(db, PathEnum.SPOTS), newSpot);
       return res.id;
     } catch (e) {
-      throw new Error('set new spot error');
+      throw new Error(e.message);
     }
   },
 
-  getSpotsByRegion: async (region: string) => {
-    const docRef = collection(db, firestorePaths.spots.path);
-    const q = query(
-      docRef,
-      where('location.region', '==', region),
-    );
-    const querySnapshot = await getDocs(q);
-    const spots = [];
-    querySnapshot.forEach((document) => {
-      spots.push({ id: document.id, ...document.data() });
-    });
-    return spots;
-  },
-
-  getAllSpotsInMapViewport: async (bounds: {
-    ne: Coords;
-    sw: Coords;
-  }) => {
+  getAllSpotsInMapViewport: async (bounds: Bounds) => {
     try {
-      const docRef = collection(db, firestorePaths.spots.path);
+      const docRef = collection(db, PathEnum.SPOTS);
+      console.log(bounds);
       const q = query(
         docRef,
-        where('lat', '>', bounds.sw.lat),
         where('lat', '<', bounds.ne.lat),
+        where('lat', '>', bounds.sw.lat),
+        // where('lng', '<', bounds.ne.lng),
+        // where('lng', '>', bounds.sw.lng),
+        limit(1000),
       );
       const querySnapshot = await getDocs(q);
       const spots = [];
@@ -99,34 +88,43 @@ export const firestoreSpotsService = {
           name,
           dives,
           stats: { divesLogged },
-          location,
+          locationName,
+          regionName,
+          countryName,
           zoom,
+          averageDepth,
         } = document.data();
         const { id } = document;
-        if (lng > bounds.sw.lng && lng < bounds.ne.lng) {
+        if (lng < bounds.ne.lng && lng > bounds.sw.lng) {
           spots.push({
             id,
             name,
             divesLogged,
-            dives: dives.length,
-            location,
+            dives: dives.length || 1,
+            location: {
+              region: regionName,
+              country: countryName,
+              location: locationName,
+            },
+            averageDepth,
             zoom,
             lat,
             lng,
           });
         }
       });
+      console.log(spots);
       return spots;
     } catch (e) {
-      throw new Error('get spots by bounds error');
+      throw new Error(e.message);
     }
   },
 
   deleteSpot: async (id: string) => {
     try {
-      await deleteDoc(doc(db, firestorePaths.spots.path, id));
+      await deleteDoc(doc(db, PathEnum.SPOTS, id));
     } catch (e) {
-      throw new Error('delete spot error');
+      throw new Error(e.message);
     }
   },
 };

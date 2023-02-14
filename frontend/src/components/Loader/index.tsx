@@ -4,14 +4,15 @@ import styles
   from './styles.module.scss';
 
 type Props = {
-  loading: boolean
+  loading: boolean;
+  iconName?: string
 };
-export const Loader: FC<Props> = ({ loading }) => (
+export const Loader: FC<Props> = ({ loading, iconName = 'loader' }) => (
   <span>
     {loading
       && (
         <span className={styles.loader}>
-          <Icon iconName="loader" size={21} />
+          <Icon iconName={iconName} size={21} />
         </span>
       )}
   </span>

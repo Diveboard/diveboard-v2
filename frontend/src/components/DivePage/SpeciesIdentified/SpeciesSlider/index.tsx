@@ -51,8 +51,8 @@ export const SpeciesIdentified: FC<Props> = ({ speciesList }): JSX.Element => {
         <SpeciesCard
           key={itm.id}
           imgSrc={itm.imgSrc}
-          speciesName={itm.cname.map((i) => i.name).toString()}
-          scientificName={itm.sname}
+          speciesName={itm.sname}
+          scientificName={itm.category}
           className="smallCard"
         />
       ))}

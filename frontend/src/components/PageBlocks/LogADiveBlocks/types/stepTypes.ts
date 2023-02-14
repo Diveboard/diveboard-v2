@@ -3,6 +3,7 @@ import {
 } from './commonTypes';
 import { initialDiveDataState } from '../LogDiveData/state';
 import { SurveyDanType } from '../../../../types';
+import { SpeciesType } from '../../../../firebase/firestore/models';
 
 export type FirstStepType = {
   overview: {
@@ -53,7 +54,7 @@ export type SecondStepType = {
     maxDepth: number;
     duration: number;
     surfaceInterval: number;
-    safetySpots: SafetySpot[];
+    safetyStops: SafetySpot[];
   };
 
   advancedParameters: {
@@ -72,7 +73,7 @@ export type ThirdStepType = {
   spotId: string | null;
 };
 export type FourthStepType = {
-  species: string[];
+  species: SpeciesType[]
 };
 
 export type FifthStepType = {
@@ -105,7 +106,7 @@ export type EighthStepType = {
   saveDAN?: boolean;
 };
 
-export type PublishingMode = 'public' | 'private' | 'friends only';
+export type PublishingMode = 'PUBLIC' | 'PRIVATE';
 
 export type NinthStepType = {
   publishingMode: PublishingMode;

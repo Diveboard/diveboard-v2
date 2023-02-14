@@ -2,8 +2,8 @@ import {
   collection, getDocs, query, orderBy, startAt, limit, where, doc, getDoc, DocumentReference,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
-import { Coords, SearchedLocationType } from '../../../types';
-import { firestorePaths } from '../firestorePaths';
+import { Bounds, Coords, SearchedLocationType } from '../../../types';
+import { PathEnum } from '../firestorePaths';
 
 export const firestoreGeoDataService = {
 
@@ -11,7 +11,7 @@ export const firestoreGeoDataService = {
     const lowCaseCountryName = countryName.trim()
       .toLowerCase();
     try {
-      const docRef = collection(db, '_country');
+      const docRef = collection(db, PathEnum.COUNTRIES);
       const q = query(
         docRef,
         orderBy('blob'),
@@ -47,60 +47,7 @@ export const firestoreGeoDataService = {
 
       return countries;
     } catch (e) {
-      console.log(e.message);
-      throw new Error('get countries suggestion error');
-    }
-  },
-
-  getGeonamesCoreData: async (geoname: string) => {
-    const upperGeonames = geoname.trim()
-      .charAt(0)
-      .toUpperCase() + geoname.slice(1);
-
-    try {
-      const docRef = collection(db, firestorePaths.geonames.path);
-      const q = query(
-        docRef,
-        // orderBy('asciiname'),
-        // startAt(upperGeonames),
-        where('asciiname', '>=', upperGeonames),
-        limit(5),
-      );
-      const querySnapshot = await getDocs(q);
-
-      const geonamesData = [] as {
-        id: string, name: string, featureClass: string, countryCode: string, featureCode: string,
-      }[];
-
-      querySnapshot.forEach((document) => {
-        const { id } = document;
-        const {
-          asciiname,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          feature_class,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          country_code,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          feature_code,
-        } = document.data();
-
-        // const name = asciiname.trim()
-        //   .charAt(0)
-        //   .toUpperCase() + asciiname.slice(1);
-        // if (name.startsWith(upperGeonames)) {
-        geonamesData.push({
-          id,
-          name: asciiname,
-          featureClass: feature_class,
-          countryCode: country_code,
-          featureCode: feature_code,
-        });
-        // }
-      });
-      return geonamesData;
-    } catch (e) {
-      console.log(e.message);
-      throw new Error('get geonames core data error');
+      throw new Error(e.message);
     }
   },
 
@@ -109,7 +56,7 @@ export const firestoreGeoDataService = {
       .charAt(0)
       .toUpperCase() + queryName.slice(1);
     try {
-      const docRef = collection(db, '_geoname_alternative');
+      const docRef = collection(db, PathEnum.GEONAMES_ALTERNATIVE);
       const q = query(
         docRef,
         where('value', '>=', upperLocation),
@@ -132,8 +79,7 @@ export const firestoreGeoDataService = {
       });
       return locations;
     } catch (e) {
-      console.log(e);
-      throw new Error('get geonames by name error');
+      throw new Error(e.message);
     }
   },
 
@@ -141,7 +87,7 @@ export const firestoreGeoDataService = {
     try {
       let docRef = geonameRef;
       if (typeof geonameRef === 'string') {
-        docRef = doc(db, '_geoname', geonameRef);
+        docRef = doc(db, PathEnum.GEONAMES, geonameRef);
       }
       const docSnap = await getDoc(docRef as DocumentReference);
       const {
@@ -157,8 +103,7 @@ export const firestoreGeoDataService = {
         areaRef,
       };
     } catch (e) {
-      console.log(e);
-      throw new Error('get geoname by ID error');
+      throw new Error(e.message);
     }
   },
 
@@ -167,14 +112,25 @@ export const firestoreGeoDataService = {
       const docSnap = await getDoc(areaRef);
       return docSnap.data();
     } catch (e) {
-      console.log(e);
-      throw new Error('get geoname coords by name error');
+      throw new Error(e.message);
+    }
+  },
+
+  getCountryByRef: async (countryRef: DocumentReference) => {
+    try {
+      const docSnap = await getDoc(countryRef);
+      const data = docSnap.data();
+      const bounds = { ne: data.bounds.northeast, sw: data.bounds.southwest };
+      const name = data.blob.charAt(0).toUpperCase() + data.blob.slice(1).replaceAll('-', ' ');
+      return { name, bounds } as { bounds: Bounds, name: string };
+    } catch (e) {
+      throw new Error(e.message);
     }
   },
 
   getAreaByCoords: async (coords: Coords) => {
     try {
-      const docRef = collection(db, '_area');
+      const docRef = collection(db, PathEnum.AREAS);
       const querySnapshot = await getDocs(docRef);
       let res;
       querySnapshot.forEach((document) => {
@@ -190,8 +146,39 @@ export const firestoreGeoDataService = {
       });
       return res;
     } catch (e) {
-      console.log(e);
-      throw new Error('get geoname coords by name error');
+      throw new Error(e.message);
+    }
+  },
+
+  getLocations: async (locationName: string) => {
+    try {
+      const upperLocation = locationName.trim()
+        .charAt(0)
+        .toUpperCase() + locationName.slice(1);
+      const docRef = collection(db, PathEnum.LOCATIONS);
+      const q = query(
+        docRef,
+        where('name', '>=', upperLocation),
+        limit(15),
+      );
+
+      const locations = [];
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((document) => {
+        const {
+          name, countryRef,
+        } = document.data();
+
+        locations.push({
+          id: document.id,
+          countryRef,
+          name,
+        });
+      });
+      return locations;
+    } catch (e) {
+      throw new Error(e.message);
     }
   },
 
@@ -200,7 +187,7 @@ export const firestoreGeoDataService = {
       .charAt(0)
       .toUpperCase() + locationName.slice(1);
     try {
-      const docRef = collection(db, '_region');
+      const docRef = collection(db, PathEnum.REGIONS);
       const q = query(
         docRef,
         where('name', '>=', upperLocation),
@@ -229,27 +216,7 @@ export const firestoreGeoDataService = {
       });
       return locations;
     } catch (e) {
-      console.log(e);
-      throw new Error('get regions error');
-    }
-  },
-
-  getRegionArea: async (id: string) => {
-    try {
-      const docRef = collection(db, firestorePaths.areas.path);
-      const q = query(
-        docRef,
-        where('id', '==', +id),
-      );
-      const querySnapshot = await getDocs(q);
-      const regions = [];
-      querySnapshot.forEach((document) => {
-        regions.push(document.data());
-      });
-      return regions[0];
-    } catch (e) {
-      console.log(e);
-      throw new Error('get geoname coords by name error');
+      throw new Error(e.message);
     }
   },
 };

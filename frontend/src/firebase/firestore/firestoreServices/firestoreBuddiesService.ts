@@ -2,7 +2,7 @@ import {
   collection, getDocs, query, where, documentId,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
-import { firestorePaths } from '../firestorePaths';
+import { PathEnum } from '../firestorePaths';
 
 export const firestoreBuddiesService = {
   getBuddiesByIds: async (buddiesIds: string[]) => {
@@ -13,7 +13,7 @@ export const firestoreBuddiesService = {
     })[] = [];
     const docRef = collection(
       db,
-      `${firestorePaths.users.path}`,
+      `${PathEnum.USERS}`,
     );
     try {
       for (let i = 0; i < buddiesIds.length; i++) {
@@ -32,8 +32,7 @@ export const firestoreBuddiesService = {
       }
       return buddies;
     } catch (e) {
-      console.log(e.message);
-      throw new Error('get buddies by Id  error');
+      throw new Error(e.message);
     }
   },
 };

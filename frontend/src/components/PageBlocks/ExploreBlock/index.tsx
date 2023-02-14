@@ -4,7 +4,6 @@ import React, {
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import GoogleMapReact from 'google-map-react';
 import styles from './styles.module.scss';
 import { SearchAnimatedInput } from '../../Input/SearchAnimatedInput';
 import SpotCard from './SpotCard';
@@ -118,14 +117,17 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [touchStartY, setTouchStartY] = useState(null);
+  const [bounds, setBounds] = useState(null);
   // const [chosenSpot, setChosenSpot] = useState(null);
 
+  const [zoom, setZoom] = useState(7);
   const [inputRegion, setInputRegion] = useState(null);
   const [isFetch, setIsFetch] = useState(true);
   const [regions, setRegions] = useState([]);
   const [region, setRegion] = useState(undefined);
   const [spots, setSpots] = useState([]);
   const [markerPoints, setMarkerPoints] = useState([]);
+  const [isLoading, setLoading] = useState(false);
 
   const [mapCoords, setMapsCoords] = useState({
     lat: 40.95,
@@ -189,7 +191,29 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   //   setChosenSpot(index);
   // };
 
+  const onMapChange = async () => {
+    try {
+      setLoading(true);
+      const markersItems = await firestoreSpotsService
+        .getAllSpotsInMapViewport(bounds);
+      setMarkerPoints(markersItems.map((s) => ({
+        id: s.id,
+        lat: s.lat,
+        lng: s.lng,
+        divesCount: s.dives,
+        name: s.name,
+        averageDepth: s.averageDepth,
+      })));
+      setSpots(markersItems);
+      setLoading(false);
+    } catch (message) {
+      setLoading(false);
+      notify(message);
+    }
+  };
+
   useDebounce(searchQuery, setInputRegion, 1000);
+  useDebounce(bounds, onMapChange, 1500);
 
   const fetchRegions = async () => {
     if (inputRegion && isFetch) {
@@ -287,25 +311,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     </SearchAnimatedInput>
   );
 
-  const onMapChange = async (e: GoogleMapReact.ChangeEventValue) => {
-    try {
-      const markersItems = await firestoreSpotsService
-        .getAllSpotsInMapViewport({
-          ne: e.bounds.ne,
-          sw: e.bounds.sw,
-        });
-      setMarkerPoints(markersItems.map((s) => ({
-        id: s.id,
-        lat: s.lat,
-        lng: s.lng,
-        divesCount: s.dives,
-        diveName: s.name,
-      })));
-      setSpots(markersItems);
-    } catch (ev) {
-      notify('Something went wrong');
-    }
-  };
   const searchRef = useRef(null);
 
   useOutsideClick(() => setRegions([]), searchRef);
@@ -374,7 +379,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
                 <SpotCard
                   region={spot.location?.region}
                   name={spot.name}
-                  depth={spot.stats?.averageDepth?.metric}
+                  depth={spot.averageDepth?.depth || ''}
                   imgSrc={spot.bestPictures?.length ? spot.bestPictures[0] : '/images/fish.jpg'}
                   country={spot.location?.country}
                 />
@@ -479,11 +484,16 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
       <div className={styles.map} id="map">
         <ExploreMap
           coords={mapCoords}
-          zoom={7}
+          zoom={zoom}
           points={markerPoints}
           isMobile={isMobile}
           renderInput={<div ref={searchRef}>{renderInput}</div>}
-          onMapChange={onMapChange}
+          onMapChange={(e) => setBounds({
+            ne: e.bounds.ne,
+            sw: e.bounds.sw,
+          })}
+          isLoading={isLoading}
+          setZoom={setZoom}
         />
         {/* {typeof chosenSpot === 'number' && ( */}
         {/* <div className={styles.chosenSpot}> */}

@@ -17,6 +17,7 @@ const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   species,
   buddies,
   diveUser,
+  pictures,
   comments,
 }) => (
   <AuthLayout user={user}>
@@ -27,6 +28,7 @@ const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
         user={diveUser}
         spot={spot}
         species={species}
+        pictures={pictures}
         buddies={buddies}
         comments={comments}
       />
@@ -53,9 +55,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   } catch (e) {
     return {
-      redirect: {
-        destination: '/_error',
-        permanent: false,
+      props: {
+        user: null,
       },
     };
   }

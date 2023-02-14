@@ -8,28 +8,28 @@ export const DestinationBlock = () => (
     <h2 className={styles.title}>Featured Destinations</h2>
     <div className={styles.cardWrapper}>
       <DestinationCard
-        imgSrc="/TEST_IMG_THEN_DELETE/fish.jpg"
+        imgSrc="/appIcons/no-photo.svg"
         destinationName="Koh Bida Nai"
         rating={4}
         country="Thailand"
         divesNumber={146}
       />
       <DestinationCard
-        imgSrc="/TEST_IMG_THEN_DELETE/egypt.png"
+        imgSrc="/appIcons/no-photo.svg"
         destinationName="Shark and Yolanda Reef"
         rating={4}
         country="Egypt"
         divesNumber={145}
       />
       <DestinationCard
-        imgSrc="/TEST_IMG_THEN_DELETE/australia.png"
+        imgSrc="/appIcons/no-photo.svg"
         destinationName="The Yongala"
         rating={4}
         country="Australia"
         divesNumber={144}
       />
       <DestinationCard
-        imgSrc="/TEST_IMG_THEN_DELETE/Malaysia.png"
+        imgSrc="/appIcons/no-photo.svg"
         destinationName="Barracuda Point"
         rating={4}
         country="Malaysia"
