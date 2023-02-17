@@ -20,7 +20,7 @@ export const SpeciesCard: FC<Props> = ({
         : (
           <Image
             className={styles.img}
-            src={`/species/${scientificName.slice(0, -1)}.svg`}
+            src={`/species/${scientificName}.svg`}
             width={140}
             height={140}
             loader={imageLoader}

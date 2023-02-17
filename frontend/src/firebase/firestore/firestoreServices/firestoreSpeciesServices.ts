@@ -59,7 +59,10 @@ export const firestoreSpeciesServices = {
         const docRef = doc(db, `${PathEnum.SPECIES}/${speciesRefsIds[i]}`);
         // eslint-disable-next-line no-await-in-loop
         const docSnap = await getDoc(docRef);
-        species.push({ id: docSnap.id, ref: docSnap.ref, ...docSnap.data() });
+        const data = docSnap.data();
+        if (data) {
+          species.push({ id: docSnap.id, ref: docSnap.ref, ...data });
+        }
       }
       return species;
     } catch (e) {
