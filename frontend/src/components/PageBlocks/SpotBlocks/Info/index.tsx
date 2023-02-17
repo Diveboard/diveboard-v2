@@ -49,7 +49,7 @@ export const Info = ({
   };
 
   const convertDepth = (value): string => {
-    const userUnitSystem = userAuth.settings.preferences.unitSystem;
+    const userUnitSystem = userAuth ? userAuth.settings.preferences.unitSystem : 'METRIC';
     if (!userAuth) {
       return `${value.toFixed(2)} m`;
     }
