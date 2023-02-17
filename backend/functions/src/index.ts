@@ -21,6 +21,7 @@ admin.initializeApp();
 export const authStart = functions.https.onCall(async (request, context): Promise<any> => {
     const data = await validateRequest(request, AuthStartRequest);
 
+    // TODO: check if user doesn't have user-otp and user-stripe -- create
     let newUser = false;
 
     let user: UserRecord;

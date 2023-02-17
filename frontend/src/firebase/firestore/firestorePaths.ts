@@ -34,6 +34,7 @@ export enum PathEnum {
   SPECIES_COORDS = 'species_coords',
 
   PICTURES = 'pictures',
+  LOGBOOK = 'logbook_data',
 
   SPOTS = 'spots',
   SURVEYS = 'surveys',

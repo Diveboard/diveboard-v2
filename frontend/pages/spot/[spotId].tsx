@@ -25,43 +25,53 @@ const Spot: InferGetServerSidePropsType<typeof getServerSideProps> = ({
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const uid = context.req.cookies.__session;
-  const { spotId } = context.query;
-  let spot = null;
-  let dives = [];
-  let species = [];
-  let pictures = [];
-  let user = null;
+  try {
+    const uid = context.req.cookies.__session;
+    const { spotId } = context.query;
+    let spot = null;
+    let dives = [];
+    let species = [];
+    let pictures = [];
+    let user = null;
 
-  if (spotId) {
-    const data = await firestoreSpotsService.getSpotById(spotId as string);
+    if (spotId) {
+      const data = await firestoreSpotsService.getSpotById(spotId as string);
 
-    if (data) {
+      if (!data) {
+        throw new Error('Spot is not found');
+      }
       spot = JSON.parse(JSON.stringify(data));
       if (data.bestPictures) {
         pictures = await firestoreGalleryService.getBestPictures(data.bestPictures);
       }
       if (data.species) {
-        species = await firestoreSpeciesServices.getSpeciesByRefs(data.species);
+        species = await firestoreSpeciesServices.getSpeciesByRefs(data.species, 6);
       }
       if (data.dives) {
         dives = await firestoreDivesService.getDivesByRefs(data.dives, 4);
       }
     }
-  }
 
-  if (uid) {
-    user = await firestorePublicProfileService.getUserById(uid);
-  }
+    if (uid) {
+      user = await firestorePublicProfileService.getUserById(uid);
+    }
 
-  return {
-    props: {
-      user,
-      spot,
-      pictures: JSON.parse(JSON.stringify(pictures)),
-      dives: JSON.parse(JSON.stringify(dives)),
-      species: JSON.parse(JSON.stringify(species)),
-    },
-  };
+    return {
+      props: {
+        user,
+        spot,
+        pictures: JSON.parse(JSON.stringify(pictures)),
+        dives: JSON.parse(JSON.stringify(dives)),
+        species: JSON.parse(JSON.stringify(species)),
+      },
+    };
+  } catch (e) {
+    return {
+      redirect: {
+        destination: '/_error',
+        permanent: false,
+      },
+    };
+  }
 };
 export default Spot;

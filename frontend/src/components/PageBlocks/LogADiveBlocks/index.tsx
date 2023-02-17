@@ -44,7 +44,6 @@ export const LogDiveBlock = ({
   const {
     setCurrentStep, setData, getAllStepsData, setEmptyData,
   } = useContext(LogDiveDataContext);
-
   const { userAuth } = useContext(AuthStatusContext);
   const router = useRouter();
   const { isNew } = router.query;

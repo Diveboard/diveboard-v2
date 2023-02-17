@@ -52,28 +52,22 @@ export const SpotBlocks = ({
 
       {isMobile && <MobileTabs mode={tab} setMode={setTab} />}
       <div className={styles.wrapper}>
-        {isMobile ? tab === 'info'
-            && (
-            <Info
-              location={spot?.location}
-              species={species}
-              coords={{ lat: spot.lat, lng: spot.lng }}
-              stats={spot.stats}
-              divesCount={Object.keys(spot.dives).length}
-            />
-            )
-          : (
-            <Info
-              location={spot?.location}
-              species={species}
-              coords={{ lat: spot.lat, lng: spot.lng }}
-              stats={spot.stats}
-              divesCount={Object.keys(spot.dives).length}
-            />
-          ) }
-        {isMobile ? tab === 'dives'
-            && <DivesInSpot spotDivesIds={spot.dives} dives={dives} />
-          : <DivesInSpot dives={dives} spotDivesIds={spot.dives} />}
+        {((isMobile && tab === 'info') || isMobile === false) && (
+        <Info
+          location={{
+            country: spot.countryName,
+            region: spot.regionName,
+            location: spot.locationName,
+          }}
+          species={species}
+          coords={{ lat: spot.lat, lng: spot.lng }}
+          stats={spot.stats}
+          divesCount={Object.keys(spot.dives).length}
+        />
+        )}
+        {((isMobile && tab === 'dives') || isMobile === false) && (
+        <DivesInSpot spotDivesIds={spot.dives} dives={dives} />
+        )}
         {/* {isMobile ? tab === 'shops' && <ShopsInSpot /> : <ShopsInSpot />} */}
       </div>
 

@@ -1,3 +1,4 @@
+import { doc } from '@firebase/firestore';
 import { AllStepsDataType } from '../types/stepTypes';
 import {
   DiveType, MediaUrls, SpeciesType, UnitSystem,
@@ -15,6 +16,8 @@ import {
   convertFeetToMeters, convertKgToLbs, convertLbsToKg,
   convertMetersToFeet,
 } from '../../../../utils/unitSystemConverter';
+import { PathEnum } from '../../../../firebase/firestore/firestorePaths';
+import { db } from '../../../../firebase/firestore/firebaseFirestore';
 
 export const convertAllStepsData = async (
   stepsData: AllStepsDataType,
@@ -42,7 +45,8 @@ export const convertAllStepsData = async (
   const convertSpecies = (species: SpeciesType[]) => {
     const specs = {};
     species.forEach((specie) => {
-      specs[specie.id] = specie.ref;
+      const ref = doc(db, `${PathEnum.SPECIES}/${specie.id}`);
+      specs[specie.id] = ref;
     });
     return specs;
   };
@@ -66,7 +70,8 @@ export const convertAllStepsData = async (
           });
           result.push(newPic);
         } else {
-          result.push([mediaUrls[i].id, mediaUrls[i].ref]);
+          const ref = doc(db, `${PathEnum.PICTURES}/${mediaUrls[i].id}`);
+          result.push([mediaUrls[i].id, ref]);
         }
       }
     }
@@ -95,14 +100,13 @@ export const convertAllStepsData = async (
         }
       }
     }
-    console.log(Object.fromEntries(result));
     return Object.fromEntries(result);
   };
 
   return {
     buddies: stepsData.fifthStep.buddies || [],
     danSurvey: stepsData.eighthStep.danSurvey,
-    surveyId: stepsData.eighthStep.surveyId,
+    surveyRef: stepsData.eighthStep.surveyRef,
     diveActivities: convertDiveActivities(stepsData.firstStep.diveActivities),
     // TODO: Implement dive center logic
     diveCenter: {
@@ -198,7 +202,6 @@ export const convertToStepsData = (
     },
     secondStep: {
       parameters: {
-        time: data.diveData?.time,
         date: data.diveData?.date
           ? convertTimestampDate(data.diveData.date)
           : null,
@@ -256,7 +259,7 @@ export const convertToStepsData = (
       })),
       save: true,
     },
-    eighthStep: { surveyId: data.surveyId || null },
+    eighthStep: { surveyRef: data.surveyRef || null },
     ninthStep: {
       publishingMode: data.publishingMode,
     },

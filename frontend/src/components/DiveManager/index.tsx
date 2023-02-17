@@ -45,7 +45,6 @@ const DiveManager = ({ userId, userDives }: Props) => {
   const [isBackdrop, setBackdrop] = useState(false);
 
   const [copiestData, setCopiestData] = useState(undefined);
-
   const [isLoading, setLoading] = useState(false);
   const [isFetching, setFetching] = useState(false);
 

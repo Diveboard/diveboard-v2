@@ -32,6 +32,17 @@ export const firestoreGalleryService = {
     }
   },
 
+  getPicById: async (id: string) => {
+    try {
+      const docRef = doc(db, `${PathEnum.PICTURES}/${id}`);
+      const docSnap = await getDoc(docRef);
+      const data = docSnap.data();
+      return data;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
   getMediaUrls: async (pictures: { [key: string]: DocumentReference }) => {
     try {
       const picsIds = Object.keys(pictures);
@@ -76,12 +87,14 @@ export const firestoreGalleryService = {
     }
   },
 
-  deleteImageById: async (id: string, reference: string) => {
+  deleteImageById: async (id: string, reference?: string) => {
     try {
       const imgRef = doc(db, `${PathEnum.PICTURES}/${id}`);
-      const pathReference = ref(storage, reference);
-      if (pathReference) {
-        await deleteObject(pathReference);
+      if (reference && reference.includes('https://firebasestorage')) {
+        const pathReference = ref(storage, reference);
+        if (pathReference) {
+          await deleteObject(pathReference);
+        }
       }
       return await deleteDoc(imgRef);
     } catch (e) {
@@ -149,21 +162,21 @@ export const firestoreGalleryService = {
     }
   },
 
-  getGallery: async (sort: 'asc' | 'desc' = 'desc', lastDate: Timestamp = null) => {
+  getGallery: async (sort: 'asc' | 'desc' = 'desc', lastDate: Timestamp = null, size = 80) => {
     try {
       const gallery = [];
       const docRef = collection(db, PathEnum.PICTURES);
       const first = query(
         docRef,
         orderBy('createdAt', sort),
-        limit(80),
+        limit(size),
       );
 
       const next = query(
         docRef,
         orderBy('createdAt', sort),
         startAfter(lastDate),
-        limit(150),
+        limit(size),
       );
 
       const q = lastDate ? next : first;

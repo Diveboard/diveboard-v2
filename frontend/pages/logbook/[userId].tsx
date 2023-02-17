@@ -9,18 +9,18 @@ import { firestoreLogbookService } from '../../src/firebase/firestore/firestoreS
 import 'react-toastify/dist/ReactToastify.css';
 
 const Logbook: InferGetServerSidePropsType<typeof getServerSideProps> = ({
-  user, dives, species, buddies, logbookUser, surveysNumber,
+  user, dives, species, logbookUser, data, pictures,
 }) => (
   <AuthLayout user={user}>
     <MainLayout>
       <ToastContainer />
       <ProfileBlock
         user={user}
-        logbookUser={logbookUser}
         dives={dives}
         species={species}
-        buddies={buddies}
-        surveysNumber={surveysNumber}
+        logbookUser={logbookUser}
+        data={data}
+        pictures={pictures}
       />
     </MainLayout>
   </AuthLayout>
@@ -37,12 +37,27 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       user = await firestorePublicProfileService.getUserById(uid);
     }
 
-    const data = await firestoreLogbookService.getLogbookData(userId as string);
+    const {
+      data,
+      logbookUser,
+      divesData,
+      pictures,
+      species,
+    } = await firestoreLogbookService.getLogbookData(
+      userId as string,
+    );
 
+    if (!logbookUser) {
+      throw new Error('Logbook is not found');
+    }
     return {
       props: {
         user,
-        ...data,
+        dives: divesData,
+        species,
+        logbookUser,
+        data,
+        pictures,
       },
     };
   } catch (e) {

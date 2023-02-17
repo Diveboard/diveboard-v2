@@ -1,5 +1,5 @@
 import React, { FC, useContext } from 'react';
-import { TimePickerInput } from '../../../../../Input/TimePickerInput';
+import { Time, TimePickerInput } from '../../../../../Input/TimePickerInput';
 import { DatePickerInput } from '../../../../../Input/DatePickerInput';
 import { InputLabelWrapper } from '../../../inputLabelWrapper';
 import { Input } from '../../../../../Input/CommonInput';
@@ -30,18 +30,22 @@ export const Parameters: FC<Props> = ({
   const {
     userAuth,
   } = useContext(AuthStatusContext);
-
   const errorsParams = setParams(errors, setErrors);
+
   return (
     <div className={styles.parameters}>
       <InputLabelWrapper label="Time In" mode={isMobile ? 'half' : 'common'}>
         <TimePickerInput
-          setTime={(val) => params('time', val)}
-          currentTime={parameters.time || ''}
-          error={errors.timeError}
-          setError={(val) => {
-            errorsParams('timeError', val as string);
+          setTime={(val) => {
+            const newData = parameters.date ? new Date(parameters.date) : new Date();
+            newData.setHours(val.hours);
+            newData.setMinutes(val.minutes);
+            params('date', newData);
           }}
+          currentTime={{
+            hours: parameters.date?.getHours() || 0,
+            minutes: parameters.date?.getMinutes() || 0,
+          } as Time}
         />
       </InputLabelWrapper>
 

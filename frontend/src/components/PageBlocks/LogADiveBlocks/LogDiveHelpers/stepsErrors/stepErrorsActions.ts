@@ -61,11 +61,6 @@ export const secondStepErrorsActions = (
   let error = false;
   const newErrors = { ...errors };
 
-  if (!data.time?.length) {
-    newErrors.timeError = 'fill time of dive';
-    error = true;
-  }
-
   if (!data.date) {
     newErrors.dateError = 'fill date of a dive';
     error = true;

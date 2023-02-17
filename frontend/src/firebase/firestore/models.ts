@@ -135,18 +135,12 @@ export type SpotType = {
   lat: number;
   lng: number;
   zoom: number;
-  location: {
-    location: string; // name
-    country: string; // name
-    region: string; // name
-  };
-  bestPictures: {
-    userId: string;
-    diveId: string;
-    pictureId: string;
-  }[];
+  locationName: string;
+  regionName: string;
+  countryName: string;
+  bestPictures: { [key: string]: DocumentReference };
   species: string[] // species id
-  dives: { [key: string]: DocumentReference }
+  dives: { [key: string]: DocumentReference };
   shops: string[] // shops id
   stats: {
     averageDepth: {

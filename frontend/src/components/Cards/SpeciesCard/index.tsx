@@ -15,7 +15,17 @@ export const SpeciesCard: FC<Props> = ({
 }) => (
   <div className={className ? `${styles.card} ${styles[className]}` : styles.card}>
     <div className={styles.imgWrapper}>
-      <Image src={imgSrc || '/images/default-species.svg'} className={styles.img} layout="fill" loader={imageLoader} unoptimized />
+      {imgSrc
+        ? <Image src={imgSrc} className={styles.img} layout="fill" loader={imageLoader} unoptimized />
+        : (
+          <Image
+            className={styles.img}
+            src={`/species/${scientificName.slice(0, -1)}.svg`}
+            width={140}
+            height={140}
+            loader={imageLoader}
+          />
+        )}
     </div>
 
     <div className={styles.footer}>

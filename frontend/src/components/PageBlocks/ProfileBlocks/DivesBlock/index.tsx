@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Timestamp } from '@firebase/firestore';
+import { doc, DocumentReference } from '@firebase/firestore';
 import { ButtonGroup } from '../../../ButtonGroup';
 import { Title } from '../Title';
 import { SearchAnimatedInput } from '../../../Input/SearchAnimatedInput';
@@ -11,22 +11,31 @@ import { AuthStatusContext } from '../../../../layouts/AuthLayout';
 import { firestoreDivesService } from '../../../../firebase/firestore/firestoreServices/firestoreDivesService';
 import { Loader } from '../../../Loader';
 import { notify } from '../../../../utils/notify';
+import { convertTimestampDate } from '../../../../utils/convertTimestampDate';
+import { firestoreLogbookService } from '../../../../firebase/firestore/firestoreServices/firestoreLogbookService';
+import { db } from '../../../../firebase/firestore/firebaseFirestore';
+import { firestoreGeoDataService } from '../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
+import { SearchDropdownPanel } from '../../../Dropdown/SearchedItems/SearchDropdownPanel';
 
 type Props = {
-  dives: Array<DiveType>;
+  divesData: Array<DiveType>;
   userId: string;
   isItOwnProfile: boolean;
+  dives: Array< { diveRef: DocumentReference } >;
 };
 
-export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
+export const DivesBlock = ({
+  divesData, userId, isItOwnProfile, dives,
+}: Props) => {
   const [searchValue, setSearchValue] = useState('');
   const [isFetching, setFetching] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [allDataGet, setAllDataGet] = useState(false);
 
-  const [diveForRender, setDiveForRender] = useState(dives);
+  const [diveForRender, setDiveForRender] = useState(divesData);
   const [draftDives, setDraftDives] = useState([]);
-  const [allDives, setAllDives] = useState(dives);
+  const [allDives, setAllDives] = useState(divesData);
+  const [locations, setLocations] = useState([]);
+  // const [searchDives, setSearchDives] = useState([]);
   const router = useRouter();
 
   const { userAuth } = useContext(AuthStatusContext);
@@ -37,9 +46,9 @@ export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
   }];
 
   useEffect(() => {
-    setDiveForRender(dives);
-    setAllDives(dives);
-  }, [dives]);
+    setDiveForRender(divesData);
+    setAllDives(divesData);
+  }, [divesData]);
 
   const [sortMode, setSortMode] = useState(buttons[0].connectedMode);
 
@@ -61,6 +70,49 @@ export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
     }
   };
 
+  const refs = dives.map(({ diveRef }) => {
+    // @ts-ignore
+    const segments = diveRef?._key?.path?.segments;
+    return { diveRef: doc(db, `${segments.slice(segments.length - 4).join('/')}`) };
+  });
+
+  const loadMore = async () => {
+    try {
+      setSortMode(buttons[0].connectedMode);
+      setFetching(true);
+      const data = await firestoreLogbookService
+        .loadDives(refs.slice(diveForRender.length, diveForRender.length + 8), 8);
+      setDiveForRender([...diveForRender, ...data]);
+      setAllDives([...diveForRender, ...data]);
+      setFetching(false);
+    } catch (e) {
+      setFetching(false);
+      notify(e.message);
+    }
+  };
+
+  const searchHandler = async () => {
+    if (searchValue) {
+      try {
+        setLocations(await firestoreGeoDataService.getLocations(searchValue));
+      } catch (e) {
+        notify(e.message);
+      }
+    }
+  };
+  const searchDivesByLocation = async (val) => {
+    if (val) {
+      try {
+        const res = await firestoreDivesService.getDivesByLocationName(userId, val.name);
+        setLocations([]);
+        setDiveForRender(res);
+        setSortMode('search');
+      } catch (e) {
+        notify(e.message);
+      }
+    }
+  };
+
   return (
     <div className={styles.divesWrapper}>
       <Title title="Dives" />
@@ -73,23 +125,31 @@ export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
           defaultChecked={sortMode}
           onClick={sortDives}
         />
-        <SearchAnimatedInput value={searchValue} setValue={setSearchValue} />
+        <SearchAnimatedInput value={searchValue} setValue={setSearchValue} onClick={searchHandler}>
+          {!!locations?.length && (
+          <SearchDropdownPanel
+            loading={false}
+            onItemClick={searchDivesByLocation}
+            items={locations}
+          />
+          )}
+        </SearchAnimatedInput>
+
       </div>
       {!isLoading ? (
         <div className={styles.cardWrapper}>
           {!!diveForRender?.length && diveForRender.map((dive) => (
             <DiveCard
-            // @ts-ignore
+              // @ts-ignore
               key={dive.id}
               onClick={() => {
                 router.push(dive.draft && userId === userAuth.uid ? `/edit-dive/${dive.id}` : `/user/${userId}/dive/${dive.id}`);
               }}
               diveName={dive.aboutDive?.tripName}
-              imgSrc={dive.externalImgsUrls[0] || '/appIcons/no-photo.svg'}
+              imgSrc={dive.pictures[0]?.url || '/images/default-species.svg'}
               tagsNumber={dive.aboutDive?.diveNumber?.toString()}
-              // @ts-ignore
-              date={new Date(dive.date)}
-              diveTime={dive.diveData?.time}
+              date={convertTimestampDate(dive.diveData.date)}
+              duration={dive.diveData?.duration}
               deepness={dive.diveData?.maxDepth}
               diversCount={dive.buddies?.length}
               diveUnitSystem={dive.unitSystem}
@@ -98,27 +158,10 @@ export const DivesBlock = ({ dives, userId, isItOwnProfile }: Props) => {
         </div>
       ) : <Loader loading={isLoading} />}
 
-      {!allDataGet && sortMode !== 'drafts' && (
+      {dives.length !== diveForRender.length && sortMode !== 'drafts' && sortMode !== 'search' && (
       <span
         className={styles.viewMore}
-        onClick={async () => {
-          try {
-            setSortMode(buttons[0].connectedMode);
-            setFetching(true);
-            const last = diveForRender[diveForRender.length - 1].diveData.date;
-            // @ts-ignore
-            const lastDate = new Timestamp(last.seconds, last.nanoseconds);
-            const data = await firestoreDivesService.getDivesByUserId(userId, 8, 'desc', lastDate);
-            if (!data.length || data.length !== 8) {
-              setAllDataGet(true);
-            }
-            setDiveForRender([...diveForRender, ...data]);
-            setAllDives([...diveForRender, ...data]);
-            setFetching(false);
-          } catch (e) {
-            notify('Something went wrong');
-          }
-        }}
+        onClick={loadMore}
       >
         {isFetching ? <Loader loading={isFetching} /> : 'View More'}
       </span>

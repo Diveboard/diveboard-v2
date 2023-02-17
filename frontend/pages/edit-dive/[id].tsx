@@ -51,12 +51,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       };
     }
 
-    // const {
-    //   email,
-    //   photoURL = '',
-    //   displayName = '',
-    // } = await firebaseAdmin.auth().getUser(uid);
-
     if (!diveId) {
       throw new Error('no dive');
     }

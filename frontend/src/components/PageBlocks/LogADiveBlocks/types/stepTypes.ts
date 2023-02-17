@@ -4,6 +4,7 @@ import {
 import { initialDiveDataState } from '../LogDiveData/state';
 import { SurveyDanType } from '../../../../types';
 import { MediaUrls, SpeciesType } from '../../../../firebase/firestore/models';
+import {DocumentReference} from "@firebase/firestore";
 
 export type FirstStepType = {
   overview: {
@@ -35,9 +36,9 @@ export type FirstStepType = {
 
 export type Tank = {
   id: number;
-  cylinder: '1x' | '2x';
+  cylinder: 1 | 2;
   volume: number;
-  size: 'L' | 'cuft';
+  volumeUnit: 'L' | 'cuft';
   material: 'steel' | 'aluminum' | 'carbon';
   mixture: 'air' | 'nitrox' | 'trimix';
   o2?:number;
@@ -49,7 +50,6 @@ export type Tank = {
 
 export type SecondStepType = {
   parameters: {
-    time: string;
     date: Date;
     maxDepth: number;
     duration: number;
@@ -100,7 +100,7 @@ export type SeventhStepType = {
 };
 
 export type EighthStepType = {
-  surveyId?: string;
+  surveyRef?: DocumentReference;
   danSurvey?: SurveyDanType;
   sendToDAN?: boolean;
   saveDAN?: boolean;

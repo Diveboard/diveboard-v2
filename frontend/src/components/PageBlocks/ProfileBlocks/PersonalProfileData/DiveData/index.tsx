@@ -5,7 +5,7 @@ import { Button } from '../../../../Buttons/Button';
 type Props = {
   qualification: string;
   diveIn: string;
-  divesPublished: string;
+  divesPublished: number;
   thisYear: number;
   totalUnderwaterTime: string;
   mostDives: string;
@@ -40,7 +40,7 @@ export const DiveData: FC <Props> = ({
           <span className={styles.boldText}>{qualification}</span>
         </div>
         )}
-        {diveIn && (
+        {!!diveIn && (
         <div>
           <span className={styles.thinText}>
             Dived in:
@@ -49,7 +49,7 @@ export const DiveData: FC <Props> = ({
           <span className={styles.boldText}>{diveIn}</span>
         </div>
         )}
-        {divesPublished && (
+        {!!divesPublished && (
         <div>
           <span className={styles.thinText}>
             Dives published:
@@ -58,7 +58,7 @@ export const DiveData: FC <Props> = ({
           <span className={styles.boldText}>{divesPublished}</span>
         </div>
         )}
-        {typeof thisYear === 'number' && (
+        {typeof thisYear === 'number' && !!divesPublished && (
         <div>
           <span className={styles.thinText}>
             This year:
@@ -69,7 +69,7 @@ export const DiveData: FC <Props> = ({
         )}
       </div>
       <div className={styles.secondBlock}>
-        {totalUnderwaterTime && (
+        {!!totalUnderwaterTime && (
         <div>
           <span className={styles.thinText}>
             Total Underwater time on Diveboard:
@@ -78,7 +78,7 @@ export const DiveData: FC <Props> = ({
           <span className={styles.boldText}>{totalUnderwaterTime}</span>
         </div>
         )}
-        {mostDives && (
+        {!!mostDives && (
         <div>
           <span className={styles.thinText}>
             Most dives on Diveboard in:
@@ -87,7 +87,7 @@ export const DiveData: FC <Props> = ({
           <span className={styles.boldText}>{mostDives}</span>
         </div>
         )}
-        {deepestDive && (
+        {!!deepestDive && (
         <div>
           <span className={styles.thinText}>
             Deepest Dive:
@@ -96,7 +96,7 @@ export const DiveData: FC <Props> = ({
           <span className={styles.boldText}>{deepestDive}</span>
         </div>
         )}
-        {longestDive && (
+        {!!longestDive && (
         <div>
           <span className={styles.thinText}>
             Longest Dive:
@@ -106,7 +106,7 @@ export const DiveData: FC <Props> = ({
         </div>
         )}
       </div>
-      {aboutDiver && (
+      {!!aboutDiver && (
       <div className={styles.thirdBlock}>
         <span>
           { aboutDiver.length > MAX_LETTER_ABOUT && !isShowNote

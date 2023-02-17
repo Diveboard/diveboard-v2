@@ -42,7 +42,6 @@ const firstStep: FirstStepType = {
 
 const secondStep: SecondStepType = {
   parameters: {
-    time: '',
     date: null,
     maxDepth: undefined,
     duration: undefined,

@@ -1,5 +1,16 @@
 import {
-  where, query, collection, getDocs, doc, getDoc, limit, orderBy, startAfter, startAt,
+  where,
+  query,
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  limit,
+  orderBy,
+  startAfter,
+  startAt,
+  DocumentReference,
+  DocumentSnapshot,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { SpeciesType, SpeciesTypeWithoutId } from '../models';
@@ -39,11 +50,12 @@ export const firestoreSpeciesServices = {
     }
   },
 
-  getSpeciesByRefs: async (speciesRefs: any) => {
+  getSpeciesByRefs: async (speciesRefs: { [key: string]: DocumentReference }, length?: number) => {
     try {
       const speciesRefsIds = Object.keys(speciesRefs);
+      const size = length || speciesRefsIds.length;
       const species = [];
-      for (let i = 0; i < speciesRefsIds.length; i++) {
+      for (let i = 0; i < size; i++) {
         const docRef = doc(db, `${PathEnum.SPECIES}/${speciesRefsIds[i]}`);
         // eslint-disable-next-line no-await-in-loop
         const docSnap = await getDoc(docRef);
@@ -70,52 +82,18 @@ export const firestoreSpeciesServices = {
     }
   },
 
-  getMySpecie: async (ref) => {
-    const docRef = doc(db, `${PathEnum.SPECIES}/${ref}`);
-    const specie = await getDoc(docRef);
-    console.log(specie.data());
-    return specie.data();
-  },
-
   getMySpecies: async (userId: string) => {
     try {
-      const speciesRefs = await firestoreDivesService.getUserSpeciesInDives(userId);
-      // @ts-ignore
-      return await firestoreSpeciesServices.getSpeciesByRefs(speciesRefs.species);
-      // const species = [];
-      // for (let i = 0; i < speciesIds.length; i++) {
-      //   const docRef = doc(db, firestorePaths.species.path, speciesIds[i]);
-      //   // eslint-disable-next-line no-await-in-loop
-      //   const docSnap = await getDoc(docRef);
-      //   species.push({ id: speciesIds[i], ...docSnap.data() });
-      // }
-      // return species.filter((fish) => fish);
-    } catch (e) {
-      throw new Error(e.message);
-    }
-  },
-
-  getSpeciesCategories: async () => {
-    try {
-      const docRef = collection(db, PathEnum.SPECIES);
-      const lionfises = query(docRef, where('category', '==', 'lionfises and scorpionfishes and rockfishes'));
-      const crustaceans = query(docRef, where('category', '==', 'crustaceans'));
-      const sponges = query(docRef, where('category', '==', 'sponges'));
-      const jellyfish = query(docRef, where('category', '==', 'jellyfish'));
-      const corals = query(docRef, where('category', '==', 'soft corals'));
-
-      const lionfisesSnapshot = await getDocs(lionfises);
-      const crustaceansSnapshot = await getDocs(crustaceans);
-      const spongesSnapshot = await getDocs(sponges);
-      const jellyfishSnapshot = await getDocs(jellyfish);
-      const coralsSnapshot = await getDocs(corals);
-      return {
-        lionfises: lionfisesSnapshot.size,
-        crustaceans: crustaceansSnapshot.size,
-        sponges: spongesSnapshot.size,
-        jellyfish: jellyfishSnapshot.size,
-        corals: coralsSnapshot.size,
-      };
+      const logbookRef = doc(db, `${PathEnum.LOGBOOK}/${userId}`);
+      const logbookSnap = await getDoc(logbookRef);
+      const { species } = logbookSnap.data();
+      const speciesData = [];
+      for (let i = 0; i < species.length; i++) {
+        // eslint-disable-next-line no-await-in-loop
+        const docSnap: DocumentSnapshot<SpeciesType> = await getDoc(species[i].specieRef);
+        speciesData.push({ id: docSnap.id, ...docSnap.data() });
+      }
+      return speciesData;
     } catch (e) {
       throw new Error(e.message);
     }
@@ -168,22 +146,4 @@ export const firestoreSpeciesServices = {
       throw new Error(e.message);
     }
   },
-
-  // getAllSpecies: async () => {
-  //   const fishes: SpeciesType[] = [];
-  //
-  //   try {
-  //     const docRef = collection(db, PathEnum.SPECIES);
-  //     const q = query(docRef, limit(10));
-  //     const querySnapshot = await getDocs(q);
-  //
-  //     querySnapshot.forEach((fishDoc) => {
-  //       const fishesData = fishDoc.data() as SpeciesTypeWithoutId;
-  //       fishes.push({ id: fishDoc.id, ...fishesData });
-  //     });
-  //     return fishes;
-  //   } catch (e) {
-  //     throw new Error(e.message);
-  //   }
-  // },
 };

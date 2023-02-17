@@ -1,49 +1,71 @@
 import React, { useEffect, useState } from 'react';
+import { doc, DocumentReference } from '@firebase/firestore';
 import { Title } from '../Title';
 import styles from './styles.module.scss';
 import { SpeciesCard } from '../../../Cards/SpeciesCard';
 import { SpeciesType } from '../../../../firebase/firestore/models';
-import { useWindowWidth } from '../../../../hooks/useWindowWidth';
+import { firestoreSpeciesServices } from '../../../../firebase/firestore/firestoreServices/firestoreSpeciesServices';
+import { db } from '../../../../firebase/firestore/firebaseFirestore';
+import { PathEnum } from '../../../../firebase/firestore/firestorePaths';
+import { notify } from '../../../../utils/notify';
+import { Loader } from '../../../Loader';
 
 type Props = {
-  species: Array<SpeciesType>
+  speciesData: Array<SpeciesType>
+  species: Array<{ specieRef: DocumentReference }>
 };
 
-export const LatestSpecies = ({ species }: Props) => {
-  const [isMoreClicked, setShowMoreClicked] = useState(false);
-  const isMobile = useWindowWidth(500, 769);
-  const [speciesForRender, setSpeciesForRender] = useState(
-    isMobile ? species : species?.slice(0, 4),
-  );
+export const LatestSpecies = ({ speciesData, species }: Props) => {
+  const [speciesForRender, setSpeciesForRender] = useState(speciesData);
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    setSpeciesForRender(isMobile ? species : species?.slice(0, 4));
-  }, [species]);
+    setSpeciesForRender(speciesData);
+  }, [speciesData]);
+
+  const loadMore = async () => {
+    const refs = {};
+    setLoading(true);
+    species.slice(speciesForRender.length, speciesForRender.length + 8)
+      .forEach(({ specieRef }) => {
+        // @ts-ignore
+        const segments = specieRef?._key?.path?.segments;
+        const id = segments[segments.length - 1];
+        refs[id] = doc(db, `${PathEnum}/${id}`);
+      });
+    try {
+      const res = await firestoreSpeciesServices.getSpeciesByRefs(refs);
+      setSpeciesForRender([...speciesForRender, ...res]);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+
+      notify(e.message);
+    }
+  };
 
   return (
     <div className={styles.latestSpeciesWrapper}>
       <Title title="Latest Species Identified" />
       <div className={styles.cardsWrapper}>
-        {speciesForRender.map((fish) => (
+        {speciesForRender.map((fish, idx) => (
           <SpeciesCard
+            // eslint-disable-next-line react/no-array-index-key
+            key={fish.id + idx}
             className={styles.speciesLogbookCard}
-            key={fish.id}
             imgSrc={fish.imgSrc}
             speciesName={fish.sname}
             scientificName={fish.category}
           />
         ))}
       </div>
-      {!isMobile && species.length > 4 && (
+      {isLoading && <Loader loading={isLoading} />}
+      {speciesForRender.length < species.length && !isLoading && (
       <span
         className={styles.viewMore}
-        onClick={() => {
-          const isClicked = !isMoreClicked;
-          setShowMoreClicked(isClicked);
-          setSpeciesForRender(isClicked ? species : species?.slice(0, 4));
-        }}
+        onClick={loadMore}
       >
-        {`View ${isMoreClicked ? 'Less' : 'More'}`}
+        View More
       </span>
       )}
     </div>

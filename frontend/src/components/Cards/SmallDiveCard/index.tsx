@@ -13,7 +13,7 @@ type Props = {
   imgSrc: string;
   date: Date;
   diverName: string;
-  diveTime: string;
+  duration: number;
   deepness: number;
   diversCount: number;
   diveUnitSystem: UnitSystem;
@@ -23,10 +23,10 @@ type Props = {
 export const SmallDiveCard: FC<Props> = ({
   imgSrc,
   date,
-  diveTime,
   diverName,
   diversCount,
   deepness,
+  duration,
   diveUnitSystem,
   diveRef,
 }) => {
@@ -82,7 +82,7 @@ export const SmallDiveCard: FC<Props> = ({
           <div className={styles.dataItem}>
             <Icon iconName="time" size={16} />
             <span>
-              {diveTime}
+              {duration}
               {' '}
               min
             </span>

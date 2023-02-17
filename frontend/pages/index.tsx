@@ -5,13 +5,14 @@ import { AuthLayout } from '../src/layouts/AuthLayout';
 import { MainLayout } from '../src/layouts/MainLayout';
 import Guest from '../src/components/PageBlocks/HomePageBlocks/Guest';
 import 'react-toastify/dist/ReactToastify.css';
+import { firestoreGalleryService } from '../src/firebase/firestore/firestoreServices/firestoreGalleryService';
 
 const Home:
-InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
+InferGetServerSidePropsType<typeof getServerSideProps> = ({ user, gallery }) => (
   <AuthLayout user={user}>
     <MainLayout isFilled>
       <ToastContainer />
-      <Guest />
+      <Guest gallery={gallery} />
     </MainLayout>
   </AuthLayout>
 );
@@ -29,9 +30,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
+  const gallery = await firestoreGalleryService.getGallery('desc', null, 8);
+  console.log(gallery)
   return {
     props: {
       user: null,
+      gallery: JSON.parse(JSON.stringify(gallery)),
     },
   };
 };

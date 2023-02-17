@@ -1,14 +1,18 @@
 import React from 'react';
+import { DocumentReference } from '@firebase/firestore';
 import { Title } from '../Title';
 import { ButtonGroup } from '../../../ButtonGroup';
 import styles from './styles.module.scss';
 import { DesktopPhotoBlock } from '../../../DivePage/DesktopPhotoBlock';
 
 type Props = {
-  pictures: Array<string>
+  pictures: Array<{
+    pictureRef: DocumentReference
+  }>
+  picturesData: Array<string>
 };
 
-export const PicturesBlock = ({ pictures }: Props) => {
+export const PicturesBlock = ({ pictures, picturesData }: Props) => {
   const buttons = [{
     connectedMode: 'all',
     text: 'All pictures',
@@ -25,7 +29,7 @@ export const PicturesBlock = ({ pictures }: Props) => {
         onClick={() => {}}
       />
       <div className={styles.imagesContainer}>
-        <DesktopPhotoBlock photos={pictures} />
+        <DesktopPhotoBlock photos={picturesData} pictures={pictures} />
       </div>
 
       {/* <PhotoGroup photos={pictures.slice(0, 6)} /> */}

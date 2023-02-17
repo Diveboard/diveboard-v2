@@ -50,7 +50,6 @@ export const SixthStep: FC<StepProps> = (
       },
     ]);
   };
-
   const addUrlHandler = () => {
     const urlReg = /^(ftp|http|https):\/\/[^ "]+$/;
     if (url.match(urlReg)) {

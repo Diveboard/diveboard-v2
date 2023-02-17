@@ -47,6 +47,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const data = await firestoreLogbookService.getDive(userId as string, diveId as string, true);
 
+    if (!data) {
+      throw new Error('Dive is not found');
+    }
+
     return {
       props: {
         user: user ? JSON.parse(JSON.stringify(user)) : null,

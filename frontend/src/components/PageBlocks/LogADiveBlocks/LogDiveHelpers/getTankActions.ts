@@ -27,8 +27,8 @@ export const getTankActions = (
       setVolume: (volume) => {
         setTanks(setParameters('volume', +volume));
       },
-      setSize: (size) => {
-        setTanks(setParameters('size', size));
+      setVolumeUnit: (size) => {
+        setTanks(setParameters('volumeUnit', size));
       },
       setMaterial: (material) => {
         setTanks(setParameters('material', material));

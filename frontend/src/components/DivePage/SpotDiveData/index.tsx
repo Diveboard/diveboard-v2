@@ -22,7 +22,7 @@ import { AuthStatusContext } from '../../../layouts/AuthLayout';
 type Props = {
   user?: UserSettingsType,
   dive: DiveType,
-  spot: SpotType
+  spot: SpotType & { location }
 };
 
 export const SpotDiveData: FC<Props> = ({

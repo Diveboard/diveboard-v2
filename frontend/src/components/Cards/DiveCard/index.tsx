@@ -12,7 +12,7 @@ type Props = {
   tagsNumber: string;
   date: Date;
   diveName;
-  diveTime: string;
+  duration: number;
   deepness: number;
   diversCount: number;
   onClick: () => void;
@@ -24,7 +24,7 @@ export const DiveCard: FC<Props> = ({
   imgSrc,
   tagsNumber,
   date,
-  diveTime,
+  duration,
   diveName,
   diversCount,
   deepness,
@@ -77,11 +77,11 @@ export const DiveCard: FC<Props> = ({
         <span className={styles.diveName}>{diveName}</span>
 
         <div className={styles.dataWrapper}>
-          {!!diveTime && (
+          {!!duration && (
           <div className={styles.dataItem}>
             <Icon iconName="time" size={16} />
             <span>
-              {diveTime}
+              {duration}
             </span>
           </div>
           ) }

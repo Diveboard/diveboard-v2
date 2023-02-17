@@ -26,7 +26,6 @@ export const SecondStep: FC<StepProps> = (
   const showedChart = useRef(false);
 
   const [parametersErrors, setParametersErrors] = useState<SecondStepErrors>({
-    timeError: '',
     dateError: '',
     maxDepthError: '',
     durationError: '',
@@ -38,10 +37,6 @@ export const SecondStep: FC<StepProps> = (
     errors: parametersErrors,
     setErrors: setParametersErrors,
   });
-
-  useEffect(() => {
-    // load points //todo
-  }, []);
 
   useEffect(() => {
     if (showedChart.current) {
@@ -57,7 +52,6 @@ export const SecondStep: FC<StepProps> = (
   if (step !== 2) {
     return null;
   }
-
   return (
     <div>
       <StepsIndicator
@@ -72,7 +66,6 @@ export const SecondStep: FC<StepProps> = (
       <>
         <div className={styles.secondStep}>
           <h2>Profile</h2>
-          {/* TODO: Check it */}
           {showChart
               && data.parameters?.safetyStops
               && <DepthChart points={data.parameters.safetyStops} />}

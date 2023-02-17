@@ -1,38 +1,44 @@
 import {
-  collection,
-  doc, getDoc, getDocs, query, setDoc,
+  collection, deleteDoc,
+  doc, DocumentReference, getDoc, getDocs, query, setDoc,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { SurveyDanType } from '../../../types';
+import { PathEnum } from '../firestorePaths';
+import {firestoreLogbookService} from "./firestoreLogbookService";
 
 export const firestoreSurveyService = {
-  getSurveyById: async (userId: string, surveyId: string) => {
+  getSurveyById: async (userId: string, docRef: DocumentReference) => {
     try {
-      const docRef = doc(db, `test-surveys/${userId}/dan/${surveyId}`);
       const docSnap = await getDoc(docRef);
-      return docSnap.data();
+      return docSnap.data()?.dan;
     } catch (e) {
       throw new Error(e.message);
     }
   },
-  addSurvey: async (userId: string, diveId: string, survey: SurveyDanType, saveToDAN: boolean) => {
+  addSurvey: async (
+    userId: string,
+    ref: DocumentReference,
+    survey: SurveyDanType,
+    saveToDAN: boolean,
+  ) => {
     try {
-      const surveyRef = doc(collection(db, `test-surveys/${userId}/dan`));
+      const surveyRef = doc(collection(db, `${PathEnum.SURVEYS}/${userId}/dan`));
       if (!survey.sent) {
         survey.sent = saveToDAN;
       }
-      await setDoc(surveyRef, { ...survey, diveId }, { merge: true });
+      await setDoc(surveyRef, { dan: { ...survey, diveRef: ref } }, { merge: true });
       if (!survey.sent && saveToDAN) {
         // TODO: sent email
         console.log('SEND EMAIL');
       }
-      return surveyRef.id;
+      await firestoreLogbookService.addSurveyToLogbook(userId, surveyRef);
+
+      return surveyRef;
     } catch (e) {
-      console.log(e.message);
-      throw new Error('add survey by id error');
+      throw new Error(e.message);
     }
   },
-  // TODO: Update survey
   updateSurvey: async (
     userId: string,
     surveyId: string,
@@ -43,20 +49,19 @@ export const firestoreSurveyService = {
     try {
       let docRef;
       if (surveyId) {
-        docRef = doc(db, `test-surveys/${userId}/dan`, surveyId);
+        docRef = doc(db, `${PathEnum.SURVEYS}/${userId}/dan`, surveyId);
       } else {
-        docRef = doc(collection(db, `test-surveys/${userId}/dan`));
+        docRef = doc(collection(db, `${PathEnum.SURVEYS}/${userId}/dan`));
       }
       if (!survey.sent) {
         survey.sent = saveToDAN;
       }
-      await setDoc(docRef, { ...survey, diveId }, { merge: true });
+      await setDoc(docRef, { dan: { ...survey } }, { merge: true });
       if (!survey.sent && saveToDAN) {
         // TODO: sent email
         console.log('SEND EMAIL');
       }
-      console.log(docRef.id);
-      return docRef.id;
+      return docRef;
     } catch (e) {
       throw new Error(e.message);
     }
@@ -64,11 +69,12 @@ export const firestoreSurveyService = {
 
   getUserSurveys: async (userId: string) => {
     try {
-      const surveyRef = collection(db, `test-surveys/${userId}/dan`);
+      const surveyRef = collection(db, `${PathEnum.SURVEYS}/${userId}/dan`);
       const q = query(
         surveyRef,
       );
       const querySnapshot = await getDocs(q);
+      // querySnapshot.forEach((s) => deleteDoc(s.ref));
       return querySnapshot.size;
     } catch (e) {
       throw new Error(e.message);

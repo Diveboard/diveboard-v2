@@ -69,6 +69,7 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
 
   const publishStepsData = async () => {
     try {
+      setLoading(true);
       const data = await convertAllStepsData(
         allStepsData,
         userId,
@@ -78,7 +79,6 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
       if (!saveDAN) {
         data.danSurvey = null;
       }
-      setLoading(true);
       if (diveId) {
         // @ts-ignore
         await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data, sendToDAN);

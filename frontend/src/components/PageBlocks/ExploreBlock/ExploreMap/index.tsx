@@ -48,7 +48,7 @@ export const ExploreMap: FC<Props> = ({
       onClick={() => router.push(`/spot/${point.id}`)}
     />
   ));
-  console.log(zoom);
+
   return (
     <div className={styles.mapWrapper}>
       <div className={styles.loader}>

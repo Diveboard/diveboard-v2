@@ -20,20 +20,22 @@ import { PropertiesType } from '../../../types';
 import { firestoreSurveyService } from './firestoreSurveyService';
 import { PathEnum } from '../firestorePaths';
 import { firestoreGalleryService } from './firestoreGalleryService';
+import { firestoreLogbookService } from './firestoreLogbookService';
 
 export const firestoreDivesService = {
   setDiveData: async (diveData: DiveType, userId: string, saveDan: boolean = false) => {
     try {
       const ref = doc(collection(db, `${PathEnum.DIVES}/${userId}`, 'userDives'));
+      let spotData = null;
       if (diveData.danSurvey) {
-        diveData.surveyId = await firestoreSurveyService.addSurvey(
+        diveData.surveyRef = await firestoreSurveyService.addSurvey(
           userId,
-          ref.id,
+          ref,
           diveData.danSurvey,
           saveDan,
         );
       } else {
-        diveData.surveyId = null;
+        diveData.surveyRef = null;
       }
       delete diveData.danSurvey;
       if (diveData.spotId) {
@@ -41,9 +43,10 @@ export const firestoreDivesService = {
         const newSpot = { ...spot };
         diveData.spotRef = spot.ref;
         newSpot.dives[ref.id] = ref;
-        // TODO: Add to spot data
+        spotData = newSpot;
         await firestoreSpotsService.updateSpotById(diveData.spotId, newSpot);
       }
+      await firestoreLogbookService.addDiveToLogbook(userId, diveData, spotData, ref);
       await setDoc(ref, { ...diveData }, { merge: true });
     } catch (e) {
       throw new Error(e.message);
@@ -59,36 +62,41 @@ export const firestoreDivesService = {
     try {
       const docRef = doc(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`, diveId);
       const docSnap = await getDoc(docRef);
+      let spotData: null;
       if (dive.danSurvey) {
-        const surveyId = await firestoreSurveyService.updateSurvey(
+        const surveyRef = await firestoreSurveyService.updateSurvey(
           userId,
           dive.surveyId,
           diveId,
           dive.danSurvey,
           saveDan,
         );
-        dive.surveyId = surveyId;
+        dive.surveyRef = surveyRef;
       }
       delete dive.danSurvey;
-      const { spotId } = await docSnap.data();
-      if (dive.spotId !== spotId) {
-        // Add dive to new spot
-        const spot = await firestoreSpotsService.getSpotById(dive.spotId);
-        if (spot) {
+      const { spotRef } = await docSnap.data();
+      // Add dive to new spot
+      const spot = spotRef ? await firestoreSpotsService.getSpotById(dive.spotId) : null;
+      spotData = spot;
+      if (spot) {
+        // logbookDive.countryName = spot.location.country;
+        if (dive.spotId !== spotRef.id) {
           const newSpot = { ...spot };
           newSpot.dives[docRef.id] = docRef;
           dive.spotRef = spot.ref;
           await firestoreSpotsService.updateSpotById(dive.spotId, newSpot);
 
-          if (spotId) {
+          if (spotRef.id) {
             // Delete dive from old spot
-            const spotO = await firestoreSpotsService.getSpotById(spotId);
+            const spotO = await firestoreSpotsService.getSpotById(spotRef.id);
             const oldSpot = { ...spotO };
             oldSpot.dives = oldSpot.dives.filter((i) => i !== diveId);
-            await firestoreSpotsService.updateSpotById(spotId, oldSpot);
+            spotData = spotO;
+            await firestoreSpotsService.updateSpotById(spotRef.id, oldSpot);
           }
         }
       }
+      await firestoreLogbookService.updateDiveInLogbook(userId, dive, spotData, docRef);
       await setDoc(docRef, { ...dive }, { merge: false });
       return true;
     } catch (e) {
@@ -96,8 +104,18 @@ export const firestoreDivesService = {
     }
   },
 
+  deleteLogbook: async (userId: string) => {
+    try {
+      const logbookRef = doc(db, `${PathEnum.LOGBOOK}/${userId}`);
+      await deleteDoc(logbookRef);
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
   unpublishDives: async (userId: string, diveIds: Array<string>) => {
     try {
+      await firestoreLogbookService.unpublishDivesToLogbook(userId, diveIds);
       for (let i = 0; i < diveIds.length; i++) {
         const docRef = doc(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`, diveIds[i]);
         // eslint-disable-next-line no-await-in-loop
@@ -119,6 +137,24 @@ export const firestoreDivesService = {
       );
       const querySnapshot = await getDocs(q);
       return querySnapshot.size;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
+  getDivesByLocationName: async (userId: string, locationName: string) => {
+    try {
+      const docRef = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
+      const q = query(
+        docRef,
+        where('locationName', '==', locationName),
+      );
+      const querySnapshot = await getDocs(q);
+      const dives = [];
+      querySnapshot.forEach((dive) => {
+        dives.push({ ...dive.data(), id: dive.id });
+      });
+      return dives;
     } catch (e) {
       throw new Error(e.message);
     }
@@ -184,6 +220,13 @@ export const firestoreDivesService = {
         const spot = dive.spotId ? await firestoreSpotsService.getSpotById(dive.spotId) : null;
         dive.spot = spot;
         dive.spotName = spot ? `${spot.location?.location}, ${spot.location?.country}, ${spot?.location.region}` : null;
+        if (dive?.pictures && draft) {
+          const [key, value] = Object.entries(dive.pictures)[0];
+          // @ts-ignore
+          // eslint-disable-next-line no-await-in-loop
+          const pictures = await firestoreGalleryService.getBestPictures({ [key]: value });
+          dive.pictures = pictures.map((pic) => ({ url: pic }));
+        }
       }
       return dives;
     } catch (e) {
@@ -307,8 +350,19 @@ export const firestoreDivesService = {
       for (let i = 0; i < diveIds.length; i++) {
         const docRef = doc(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`, diveIds[i]);
         // eslint-disable-next-line no-await-in-loop
+        const docSnap = await getDoc(docRef);
+        const { pictures } = docSnap.data();
+        if (pictures) {
+          const picturesIds = Object.keys(pictures);
+          for (let j = 0; j < picturesIds.length; j++) {
+            // eslint-disable-next-line no-await-in-loop
+            await firestoreGalleryService.deleteImageById(picturesIds[j]);
+          }
+        }
+        // eslint-disable-next-line no-await-in-loop
         await deleteDoc(docRef);
       }
+      await firestoreLogbookService.deleteDiveFromLogbook(userId, diveIds);
     } catch (e) {
       throw new Error(e.message);
     }
@@ -358,6 +412,7 @@ export const firestoreDivesService = {
       throw new Error(e.message);
     }
   },
+
   deletePictureFromDive: async (
     userId: string,
     diveId: string,
@@ -371,6 +426,60 @@ export const firestoreDivesService = {
       await updateDoc(docRef, {
         pictures,
       });
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
+  getLongestDive: async (userId: string) => {
+    try {
+      let longestDive = null;
+      const ref = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
+      const q = query(
+        ref,
+        orderBy('diveData.duration', 'desc'),
+        limit(1),
+      );
+
+      const docSnap = await getDocs(q);
+      docSnap.forEach((d) => {
+        const data = d.data();
+        if (data) {
+          longestDive = {
+            diveRef: d.ref,
+            time: data.diveData.duration,
+            spot: data.spotRef || null,
+          };
+        }
+      });
+      return longestDive;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
+  getDeepestDive: async (userId: string) => {
+    try {
+      let deepestDive = null;
+      const ref = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
+      const q = query(
+        ref,
+        orderBy('diveData.maxDepth', 'desc'),
+        limit(1),
+      );
+      const docSnap = await getDocs(q);
+      docSnap.forEach((d) => {
+        const data = d.data();
+        if (data) {
+          deepestDive = {
+            diveRef: d.ref,
+            spot: data.spotRef || null,
+            depth: data.diveData.maxDepth,
+            unitSystem: data.unitSystem?.toLowerCase(),
+          };
+        }
+      });
+      return deepestDive;
     } catch (e) {
       throw new Error(e.message);
     }

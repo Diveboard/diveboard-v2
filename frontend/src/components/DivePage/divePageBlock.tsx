@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { useRouter } from 'next/router';
 import { CommentsBlock } from './CommentsBlock';
@@ -20,6 +20,7 @@ import {
   DiveType, SpeciesType, SpotType, UserSettingsType,
 } from '../../firebase/firestore/models';
 import { DiveBuddyCard } from '../Cards/DiveBuddyCard';
+import { AuthStatusContext } from '../../layouts/AuthLayout';
 
 type Props = {
   user?: UserSettingsType,
@@ -35,12 +36,19 @@ export const DivePageBlock = ({
   user, dive, spot, species, buddies, comments, pictures,
 }: Props): JSX.Element => {
   const isMobile = useWindowWidth(500, 769);
-
   const router = useRouter();
 
   const isGearsExist = !!dive.diveData?.weights
       || (!!dive.gears?.length
       && !!dive.gears.some((gear) => gear.typeOfGear));
+
+  const { userAuth } = useContext(AuthStatusContext);
+
+  const [isItOwnProfile, setOwnProfile] = useState(userAuth?.uid === user.uid);
+
+  useEffect(() => {
+    setOwnProfile(user?.uid === user.uid);
+  }, [user.uid]);
 
   const renderPhotoBlock = () => (isMobile
     ? <MobilePhotoGroup photos={pictures} />
@@ -52,7 +60,7 @@ export const DivePageBlock = ({
 
   return (
     <section className={styles.wrapper}>
-      {dive && dive.publishingMode === 'PUBLIC' && !dive.draft ? (
+      {dive && ((!isItOwnProfile && dive.publishingMode === 'PUBLIC') || isItOwnProfile) && !dive.draft ? (
         <>
           <SpotDiveData user={user} dive={dive} spot={spot} />
           {!!pictures?.length && renderPhotoBlock()}

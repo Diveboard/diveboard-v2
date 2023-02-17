@@ -36,6 +36,9 @@ export const firestoreSpotsService = {
       const docRef = doc(db, PathEnum.SPOTS, spotId);
       const docSnap = await getDoc(docRef);
       const data = docSnap.data();
+      if (!data) {
+        return null;
+      }
       const location = {
         region: data.regionName,
         country: data.countryName,
