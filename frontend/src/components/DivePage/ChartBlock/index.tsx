@@ -42,7 +42,7 @@ export const ChartBlock: FC<Props> = ({
 
   const convertTankName = (tank: Tank) => {
     const material = tank?.material ? tank.material.charAt(0).toUpperCase() + tank.material.slice(1) : '';
-    return `${tank?.volume || ''} ${tank?.size || ''} ${material} ${tank?.pressureStart || ''} -> ${tank?.pressureEnd || ''} ${tank?.pressureMeasures || ''}`;
+    return `${tank?.volume || ''} ${tank?.volumeUnit || ''} ${material} ${tank?.pressureStart || ''} -> ${tank?.pressureEnd || ''} ${tank?.pressureMeasures || ''}`;
   };
   return (
     <div className={styles.chartWrapper}>

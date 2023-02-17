@@ -4,7 +4,7 @@ import styles from './styles.module.scss';
 import { InputLabelWrapper } from '../../../../inputLabelWrapper';
 import { Input } from '../../../../../../Input/CommonInput';
 import { Dropdown } from '../../../../../../Dropdown/Dropdawn';
-import {ArrayElement, SetTankParametersType, TankType} from '../../../../types/commonTypes';
+import { ArrayElement, SetTankParametersType, TankType } from '../../../../types/commonTypes';
 import { MarginWrapper } from '../../../../../../MarginWrapper';
 import { Button } from '../../../../../../Buttons/Button';
 
@@ -45,7 +45,7 @@ export const Tank: FC<Props> = ({
         <Dropdown
           item={volumeUnit || 'cuft'}
           setItem={(item) => {
-            console.log(item)
+            console.log(item);
             setTankParameters.setVolumeUnit(item as TankType['volumeUnit']);
           }}
           allItems={['L', 'cuft']}

@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect } from 'react';
+import React from 'react';
 import { SampleNextArrow, SamplePrevArrow } from '../../../Icons/IconSVGComponents/SampleNextArrows';
 
 import styles from './sampleArrow.module.scss';

@@ -2,6 +2,7 @@ import React, {
   FC, useContext, useEffect, useState,
 } from 'react';
 
+import { DocumentReference } from '@firebase/firestore';
 import { StepsNavigation } from '../../StepsNavigation';
 import { SurveyCard } from './SurveyCard';
 import { DanSurvey } from './Surveys/Dan';
@@ -13,7 +14,6 @@ import styles from './styles.module.scss';
 import { StepsIndicator } from '../../StepsIndicator';
 import { SurveyDanType } from '../../../../../types';
 import { InitialDANFormState } from './Surveys/Dan/DanForm/initialDANFormState';
-import {DocumentReference} from "@firebase/firestore";
 
 export const EighthStep: FC<StepProps> = ({
   step,

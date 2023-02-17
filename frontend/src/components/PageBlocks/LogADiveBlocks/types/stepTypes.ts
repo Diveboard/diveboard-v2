@@ -1,10 +1,10 @@
+import { DocumentReference } from '@firebase/firestore';
 import {
   Buddy, GearsVariantsType, SafetySpot, ScoreType,
 } from './commonTypes';
 import { initialDiveDataState } from '../LogDiveData/state';
 import { SurveyDanType } from '../../../../types';
 import { MediaUrls, SpeciesType } from '../../../../firebase/firestore/models';
-import {DocumentReference} from "@firebase/firestore";
 
 export type FirstStepType = {
   overview: {

@@ -62,7 +62,7 @@ export const DivePageBlock = ({
     <section className={styles.wrapper}>
       {dive && ((!isItOwnProfile && dive.publishingMode === 'PUBLIC') || isItOwnProfile) && !dive.draft ? (
         <>
-          <SpotDiveData user={user} dive={dive} spot={spot} />
+          <SpotDiveData user={user} dive={dive} spot={spot as any} />
           {!!pictures?.length && renderPhotoBlock()}
           <div className={styles.subwrapper}>
             {(!!dive.diveData?.safetyStops?.length || !!dive?.tanks.length) && (

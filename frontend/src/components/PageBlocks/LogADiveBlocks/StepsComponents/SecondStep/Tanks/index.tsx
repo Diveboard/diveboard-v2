@@ -28,7 +28,7 @@ export const Tanks:FC<Props> = ({ tanks, setTanks }) => {
       he: 0,
     }]);
   };
-  console.log(tanks)
+
   const tanksComponents = tanks.map(({
     id,
     cylinder,

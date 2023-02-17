@@ -31,7 +31,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   const gallery = await firestoreGalleryService.getGallery('desc', null, 8);
-  console.log(gallery)
+
   return {
     props: {
       user: null,

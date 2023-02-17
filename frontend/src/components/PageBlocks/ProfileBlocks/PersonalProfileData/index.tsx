@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import { useRouter } from 'next/router';
 import { flag } from 'country-emoji';
 import {
@@ -9,9 +9,6 @@ import { Button } from '../../../Buttons/Button';
 import { DiveData } from './DiveData';
 import pageRoutes from '../../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
-import { DiveType, SpotType } from '../../../../firebase/firestore/models';
-import { AuthStatusContext } from '../../../../layouts/AuthLayout';
-import { convertFeetToMeters, convertMetersToFeet } from '../../../../utils/unitSystemConverter';
 
 type Props = {
   imgSrc: string;

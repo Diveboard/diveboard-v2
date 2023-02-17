@@ -21,7 +21,7 @@ export const createNewSpotHandler = (
       region,
       location,
     },
-  } = newSpotData;
+  } = newSpotData as any;
   if (name.length < 3) {
     error = true;
     setNewSpotNameError('fill spot name more than 3 letters');
