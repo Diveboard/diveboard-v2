@@ -22,7 +22,7 @@ import { AuthStatusContext } from '../../../layouts/AuthLayout';
 type Props = {
   user?: UserSettingsType,
   dive: DiveType,
-  spot: SpotType & { location }
+  spot: SpotType
 };
 
 export const SpotDiveData: FC<Props> = ({
@@ -33,7 +33,7 @@ export const SpotDiveData: FC<Props> = ({
   const router = useRouter();
   const diveTypeList = () => dive.diveActivities.join(', ');
 
-  const spotName = spot ? `${spot.location?.location || ''}, ${spot.location?.country || ''}, ${spot.location?.region || ''}` : '';
+  const spotName = spot ? `${spot?.locationName || ''}, ${spot?.countryName || ''}, ${spot?.regionName || ''}` : '';
 
   const moreButtonHandler = () => {
     setShowMore(true);
@@ -152,7 +152,7 @@ export const SpotDiveData: FC<Props> = ({
                   {spot?.name}
                 </div>
                 <div className={styles.spotCountryWrapper}>
-                  <div>{spot && flag(spot.location?.country)}</div>
+                  <div>{spot && flag(spot.countryName)}</div>
                   <div className={styles.spotLocation}>{spotName}</div>
                 </div>
               </div>

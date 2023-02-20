@@ -131,7 +131,7 @@ export const convertAllStepsData = async (
     species: stepsData.fourthStep.species?.length
       ? convertSpecies(stepsData.fourthStep.species)
       : {},
-    spotId: stepsData.thirdStep.spotId, // Add spot ref
+    spotRef: stepsData.thirdStep.spotId ? doc(db, `${PathEnum.SPOTS}/${stepsData.thirdStep.spotId}`) : null,
     tanks: stepsData.secondStep.tanks?.map((tank) => replaceUndefinedToNull(tank)) || [],
     oldId: null,
     unitSystem,

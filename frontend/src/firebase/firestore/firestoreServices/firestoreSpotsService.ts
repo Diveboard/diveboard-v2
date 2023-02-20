@@ -1,5 +1,6 @@
 import {
-  addDoc, collection, deleteDoc, doc, getDoc, getDocs, limit, query, setDoc, where,
+  addDoc, collection, deleteDoc, doc,
+  DocumentReference, getDoc, getDocs, limit, query, setDoc, where,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { SpotType } from '../models';
@@ -7,25 +8,24 @@ import { Bounds } from '../../../types';
 import { PathEnum } from '../firestorePaths';
 
 export const firestoreSpotsService = {
-  getSpotCoordsById: async (spotId: string) => {
-    try {
-      const docRef = doc(db, PathEnum.SPOTS, spotId);
-      const docSnap = await getDoc(docRef);
-      const { lat, lng } = docSnap.data();
-      return {
-        lat,
-        lng,
-      };
-    } catch (e) {
-      throw new Error(e.message);
-    }
-  },
-
   updateSpotById: async (spotId: string, data: Partial<SpotType>) => {
     try {
       const docRef = doc(db, PathEnum.SPOTS, spotId);
       await setDoc(docRef, { ...data }, { merge: true });
       return true;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
+  getSpotByRef: async (spotRef: DocumentReference) => {
+    try {
+      const docSnap = await getDoc(spotRef);
+      const data = docSnap.data();
+      if (!data) {
+        return null;
+      }
+      return { ...data, ref: docSnap.ref } as any;
     } catch (e) {
       throw new Error(e.message);
     }
@@ -50,17 +50,6 @@ export const firestoreSpotsService = {
     }
   },
 
-  getSpotNameById: async (spotId: string) => {
-    try {
-      const docRef = doc(db, PathEnum.SPOTS, spotId);
-      const docSnap = await getDoc(docRef);
-      const { location } = docSnap.data();
-      return `${location.location}, ${location.country}, ${location.region}`;
-    } catch (e) {
-      throw new Error(e.message);
-    }
-  },
-
   setNewSpot: async (newSpot: SpotType) => {
     try {
       const res = await addDoc(collection(db, PathEnum.SPOTS), newSpot);
@@ -73,7 +62,6 @@ export const firestoreSpotsService = {
   getAllSpotsInMapViewport: async (bounds: Bounds) => {
     try {
       const docRef = collection(db, PathEnum.SPOTS);
-      console.log(bounds);
       const q = query(
         docRef,
         where('lat', '<', bounds.ne.lat),
@@ -116,7 +104,6 @@ export const firestoreSpotsService = {
           });
         }
       });
-      console.log(spots);
       return spots;
     } catch (e) {
       throw new Error(e.message);

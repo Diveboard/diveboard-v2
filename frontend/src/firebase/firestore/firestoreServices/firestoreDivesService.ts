@@ -38,8 +38,8 @@ export const firestoreDivesService = {
         diveData.surveyRef = null;
       }
       delete diveData.danSurvey;
-      if (diveData.spotId) {
-        const spot = await firestoreSpotsService.getSpotById(diveData.spotId);
+      if (diveData.spotRef) {
+        const spot = await firestoreSpotsService.getSpotByRef(diveData.spotRef);
         const newSpot = { ...spot };
         diveData.spotRef = spot.ref;
         newSpot.dives[ref.id] = ref;
@@ -64,9 +64,10 @@ export const firestoreDivesService = {
       const docSnap = await getDoc(docRef);
       let spotData: null;
       if (dive.danSurvey) {
-        const surveyRef = await firestoreSurveyService.updateSurvey(
+        let { surveyRef } = docSnap.data();
+        surveyRef = await firestoreSurveyService.updateSurvey(
           userId,
-          dive.surveyId,
+          surveyRef,
           diveId,
           dive.danSurvey,
           saveDan,
@@ -76,21 +77,20 @@ export const firestoreDivesService = {
       delete dive.danSurvey;
       const { spotRef } = await docSnap.data();
       // Add dive to new spot
-      const spot = spotRef ? await firestoreSpotsService.getSpotById(dive.spotId) : null;
+      const spot = spotRef ? await firestoreSpotsService.getSpotByRef(dive.spotRef) : null;
       spotData = spot;
       if (spot) {
-        // logbookDive.countryName = spot.location.country;
-        if (dive.spotId !== spotRef.id) {
+        if (dive.spotRef?.id !== spotRef.id) {
           const newSpot = { ...spot };
           newSpot.dives[docRef.id] = docRef;
           dive.spotRef = spot.ref;
-          await firestoreSpotsService.updateSpotById(dive.spotId, newSpot);
+          await firestoreSpotsService.updateSpotById(dive.spotRef.id, newSpot);
 
-          if (spotRef.id) {
+          if (spotRef?.id) {
             // Delete dive from old spot
             const spotO = await firestoreSpotsService.getSpotById(spotRef.id);
             const oldSpot = { ...spotO };
-            oldSpot.dives = oldSpot.dives.filter((i) => i !== diveId);
+            oldSpot.dives = oldSpot.dives?.filter((i) => i !== diveId);
             spotData = spotO;
             await firestoreSpotsService.updateSpotById(spotRef.id, oldSpot);
           }
@@ -99,15 +99,6 @@ export const firestoreDivesService = {
       await firestoreLogbookService.updateDiveInLogbook(userId, dive, spotData, docRef);
       await setDoc(docRef, { ...dive }, { merge: false });
       return true;
-    } catch (e) {
-      throw new Error(e.message);
-    }
-  },
-
-  deleteLogbook: async (userId: string) => {
-    try {
-      const logbookRef = doc(db, `${PathEnum.LOGBOOK}/${userId}`);
-      await deleteDoc(logbookRef);
     } catch (e) {
       throw new Error(e.message);
     }
@@ -300,30 +291,6 @@ export const firestoreDivesService = {
     }
   },
 
-  getUserSpeciesInDives: async (
-    userId: string,
-  ) => {
-    try {
-      const docRef = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
-      const q = query(
-        docRef,
-        where('species', '!=', {}),
-      );
-      const querySnapshot = await getDocs(q);
-      let speciesSet = new Set();
-      querySnapshot.forEach((specDoc) => {
-        const { species } = specDoc.data();
-        if (species) {
-          // @ts-ignore
-          speciesSet = { ...speciesSet, species };
-        }
-      });
-      return speciesSet;
-    } catch (e) {
-      throw new Error(e.message);
-    }
-  },
-
   getDiveData: async (
     userId: string,
     diveId: string,
@@ -351,13 +318,17 @@ export const firestoreDivesService = {
         const docRef = doc(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`, diveIds[i]);
         // eslint-disable-next-line no-await-in-loop
         const docSnap = await getDoc(docRef);
-        const { pictures } = docSnap.data();
+        const { pictures, surveyRef } = docSnap.data();
         if (pictures) {
           const picturesIds = Object.keys(pictures);
           for (let j = 0; j < picturesIds.length; j++) {
             // eslint-disable-next-line no-await-in-loop
             await firestoreGalleryService.deleteImageById(picturesIds[j]);
           }
+        }
+        if (surveyRef) {
+          // eslint-disable-next-line no-await-in-loop
+          await firestoreLogbookService.deleteSurveyFromLogbook(userId, surveyRef.id);
         }
         // eslint-disable-next-line no-await-in-loop
         await deleteDoc(docRef);

@@ -1,6 +1,6 @@
 import {
   collection,
-  doc, DocumentReference, getDoc, getDocs, query, setDoc,
+  doc, DocumentReference, getDoc, setDoc,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { SurveyDanType } from '../../../types';
@@ -41,15 +41,15 @@ export const firestoreSurveyService = {
   },
   updateSurvey: async (
     userId: string,
-    surveyId: string,
+    surveyRef: DocumentReference,
     diveId: string,
     survey: SurveyDanType,
     saveToDAN: boolean,
   ) => {
     try {
       let docRef;
-      if (surveyId) {
-        docRef = doc(db, `${PathEnum.SURVEYS}/${userId}/dan`, surveyId);
+      if (surveyRef) {
+        docRef = surveyRef;
       } else {
         docRef = doc(collection(db, `${PathEnum.SURVEYS}/${userId}/dan`));
       }
@@ -63,20 +63,6 @@ export const firestoreSurveyService = {
       }
       await firestoreLogbookService.updateSurveyInLogbook(userId, docRef);
       return docRef;
-    } catch (e) {
-      throw new Error(e.message);
-    }
-  },
-
-  getUserSurveys: async (userId: string) => {
-    try {
-      const surveyRef = collection(db, `${PathEnum.SURVEYS}/${userId}/dan`);
-      const q = query(
-        surveyRef,
-      );
-      const querySnapshot = await getDocs(q);
-      // querySnapshot.forEach((s) => deleteDoc(s.ref));
-      return querySnapshot.size;
     } catch (e) {
       throw new Error(e.message);
     }
