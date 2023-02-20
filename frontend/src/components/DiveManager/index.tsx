@@ -88,7 +88,8 @@ const DiveManager = ({ userId, userDives }: Props) => {
         setLoading(false);
       }
     } catch (e) {
-      notify('Something went wrong');
+      setLoading(false);
+      notify(e.message);
     }
   };
   const dropdownList = [
@@ -223,7 +224,8 @@ const DiveManager = ({ userId, userDives }: Props) => {
         notify('Choose at least one dive');
       }
     } catch (e) {
-      notify('Something went wrong');
+      setLoading(false);
+      notify(e.message);
     }
   };
 
@@ -242,7 +244,8 @@ const DiveManager = ({ userId, userDives }: Props) => {
         notify('Choose at least one dive');
       }
     } catch (e) {
-      notify('Something went wrong');
+      setLoading(false);
+      notify(e.message);
     }
   };
 
@@ -287,7 +290,8 @@ const DiveManager = ({ userId, userDives }: Props) => {
       }
       setFetching(false);
     } catch (e) {
-      notify('Something went wrong');
+      setLoading(false);
+      notify(e.message);
     }
   };
 
@@ -308,7 +312,8 @@ const DiveManager = ({ userId, userDives }: Props) => {
           setOldestDives(newDives);
           setLoading(false);
         } catch (e) {
-          notify('Something went wrong');
+          setLoading(false);
+          notify(e.message);
         }
       }
     }
@@ -324,7 +329,8 @@ const DiveManager = ({ userId, userDives }: Props) => {
           setDraftDives(newDives);
           setLoading(false);
         } catch (e) {
-          notify('Something went wrong');
+          setLoading(false);
+          notify(e.message);
         }
       }
     }

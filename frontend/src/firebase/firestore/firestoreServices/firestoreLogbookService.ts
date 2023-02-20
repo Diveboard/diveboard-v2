@@ -102,9 +102,7 @@ export const firestoreLogbookService = {
   getLogbookData: async (uid: string) => {
     // TODO: Map
     // TODO: Species Images
-    // TODO: Pagination for pictures
     // TODO: Dive Buddies
-    // TODO: Save to draft
 
     try {
       const logbookUser = await firestorePublicProfileService.getUserById(uid as string);
@@ -193,7 +191,6 @@ export const firestoreLogbookService = {
       const logbookRef = doc(db, `${PathEnum.LOGBOOK}/${userId}`);
       const logbookSnap = await getDoc(logbookRef);
       const logbookData = logbookSnap.data();
-      console.log(dive.draft)
       const logbookDive = {
         countryName: spotData?.location?.countryName || '',
         diveRef: ref,
@@ -250,7 +247,6 @@ export const firestoreLogbookService = {
       species = [...species, ...diveSpecies];
       const dives = logbookData?.dives || [];
       const diveForUpdate = dives.findIndex((d) => d.diveRef.id === ref.id);
-      console.log(diveForUpdate)
       const underwaterTime = logbookData.underwaterTime.map((d) => {
         if (d.diveRef.id === ref.id) {
           d.time = dive.diveData.duration;

@@ -204,14 +204,16 @@ export const firestoreDivesService = {
           id: doc.id,
           date: data.diveData?.date ? convertTimestampDate(data.diveData.date) : null,
         };
-        dives.push(dive);
+        if (dive) {
+          dives.push(dive);
+        }
       });
       for (const dive of dives) {
         // eslint-disable-next-line no-await-in-loop
-        const spot = dive.spotId ? await firestoreSpotsService.getSpotById(dive.spotId) : null;
+        const spot = dive.spotRef ? await firestoreSpotsService.getSpotByRef(dive.spotRef) : null;
         dive.spot = spot;
         dive.spotName = spot ? `${spot.location?.location}, ${spot.location?.country}, ${spot?.location.region}` : null;
-        if (dive?.pictures && draft) {
+        if (dive.pictures === {} && draft) {
           const [key, value] = Object.entries(dive.pictures)[0];
           // @ts-ignore
           // eslint-disable-next-line no-await-in-loop
