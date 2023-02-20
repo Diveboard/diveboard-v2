@@ -145,11 +145,8 @@ export const SpotDiveData: FC<Props> = ({
               <ProfileImage imgSrc={user?.photoUrl} size={74} />
               <div className={styles.spotTitleWrapper}>
                 <div className={styles.spotTitle}>
-                  {user?.firstName}
-                  {' '}
-                  in
-                  {' '}
-                  {spot?.name}
+                  {user?.firstName || user?.nickname}
+                  {spot?.name && `in ${spot.name}`}
                 </div>
                 <div className={styles.spotCountryWrapper}>
                   <div>{spot && flag(spot.countryName)}</div>

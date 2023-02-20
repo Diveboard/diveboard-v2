@@ -58,12 +58,12 @@ export const MobilePhotoGroup: FC<Props> = ({ photos, pictures }) => {
         {photosElements}
       </div>
       {pictures.length > photosForRender.length && (
-      <span
-        className={styles.viewMore}
+      <div
+        className={`${styles.viewMore} ${styles['pt-15']}`}
         onClick={loadMore}
       >
         View More
-      </span>
+      </div>
       )}
       <Loader loading={isLoading} />
     </div>
