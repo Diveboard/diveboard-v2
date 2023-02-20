@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import { useRouter } from 'next/router';
+import { DocumentReference } from '@firebase/firestore';
 import { CommentsBlock } from './CommentsBlock';
 import { SpotDiveData } from './SpotDiveData';
 import { GearUsed } from './GearBlock';
@@ -26,14 +27,16 @@ type Props = {
   user?: UserSettingsType,
   dive: DiveType,
   spot: SpotType,
-  species?: Array<SpeciesType>
+  species: Array<{ specieRef: DocumentReference }>
+  speciesData?: Array<SpeciesType>
   buddies: Array<BuddiesType>
   comments: Array<CommentType>
-  pictures: Array<string>
+  pictures: Array<{ pictureRef: DocumentReference }>
+  picturesData: Array<string>
 };
 
 export const DivePageBlock = ({
-  user, dive, spot, species, buddies, comments, pictures,
+  user, dive, spot, speciesData, buddies, comments, picturesData, pictures, species,
 }: Props): JSX.Element => {
   const isMobile = useWindowWidth(500, 769);
   const router = useRouter();
@@ -51,24 +54,29 @@ export const DivePageBlock = ({
   }, [user.uid]);
 
   const renderPhotoBlock = () => (isMobile
-    ? <MobilePhotoGroup photos={pictures} />
-    : <DesktopPhotoBlock photos={pictures} />);
+    ? <MobilePhotoGroup photos={picturesData} pictures={pictures} />
+    : (
+      <DesktopPhotoBlock
+        photos={picturesData}
+        pictures={pictures}
+      />
+    ));
 
   const renderSpeciesBlock = () => (isMobile
-    ? <SpeciesMobile speciesList={species} />
-    : <SpeciesIdentified speciesList={species} />);
+    ? <SpeciesMobile speciesList={speciesData} species={species} />
+    : <SpeciesIdentified speciesList={speciesData} species={species} />);
 
   return (
     <section className={styles.wrapper}>
       {dive && ((!isItOwnProfile && dive.publishingMode === 'PUBLIC') || isItOwnProfile) && !dive.draft ? (
         <>
           <SpotDiveData user={user} dive={dive} spot={spot as any} />
-          {!!pictures?.length && renderPhotoBlock()}
+          {!!picturesData?.length && renderPhotoBlock()}
           <div className={styles.subwrapper}>
             {(!!dive.diveData?.safetyStops?.length || !!dive?.tanks.length) && (
               <ChartBlock diveData={{ points: dive.diveData?.safetyStops, tanks: dive?.tanks }} />
             )}
-            {(!!species.length || isGearsExist)
+            {(!!speciesData.length || isGearsExist)
                 && (
                 <div className={styles.thirdWrapper}>
                   {isGearsExist && (
@@ -78,7 +86,7 @@ export const DivePageBlock = ({
                     diveUnitSystem={dive.unitSystem}
                   />
                   )}
-                  {!!species.length && (
+                  {!!speciesData.length && (
                   <div className={styles.speciesWrapper}>
                     <DivePageMobContainer>
                       <DivePageTitle title="Species Identified" />

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import { DocumentReference } from '@firebase/firestore';
 import { useWindowWidth } from '../../../hooks/useWindowWidth';
-import { MobilePhotoGroup } from '../../PhotoGroup/mobilePhotoGroup';
 import { DesktopPhotoBlock } from '../../DivePage/DesktopPhotoBlock';
 import { Info } from './Info';
 import { DivesInSpot } from './DivesInSpot';
@@ -14,20 +14,22 @@ import { Icon } from '../../Icons/Icon';
 type Props = {
   spot: SpotType;
   dives: Array<DiveType>
-  species: Array<SpeciesType>
-  pictures: Array<string>
+  species: Array<{
+    specieRef: DocumentReference
+  }>
+  pictures: Array<{
+    pictureRef: DocumentReference
+  }>
+  speciesData: Array<SpeciesType>
+  picturesData: Array<string>
 };
 
 export const SpotBlocks = ({
-  spot, dives, species, pictures,
+  spot, dives, speciesData, picturesData, species, pictures,
 }: Props) => {
   const router = useRouter();
   const isMobile = useWindowWidth(500, 769);
   const [tab, setTab] = useState<'info' | 'dives' | 'shops'>('info');
-
-  const renderPhotoBlock = isMobile
-    ? <MobilePhotoGroup photos={pictures} />
-    : <DesktopPhotoBlock photos={pictures} />;
 
   return (
     <div className={styles.spotBlock}>
@@ -44,11 +46,12 @@ export const SpotBlocks = ({
             </div>
             {/* <LinkedButton link="" iconName="share-link" iconSize={40} /> */}
           </div>
-          {renderPhotoBlock}
+          <DesktopPhotoBlock photos={picturesData} pictures={pictures} />
         </>
       )}
 
-      {isMobile && <MobileSpotHeader spotName={spot?.name} images={pictures} />}
+      {isMobile
+          && <MobileSpotHeader spotName={spot?.name} images={picturesData} pictures={pictures} />}
 
       {isMobile && <MobileTabs mode={tab} setMode={setTab} />}
       <div className={styles.wrapper}>
@@ -59,7 +62,8 @@ export const SpotBlocks = ({
             region: spot.regionName,
             location: spot.locationName,
           }}
-          species={species}
+          species={species} // species
+          speciesData={speciesData} // speciesData
           coords={{ lat: spot.lat, lng: spot.lng }}
           stats={spot.stats}
           divesCount={Object.keys(spot.dives).length}

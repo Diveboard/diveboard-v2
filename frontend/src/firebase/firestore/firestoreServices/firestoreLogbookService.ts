@@ -37,8 +37,7 @@ export const firestoreLogbookService = {
       }
 
       if (data?.species) {
-        // TODO: Add pagination
-        species = await firestoreSpeciesServices.getSpeciesByRefs(data.species);
+        species = await firestoreSpeciesServices.getSpeciesByRefs(data.species, 4);
       }
 
       if (data?.buddies.length) {
@@ -47,8 +46,7 @@ export const firestoreLogbookService = {
       }
 
       if (data?.pictures) {
-        // TODO: Add pagination
-        pictures = await firestoreGalleryService.getBestPictures(data.pictures);
+        pictures = await firestoreGalleryService.getBestPictures(data.pictures, 5);
       }
 
       const diveUser = await firestorePublicProfileService.getUserById(userId as string);
@@ -57,9 +55,15 @@ export const firestoreLogbookService = {
         dive: data ? JSON.parse(JSON.stringify(data)) : null,
         comments: JSON.parse(JSON.stringify(comments)),
         spot: spot ? JSON.parse(JSON.stringify(spot)) : null,
-        species: JSON.parse(JSON.stringify(species)),
+        speciesData: JSON.parse(JSON.stringify(species)),
+        species: JSON.parse(JSON.stringify(
+          Object.values(data.species).map((s) => ({ specieRef: s })),
+        )),
         buddies: JSON.parse(JSON.stringify(buddies)),
-        pictures: JSON.parse(JSON.stringify(pictures)),
+        picturesData: JSON.parse(JSON.stringify(pictures)),
+        pictures: JSON.parse(JSON.stringify(
+          Object.values(data.pictures).map((p) => ({ pictureRef: p })),
+        )),
       };
     } catch (e) {
       throw new Error(e.message);
@@ -202,8 +206,10 @@ export const firestoreLogbookService = {
       let species = [];
       let longestDive = logbookData?.longestDive;
       let deepestDive = logbookData?.deepestDive;
-
-      if (!longestDive || longestDive.time < dive.diveData.duration) {
+      if (!longestDive
+          || longestDive.time < dive.diveData.duration
+          || longestDive.diveRef.id === ref.id
+      ) {
         longestDive = {
           diveRef: ref,
           time: dive.diveData.duration,
@@ -211,7 +217,10 @@ export const firestoreLogbookService = {
         };
       }
 
-      if (!deepestDive || deepestDive.depth < dive.diveData.maxDepth) {
+      if (!deepestDive
+          || deepestDive.depth < dive.diveData.maxDepth
+          || deepestDive.diveRef.id === ref.id
+      ) {
         deepestDive = {
           diveRef: ref,
           depth: dive.diveData.maxDepth,
@@ -405,6 +414,21 @@ export const firestoreLogbookService = {
       const { surveys = [] } = logbookSnap.data();
       surveys.push(surveyRef);
       await setDoc(logbookRef, { surveys }, { merge: true });
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
+  updateSurveyInLogbook: async (userId: string, surveyRef: DocumentReference) => {
+    try {
+      const logbookRef = doc(db, `${PathEnum.LOGBOOK}/${userId}`);
+      const logbookSnap = await getDoc(logbookRef);
+      const { surveys = [] } = logbookSnap.data();
+      // TODO: Check duplicates
+      if (!surveys.find((survey) => survey.id === surveyRef.id)) {
+        surveys.push(surveyRef);
+        await setDoc(logbookRef, { surveys }, { merge: true });
+      }
     } catch (e) {
       throw new Error(e.message);
     }

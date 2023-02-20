@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { DocumentReference } from '@firebase/firestore';
 import { SpeciesMobile } from '../../../DivePage/SpeciesIdentified/SpeciesMobile';
 import { SpeciesIdentified } from '../../../DivePage/SpeciesIdentified/SpeciesSlider';
 import { useWindowWidth } from '../../../../hooks/useWindowWidth';
@@ -22,16 +23,19 @@ type Props = {
   stats: any;
   divesCount: number;
   coords: Coords;
-  species: Array<SpeciesType>
+  speciesData: Array<SpeciesType>
+  species: Array<{
+    specieRef: DocumentReference
+  }>
 };
 
 export const Info = ({
-  location, species, coords, stats, divesCount,
+  location, speciesData, species, coords, stats, divesCount,
 }: Props) => {
   const isMobile = useWindowWidth(200, 769);
   const speciesBlock = isMobile
-    ? <SpeciesMobile speciesList={species} />
-    : <SpeciesIdentified speciesList={species} />;
+    ? <SpeciesMobile speciesList={speciesData} species={species} />
+    : <SpeciesIdentified speciesList={speciesData} species={species} />;
 
   const {
     userAuth,

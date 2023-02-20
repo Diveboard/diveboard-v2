@@ -15,10 +15,12 @@ const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   dive,
   spot,
   species,
+  speciesData,
   buddies,
   diveUser,
   pictures,
   comments,
+  picturesData,
 }) => (
   <AuthLayout user={user}>
     <MainLayout>
@@ -28,7 +30,9 @@ const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
         user={diveUser}
         spot={spot}
         species={species}
+        speciesData={speciesData}
         pictures={pictures}
+        picturesData={picturesData}
         buddies={buddies}
         comments={comments}
       />

@@ -14,12 +14,19 @@ import { firestoreGalleryService } from '../../src/firebase/firestore/firestoreS
 import 'react-toastify/dist/ReactToastify.css';
 
 const Spot: InferGetServerSidePropsType<typeof getServerSideProps> = ({
-  user, spot, dives, species, pictures,
+  user, spot, dives, speciesData, species, pictures, picturesData,
 }) => (
   <AuthLayout user={user}>
     <MainLayout>
       <ToastContainer />
-      <SpotBlocks spot={spot} dives={dives} species={species} pictures={pictures} />
+      <SpotBlocks
+        spot={spot}
+        dives={dives}
+        species={species}
+        speciesData={speciesData}
+        pictures={pictures}
+        picturesData={picturesData}
+      />
     </MainLayout>
   </AuthLayout>
 );
@@ -30,22 +37,25 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { spotId } = context.query;
     let spot = null;
     let dives = [];
+    let speciesData = [];
     let species = [];
     let pictures = [];
+    let picturesData = [];
     let user = null;
 
     if (spotId) {
       const data = await firestoreSpotsService.getSpotById(spotId as string);
-
       if (!data) {
         throw new Error('Spot is not found');
       }
       spot = JSON.parse(JSON.stringify(data));
       if (data.bestPictures) {
-        pictures = await firestoreGalleryService.getBestPictures(data.bestPictures);
+        pictures = data.bestPictures;
+        picturesData = await firestoreGalleryService.getBestPictures(data.bestPictures, 5);
       }
       if (data.species) {
-        species = await firestoreSpeciesServices.getSpeciesByRefs(data.species, 6);
+        species = data.species;
+        speciesData = await firestoreSpeciesServices.getSpeciesByRefs(data.species, 4);
       }
       if (data.dives) {
         dives = await firestoreDivesService.getDivesByRefs(data.dives, 4);
@@ -60,9 +70,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       props: {
         user,
         spot,
-        pictures: JSON.parse(JSON.stringify(pictures)),
+        picturesData: JSON.parse(JSON.stringify(picturesData)),
         dives: JSON.parse(JSON.stringify(dives)),
-        species: JSON.parse(JSON.stringify(species)),
+        speciesData: JSON.parse(JSON.stringify(speciesData)),
+        species: JSON.parse(JSON.stringify(
+          Object.values(species).map((p) => ({ specieRef: p })),
+        )),
+        pictures: JSON.parse(JSON.stringify(
+          Object.values(pictures).map((p) => ({ pictureRef: p })),
+        )),
       },
     };
   } catch (e) {

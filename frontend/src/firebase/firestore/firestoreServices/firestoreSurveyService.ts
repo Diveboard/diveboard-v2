@@ -1,11 +1,11 @@
 import {
-  collection, deleteDoc,
+  collection,
   doc, DocumentReference, getDoc, getDocs, query, setDoc,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { SurveyDanType } from '../../../types';
 import { PathEnum } from '../firestorePaths';
-import {firestoreLogbookService} from "./firestoreLogbookService";
+import { firestoreLogbookService } from './firestoreLogbookService';
 
 export const firestoreSurveyService = {
   getSurveyById: async (userId: string, docRef: DocumentReference) => {
@@ -61,6 +61,7 @@ export const firestoreSurveyService = {
         // TODO: sent email
         console.log('SEND EMAIL');
       }
+      await firestoreLogbookService.updateSurveyInLogbook(userId, docRef);
       return docRef;
     } catch (e) {
       throw new Error(e.message);

@@ -13,11 +13,12 @@ import { firestoreSpotsService } from './firestoreSpotsService';
 import { PathEnum } from '../firestorePaths';
 
 export const firestoreGalleryService = {
-  getBestPictures: async (bestPictures: { [key: string]: DocumentReference }) => {
+  getBestPictures: async (bestPictures: { [key: string]: DocumentReference }, length?: number) => {
     try {
       const picsIds = Object.keys(bestPictures);
+      const size = length || picsIds.length;
       const pics = [];
-      for (let i = 0; i < picsIds.length; i++) {
+      for (let i = 0; i < size; i++) {
         const docRef = doc(db, `${PathEnum.PICTURES}/${picsIds[i]}`);
         // eslint-disable-next-line no-await-in-loop
         const docSnap = await getDoc(docRef);
