@@ -10,6 +10,7 @@ import { MobileAddButton } from '../../Buttons/MobileAddButton';
 import pagesRoutes from '../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
 import {
+  BuddiesType,
   DiveType, SpeciesType, SpotType, UserSettingsType,
 } from '../../../firebase/firestore/models';
 import { SurveysBlock } from './SurveysBlock';
@@ -19,6 +20,7 @@ import { convertMinutes } from '../../../utils/convertMinutes';
 type Props = {
   dives: Array<DiveType & { spot: SpotType, date: string }>
   species: Array<SpeciesType>
+  buddies: Array<BuddiesType>
   logbookUser: UserSettingsType
   user: UserSettingsType
   data: any
@@ -26,13 +28,12 @@ type Props = {
 };
 
 export const ProfileBlock = ({
-  dives, species, logbookUser, user, data, pictures,
+  dives, species, logbookUser, user, data, pictures, buddies,
 }: Props) => {
   const mapCoords = {
     lat: 40.95,
     lng: 30.33,
   };
-
   const isOffline = useContext(NetworkStatusContext);
 
   const markerPoints = dives ? dives.map((dive) => ({
@@ -136,7 +137,7 @@ export const ProfileBlock = ({
       {!!species?.length && <LatestSpecies speciesData={species} species={data.species} /> }
       {/* <CertificationBlock certifications={certifications} />* /}
       {/* <CentersVisitedBlock /> */}
-      {!!data?.buddies?.length && <DiveBuddies buddies={data.buddies} /> }
+      {!!buddies?.length && <DiveBuddies buddiesData={buddies} buddies={data.buddies} /> }
       {!!data?.surveys?.length && <SurveysBlock surveys={data.surveys} />}
     </div>
   );

@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-
-import { useRouter } from 'next/router';
 import { DocumentReference } from '@firebase/firestore';
 import { CommentsBlock } from './CommentsBlock';
 import { SpotDiveData } from './SpotDiveData';
@@ -20,8 +18,8 @@ import {
   BuddiesType, CommentType,
   DiveType, SpeciesType, SpotType, UserSettingsType,
 } from '../../firebase/firestore/models';
-import { DiveBuddyCard } from '../Cards/DiveBuddyCard';
 import { AuthStatusContext } from '../../layouts/AuthLayout';
+import { BuddiesBlock } from './BuddiesBlock';
 
 type Props = {
   user?: UserSettingsType,
@@ -29,6 +27,7 @@ type Props = {
   spot: SpotType,
   species: Array<{ specieRef: DocumentReference }>
   speciesData?: Array<SpeciesType>
+  buddiesData: Array<BuddiesType>
   buddies: Array<BuddiesType>
   comments: Array<CommentType>
   pictures: Array<{ pictureRef: DocumentReference }>
@@ -36,10 +35,9 @@ type Props = {
 };
 
 export const DivePageBlock = ({
-  user, dive, spot, speciesData, buddies, comments, picturesData, pictures, species,
+  user, dive, spot, speciesData, buddies, buddiesData, comments, picturesData, pictures, species,
 }: Props): JSX.Element => {
   const isMobile = useWindowWidth(500, 769);
-  const router = useRouter();
 
   const isGearsExist = !!dive.diveData?.weights
       || (!!dive.gears?.length
@@ -99,21 +97,11 @@ export const DivePageBlock = ({
                 </div>
                 )}
           </div>
-          {!!buddies?.length && (
+          {!!buddiesData?.length && (
           <DivePageMobContainer>
             <DivePageTitle title="Dive Buddies" />
             <div className={styles.divesWrapper}>
-              {buddies.map((buddy) => (
-                <DiveBuddyCard
-                  onClick={() => buddy.id && router.push(`/logbook/${buddy.id}`)}
-                  key={buddy.id || buddy.firstName}
-                  imgSrc={buddy?.photoUrl || '/appIcons/no-photo.svg'}
-                  name={`${buddy?.firstName || ''} ${buddy?.lastName || ''}`}
-                  onDiveBoard={buddy?.diveTotal}
-                  total={buddy?.diveTotal}
-                  onSpot={buddy?.divesOnSpot}
-                />
-              ))}
+              <BuddiesBlock buddiesData={buddiesData} buddies={buddies} />
             </div>
           </DivePageMobContainer>
           )}

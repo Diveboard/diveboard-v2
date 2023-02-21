@@ -25,10 +25,10 @@ export const CommentItem: FC <Props> = ({
   return (
     <div className={styles.itemWrapper}>
       <div className={styles.user} onClick={() => router.push(`/logbook/${author.userId}`)}>
-        <ProfileImage imgSrc={author.photoUrl} size={44} />
+        <ProfileImage imgSrc={author?.photoUrl} size={44} />
         <div className={styles.userWrapper}>
           <div className={styles.nameAuthor}>
-            {`${author.firstName} ${author.lastName}`}
+            {`${author?.firstName || ''} ${author?.lastName || ''}`}
           </div>
           <div className={styles.datePublish}>{datePublish}</div>
         </div>

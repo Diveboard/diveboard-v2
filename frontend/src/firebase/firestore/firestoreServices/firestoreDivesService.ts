@@ -62,7 +62,7 @@ export const firestoreDivesService = {
     try {
       const docRef = doc(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`, diveId);
       const docSnap = await getDoc(docRef);
-      let spotData: null;
+
       if (dive.danSurvey) {
         let { surveyRef } = docSnap.data();
         surveyRef = await firestoreSurveyService.updateSurvey(
@@ -76,9 +76,9 @@ export const firestoreDivesService = {
       }
       delete dive.danSurvey;
       const { spotRef } = await docSnap.data();
-      // Add dive to new spot
-      const spot = spotRef ? await firestoreSpotsService.getSpotByRef(dive.spotRef) : null;
-      spotData = spot;
+      // TODO: Add dive to new spot. Check for logbook
+      const spot = dive.spotRef?.id ? await firestoreSpotsService.getSpotByRef(dive.spotRef) : null;
+      const spotData = spot;
       if (spot) {
         if (dive.spotRef?.id !== spotRef.id) {
           const newSpot = { ...spot };
@@ -86,14 +86,14 @@ export const firestoreDivesService = {
           dive.spotRef = spot.ref;
           await firestoreSpotsService.updateSpotById(dive.spotRef.id, newSpot);
 
-          if (spotRef?.id) {
-            // Delete dive from old spot
-            const spotO = await firestoreSpotsService.getSpotById(spotRef.id);
-            const oldSpot = { ...spotO };
-            oldSpot.dives = oldSpot.dives?.filter((i) => i !== diveId);
-            spotData = spotO;
-            await firestoreSpotsService.updateSpotById(spotRef.id, oldSpot);
-          }
+          // if (spotRef?.id) {
+          //   // Delete dive from old spot
+          //   const spotO = await firestoreSpotsService.getSpotById(spotRef.id);
+          //   const oldSpot = { ...spotO };
+          //   oldSpot.dives = oldSpot.dives?.filter((i) => i !== diveId);
+          //   spotData = spotO;
+          //   await firestoreSpotsService.updateSpotById(spotRef.id, oldSpot);
+          // }
         }
       }
       await firestoreLogbookService.updateDiveInLogbook(userId, dive, spotData, docRef);

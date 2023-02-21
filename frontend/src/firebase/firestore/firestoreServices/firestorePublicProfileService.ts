@@ -11,9 +11,8 @@ import {
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { PathEnum } from '../firestorePaths';
-import { UserType } from '../../../types';
 import { firestoreDivesService } from './firestoreDivesService';
-import { UserSettingsType } from '../models';
+import { BuddiesType, UserSettingsType } from '../models';
 
 export const firestorePublicProfileService = {
   setEmail: async (email: string, userId: string) => {
@@ -87,36 +86,31 @@ export const firestorePublicProfileService = {
     }
   },
 
-  getBuddiesInfo: async (usersIds: Array<{ id?: string, name?: string }>, spotId?: string) => {
+  getBuddiesInfo: async (usersIds: Array<BuddiesType>, length?: number) => {
     try {
       const users = [];
-      for (let i = 0; i < usersIds.length; i++) {
-        if (usersIds[i].id) {
-          const docRef = doc(db, PathEnum.USERS, usersIds[i].id);
+      const size = (!length || length > usersIds.length) ? usersIds.length : length;
+      for (let i = 0; i < size; i++) {
+        if (usersIds[i].userRef) {
           // eslint-disable-next-line no-await-in-loop
-          const docSnap = await getDoc(docRef);
+          const docSnap = await getDoc(usersIds[i].userRef);
           if (docSnap.data()) {
-            const { firstName, lastName, photoUrl } = docSnap.data();
+            const { photoUrl } = docSnap.data();
             // eslint-disable-next-line no-await-in-loop
-            const diveTotal = await firestoreDivesService.getDivesCountByUserId(usersIds[i].id);
-            // eslint-disable-next-line no-await-in-loop
-            const divesOnSpot = spotId ? await firestoreDivesService
-              .getDivesCountByUserIdInSpot(usersIds[i].id, spotId) : 0;
+            const diveTotal = await firestoreDivesService
+              .getDivesCountByUserId(usersIds[i].userRef.id);
             users.push({
-              id: usersIds[i].id,
-              firstName,
-              lastName,
+              ...usersIds[i],
               photoUrl,
               diveTotal,
-              divesOnSpot,
+              id: usersIds[i].userRef.id,
             });
           }
         } else {
           users.push({
-            id: usersIds[i]?.id,
-            firstName: usersIds[i]?.name,
+            ...usersIds[i],
             diveTotal: 1,
-            divesOnSpot: 0,
+            id: i,
           });
         }
       }
@@ -127,7 +121,7 @@ export const firestorePublicProfileService = {
   },
 
   getUserPredictionsByName: async (predictionName: string) => {
-    const users:Omit<UserType, 'about' | 'country' | 'qualifications' | 'email'>[] = [];
+    const users: BuddiesType[] = [];
 
     try {
       const docRef = collection(db, PathEnum.USERS);
@@ -135,15 +129,27 @@ export const firestorePublicProfileService = {
         docRef,
         orderBy('firstName'),
         startAt(predictionName.trim()),
-        limit(15),
+        limit(20),
       );
       const querySnapshot = await getDocs(q);
 
       querySnapshot.forEach((document) => {
-        const { firstName, photoUrl, lastName } = document.data() as Omit<UserType, 'uid'>;
+        const {
+          firstName,
+          photoUrl,
+          lastName,
+          settings,
+          email,
+        } = document.data() as UserSettingsType;
         users.push({
-          uid: document.id, firstName, lastName, photoUrl,
-        });
+          id: document.id,
+          userRef: document.ref,
+          email,
+          notify: settings.notifications.instant,
+          name: `${firstName} ${lastName}`,
+          type: 'internal',
+          photoUrl,
+        } as BuddiesType);
       });
       return users;
     } catch (e) {

@@ -146,7 +146,7 @@ export const SpotDiveData: FC<Props> = ({
               <div className={styles.spotTitleWrapper}>
                 <div className={styles.spotTitle}>
                   {user?.firstName || user?.nickname}
-                  {spot?.name && `in ${spot.name}`}
+                  {spot?.name && ` in ${spot.name}`}
                 </div>
                 <div className={styles.spotCountryWrapper}>
                   <div>{spot && flag(spot.countryName)}</div>

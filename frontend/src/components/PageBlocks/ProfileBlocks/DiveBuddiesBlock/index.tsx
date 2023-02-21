@@ -1,46 +1,84 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { DocumentReference } from '@firebase/firestore';
+import { doc } from '@firebase/firestore';
 import { Title } from '../Title';
 import { DiveBuddyCard } from '../../../Cards/DiveBuddyCard';
-import { ArrowLink } from '../../../ArrowLink';
 import style from './styles.module.scss';
+import { BuddiesType } from '../../../../firebase/firestore/models';
+import { db } from '../../../../firebase/firestore/firebaseFirestore';
+import { notify } from '../../../../utils/notify';
+import {
+  firestorePublicProfileService,
+} from '../../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
+import { Loader } from '../../../Loader';
 
 type Props = {
-  buddies: Array<{
-    email: string | null,
-    name: string | null,
-    diveRef: DocumentReference | null,
-    userRef: DocumentReference | null,
-  }>
+  buddies: Array<BuddiesType>
+  buddiesData: Array<BuddiesType>
 };
 
-export const DiveBuddies: FC<Props> = ({ buddies }) => {
+export const DiveBuddies: FC<Props> = ({ buddiesData, buddies }) => {
   const router = useRouter();
-  // const set = new Set(buddies.map((buddy) => buddy.name));
+  const [buddiesForRender, setBuddiesForRender] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+
+  const filterUniqBuddies = (arr: Array<BuddiesType>) => {
+    const uniqueIds = [];
+    return arr.filter((element) => {
+      const isDuplicate = uniqueIds.some((el) => el.name === element.name);
+      if (!isDuplicate) {
+        uniqueIds.push(element);
+        return true;
+      }
+      return false;
+    });
+  };
+  const unics = filterUniqBuddies(buddies);
+
+  useEffect(() => {
+    setBuddiesForRender(filterUniqBuddies(buddiesData));
+  }, [buddiesData]);
+
+  const loadMore = async () => {
+    setLoading(true);
+    const buds = unics.slice(buddiesForRender.length, buddiesForRender.length + 4)
+      .map((buddy) => {
+        if (buddy.userRef) {
+          // @ts-ignore
+          const segments = buddy.userRef?._key?.path?.segments;
+          const id = segments[segments.length - 1];
+          buddy.userRef = doc(db, `users/${id}`);
+        }
+        return buddy;
+      });
+    try {
+      const res = await firestorePublicProfileService.getBuddiesInfo(buds);
+      setBuddiesForRender(filterUniqBuddies([...buddiesForRender, ...res]));
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      notify(e.message);
+    }
+  };
+
   return (
     <div className={style.blockWrapper}>
-      <Title title={`Dive Buddies (${buddies?.length || 0})`} />
+      <Title title={`Dive Buddies (${buddies?.length ? unics.length : 0})`} />
       <div className={style.cardsWrapper}>
-        {buddies.map((buddy, key) => (
+        {buddiesForRender.map((buddy, key) => (
           <DiveBuddyCard
             // eslint-disable-next-line react/no-array-index-key
             key={key}
-            onClick={() => buddy.userRef?.id && router.push(`/logbook/${buddy.userRef.id}`)}
-            imgSrc="/appIcons/no-photo.svg"
+            onClick={() => buddy.userRef && router.push(`/logbook/${buddy.id}`)}
+            imgSrc={buddy.photoUrl || '/appIcons/no-photo.svg'}
             name={buddy.name}
-            onDiveBoard={0}
+            onDiveBoard={buddy.diveTotal}
           />
         ))}
       </div>
-
-      <div className={style.arrowLinkWrapper}>
-        <ArrowLink
-          text="View Buddies"
-          color="#0059DE"
-          link="/"
-        />
-      </div>
+      {buddiesForRender.length < unics.length
+            && <div onClick={loadMore} className={style.arrowLinkWrapper}>View More</div>}
+      {isLoading && <Loader loading={isLoading} /> }
 
     </div>
   );

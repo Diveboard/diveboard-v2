@@ -10,11 +10,12 @@ type Props = {
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
   recommendedItems: { text: string, connectedMode: string, imgSrc?: string }[]
   onSearchHandler: (value: string) => Promise<SearchedLocationType[]>;
+  disabled?: boolean
 };
 
 export const SearchBlock: FC<Props> = (
   {
-    title, inputValue, setInputValue, recommendedItems, onSearchHandler,
+    title, inputValue, setInputValue, recommendedItems, onSearchHandler, disabled = false,
   },
 ) => {
   const [focus, setFocus] = useState(false);
@@ -24,6 +25,7 @@ export const SearchBlock: FC<Props> = (
         {title}
       </h3>
       <Input
+        disabled={disabled}
         value={inputValue}
         setValue={setInputValue}
         placeholder={`Type to fined ${title}`}

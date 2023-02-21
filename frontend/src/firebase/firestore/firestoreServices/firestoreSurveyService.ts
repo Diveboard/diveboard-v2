@@ -16,6 +16,7 @@ export const firestoreSurveyService = {
       throw new Error(e.message);
     }
   },
+
   addSurvey: async (
     userId: string,
     ref: DocumentReference,
@@ -29,11 +30,10 @@ export const firestoreSurveyService = {
       }
       await setDoc(surveyRef, { dan: { ...survey, diveRef: ref } }, { merge: true });
       if (!survey.sent && saveToDAN) {
+        await firestoreLogbookService.addSurveyToLogbook(userId, surveyRef);
         // TODO: sent email
         console.log('SEND EMAIL');
       }
-      await firestoreLogbookService.addSurveyToLogbook(userId, surveyRef);
-
       return surveyRef;
     } catch (e) {
       throw new Error(e.message);
@@ -58,10 +58,10 @@ export const firestoreSurveyService = {
       }
       await setDoc(docRef, { dan: { ...survey } }, { merge: true });
       if (!survey.sent && saveToDAN) {
+        await firestoreLogbookService.updateSurveyInLogbook(userId, surveyRef);
         // TODO: sent email
         console.log('SEND EMAIL');
       }
-      await firestoreLogbookService.updateSurveyInLogbook(userId, docRef);
       return docRef;
     } catch (e) {
       throw new Error(e.message);

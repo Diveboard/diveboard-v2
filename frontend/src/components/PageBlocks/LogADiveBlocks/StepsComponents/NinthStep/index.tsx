@@ -90,7 +90,7 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
       setStep(10);
     } catch (e) {
       setLoading(false);
-      notify('Something went wrong');
+      notify(e.message);
     }
   };
 

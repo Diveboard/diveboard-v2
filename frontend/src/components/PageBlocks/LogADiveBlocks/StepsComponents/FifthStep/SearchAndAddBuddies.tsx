@@ -7,124 +7,58 @@ import { ButtonGroupMultiple } from '../../../../ButtonGroup/ButtonGroupMultiple
 import {
   firestorePublicProfileService,
 } from '../../../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
-import { BuddyItemType } from './index';
 import styles from './style.module.scss';
+import { BuddiesType } from '../../../../../firebase/firestore/models';
 
 type Props = {
-  selectedBuddies: BuddyItemType[];
+  selectedBuddies: BuddiesType[];
   setSelectedBuddies: React.Dispatch<
-  React.SetStateAction<BuddyItemType[]>>
+  React.SetStateAction<BuddiesType[]>>
 };
 
 export const SearchAndAddBuddies: FC<Props> = ({
   selectedBuddies,
   setSelectedBuddies,
 }) => {
-  const [myBuddies, setMyBuddies] = useState<BuddyItemType[]>([]);
+  const [myBuddies, setMyBuddies] = useState<BuddiesType[]>([]);
   const [searchType, setSearchType] = useState('diveboard');
-  const [buddyNameError, setBuddyNameError] = useState('');
+
   const [searchedBuddyName, setSearchedBuddyName] = useState('');
   const [buddyName, setBuddyName] = useState('');
   const [buddyEmail, setBuddyEmail] = useState('');
+
+  const [buddyNameError, setBuddyNameError] = useState('');
   const [buddyEmailError, setBuddyEmailError] = useState('');
-  const [mode, setMode] = useState<string[]>([]);
 
-  const clickSearchedBuddyHandler = (clickedBuddy: BuddyItemType) => {
-    const buddiesPrevStateCallback = (prev) => {
-      const b = prev.find((item) => {
-        if ('id' in clickedBuddy) {
-          return item.id === clickedBuddy.id;
-        }
-        return item.name === clickedBuddy.name;
-      });
-      if (b) {
-        return prev.filter((item) => {
-          if ('id' in clickedBuddy) {
-            return item.id !== clickedBuddy.id;
-          }
-          return item.name !== clickedBuddy.name;
-        });
-      }
-
-      if ('id' in clickedBuddy) {
-        return [...prev, {
-          id: clickedBuddy.id,
-          name: clickedBuddy.name,
-          imgSrc: clickedBuddy.imgSrc,
-        }];
-      }
-      return [...prev, {
-        name: clickedBuddy.name,
-        email: clickedBuddy.email,
-      }];
-    };
-    setSelectedBuddies(buddiesPrevStateCallback);
-    setMyBuddies(buddiesPrevStateCallback);
+  const clickSearchedBuddyHandler = (clickedBuddy: BuddiesType) => {
+    const newBuddies = [...selectedBuddies, clickedBuddy];
+    setSelectedBuddies(newBuddies);
+    setMyBuddies(myBuddies.filter((item) => item.id !== clickedBuddy.id));
   };
-
   const addBuddyHandler = () => {
     if (buddyName) {
-      const duplicateMyBuddies = myBuddies.find((item) => {
-        if ('name' in item) {
-          return item.name === buddyName;
-        }
-        return false;
-      });
-
-      const duplicateSelectedBuddies = selectedBuddies.find((item) => {
-        if ('name' in item) {
-          return item.name === buddyName;
-        }
-        return false;
-      });
-
-      if (!duplicateMyBuddies && !duplicateSelectedBuddies) {
-        setSelectedBuddies([...selectedBuddies, {
-          name: buddyName,
-          email: buddyEmail,
-        }]);
-        setMode([...mode, buddyName]);
-        setBuddyName('');
-        setBuddyEmail('');
-        setSearchType('diveboard');
-      } else {
-        setBuddyNameError('you have already added buddy with those name ');
-      }
-    } else {
+      setSelectedBuddies([...selectedBuddies, {
+        name: buddyName,
+        email: buddyEmail,
+        notify: true,
+        type: 'external',
+      }]);
+      setBuddyName('');
+      setBuddyEmail('');
       setSearchType('diveboard');
+    } else {
+      setBuddyNameError('Buddy name is required');
     }
   };
-
-  useEffect(() => {
-    const filtered = myBuddies.filter((item) => {
-      let notContains = true;
-      selectedBuddies.forEach((selectedItem) => {
-        if ('id' in selectedItem && 'id' in item && selectedItem.id === item.id) {
-          notContains = false;
-        }
-      });
-      return notContains;
-    });
-    setMyBuddies(filtered);
-  }, []);
-
-  useEffect(() => {
-    const checked = selectedBuddies.map((item) => item.name);
-    setMode(checked);
-  }, [selectedBuddies]);
 
   useEffect(() => {
     if (searchedBuddyName.length >= 3) {
       (async () => {
         const buddiesPredictions = await firestorePublicProfileService
           .getUserPredictionsByName(searchedBuddyName);
-        const buddies = buddiesPredictions
-          .map((buddy) => ({
-            id: buddy.uid,
-            name: buddy.firstName,
-            imgSrc: buddy.photoUrl,
-          } as BuddyItemType));
-        setMyBuddies(buddies);
+        setMyBuddies(buddiesPredictions
+          .filter(({ id }) => !selectedBuddies
+            .some((selectedBuddy) => selectedBuddy.id === id)));
       })();
     }
   }, [searchedBuddyName]);
@@ -178,6 +112,7 @@ export const SearchAndAddBuddies: FC<Props> = ({
             <Input
               value={buddyEmail}
               setValue={setBuddyEmail}
+              type="email"
               error={buddyEmailError}
               setError={setBuddyEmailError}
               placeholder="Email"
@@ -210,17 +145,22 @@ export const SearchAndAddBuddies: FC<Props> = ({
           </h3>
           <ButtonGroupMultiple
             items={selectedBuddies}
-            onClick={clickSearchedBuddyHandler}
-            mode={mode}
-            setMode={setMode}
+            onClick={(item) => {
+              setSelectedBuddies(selectedBuddies.filter((buddy) => buddy.name !== item.name));
+            }}
+            mode="selected"
           />
-          <h3>
-            Searched:
-          </h3>
-          <ButtonGroupMultiple
-            items={myBuddies}
-            onClick={clickSearchedBuddyHandler}
-          />
+          {!!myBuddies?.length && (
+          <>
+            <h3>
+              Searched:
+            </h3>
+            <ButtonGroupMultiple
+              items={myBuddies}
+              onClick={clickSearchedBuddyHandler}
+            />
+          </>
+          )}
         </div>
       )}
 

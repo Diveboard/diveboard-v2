@@ -41,8 +41,7 @@ export const firestoreLogbookService = {
       }
 
       if (data?.buddies.length) {
-        // TODO: Add pagination
-        buddies = await firestorePublicProfileService.getBuddiesInfo(data.buddies, data?.spotId);
+        buddies = await firestorePublicProfileService.getBuddiesInfo(data.buddies, 4);
       }
 
       if (data?.pictures) {
@@ -59,7 +58,8 @@ export const firestoreLogbookService = {
         species: JSON.parse(JSON.stringify(
           Object.values(data.species).map((s) => ({ specieRef: s })),
         )),
-        buddies: JSON.parse(JSON.stringify(buddies)),
+        buddiesData: JSON.parse(JSON.stringify(buddies)),
+        buddies: JSON.parse(JSON.stringify(data.buddies)),
         picturesData: JSON.parse(JSON.stringify(pictures)),
         pictures: JSON.parse(JSON.stringify(
           Object.values(data.pictures).map((p) => ({ pictureRef: p })),
@@ -124,13 +124,14 @@ export const firestoreLogbookService = {
         };
       }
       const {
-        dives, longestDive, deepestDive, pictures, species,
+        dives, longestDive, deepestDive, pictures, species, buddies,
       } = data;
       let longestDiveName = '';
       let deepestDiveName = '';
       let divesData = [];
       const picturesData = [];
       const speciesData = [];
+      let buddiesData = [];
       if (species?.length) {
         for (let i = 0; i < species.length; i++) {
           if (i < 4) {
@@ -139,6 +140,10 @@ export const firestoreLogbookService = {
             speciesData.push({ ...specieSnap.data(), id: specieSnap.id });
           }
         }
+      }
+
+      if (buddies?.length) {
+        buddiesData = await firestorePublicProfileService.getBuddiesInfo(buddies, 4);
       }
 
       if (pictures?.length) {
@@ -159,14 +164,14 @@ export const firestoreLogbookService = {
         divesData = await firestoreLogbookService.loadDives(dives, 4);
       }
       if (longestDive && longestDive?.spot) {
-        const spot: DocumentSnapshot<SpotType> = await getDoc(longestDive.spot);
-        const { locationName, regionName, countryName } = spot.data();
-        longestDiveName = `${locationName || ''}, ${regionName || ''} ${countryName || ''}`;
+        const spotDoc: DocumentSnapshot<SpotType> = await getDoc(longestDive.spot);
+        const spot = spotDoc.data();
+        longestDiveName = `${spot?.locationName || ''}, ${spot?.regionName || ''}, ${spot?.countryName || ''}`;
       }
       if (deepestDive && deepestDive?.spot) {
-        const spot: DocumentSnapshot<SpotType> = await getDoc(longestDive.spot);
-        const { locationName, regionName, countryName } = spot.data();
-        deepestDiveName = `${locationName || ''}, ${regionName || ''} ${countryName || ''}`;
+        const spotDoc: DocumentSnapshot<SpotType> = await getDoc(longestDive.spot);
+        const spot = spotDoc.data();
+        deepestDiveName = `${spot?.locationName || ''}, ${spot?.regionName || ''}, ${spot?.countryName || ''}`;
       }
       if (data.longestDive) {
         data.longestDive.longestDiveName = longestDiveName;
@@ -180,6 +185,7 @@ export const firestoreLogbookService = {
         divesData: divesData.length ? JSON.parse(JSON.stringify(divesData)) : [],
         pictures: picturesData.length ? JSON.parse(JSON.stringify(picturesData)) : [],
         species: speciesData.length ? JSON.parse(JSON.stringify(speciesData)) : [],
+        buddies: buddiesData.length ? JSON.parse(JSON.stringify(buddiesData)) : [],
       };
     } catch (e) {
       throw new Error(e.message);
@@ -201,6 +207,7 @@ export const firestoreLogbookService = {
 
       let pictures = [];
       let species = [];
+      let buddies = [];
       let longestDive = logbookData?.longestDive;
       let deepestDive = logbookData?.deepestDive;
       if (!longestDive
@@ -230,21 +237,32 @@ export const firestoreLogbookService = {
         .map((pic) => ({ diveRef: ref, pictureRef: pic })) : [];
 
       if (logbookData?.pictures?.length) {
-        pictures = logbookData.pictures?.filter((pic) => pic.diveRef !== ref);
+        pictures = logbookData.pictures?.filter((pic) => pic.diveRef.id !== ref.id);
       }
-      const diveSpecies = Object.values(dive.species)
-        .map((specie) => ({ diveRef: ref, specieRef: specie }));
+
+      const diveSpecies = dive.species ? Object.values(dive.species)
+        .map((specie) => ({ diveRef: ref, specieRef: specie })) : [];
 
       if (logbookData?.species?.length) {
         species = logbookData.species?.filter((pic) => pic.diveRef.id !== ref.id);
       }
 
-      if (logbookData?.pictures?.length) {
-        pictures = logbookData.pictures?.filter((pic) => pic.diveRef.id !== ref.id);
+      const diveBuddies = dive.buddies?.length ? dive.buddies
+        .map((bud) => ({
+          diveRef: ref,
+          userRef: bud.userRef ? doc(db, `${PathEnum.USERS}/${bud.userRef.id}`) : null,
+          email: bud.email || null,
+          name: bud.name || null,
+        })) : [];
+
+      if (logbookData?.buddies?.length) {
+        buddies = logbookData.buddies?.filter((bud) => bud.diveRef.id !== ref.id);
       }
 
       pictures = [...pictures, ...divePictures];
       species = [...species, ...diveSpecies];
+      buddies = [...buddies, ...diveBuddies];
+
       const dives = logbookData?.dives || [];
       const diveForUpdate = dives.findIndex((d) => d.diveRef.id === ref.id);
       const underwaterTime = logbookData.underwaterTime.map((d) => {
@@ -253,13 +271,18 @@ export const firestoreLogbookService = {
         }
         return d;
       });
-
-      if (diveForUpdate) {
+      if (diveForUpdate !== -1) {
         dives[diveForUpdate] = logbookDive;
         await setDoc(
           logbookRef,
           {
-            dives, pictures, species, longestDive, deepestDive, underwaterTime,
+            dives,
+            pictures,
+            species,
+            longestDive,
+            deepestDive,
+            underwaterTime,
+            buddies,
           },
           { merge: true },
         );
@@ -287,7 +310,13 @@ export const firestoreLogbookService = {
         .map((specie) => ({ diveRef: ref, specieRef: specie }));
       const logbookPictures = Object.values(diveData.pictures)
         .map((pic) => ({ diveRef: ref, pictureRef: pic }));
-
+      const logbookBuddies = Object.values(diveData.buddies)
+        .map((bud) => ({
+          diveRef: ref,
+          userRef: bud.userRef ? doc(db, `${PathEnum.USERS}/${bud.userRef.id}`) : null,
+          email: bud.email || null,
+          name: bud.name || null,
+        }));
       const logbookRef = doc(db, `${PathEnum.LOGBOOK}/${userId}`);
       const logbookSnap = await getDoc(logbookRef);
       const logbookData = logbookSnap.data();
@@ -295,6 +324,7 @@ export const firestoreLogbookService = {
 
       const species = logbookData?.species ? [...logbookData.species, ...logbookSpecies] : [];
       const pictures = logbookData?.pictures ? [...logbookData.pictures, ...logbookPictures] : [];
+      const buddies = logbookData?.buddies ? [...logbookData.buddies, ...logbookBuddies] : [];
 
       let longestDive = logbookData?.longestDive;
       if (
@@ -330,7 +360,7 @@ export const firestoreLogbookService = {
 
       dives.push(logbookDive);
       await setDoc(logbookRef, {
-        dives, species, pictures, longestDive, deepestDive, underwaterTime,
+        dives, species, pictures, longestDive, deepestDive, underwaterTime, buddies,
       }, { merge: true });
     } catch (e) {
       throw new Error(e.message);
@@ -345,6 +375,7 @@ export const firestoreLogbookService = {
       let dives = logbookData?.dives || [];
       let pictures = logbookData?.pictures || [];
       let species = logbookData?.species || [];
+      let buddies = logbookData?.buddies || [];
       let underwaterTime = logbookData?.underwaterTime || [];
       let longestDive = logbookData?.longestDive;
       let deepestDive = logbookData?.deepestDive;
@@ -360,6 +391,7 @@ export const firestoreLogbookService = {
       }
 
       dives = dives.filter((dive) => !diveIds.some((diveId) => dive.diveRef.id === diveId));
+      buddies = buddies.filter((buddy) => !diveIds.some((diveId) => buddy.diveRef.id === diveId));
 
       underwaterTime = underwaterTime
         .filter((dive) => !diveIds
@@ -374,7 +406,7 @@ export const firestoreLogbookService = {
       await setDoc(
         logbookRef,
         {
-          dives, pictures, species, underwaterTime, longestDive, deepestDive,
+          dives, pictures, species, underwaterTime, longestDive, deepestDive, buddies,
         },
         { merge: true },
       );

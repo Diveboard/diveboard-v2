@@ -1,10 +1,10 @@
 import { DocumentReference } from '@firebase/firestore';
 import {
-  Buddy, GearsVariantsType, SafetySpot, ScoreType,
+  GearsVariantsType, SafetySpot, ScoreType,
 } from './commonTypes';
 import { initialDiveDataState } from '../LogDiveData/state';
 import { SurveyDanType } from '../../../../types';
-import { MediaUrls, SpeciesType } from '../../../../firebase/firestore/models';
+import {BuddiesType, MediaUrls, SpeciesType} from '../../../../firebase/firestore/models';
 
 export type FirstStepType = {
   overview: {
@@ -79,7 +79,7 @@ export type FourthStepType = {
 export type FifthStepType = {
   diveCenter: string;
   guideName: string;
-  buddies: Buddy[];
+  buddies: BuddiesType[];
 };
 
 export type SixthStepType = {

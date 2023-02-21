@@ -98,7 +98,7 @@ export const LogDiveBlock = ({
       router.push('/dive-manager');
     } catch (e) {
       setLoading(false);
-      notify('Something went wrong');
+      notify(e.message);
     }
   };
 

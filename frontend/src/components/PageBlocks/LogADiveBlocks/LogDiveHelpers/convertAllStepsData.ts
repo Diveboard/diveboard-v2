@@ -1,6 +1,7 @@
 import { doc } from '@firebase/firestore';
 import { AllStepsDataType } from '../types/stepTypes';
 import {
+  BuddiesType,
   DiveType, MediaUrls, SpeciesType, UnitSystem,
 } from '../../../../firebase/firestore/models';
 import {
@@ -53,6 +54,7 @@ export const convertAllStepsData = async (
 
   const uploadFiles = async () => {
     const mediaUrls = stepsData.sixthStep.mediaUrl;
+    const spot = stepsData.thirdStep.spotId ? doc(db, `${PathEnum.SPOTS}/${stepsData.thirdStep.spotId}`) : null;
     const result = [];
     if (mediaUrls.length) {
       for (let i = 0; i < mediaUrls.length; i++) {
@@ -65,7 +67,7 @@ export const convertAllStepsData = async (
             media: 'IMAGE',
             height: 0,
             width: 0,
-            spot: stepsData.thirdStep.spotId,
+            spot,
             videoUrl: null,
           });
           result.push(newPic);
@@ -92,7 +94,7 @@ export const convertAllStepsData = async (
             media: 'IMAGE',
             height: 0,
             width: 0,
-            spot: stepsData.thirdStep.spotId,
+            spot,
             videoUrl: null,
           }));
         } else {
@@ -102,9 +104,15 @@ export const convertAllStepsData = async (
     }
     return Object.fromEntries(result);
   };
+  const convertDiveBuddies = (buddies: Array<BuddiesType>) => buddies.map((buddy) => {
+    if (buddy.userRef) {
+      buddy.userRef = doc(db, `users/${buddy.id}`);
+    }
+    return buddy;
+  });
 
   return {
-    buddies: stepsData.fifthStep.buddies || [],
+    buddies: convertDiveBuddies(stepsData.fifthStep.buddies),
     danSurvey: stepsData.eighthStep.danSurvey,
     surveyRef: stepsData.eighthStep.surveyRef,
     diveActivities: convertDiveActivities(stepsData.firstStep.diveActivities),
@@ -243,7 +251,7 @@ export const convertToStepsData = (
       species: data.species,
     },
     fifthStep: {
-      buddies: data.buddies as { id : string }[],
+      buddies: data.buddies,
       diveCenter: data.diveCenter.id,
       guideName: data.diveCenter.guide,
     },

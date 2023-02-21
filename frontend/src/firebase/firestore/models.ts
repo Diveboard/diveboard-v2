@@ -70,12 +70,15 @@ export type SpeciesType = {
 };
 
 export type BuddiesType = {
-  id: string;
-  firstName: string;
-  lastName?: string;
+  name: string;
+  email: string;
+  userRef?: DocumentReference;
+  notify: boolean;
+  oldId?: number;
+  type: 'internal' | 'external';
   photoUrl?: string;
-  diveTotal: number;
-  divesOnSpot: number;
+  diveTotal?: number;
+  id?: string;
 };
 
 export type SpeciesTypeWithoutId = Omit<SpeciesType, 'id'>;
