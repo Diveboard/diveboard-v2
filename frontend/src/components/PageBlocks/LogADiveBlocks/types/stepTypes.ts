@@ -4,7 +4,7 @@ import {
 } from './commonTypes';
 import { initialDiveDataState } from '../LogDiveData/state';
 import { SurveyDanType } from '../../../../types';
-import {BuddiesType, MediaUrls, SpeciesType} from '../../../../firebase/firestore/models';
+import { BuddiesType, MediaUrls, SpeciesType } from '../../../../firebase/firestore/models';
 
 export type FirstStepType = {
   overview: {
