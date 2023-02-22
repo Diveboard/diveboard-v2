@@ -10,6 +10,8 @@ import { ImageInfo } from '../../../types';
 import { firestoreGalleryService } from '../../../firebase/firestore/firestoreServices/firestoreGalleryService';
 import { notify } from '../../../utils/notify';
 import { Loader } from '../../Loader';
+import { firestoreGeoDataService } from '../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
+import { SearchDropdownPanel } from '../../Dropdown/SearchedItems/SearchDropdownPanel';
 
 type Props = {
   images: Array<ImageInfo>
@@ -17,6 +19,7 @@ type Props = {
 
 export const GalleryBlock = ({ images }: Props) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [locations, setLocations] = useState([]);
   const [openLightbox, setOpenLightbox] = useState(false);
   const [imageIndex, setImageIndex] = useState<number>(null);
   const [sortType, setSortType] = useState('recent');
@@ -32,14 +35,13 @@ export const GalleryBlock = ({ images }: Props) => {
     try {
       setLoading(true);
       if (searchQuery) {
-        const res = await firestoreGalleryService.getGalleryByLocation(searchQuery);
-        setFetchedImages(res);
-        setSortType('search');
+        const locs = await firestoreGeoDataService.getLocations(searchQuery);
+        setLocations(locs);
       }
       setLoading(false);
     } catch (e) {
       setLoading(false);
-      notify('Something went wrong');
+      notify(e.message);
     }
   };
 
@@ -65,6 +67,23 @@ export const GalleryBlock = ({ images }: Props) => {
     }
   }, [sortType]);
 
+  const searchHandler = async (val) => {
+    try {
+      setLoading(true);
+      if (val?.name) {
+        setSearchQuery(val.name);
+        const res = await firestoreGalleryService.getGalleryByLocation(searchQuery);
+        setFetchedImages(res);
+        setSortType('search');
+        setLocations([]);
+      }
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      notify(e.message);
+    }
+  };
+
   return (
     <div className={`${styles.wrapper} ${styles['min-height-wrapper']}`}>
       <h1>Gallery</h1>
@@ -78,7 +97,15 @@ export const GalleryBlock = ({ images }: Props) => {
           value={searchQuery}
           setValue={setSearchQuery}
           onClick={filterBySearch}
-        />
+        >
+          {!!locations?.length && (
+          <SearchDropdownPanel
+            loading={false}
+            onItemClick={searchHandler}
+            items={locations}
+          />
+          )}
+        </SearchAnimatedInput>
       </div>
       <div
         className={styles.imageGrid}

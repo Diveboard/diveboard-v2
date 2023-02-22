@@ -105,8 +105,9 @@ export const firestoreGalleryService = {
 
   addImgToGallery: async (imgData: any) => {
     try {
-      const spotData = imgData.spot ? await firestoreSpotsService.getSpotById(imgData.spot) : null;
+      const spotData = imgData.spot ? await firestoreSpotsService.getSpotByRef(imgData.spot) : null;
       const userRef = doc(db, `${PathEnum.USERS}/${imgData.user}`);
+      delete imgData.user;
       const res = await addDoc(collection(db, PathEnum.PICTURES), {
         ...imgData,
         locationName: spotData ? spotData.locationName : null,
@@ -121,11 +122,6 @@ export const firestoreGalleryService = {
     }
   },
 
-  getImageByRef: async (reference: DocumentReference) => {
-    const docSnap = await getDoc(reference);
-    return docSnap.data();
-  },
-
   getGalleryByLocation: async (searchName: string) => {
     try {
       const upperGeonames = searchName.trim()
@@ -138,26 +134,29 @@ export const firestoreGalleryService = {
         where('locationName', '>=', upperGeonames),
         limit(150),
       );
+
       const querySnapshot = await getDocs(q);
 
-      querySnapshot.forEach((img) => gallery.push({ ...img.data(), imageId: img.id }));
-      for (let i = 0; i < gallery.length; i++) {
-        if (gallery[i].user) {
-          const {
-            lastName,
-            firstName,
-            photoUrl,
-            // eslint-disable-next-line no-await-in-loop
-          } = await firestorePublicProfileService.getUserById(gallery[i].user.id);
-          gallery[i].user = {
-            lastName,
-            firstName,
-            photoUrl,
-            userId: gallery[i].user.id,
+      const promises = [];
+
+      querySnapshot.forEach((img) => {
+        const data = img.data();
+        if (data) {
+          promises.push(firestorePublicProfileService.getUserByRef(data.userRef));
+          gallery.push({ ...img.data(), imageId: img.id });
+        }
+      });
+      return await Promise.all(promises).then((values) => values.map((user, idx) => {
+        if (user) {
+          gallery[idx].user = {
+            lastName: user.lastName || '',
+            firstName: user.firstName || '',
+            photoUrl: user.photoUrl || null,
+            userId: user.uid,
           };
         }
-      }
-      return gallery;
+        return gallery[idx];
+      }));
     } catch (e) {
       throw new Error(e.message);
     }

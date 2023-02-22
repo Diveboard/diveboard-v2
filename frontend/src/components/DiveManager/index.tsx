@@ -35,7 +35,6 @@ type Props = {
 
 const DiveManager = ({ userId, userDives }: Props) => {
   const [checkboxItem, setCheckboxItem] = useState(false);
-
   const [isChangeSelectAll, setChangeSelectAll] = useState(false);
   const [isShowSettings, setShowSettings] = useState(false);
   const [isShowPopupCopy, setShowPopupCopy] = useState(false);

@@ -38,7 +38,7 @@ export const firestoreDivesService = {
         diveData.surveyRef = null;
       }
       delete diveData.danSurvey;
-      if (diveData.spotRef.id) {
+      if (diveData.spotRef?.id) {
         const spot = await firestoreSpotsService.getSpotByRef(diveData.spotRef);
         const newSpot = { ...spot };
         spot.dives[ref.id] = ref;
@@ -179,17 +179,18 @@ export const firestoreDivesService = {
 
       const q = lastDate ? next : first;
       const querySnapshot = await getDocs(draft ? drafts : q);
-
       // eslint-disable-next-line @typescript-eslint/no-shadow
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        const dive = {
-          ...data,
-          id: doc.id,
-          date: data.diveData?.date ? convertTimestampDate(data.diveData.date) : null,
-        };
-        if (dive) {
-          dives.push(dive);
+        if (data) {
+          const dive = {
+            ...data,
+            id: doc.id,
+            date: data.diveData?.date ? convertTimestampDate(data.diveData.date) : null,
+          };
+          if (dive) {
+            dives.push(dive);
+          }
         }
       });
       for (const dive of dives) {
