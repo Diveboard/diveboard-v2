@@ -198,7 +198,7 @@ export const firestoreLogbookService = {
       const logbookSnap = await getDoc(logbookRef);
       const logbookData = logbookSnap.data();
       const logbookDive = {
-        countryName: spotData?.location?.countryName || '',
+        countryName: spotData?.countryName || '',
         diveRef: ref,
         draft: dive.draft,
         publishingMode: dive.publishingMode,
@@ -300,7 +300,7 @@ export const firestoreLogbookService = {
   ) => {
     try {
       const logbookDive = {
-        countryName: spotData?.location?.countryName || '',
+        countryName: spotData?.countryName || '',
         diveRef: ref,
         draft: diveData.draft,
         publishingMode: diveData.publishingMode,

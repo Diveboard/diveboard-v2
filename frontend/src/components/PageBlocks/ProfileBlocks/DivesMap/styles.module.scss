@@ -1,6 +1,15 @@
 .mapWrapper {
   height: 785px;
   margin-top: 75px;
+  position: relative;
+
+  .loader {
+    z-index: 100;
+    top: 100px;
+    left: 25px;
+    position: absolute;
+    color: white;
+  }
 
   .map {
     position: relative;

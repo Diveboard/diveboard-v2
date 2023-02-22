@@ -3,7 +3,6 @@ import React, {
 } from 'react';
 import { LogADiveDiveMap } from './NewDiveMap';
 import { StepsNavigation } from '../../StepsNavigation';
-import { ButtonGroup } from '../../../../ButtonGroup';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { useUserLocation } from '../../../../../hooks/useUserLocation';
 import { MarkerType, StepProps } from '../../types/commonTypes';
@@ -13,13 +12,14 @@ import styles from './styles.module.scss';
 import { firestoreSpotsService } from '../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
 import { StepsIndicator } from '../../StepsIndicator';
 import { Bounds } from '../../../../../types';
+import { Button } from '../../../../ButtonGroup/Button';
 
 export const ThirdStep: FC<StepProps> = ({
   step,
   setStep,
 }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
-  const [data, setData] = useState<ThirdStepType>(undefined);
+  const [data, setData] = useState<ThirdStepType>(null);
   const userLocation = useUserLocation();
   const [location, setLocation] = useState({
     lat: 41.5,
@@ -38,13 +38,14 @@ export const ThirdStep: FC<StepProps> = ({
 
   const [zoom, setZoom] = useState(5);
 
-  const [clickedPoint, setClickedPoint] = useState('');
+  // const [clickedPoint, setClickedPoint] = useState('');
 
   const createdNewSpotId = useRef<string>();
 
   const buttons = useMemo(() => markers.map((item) => ({
     connectedMode: item.name,
     text: item.name,
+    id: item.id,
   })), [markers]);
 
   useEffect(() => {
@@ -71,7 +72,7 @@ export const ThirdStep: FC<StepProps> = ({
           spotId,
         );
         setLocation({ lat: spot.lat, lng: spot.lng });
-        setClickedPoint(spot.name);
+        // setClickedPoint(spot.name);
       }
     })();
   }, [step]);
@@ -94,7 +95,7 @@ export const ThirdStep: FC<StepProps> = ({
           boundsCoors={bounds}
           location={location}
           setLocation={setLocation}
-          markers={markers}
+          // markers={markers}
           setMarkers={setMarkers}
           zoom={zoom}
           setZoom={setZoom}
@@ -103,19 +104,21 @@ export const ThirdStep: FC<StepProps> = ({
           setNewPoint={setCreateSpotMode}
           setNewPointCoords={setNewPointCoords}
           createdNewSpotId={createdNewSpotId.current}
-          setChosenPointId={(res) => setData({ spotId: res })}
-          setButton={setClickedPoint}
+          // setChosenPointId={(res) => setData({ spotId: res })}
+          // setButton={setClickedPoint}
         />
         {!createSpotMode && (
           <div className={styles.pointsBtnGroup}>
-            <ButtonGroup
-              buttons={buttons}
-              onClick={(buttonName) => {
-                const spot = markers.find((item) => item.name === buttonName);
-                setData({ spotId: spot.id });
-              }}
-              defaultChecked={newSpotName || clickedPoint}
-            />
+            {buttons.map((btn) => (
+              <Button
+                button={btn}
+                onClick={(button) => {
+                  const spot = markers.find((item) => item.id === button);
+                  setData({ spotId: spot.id });
+                }}
+                defaultBtnId={data.spotId}
+              />
+            ))}
           </div>
         )}
 
@@ -131,7 +134,7 @@ export const ThirdStep: FC<StepProps> = ({
             setLocation={(loc) => {
               setNewPointCoords(loc);
               setLocation(loc);
-              setClickedPoint(newSpotName);
+              // setClickedPoint(newSpotName);
             }}
             setData={(id) => {
               setData({ spotId: id });

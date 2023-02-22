@@ -2,6 +2,7 @@ import React, {
   FC, useEffect, useRef, useState,
 } from 'react';
 import GoogleMapReact from 'google-map-react';
+import supercluster from 'points-cluster';
 import { getMapOptions } from '../../../../../../utils/getMapOptions';
 import { DivePoint } from '../../../../../Point';
 import { SearchInput } from '../../../../../Input/SearchInput';
@@ -20,20 +21,22 @@ import {
 } from '../../../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
 import { Bounds } from '../../../../../../types';
 import { notify } from '../../../../../../utils/notify';
+import { useDebounce } from '../../../../../../hooks/useDebounce';
+import { Loader } from '../../../../../Loader';
 
 type Props = {
   location: { lat: number, lng: number };
   setLocation: React.Dispatch<React.SetStateAction<{ lat: number, lng: number }>>;
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
-  markers: MarkerType[];
+  // markers: MarkerType[];
   setMarkers: React.Dispatch<React.SetStateAction<MarkerType[]>>;
   newPoint: boolean;
   setNewPoint: React.Dispatch<React.SetStateAction<boolean>>;
   setNewPointCoords: React.Dispatch<React.SetStateAction<{ lat: number, lng: number }>>;
   createdNewSpotId: string;
-  setChosenPointId: (res: string) => void;
-  setButton:React.Dispatch<React.SetStateAction<string>>;
+  // setChosenPointId: (res: string) => void;
+  // setButton:React.Dispatch<React.SetStateAction<string>>;
   boundsCoors?: Bounds;
   newPointCoords?: { lat: number, lng: number };
 };
@@ -43,35 +46,23 @@ export const LogADiveDiveMap: FC<Props> = ({
   setLocation,
   zoom,
   setZoom,
-  markers,
+  // markers,
   setMarkers,
   newPoint,
   setNewPoint,
   setNewPointCoords,
   createdNewSpotId,
-  setChosenPointId,
-  setButton,
+  // setChosenPointId,
+  // setButton,
   boundsCoors,
   newPointCoords,
 }) => {
   const [region, setRegion] = useState('');
+  const [boundsCoords, setBoundsCoords] = useState(null);
+  const [clusters, setClusters] = useState([]);
+  const [isLoading, setLoading] = useState(false);
   const userLocation = useUserLocation();
   const bounds = useRef<Bounds>();
-
-  const markersComponents = markers.map((point) => (
-    <DivePoint
-      key={point.id}
-      divesCount={point.divesLogged}
-      lat={point.lat}
-      lng={point.lng}
-      diveName={point.name}
-      onClick={(name) => {
-        const spotId = markers.find((item) => item.name === name);
-        setChosenPointId(spotId.id);
-        setButton(name);
-      }}
-    />
-  ));
 
   const setVisible = useRef<(visible: boolean) => void>();
   const setNewPositionMarker = useRef<(coords: {
@@ -107,23 +98,6 @@ export const LogADiveDiveMap: FC<Props> = ({
     };
   };
 
-  const mapOnChangeHandler = async (e: GoogleMapReact.ChangeEventValue) => {
-    setZoom(e.zoom);
-    setLocation({
-      lat: e.center.lat,
-      lng: e.center.lng,
-    });
-    bounds.current = {
-      ne: e.bounds.ne,
-      sw: e.bounds.sw,
-    };
-    const markersItems = await firestoreSpotsService
-      .getAllSpotsInMapViewport({
-        ne: e.bounds.ne,
-        sw: e.bounds.sw,
-      });
-    setMarkers(markersItems);
-  };
   useEffect(() => {
     // Handle add new spot
     if (boundsCoors) {
@@ -163,6 +137,45 @@ export const LogADiveDiveMap: FC<Props> = ({
   }, [newPoint]);
   const searchRef = useRef(null);
   const [value, setValue] = useState('');
+
+  const getClusters = (props, markersItems) => {
+    const superClusters = supercluster(markersItems, {
+      minZoom: 0,
+      maxZoom: 16,
+      radius: 20,
+    });
+    return superClusters({ bounds: props.bounds, zoom: props.zoom });
+  };
+
+  const mapOnChangeHandler = async (e: GoogleMapReact.ChangeEventValue) => {
+    try {
+      setLoading(true);
+      setMarkers([]);
+      setZoom(e.zoom);
+      setLocation({
+        lat: e.center.lat,
+        lng: e.center.lng,
+      });
+      bounds.current = {
+        ne: e.bounds.ne,
+        sw: e.bounds.sw,
+      };
+      const markersItems = await firestoreSpotsService
+        .getAllSpotsInMapViewport({
+          ne: e.bounds.ne,
+          sw: e.bounds.sw,
+        });
+      setClusters(getClusters(e, markersItems));
+      setMarkers(markersItems);
+      setLoading(false);
+    } catch (ev) {
+      setLoading(false);
+      notify(ev.message);
+    }
+  };
+
+  // @ts-ignore
+  useDebounce(boundsCoords, mapOnChangeHandler, 1500);
 
   return (
     <div className={styles.mapWrapper}>
@@ -220,15 +233,25 @@ export const LogADiveDiveMap: FC<Props> = ({
         defaultCenter={userLocation}
         center={location}
         defaultZoom={zoom}
+        draggable={!isLoading}
         // @ts-ignore
         options={getMapOptions}
         onGoogleApiLoaded={({
           map,
           maps,
         }) => handleApiLoaded(map, maps)}
-        onChange={mapOnChangeHandler}
+        onChange={setBoundsCoords}
       >
-        {!newPoint && markersComponents}
+        {!newPoint && clusters.length && clusters.map((point) => (
+          <DivePoint
+            key={point.id}
+            divesCount={point.numPoints}
+            lat={point.wy}
+            lng={point.wx}
+            diveName=""
+            onClick={() => {}}
+          />
+        ))}
       </GoogleMapReact>
       {!newPoint && (
         <span
@@ -243,6 +266,9 @@ export const LogADiveDiveMap: FC<Props> = ({
           <Icon iconName="add-point-white" />
         </span>
       )}
+      <div className={styles.loader}>
+        <Loader loading={isLoading} />
+      </div>
     </div>
   );
 };

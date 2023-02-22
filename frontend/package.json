@@ -31,6 +31,7 @@
     "next-images": "^1.8.4",
     "next-pwa": "^5.4.4",
     "next-transpile-modules": "^9.0.0",
+    "points-cluster": "^0.1.4",
     "prettier": "^2.5.1",
     "rc-time-picker": "^3.7.3",
     "react": "17.0.2",

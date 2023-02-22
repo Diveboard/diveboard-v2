@@ -4,6 +4,7 @@ import React, {
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import supercluster from 'points-cluster';
 import styles from './styles.module.scss';
 import { SearchAnimatedInput } from '../../Input/SearchAnimatedInput';
 import SpotCard from './SpotCard';
@@ -12,11 +13,11 @@ import { ExploreMap } from './ExploreMap';
 import { firestoreGeoDataService } from '../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
 import { useDebounce } from '../../../hooks/useDebounce';
 import { SearchDropdownPanel } from '../../Dropdown/SearchedItems/SearchDropdownPanel';
-import { firestoreSpotsService } from '../../../firebase/firestore/firestoreServices/firestoreSpotsService';
 import { useOutsideClick } from '../../../hooks/useOutsideClick';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
 import { convertCalToFar, convertMetersToFeet } from '../../../utils/unitSystemConverter';
 import { notify } from '../../../utils/notify';
+import { firestoreSpotsService } from '../../../firebase/firestore/firestoreServices/firestoreSpotsService';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -55,18 +56,12 @@ const options = {
   colors: ['#FDC90D80'],
 };
 
-// const series = [
-//   {
-//     name: 'series-1',
-//     data: [30, 40, 45, 77, 95, 80, 63, 50, 49, 60, 70, 91],
-//   },
-// ];
-
 const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [touchStartY, setTouchStartY] = useState(null);
   const [bounds, setBounds] = useState(null);
+  const [clusters, setClusters] = useState([]);
   // const [chosenSpot, setChosenSpot] = useState(null);
 
   const [zoom, setZoom] = useState(7);
@@ -75,7 +70,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const [regions, setRegions] = useState([]);
   const [region, setRegion] = useState(undefined);
   const [spots, setSpots] = useState([]);
-  const [markerPoints, setMarkerPoints] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
   const [mapCoords, setMapsCoords] = useState({
@@ -130,20 +124,22 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     }
   };
 
-  const onMapChange = async () => {
+  const getClusters = (props, markersItems) => {
+    const superClusters = supercluster(markersItems, {
+      minZoom: 0,
+      maxZoom: 16,
+      radius: 20,
+    });
+    return superClusters({ bounds: props.bounds, zoom: props.zoom });
+  };
+
+  const onMapChange = async (e) => {
     try {
       setLoading(true);
       const markersItems = await firestoreSpotsService
-        .getAllSpotsInMapViewport(bounds);
-      setMarkerPoints(markersItems.map((s) => ({
-        id: s.id,
-        lat: s.lat,
-        lng: s.lng,
-        divesCount: s.dives,
-        name: s.name,
-        averageDepth: s.averageDepth,
-      })));
+        .getAllSpotsInMapViewport(e.bounds);
       setSpots(markersItems);
+      setClusters(getClusters(e, markersItems));
       setLoading(false);
     } catch (message) {
       setLoading(false);
@@ -424,13 +420,10 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
         <ExploreMap
           coords={mapCoords}
           zoom={zoom}
-          points={markerPoints}
           isMobile={isMobile}
           renderInput={<div ref={searchRef}>{renderInput}</div>}
-          onMapChange={(e) => setBounds({
-            ne: e.bounds.ne,
-            sw: e.bounds.sw,
-          })}
+          onMapChange={setBounds}
+          clusters={clusters}
           isLoading={isLoading}
           setZoom={setZoom}
         />

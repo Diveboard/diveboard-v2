@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { name } from 'country-emoji';
 import { PersonalProfileData } from './PersonalProfileData';
 import { DivesMap } from './DivesMap';
@@ -14,7 +14,6 @@ import {
   DiveType, SpeciesType, SpotType, UserSettingsType,
 } from '../../../firebase/firestore/models';
 import { SurveysBlock } from './SurveysBlock';
-import { NetworkStatusContext } from '../../../layouts/NetworkStatus';
 import { convertMinutes } from '../../../utils/convertMinutes';
 
 type Props = {
@@ -30,20 +29,6 @@ type Props = {
 export const ProfileBlock = ({
   dives, species, logbookUser, user, data, pictures, buddies,
 }: Props) => {
-  const mapCoords = {
-    lat: 40.95,
-    lng: 30.33,
-  };
-  const isOffline = useContext(NetworkStatusContext);
-
-  const markerPoints = dives ? dives.map((dive) => ({
-    id: dive.id,
-    divesCount: 1,
-    diveName: dive.aboutDive.tripName,
-    lat: dive.spot?.lat,
-    lng: dive.spot?.lng,
-  })) : [];
-
   const [isItOwnProfile, setOwnProfile] = useState(user?.uid === logbookUser.uid);
 
   useEffect(() => {
@@ -119,9 +104,7 @@ export const ProfileBlock = ({
       />
       {!!dives?.length && (
       <DivesMap
-        coords={mapCoords}
-        zoom={7}
-        points={isOffline ? [] : markerPoints}
+        userId={logbookUser.uid}
       />
       )}
       {!!dives?.length && (

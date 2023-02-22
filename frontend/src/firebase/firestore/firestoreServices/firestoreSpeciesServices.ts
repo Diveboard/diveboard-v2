@@ -6,17 +6,13 @@ import {
   doc,
   getDoc,
   limit,
-  orderBy,
-  startAfter,
-  startAt,
   DocumentReference,
   DocumentSnapshot,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
-import { SpeciesType, SpeciesTypeWithoutId } from '../models';
+import { SpeciesType } from '../models';
 import { Coords } from '../../../types';
 import { firestorePaths, PathEnum } from '../firestorePaths';
-import { firestoreDivesService } from './firestoreDivesService';
 
 export const firestoreSpeciesServices = {
 

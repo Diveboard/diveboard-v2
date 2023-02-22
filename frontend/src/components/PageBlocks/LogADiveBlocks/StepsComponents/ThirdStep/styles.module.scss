@@ -8,7 +8,9 @@
   .pointsBtnGroup {
     margin-top: 20px;
     margin-bottom: 30px;
-    overflow: auto;
+    gap: 5px 0;
+    display: flex;
+    flex-wrap: wrap;
   }
 
   .newSpotGroup {

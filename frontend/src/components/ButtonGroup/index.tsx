@@ -10,6 +10,7 @@ type Props = {
     text: string;
     connectedMode: string;
     imgSrc?: string;
+    id?: string;
   }[];
   onClick: (buttonName: string) => void;
 };
@@ -27,7 +28,7 @@ export const ButtonGroup = ({
     setMode(defaultChecked);
   }, [defaultChecked]);
 
-  const buttonComponents = buttons.map((btn) => {
+  const buttonComponents = buttons.map((btn, idx) => {
     let btnStyle;
     if (btn.connectedMode === mode) {
       btnStyle = `${styles.btn} ${styles.active}`;
@@ -39,7 +40,8 @@ export const ButtonGroup = ({
 
     return (
       <button
-        key={btn.text}
+        // eslint-disable-next-line react/no-array-index-key
+        key={idx}
         className={btnStyle}
         onClick={() => {
           if (btn.connectedMode !== 'shops') {

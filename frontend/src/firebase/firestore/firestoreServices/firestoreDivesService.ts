@@ -13,7 +13,7 @@ import {
   where,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
-import { DiveType } from '../models';
+import { DiveType, SpotType } from '../models';
 import { convertTimestampDate } from '../../../utils/convertTimestampDate';
 import { firestoreSpotsService } from './firestoreSpotsService';
 import { PropertiesType } from '../../../types';
@@ -38,13 +38,12 @@ export const firestoreDivesService = {
         diveData.surveyRef = null;
       }
       delete diveData.danSurvey;
-      if (diveData.spotRef) {
+      if (diveData.spotRef.id) {
         const spot = await firestoreSpotsService.getSpotByRef(diveData.spotRef);
         const newSpot = { ...spot };
-        diveData.spotRef = spot.ref;
-        newSpot.dives[ref.id] = ref;
+        spot.dives[ref.id] = ref;
         spotData = newSpot;
-        await firestoreSpotsService.updateSpotById(diveData.spotId, newSpot);
+        await firestoreSpotsService.updateSpotById(diveData.spotRef.id, newSpot);
       }
       await firestoreLogbookService.addDiveToLogbook(userId, diveData, spotData, ref);
       await setDoc(ref, { ...diveData }, { merge: true });
@@ -75,25 +74,22 @@ export const firestoreDivesService = {
         dive.surveyRef = surveyRef;
       }
       delete dive.danSurvey;
+
       const { spotRef } = await docSnap.data();
-      // TODO: Add dive to new spot. Check for logbook
       const spot = dive.spotRef?.id ? await firestoreSpotsService.getSpotByRef(dive.spotRef) : null;
       const spotData = spot;
       if (spot) {
-        if (dive.spotRef?.id !== spotRef.id) {
+        if (dive.spotRef?.id !== spotRef?.id) {
           const newSpot = { ...spot };
           newSpot.dives[docRef.id] = docRef;
           dive.spotRef = spot.ref;
           await firestoreSpotsService.updateSpotById(dive.spotRef.id, newSpot);
-
-          // if (spotRef?.id) {
-          //   // Delete dive from old spot
-          //   const spotO = await firestoreSpotsService.getSpotById(spotRef.id);
-          //   const oldSpot = { ...spotO };
-          //   oldSpot.dives = oldSpot.dives?.filter((i) => i !== diveId);
-          //   spotData = spotO;
-          //   await firestoreSpotsService.updateSpotById(spotRef.id, oldSpot);
-          // }
+          if (spotRef?.id) {
+            const oldSpot = await firestoreSpotsService.getSpotByRef(spotRef);
+            const oldSpotCopy = { ...oldSpot };
+            delete oldSpotCopy.dives[diveId];
+            await firestoreSpotsService.updateSpotById(spotRef.id, oldSpotCopy);
+          }
         }
       }
       await firestoreLogbookService.updateDiveInLogbook(userId, dive, spotData, docRef);
@@ -212,7 +208,7 @@ export const firestoreDivesService = {
         // eslint-disable-next-line no-await-in-loop
         const spot = dive.spotRef ? await firestoreSpotsService.getSpotByRef(dive.spotRef) : null;
         dive.spot = spot;
-        dive.spotName = spot ? `${spot.location?.location}, ${spot.location?.country}, ${spot?.location.region}` : null;
+        dive.spotName = spot ? `${spot.locationName}, ${spot.countryName}, ${spot.regionName}` : null;
         if (dive.pictures !== {} && draft) {
           const [key, value] = Object.entries(dive.pictures)[0];
           // @ts-ignore
@@ -453,6 +449,32 @@ export const firestoreDivesService = {
         }
       });
       return deepestDive;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
+  getSpotsCoordsByUserDives: async (userId: string) => {
+    try {
+      const ref = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
+      const q = query(
+        ref,
+      );
+      const docSnap = await getDocs(q);
+      const promises = [];
+
+      docSnap.forEach((d) => {
+        const data = d.data();
+        if (data.spotRef) {
+          promises.push(getDoc(data.spotRef));
+        }
+      });
+      return await Promise.all(promises).then((values) => values.map((res) => {
+        const { lat, lng, name } = res.data() as SpotType;
+        return {
+          lat, lng, id: res.id, name,
+        };
+      }));
     } catch (e) {
       throw new Error(e.message);
     }

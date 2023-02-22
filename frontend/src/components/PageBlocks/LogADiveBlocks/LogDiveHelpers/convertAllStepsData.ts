@@ -1,4 +1,4 @@
-import { doc } from '@firebase/firestore';
+import { doc, DocumentReference } from '@firebase/firestore';
 import { AllStepsDataType } from '../types/stepTypes';
 import {
   BuddiesType,
@@ -104,23 +104,23 @@ export const convertAllStepsData = async (
     }
     return Object.fromEntries(result);
   };
-  const convertDiveBuddies = (buddies: Array<BuddiesType>) => buddies.map((buddy) => {
-    if (buddy.userRef) {
-      buddy.userRef = doc(db, `users/${buddy.id}`);
+  const convertDiveBuddies = (buddies: Array<BuddiesType>) => {
+    if (!buddies?.length) {
+      return [];
     }
-    return buddy;
-  });
+    return buddies.map((buddy) => {
+      if (buddy.userRef) {
+        buddy.userRef = doc(db, `users/${buddy.id}`);
+      }
+      return buddy;
+    });
+  };
 
   return {
     buddies: convertDiveBuddies(stepsData.fifthStep.buddies),
-    danSurvey: stepsData.eighthStep.danSurvey,
-    surveyRef: stepsData.eighthStep.surveyRef,
+    danSurvey: stepsData.eighthStep.danSurvey || null,
+    surveyRef: stepsData.eighthStep.surveyRef || null,
     diveActivities: convertDiveActivities(stepsData.firstStep.diveActivities),
-    // TODO: Implement dive center logic
-    diveCenter: {
-      id: '0',
-      guide: '0',
-    },
     diveData: {
       ...replaceUndefinedToNull(stepsData.secondStep.parameters),
       ...replaceUndefinedToNull(stepsData.secondStep.advancedParameters),
@@ -186,6 +186,15 @@ const convertWeightSystem = (
   return convertKgToLbs(value);
 };
 
+const findSpotIdByRef = (spotRef: DocumentReference) => {
+  // @ts-ignore
+  const segments = spotRef._key?.path?.segments;
+  if (segments?.length) {
+    return segments[segments.length - 1];
+  }
+  return null;
+};
+
 export const convertToStepsData = (
   data: DiveType & { mediaUrls: Array<MediaUrls> },
   unitSystem: UnitSystem,
@@ -245,15 +254,13 @@ export const convertToStepsData = (
       tanks: data.tanks,
     },
     thirdStep: {
-      spotId: data.spotId,
+      spotId: data.spotRef ? findSpotIdByRef(data.spotRef) : null,
     },
     fourthStep: {
       species: data.species,
     },
     fifthStep: {
       buddies: data.buddies,
-      diveCenter: data.diveCenter.id,
-      guideName: data.diveCenter.guide,
     },
     sixthStep: {
       mediaUrl: data.mediaUrls,

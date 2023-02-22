@@ -8,10 +8,10 @@ import { Bounds } from '../../../types';
 import { PathEnum } from '../firestorePaths';
 
 export const firestoreSpotsService = {
-  updateSpotById: async (spotId: string, data: Partial<SpotType>) => {
+  updateSpotById: async (spotId: string, data: SpotType) => {
     try {
       const docRef = doc(db, PathEnum.SPOTS, spotId);
-      await setDoc(docRef, { ...data }, { merge: true });
+      await setDoc(docRef, { ...data }, { merge: false });
       return true;
     } catch (e) {
       throw new Error(e.message);
@@ -68,7 +68,7 @@ export const firestoreSpotsService = {
         where('lat', '>', bounds.sw.lat),
         // where('lng', '<', bounds.ne.lng),
         // where('lng', '>', bounds.sw.lng),
-        limit(1000),
+        limit(5000),
       );
       const querySnapshot = await getDocs(q);
       const spots = [];
@@ -86,7 +86,7 @@ export const firestoreSpotsService = {
           averageDepth,
         } = document.data();
         const { id } = document;
-        if (lng < bounds.ne.lng && lng > bounds.sw.lng) {
+        if (lng < bounds.ne.lng && lng > bounds.sw.lng && name) {
           spots.push({
             id,
             name,
