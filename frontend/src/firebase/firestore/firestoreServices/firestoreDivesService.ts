@@ -115,20 +115,6 @@ export const firestoreDivesService = {
     }
   },
 
-  getDivesCountByUserIdInSpot: async (userId: string, spotId: string) => {
-    try {
-      const docRef = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
-      const q = query(
-        docRef,
-        where('spotId', '==', spotId),
-      );
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.size;
-    } catch (e) {
-      throw new Error(e.message);
-    }
-  },
-
   getDivesByLocationName: async (userId: string, locationName: string) => {
     try {
       const docRef = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
@@ -316,7 +302,15 @@ export const firestoreDivesService = {
         const docRef = doc(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`, diveIds[i]);
         // eslint-disable-next-line no-await-in-loop
         const docSnap = await getDoc(docRef);
-        const { pictures, surveyRef } = docSnap.data();
+        const { pictures, surveyRef, spotRef } = docSnap.data();
+        if (spotRef?.id) {
+          // eslint-disable-next-line no-await-in-loop
+          const spot = await firestoreSpotsService.getSpotByRef(spotRef);
+          const newSpot = { ...spot };
+          delete newSpot.dives[docRef.id];
+          // eslint-disable-next-line no-await-in-loop
+          await firestoreSpotsService.updateSpotById(spotRef.id, newSpot);
+        }
         if (pictures) {
           const picturesIds = Object.keys(pictures);
           for (let j = 0; j < picturesIds.length; j++) {
@@ -364,8 +358,12 @@ export const firestoreDivesService = {
         // eslint-disable-next-line no-await-in-loop
         const docSnap = await getDoc(divesIds[i]);
         const data = docSnap.data();
+        if (!data) {
+          // eslint-disable-next-line no-continue
+          continue;
+        }
         let pictures = [];
-        if (data.pictures) {
+        if (data?.pictures) {
           const key = Object.keys(data.pictures)[0];
           const value = Object.values(data.pictures)[0];
           // @ts-ignore

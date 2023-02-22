@@ -11,7 +11,7 @@ export const firestoreSpotsService = {
   updateSpotById: async (spotId: string, data: SpotType) => {
     try {
       const docRef = doc(db, PathEnum.SPOTS, spotId);
-      await setDoc(docRef, { ...data }, { merge: false });
+      await setDoc(docRef, { ...data }, { merge: true });
       return true;
     } catch (e) {
       throw new Error(e.message);
@@ -39,12 +39,7 @@ export const firestoreSpotsService = {
       if (!data) {
         return null;
       }
-      const location = {
-        region: data.regionName,
-        country: data.countryName,
-        location: data.locationName,
-      };
-      return { ...data, location, ref: docSnap.ref } as any;
+      return { ...data, ref: docSnap.ref } as any;
     } catch (e) {
       throw new Error(e.message);
     }
@@ -68,7 +63,7 @@ export const firestoreSpotsService = {
         where('lat', '>', bounds.sw.lat),
         // where('lng', '<', bounds.ne.lng),
         // where('lng', '>', bounds.sw.lng),
-        limit(5000),
+        limit(2500),
       );
       const querySnapshot = await getDocs(q);
       const spots = [];

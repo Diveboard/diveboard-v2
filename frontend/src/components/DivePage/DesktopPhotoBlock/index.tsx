@@ -22,7 +22,7 @@ type Props = {
 export const DesktopPhotoBlock: FC<Props> = ({ photos, pictures }) => {
   const newPhotoArray = [];
   const [photosForRender, setPhotosForRender] = useState(photos);
-  const size = pictures?.length || photos.length;
+  const size = pictures?.length || photos?.length || 0;
 
   useEffect(() => {
     setPhotosForRender(photos);

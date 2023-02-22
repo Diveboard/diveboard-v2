@@ -109,9 +109,9 @@ export const firestoreGalleryService = {
       const userRef = doc(db, `${PathEnum.USERS}/${imgData.user}`);
       const res = await addDoc(collection(db, PathEnum.PICTURES), {
         ...imgData,
-        locationName: spotData ? spotData.location.location : null,
-        regionName: spotData ? spotData.location.region : null,
-        countryName: spotData ? spotData.location.country : null,
+        locationName: spotData ? spotData.locationName : null,
+        regionName: spotData ? spotData.regionName : null,
+        countryName: spotData ? spotData.countryName : null,
         spotRef: spotData ? spotData.ref : null,
         userRef,
       });
