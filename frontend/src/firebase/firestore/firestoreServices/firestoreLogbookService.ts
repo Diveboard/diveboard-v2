@@ -41,7 +41,7 @@ export const firestoreLogbookService = {
       }
 
       if (data?.buddies.length) {
-        buddies = await firestorePublicProfileService.getBuddiesInfo(data.buddies, 4);
+        buddies = await firestorePublicProfileService.getBuddiesInfo(data.buddies, 2);
       }
 
       if (data?.pictures) {
@@ -143,7 +143,7 @@ export const firestoreLogbookService = {
       }
 
       if (buddies?.length) {
-        buddiesData = await firestorePublicProfileService.getBuddiesInfo(buddies, 4);
+        buddiesData = await firestorePublicProfileService.getBuddiesInfo(buddies, 2);
       }
 
       if (pictures?.length) {

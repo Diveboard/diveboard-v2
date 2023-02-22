@@ -25,6 +25,7 @@ import { Backdrop } from '../../Backdrop';
 import { Popup } from '../../DiveManager/Popup';
 import KebabButton from '../../Buttons/KebabButton';
 import { MediaUrls, SpeciesType } from '../../../firebase/firestore/models';
+import { FirstStepType } from './types/stepTypes';
 
 type Props = {
   dive?: DiveType;
@@ -42,12 +43,14 @@ export const LogDiveBlock = ({
   const [isDraftPopupOpen, setDraftPopupOpen] = useState<boolean>(false);
 
   const {
-    setCurrentStep, setData, getAllStepsData, setEmptyData,
+    setCurrentStep, setData, getAllStepsData, setEmptyData, getStepData,
   } = useContext(LogDiveDataContext);
   const { userAuth } = useContext(AuthStatusContext);
   const router = useRouter();
   const { isNew } = router.query;
   const [, anchor] = router.asPath.split('#');
+
+  const { overview: { diveNumber } } = getStepData(1) as FirstStepType;
 
   useEffect(() => {
     if (+anchor !== step && +anchor >= 1 && +anchor < 10) {
@@ -116,7 +119,7 @@ export const LogDiveBlock = ({
     <div className={styles.diveWrapper} style={{ display: (step === 0 || isLoading) ? 'block' : 'flex' }}>
       {step !== 10 && (
       <div className={styles.header}>
-        <h1>{diveId ? `Dive ${diveId}` : 'New Dive'}</h1>
+        <h1>{diveId ? `Dive #${diveNumber}` : 'New Dive'}</h1>
         <span onClick={() => setDraftPopupOpen(true)}>SAVE DRAFT</span>
       </div>
       )}
