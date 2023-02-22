@@ -49,10 +49,10 @@ export const ThirdStep: FC<StepProps> = ({
   })), [markers]);
 
   useEffect(() => {
-    if (userLocation) {
+    if (userLocation && !data?.spotId) {
       setLocation(userLocation);
     }
-  }, [userLocation]);
+  }, [userLocation, data]);
 
   useEffect(() => {
     if (!createSpotMode && newSpotName && markers.length) {

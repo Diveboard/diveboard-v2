@@ -43,6 +43,7 @@ export const firestoreDivesService = {
         const newSpot = { ...spot };
         spot.dives[ref.id] = ref;
         spotData = newSpot;
+        diveData.locationName = newSpot.locationName;
         await firestoreSpotsService.updateSpotById(diveData.spotRef.id, newSpot);
       }
       await firestoreLogbookService.addDiveToLogbook(userId, diveData, spotData, ref);
@@ -83,6 +84,7 @@ export const firestoreDivesService = {
           const newSpot = { ...spot };
           newSpot.dives[docRef.id] = docRef;
           dive.spotRef = spot.ref;
+          dive.locationName = newSpot.locationName;
           await firestoreSpotsService.updateSpotById(dive.spotRef.id, newSpot);
           if (spotRef?.id) {
             const oldSpot = await firestoreSpotsService.getSpotByRef(spotRef);

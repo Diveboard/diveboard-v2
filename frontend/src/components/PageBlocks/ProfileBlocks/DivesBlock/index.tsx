@@ -37,7 +37,6 @@ export const DivesBlock = ({
   const [locations, setLocations] = useState([]);
   // const [searchDives, setSearchDives] = useState([]);
   const router = useRouter();
-
   const { userAuth } = useContext(AuthStatusContext);
 
   const buttons = [{

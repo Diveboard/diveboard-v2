@@ -125,6 +125,7 @@ export type DiveType = {
   spotId: string | null;
   spotRef: DocumentReference;
   comments?: Array<CommentType>;
+  locationName?: string;
 }
 & SeventhStepType
 & EighthStepType
