@@ -56,8 +56,6 @@ export const FifthStep: FC<StepProps> = ({
   const { shops, guides } = useGetShops();
 
   const fifthStepData: FifthStepType = {
-    diveCenter,
-    guideName,
     buddies: selectedBuddies,
   };
 

@@ -75,8 +75,6 @@ const fourthStep: FourthStepType = {
 };
 
 const fifthStep: FifthStepType = {
-  diveCenter: undefined,
-  guideName: undefined,
   buddies: undefined,
 };
 
