@@ -2,27 +2,24 @@ import React, { FC, useState } from 'react';
 import styles from '../styles.module.scss';
 import { Button } from '../../../../Buttons/Button';
 
+export type Stats = {
+  qualification?: string;
+  diveIn?: string[];
+  divesPublished?: number;
+  thisYear?: number;
+  totalUnderwaterTime?: string;
+  mostDives?: string;
+  deepestDive?: string;
+  longestDive?: string;
+};
+
 type Props = {
-  qualification: string;
-  diveIn: string;
-  divesPublished: number;
-  thisYear: number;
-  totalUnderwaterTime: string;
-  mostDives: string;
-  deepestDive: string;
-  longestDive: string;
+  stats: Stats,
   aboutDiver: string;
 };
 
 export const DiveData: FC <Props> = ({
-  qualification,
-  diveIn,
-  divesPublished,
-  thisYear,
-  totalUnderwaterTime,
-  mostDives,
-  deepestDive,
-  longestDive,
+  stats,
   aboutDiver,
 }) => {
   const [isShowNote, setShowMore] = useState(false);
@@ -31,78 +28,78 @@ export const DiveData: FC <Props> = ({
   return (
     <div className={styles.diveData}>
       <div className={styles.firstBlock}>
-        {qualification && (
+        {!!stats?.qualification && (
         <div>
           <span className={styles.thinText}>
             Qualifications:
             {'  '}
           </span>
-          <span className={styles.boldText}>{qualification}</span>
+          <span className={styles.boldText}>{stats.qualification}</span>
         </div>
         )}
-        {!!diveIn && (
+        {!!stats?.diveIn?.length && (
         <div>
           <span className={styles.thinText}>
             Dived in:
             {'  '}
           </span>
-          <span className={styles.boldText}>{diveIn}</span>
+          <span className={styles.boldText}>{stats.diveIn}</span>
         </div>
         )}
-        {!!divesPublished && (
+        {!!stats?.divesPublished && (
         <div>
           <span className={styles.thinText}>
             Dives published:
             {'  '}
           </span>
-          <span className={styles.boldText}>{divesPublished}</span>
+          <span className={styles.boldText}>{stats.divesPublished}</span>
         </div>
         )}
-        {typeof thisYear === 'number' && !!divesPublished && (
+        {typeof stats?.thisYear === 'number' && !!stats?.divesPublished && (
         <div>
           <span className={styles.thinText}>
             This year:
             {'  '}
           </span>
-          <span className={styles.boldText}>{thisYear}</span>
+          <span className={styles.boldText}>{stats.thisYear}</span>
         </div>
         )}
       </div>
       <div className={styles.secondBlock}>
-        {!!totalUnderwaterTime && (
+        {!!stats?.totalUnderwaterTime && (
         <div>
           <span className={styles.thinText}>
             Total Underwater time on Diveboard:
             {'  '}
           </span>
-          <span className={styles.boldText}>{totalUnderwaterTime}</span>
+          <span className={styles.boldText}>{stats.totalUnderwaterTime}</span>
         </div>
         )}
-        {!!mostDives && (
+        {!!stats?.mostDives && (
         <div>
           <span className={styles.thinText}>
             Most dives on Diveboard in:
             {'  '}
           </span>
-          <span className={styles.boldText}>{mostDives}</span>
+          <span className={styles.boldText}>{stats.mostDives}</span>
         </div>
         )}
-        {!!deepestDive && (
+        {!!stats?.deepestDive && (
         <div>
           <span className={styles.thinText}>
             Deepest Dive:
             {'  '}
           </span>
-          <span className={styles.boldText}>{deepestDive}</span>
+          <span className={styles.boldText}>{stats.deepestDive}</span>
         </div>
         )}
-        {!!longestDive && (
+        {!!stats?.longestDive && (
         <div>
           <span className={styles.thinText}>
             Longest Dive:
             {'  '}
           </span>
-          <span className={styles.boldText}>{longestDive}</span>
+          <span className={styles.boldText}>{stats.longestDive}</span>
         </div>
         )}
       </div>

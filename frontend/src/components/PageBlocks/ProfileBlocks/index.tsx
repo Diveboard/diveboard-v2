@@ -102,26 +102,30 @@ export const ProfileBlock = ({
         isItOwnProfile={isItOwnProfile}
         stats={getStats()}
       />
-      {!!dives?.length && (
-      <DivesMap
-        userId={logbookUser.uid}
-      />
-      )}
-      {!!dives?.length && (
+      {data && (
+      <>
+        {!!dives?.length && (
+        <DivesMap
+          userId={logbookUser.uid}
+        />
+        )}
+        {!!dives?.length && (
         <DivesBlock
           divesData={isItOwnProfile ? dives : dives.filter((dive) => !dive.draft && dive.publishingMode === 'PUBLIC')}
           userId={logbookUser.uid}
           isItOwnProfile={isItOwnProfile}
           dives={isItOwnProfile ? data.dives : data.dives.filter((dive) => !dive.draft && dive.publishingMode === 'PUBLIC')}
         />
-      )}
+        )}
 
-      {!!pictures.length && <PicturesBlock picturesData={pictures} pictures={data.pictures} /> }
-      {!!species?.length && <LatestSpecies speciesData={species} species={data.species} /> }
-      {/* <CertificationBlock certifications={certifications} />* /}
+        {!!pictures.length && <PicturesBlock picturesData={pictures} pictures={data.pictures} /> }
+        {!!species?.length && <LatestSpecies speciesData={species} species={data.species} /> }
+        {/* <CertificationBlock certifications={certifications} />* /}
       {/* <CentersVisitedBlock /> */}
-      {!!buddies?.length && <DiveBuddies buddiesData={buddies} buddies={data.buddies} /> }
-      {!!data?.surveys?.length && <SurveysBlock surveys={data.surveys} />}
+        {!!buddies?.length && <DiveBuddies buddiesData={buddies} buddies={data.buddies} /> }
+        {!!data?.surveys?.length && <SurveysBlock surveys={data.surveys} />}
+      </>
+      )}
     </div>
   );
 };

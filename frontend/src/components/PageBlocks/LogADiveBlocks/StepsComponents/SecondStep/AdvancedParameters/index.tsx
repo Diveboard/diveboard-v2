@@ -60,6 +60,7 @@ export const AdvancedParameters: FC<Props> = ({
             value={advancedParameters.weights ? `${advancedParameters.weights}` : ''}
             setValue={(val) => params('weights', +(val as string))}
             height={48}
+            min={0}
             width={isMobile ? 768 : 165}
             placeholder={userAuth.settings.preferences.unitSystem === 'METRIC' ? 'kg' : 'lbs'}
           />

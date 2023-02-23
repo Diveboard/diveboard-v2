@@ -108,7 +108,13 @@ export const LogADiveDiveMap: FC<Props> = ({
   }, [boundsCoors]);
 
   useEffect(() => {
-    if (userLocation && !spotId) setLocation(userLocation);
+    if (!spotId) {
+      if (userLocation) {
+        setLocation(userLocation);
+      } else {
+        setLocation({ lat: 34, lng: 46 });
+      }
+    }
   }, [userLocation, spotId]);
 
   useEffect(() => {

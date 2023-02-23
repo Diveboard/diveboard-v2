@@ -6,7 +6,7 @@ import {
 } from '../../SettingsBlocks/SettingsItemContent/NotEditedContent/ProfileImage';
 import { Icon } from '../../../Icons/Icon';
 import { Button } from '../../../Buttons/Button';
-import { DiveData } from './DiveData';
+import { DiveData, Stats } from './DiveData';
 import pageRoutes from '../../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
 
@@ -75,16 +75,9 @@ export const PersonalProfileData: FC<Props> = ({
       </div>
 
       <div className={styles.diveDataWrapper}>
-        {stats && (
+        {(stats || about) && (
         <DiveData
-          qualification=""
-          diveIn={stats.diveIn?.join(', ')}
-          divesPublished={stats.divesPublished}
-          thisYear={stats.thisYear}
-          mostDives={stats.mostDives}
-          totalUnderwaterTime={stats.totalUnderwaterTime}
-          deepestDive={stats.deepestDive}
-          longestDive={stats.longestDive}
+          stats={stats as Stats}
           aboutDiver={about}
         />
         )}

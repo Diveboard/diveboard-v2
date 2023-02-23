@@ -79,12 +79,22 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
       if (!saveDAN) {
         data.danSurvey = null;
       }
-      if (diveId) {
-        // @ts-ignore
-        await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data, sendToDAN);
+      if (data.aboutDive.diveNumber
+          && data.aboutDive.tripName
+          && data.diveData.date
+          && data.diveData.maxDepth
+          && data.diveData.duration
+      ) {
+        if (diveId) {
+          // @ts-ignore
+          await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data, sendToDAN);
+        } else {
+          // @ts-ignore
+          await firestoreDivesService.setDiveData(data, userAuth.uid, sendToDAN);
+        }
+        setStep(10);
       } else {
-        // @ts-ignore
-        await firestoreDivesService.setDiveData(data, userAuth.uid, sendToDAN);
+        notify('Fill all require data');
       }
       setLoading(false);
       setStep(10);

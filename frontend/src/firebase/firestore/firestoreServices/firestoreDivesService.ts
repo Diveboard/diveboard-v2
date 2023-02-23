@@ -207,7 +207,7 @@ export const firestoreDivesService = {
         const spot = dive.spotRef ? await firestoreSpotsService.getSpotByRef(dive.spotRef) : null;
         dive.spot = spot;
         dive.spotName = spot ? `${spot.locationName}, ${spot.countryName}, ${spot.regionName}` : null;
-        if (dive.pictures !== {} && draft) {
+        if (Object.entries(dive.pictures).length && draft) {
           const [key, value] = Object.entries(dive.pictures)[0];
           // @ts-ignore
           // eslint-disable-next-line no-await-in-loop

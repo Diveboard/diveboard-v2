@@ -90,15 +90,25 @@ export const LogDiveBlock = ({
         userAuth.settings.preferences.unitSystem,
         true,
       );
-      if (diveId) {
-        // @ts-ignore
-        await firestoreDivesService.updateDiveData(userId, diveId, data);
+      if (data.aboutDive.diveNumber
+          && data.aboutDive.tripName
+          && data.diveData.date
+          && data.diveData.maxDepth
+          && data.diveData.duration
+      ) {
+        if (diveId) {
+          // @ts-ignore
+          await firestoreDivesService.updateDiveData(userId, diveId, data);
+        } else {
+          // @ts-ignore
+          await firestoreDivesService.setDiveData(data, userId);
+        }
+        router.push('/dive-manager');
       } else {
-        // @ts-ignore
-        await firestoreDivesService.setDiveData(data, userId);
+        notify('Fill all require data');
       }
+      setLoading(false);
       setDraftPopupOpen(false);
-      router.push('/dive-manager');
     } catch (e) {
       setLoading(false);
       notify(e.message);

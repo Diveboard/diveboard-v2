@@ -109,7 +109,6 @@ export const firestoreLogbookService = {
       if (!logbookUser) {
         throw new Error('Logbook is not exist');
       }
-
       if (!data) {
         return {
           logbookUser: JSON.parse(JSON.stringify(logbookUser)),
@@ -117,6 +116,7 @@ export const firestoreLogbookService = {
           divesData: [],
           pictures: [],
           species: [],
+          buddies: [],
         };
       }
       const {
@@ -322,7 +322,8 @@ export const firestoreLogbookService = {
       const pictures = logbookData?.pictures ? [...logbookData.pictures, ...logbookPictures] : [];
       const buddies = logbookData?.buddies ? [...logbookData.buddies, ...logbookBuddies] : [];
 
-      let longestDive = logbookData?.longestDive;
+      let longestDive = logbookData?.longestDive || null;
+
       if (
         longestDive === null
           || longestDive === {}
@@ -335,7 +336,7 @@ export const firestoreLogbookService = {
         };
       }
 
-      let deepestDive = logbookData?.deepestDive;
+      let deepestDive = logbookData?.deepestDive || null;
       if (deepestDive === null
           || deepestDive === {}
           || deepestDive?.depth < diveData.diveData.maxDepth
