@@ -54,7 +54,6 @@ export const ExploreMap: FC<Props> = ({
       onZoomAnimationEnd={(zo) => setZoom(zo)}
       options={(maps: Maps) => getMapOptions(maps)}
       onChange={onMapChange}
-      onClick={(e) => console.log(e)}
       draggable={!isLoading}
     >
       {clusters.length && clusters.map((point) => (

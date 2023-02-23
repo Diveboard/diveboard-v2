@@ -22,7 +22,7 @@ export const DivesMap: FC<Props> = ({
   const [zoom, setZoom] = useState(1);
   const [isLoading, setLoading] = useState(true);
   const [markers, setMarkers] = useState([]);
-  const [mapCoords, seMapCoords] = useState({
+  const [mapCoords, setMapCoords] = useState({
     lat: 40.95,
     lng: 30.33,
   });
@@ -44,7 +44,7 @@ export const DivesMap: FC<Props> = ({
             />
           ));
           setMarkers(points);
-          seMapCoords({ lng: res[0].lng, lat: res[0].lat });
+          setMapCoords({ lng: res[0].lng, lat: res[0].lat });
           setZoom(7);
           setLoading(false);
         }
