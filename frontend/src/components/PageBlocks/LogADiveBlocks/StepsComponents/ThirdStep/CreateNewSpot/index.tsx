@@ -21,7 +21,7 @@ type Props = {
   zoom: number;
   setBounds?: (bounds: Bounds) => void;
   setLocation?: (coords: Coords) => void;
-  setData: (id: string) => void;
+  setData: ({ id, text }) => void;
 };
 
 export const CreateNewSpot: FC<Props> = ({
@@ -187,7 +187,7 @@ export const CreateNewSpot: FC<Props> = ({
                     zoom,
                   ) as unknown as SpotType,
                 );
-                setData(createdNewSpotId.current);
+                setData({ id: createdNewSpotId.current, text: newSpotName });
                 setNewSpotName('');
               }
             }}

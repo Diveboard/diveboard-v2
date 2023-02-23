@@ -124,7 +124,11 @@ export const DivesBlock = ({
           defaultChecked={sortMode}
           onClick={sortDives}
         />
-        <SearchAnimatedInput value={searchValue} setValue={setSearchValue} onClick={searchHandler}>
+        <SearchAnimatedInput
+          value={searchValue}
+          setValue={setSearchValue}
+          onClick={searchHandler}
+        >
           {!!locations?.length && (
           <SearchDropdownPanel
             loading={false}

@@ -25,15 +25,15 @@ export const firestoreSurveyService = {
   ) => {
     try {
       const surveyRef = doc(collection(db, `${PathEnum.SURVEYS}/${userId}/dan`));
-      if (!survey.sent) {
-        survey.sent = saveToDAN;
-      }
-      await setDoc(surveyRef, { dan: { ...survey, diveRef: ref } }, { merge: true });
       if (!survey.sent && saveToDAN) {
         await firestoreLogbookService.addSurveyToLogbook(userId, surveyRef);
         // TODO: sent email
         console.log('SEND EMAIL');
       }
+      if (!survey.sent) {
+        survey.sent = saveToDAN;
+      }
+      await setDoc(surveyRef, { dan: { ...survey, diveRef: ref } }, { merge: true });
       return surveyRef;
     } catch (e) {
       throw new Error(e.message);
@@ -53,15 +53,15 @@ export const firestoreSurveyService = {
       } else {
         docRef = doc(collection(db, `${PathEnum.SURVEYS}/${userId}/dan`));
       }
+      if (!survey.sent && saveToDAN) {
+        await firestoreLogbookService.addSurveyToLogbook(userId, surveyRef);
+        // TODO: sent email
+        console.log('SEND EMAIL');
+      }
       if (!survey.sent) {
         survey.sent = saveToDAN;
       }
       await setDoc(docRef, { dan: { ...survey } }, { merge: true });
-      if (!survey.sent && saveToDAN) {
-        await firestoreLogbookService.updateSurveyInLogbook(userId, surveyRef);
-        // TODO: sent email
-        console.log('SEND EMAIL');
-      }
       return docRef;
     } catch (e) {
       throw new Error(e.message);

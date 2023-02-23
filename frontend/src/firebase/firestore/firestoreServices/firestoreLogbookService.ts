@@ -100,10 +100,6 @@ export const firestoreLogbookService = {
   },
 
   getLogbookData: async (uid: string) => {
-    // TODO: Map
-    // TODO: Species Images
-    // TODO: Dive Buddies
-
     try {
       const logbookUser = await firestorePublicProfileService.getUserById(uid as string);
       const docRef = doc(db, `${PathEnum.LOGBOOK}/${uid}`);
@@ -441,32 +437,6 @@ export const firestoreLogbookService = {
       const logbookSnap = await getDoc(logbookRef);
       const { surveys = [] } = logbookSnap.data();
       surveys.push(surveyRef);
-      await setDoc(logbookRef, { surveys }, { merge: true });
-    } catch (e) {
-      throw new Error(e.message);
-    }
-  },
-
-  updateSurveyInLogbook: async (userId: string, surveyRef: DocumentReference) => {
-    try {
-      const logbookRef = doc(db, `${PathEnum.LOGBOOK}/${userId}`);
-      const logbookSnap = await getDoc(logbookRef);
-      const { surveys = [] } = logbookSnap.data();
-      if (!surveys.find((survey) => survey.id === surveyRef.id)) {
-        surveys.push(surveyRef);
-        await setDoc(logbookRef, { surveys }, { merge: true });
-      }
-    } catch (e) {
-      throw new Error(e.message);
-    }
-  },
-
-  deleteSurveyFromLogbook: async (userId: string, surveyId: string) => {
-    try {
-      const logbookRef = doc(db, `${PathEnum.LOGBOOK}/${userId}`);
-      const logbookSnap = await getDoc(logbookRef);
-      let { surveys = [] } = logbookSnap.data();
-      surveys = surveys.filter((survey) => survey.id !== surveyId);
       await setDoc(logbookRef, { surveys }, { merge: true });
     } catch (e) {
       throw new Error(e.message);

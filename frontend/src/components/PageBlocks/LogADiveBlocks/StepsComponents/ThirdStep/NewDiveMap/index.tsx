@@ -29,16 +29,14 @@ type Props = {
   setLocation: React.Dispatch<React.SetStateAction<{ lat: number, lng: number }>>;
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
-  // markers: MarkerType[];
   setMarkers: React.Dispatch<React.SetStateAction<MarkerType[]>>;
   newPoint: boolean;
   setNewPoint: React.Dispatch<React.SetStateAction<boolean>>;
   setNewPointCoords: React.Dispatch<React.SetStateAction<{ lat: number, lng: number }>>;
   createdNewSpotId: string;
-  // setChosenPointId: (res: string) => void;
-  // setButton:React.Dispatch<React.SetStateAction<string>>;
   boundsCoors?: Bounds;
   newPointCoords?: { lat: number, lng: number };
+  spotId: string | null
 };
 
 export const LogADiveDiveMap: FC<Props> = ({
@@ -46,16 +44,14 @@ export const LogADiveDiveMap: FC<Props> = ({
   setLocation,
   zoom,
   setZoom,
-  // markers,
   setMarkers,
   newPoint,
   setNewPoint,
   setNewPointCoords,
   createdNewSpotId,
-  // setChosenPointId,
-  // setButton,
   boundsCoors,
   newPointCoords,
+  spotId,
 }) => {
   const [region, setRegion] = useState('');
   const [boundsCoords, setBoundsCoords] = useState(null);
@@ -112,12 +108,12 @@ export const LogADiveDiveMap: FC<Props> = ({
   }, [boundsCoors]);
 
   useEffect(() => {
-    if (userLocation) setLocation(userLocation);
-  }, [userLocation]);
+    if (userLocation && !spotId) setLocation(userLocation);
+  }, [userLocation, spotId]);
 
   useEffect(() => {
-    if (newPointCoords && setNewPositionMarker.current) {
-      setNewPositionMarker?.current(newPointCoords);
+    if (setNewPositionMarker.current) {
+      setNewPositionMarker?.current(newPointCoords || userLocation);
     }
   }, [newPointCoords]);
 
@@ -142,7 +138,7 @@ export const LogADiveDiveMap: FC<Props> = ({
     const superClusters = supercluster(markersItems, {
       minZoom: 0,
       maxZoom: 16,
-      radius: 20,
+      radius: 40,
     });
     return superClusters({ bounds: props.bounds, zoom: props.zoom });
   };
@@ -240,7 +236,11 @@ export const LogADiveDiveMap: FC<Props> = ({
           map,
           maps,
         }) => handleApiLoaded(map, maps)}
-        onChange={setBoundsCoords}
+        onChange={(e) => {
+          if (!newPoint) {
+            setBoundsCoords(e);
+          }
+        }}
       >
         {!newPoint && clusters.length && clusters.map((point) => (
           <DivePoint

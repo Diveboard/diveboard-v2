@@ -7,7 +7,10 @@ type Props = {
     text: string;
     id: string;
   };
-  onClick: (id: string) => void;
+  onClick: ({
+    text,
+    id,
+  }) => void;
 };
 
 export const Button = ({
@@ -17,7 +20,7 @@ export const Button = ({
 }: Props): JSX.Element => (
   <button
     className={`${styles.btn} ${button.id === defaultBtnId ? styles.active : styles.notActive}`}
-    onClick={() => onClick(button.id)}
+    onClick={() => onClick(button)}
   >
     {button.text}
   </button>

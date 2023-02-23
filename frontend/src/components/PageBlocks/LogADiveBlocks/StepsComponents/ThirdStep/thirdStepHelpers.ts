@@ -16,25 +16,23 @@ export const createNewSpotHandler = (
   let error = false;
   const {
     name,
-    location: {
-      country,
-      region,
-      location,
-    },
+    countryName,
+    regionName,
+    locationName,
   } = newSpotData as any;
   if (name.length < 3) {
     error = true;
     setNewSpotNameError('fill spot name more than 3 letters');
   }
-  if (!country.length) {
+  if (!countryName.length) {
     error = true;
     setNewSpotCountryError('fill spot country');
   }
-  if (!region.length) {
+  if (!regionName.length) {
     error = true;
     setNewSpotRegionError('fill spot region');
   }
-  if (!location.length) {
+  if (!locationName.length) {
     error = true;
     setNewSpotLocationError('fill spot location');
   }
@@ -57,22 +55,19 @@ export const createNewSpotData = (
   coords: Coords,
   zoom: number,
 ) => ({
-  oldId: null,
+  oldId: 1234567890,
   name,
   lat: coords.lat,
   lng: coords.lng,
   zoom,
-  location: {
-    location,
-    region,
-    country,
-  },
-  bestPictures: [],
+  locationName: location,
+  regionName: region,
+  countryName: country,
+  bestPictures: {},
   description: '',
-  dives: [],
+  dives: {},
   score: 0,
-  shops: [],
-  species: [],
+  species: {},
   stats: {
     averageDepth: {
       imperial: 0,
