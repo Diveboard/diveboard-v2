@@ -210,7 +210,7 @@ export const subDonation = functions.https.onCall(async (request, context): Prom
         throw new functions.https.HttpsError('invalid-argument', Errors.STRIPE_NO_DEFAULT_METHOD)
     }
 
-    if (stripeData!.activeSubscription && stripeData!.subscriptionEndsAt.toDate().getTime() > (new Date().getTime()) ) {
+    if (stripeData && stripeData!.activeSubscription && stripeData!.subscriptionEndsAt.toDate().getTime() > (new Date().getTime()) ) {
         throw new functions.https.HttpsError('invalid-argument', Errors.STRIPE_SUBSCRIPTION_ACTIVE)
     }
 
