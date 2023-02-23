@@ -279,6 +279,7 @@ export const firestoreLogbookService = {
             deepestDive,
             underwaterTime,
             buddies,
+            oldId: '4',
           },
           { merge: true },
         );
