@@ -1,6 +1,7 @@
 import React from 'react';
 import { AuthCodeTimer } from '../src/layouts/AuthCodeTimer';
 import '../styles/globals.css';
+import '../styles/wrappers.css';
 import { NetworkStatus } from '../src/layouts/NetworkStatus';
 
 function MyApp({

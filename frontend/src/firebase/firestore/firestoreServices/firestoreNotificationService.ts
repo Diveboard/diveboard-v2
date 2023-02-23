@@ -1,10 +1,9 @@
 import { doc, getDoc, setDoc } from '@firebase/firestore';
 import { NotificationsType } from '../models';
 import { db } from '../firebaseFirestore';
-import { firestorePaths } from '../firestorePaths';
+import { PathEnum } from '../firestorePaths';
 
-// const notificationSegment = firestorePaths.users; // .settings.notifications.segment;
-const getPath = (userId: string) => `${firestorePaths.users.path}/${userId}`; // /${firestorePaths.users.settings.segment}`;
+const getPath = (userId: string) => `${PathEnum.USERS}/${userId}`; // /${firestorePaths.users.settings.segment}`;
 
 export const firestoreNotificationService = {
   setDefaultNotification: async (userId: string) => {
@@ -20,7 +19,7 @@ export const firestoreNotificationService = {
         settings: { notifications: { ...defaultNotifications } },
       }, { merge: true });
     } catch (e) {
-      throw new Error('set default notifications error');
+      throw new Error(e.message);
     }
   },
 
@@ -29,7 +28,7 @@ export const firestoreNotificationService = {
       const ref = doc(db, getPath(userId));
       setDoc(ref, { settings: { notifications: { ...notifications } } }, { merge: true });
     } catch (e) {
-      throw new Error('set  notifications error');
+      throw new Error(e.message);
     }
   },
 
@@ -39,7 +38,7 @@ export const firestoreNotificationService = {
       const docSnap = await getDoc(docRef);
       return docSnap.data().settings.notifications;
     } catch (e) {
-      throw new Error('get notifications error');
+      throw new Error(e.message);
     }
   },
 };

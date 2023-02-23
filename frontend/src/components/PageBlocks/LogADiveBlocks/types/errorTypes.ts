@@ -4,7 +4,6 @@ export type FirstStepErrors = {
 };
 
 export type SecondStepErrors = {
-  timeError: string,
   dateError: string,
   maxDepthError: string,
   durationError: string,

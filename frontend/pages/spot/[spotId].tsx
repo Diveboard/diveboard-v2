@@ -1,5 +1,6 @@
 import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { ToastContainer } from 'react-toastify';
 import { AuthLayout } from '../../src/layouts/AuthLayout';
 import { SpotBlocks } from '../../src/components/PageBlocks/SpotBlocks';
 import { MainLayout } from '../../src/layouts/MainLayout';
@@ -9,59 +10,84 @@ import { firestoreSpeciesServices } from '../../src/firebase/firestore/firestore
 import {
   firestorePublicProfileService,
 } from '../../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
+import { firestoreGalleryService } from '../../src/firebase/firestore/firestoreServices/firestoreGalleryService';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Spot: InferGetServerSidePropsType<typeof getServerSideProps> = ({
-  user, spot, dives, species,
+  user, spot, dives, speciesData, species, pictures, picturesData,
 }) => (
   <AuthLayout user={user}>
     <MainLayout>
-      <SpotBlocks spot={spot} dives={dives} species={species} />
+      <ToastContainer />
+      <SpotBlocks
+        spot={spot}
+        dives={dives}
+        species={species}
+        speciesData={speciesData}
+        pictures={pictures}
+        picturesData={picturesData}
+      />
     </MainLayout>
   </AuthLayout>
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const uid = context.req.cookies.__session;
-  const { spotId } = context.query;
-  let spot = null;
-  const dives = [];
-  let species = [];
-  let user = null;
+  try {
+    const uid = context.req.cookies.__session;
+    const { spotId } = context.query;
+    let spot = null;
+    let dives = [];
+    let speciesData = [];
+    let species = [];
+    let pictures = [];
+    let picturesData = [];
+    let user = null;
 
-  if (spotId) {
-    const data = await firestoreSpotsService.getSpotById(spotId as string);
-
-    if (data) {
+    if (spotId) {
+      const data = await firestoreSpotsService.getSpotById(spotId as string);
+      if (!data) {
+        throw new Error('Spot is not found');
+      }
       spot = JSON.parse(JSON.stringify(data));
-      if (data?.dive?.length) {
-        let speciesIds = [];
-        for (let i = 0; i < data.dive.length; i++) {
-          const dive = data.dive[i];
-          // eslint-disable-next-line no-await-in-loop
-          const divesData = await firestoreDivesService.getDiveData(dive.userId, dive.diveId);
-          if (divesData) {
-            speciesIds = [...speciesIds, ...divesData.species];
-            dives.push(divesData);
-          }
-        }
-        if (speciesIds.length) {
-          species = await firestoreSpeciesServices.getSpeciesByIds(Array.from(new Set(speciesIds)));
-        }
+      if (data.bestPictures) {
+        pictures = data.bestPictures;
+        picturesData = await firestoreGalleryService.getBestPictures(data.bestPictures, 5);
+      }
+      if (data.species) {
+        species = data.species;
+        speciesData = await firestoreSpeciesServices.getSpeciesByRefs(data.species, 4);
+      }
+      if (data.dives) {
+        dives = await firestoreDivesService.getDivesByRefs(data.dives, 4);
       }
     }
-  }
 
-  if (uid) {
-    user = await firestorePublicProfileService.getUserById(uid);
-  }
+    if (uid) {
+      user = await firestorePublicProfileService.getUserById(uid);
+    }
 
-  return {
-    props: {
-      user,
-      spot,
-      dives: JSON.parse(JSON.stringify(dives)),
-      species: JSON.parse(JSON.stringify(species)),
-    },
-  };
+    return {
+      props: {
+        user,
+        spot,
+        picturesData: JSON.parse(JSON.stringify(picturesData)),
+        dives: JSON.parse(JSON.stringify(dives)),
+        speciesData: JSON.parse(JSON.stringify(speciesData)),
+        species: JSON.parse(JSON.stringify(
+          Object.values(species).map((p) => ({ specieRef: p })),
+        )),
+        pictures: JSON.parse(JSON.stringify(
+          Object.values(pictures).map((p) => ({ pictureRef: p })),
+        )),
+      },
+    };
+  } catch (e) {
+    return {
+      redirect: {
+        destination: '/_error',
+        permanent: false,
+      },
+    };
+  }
 };
 export default Spot;

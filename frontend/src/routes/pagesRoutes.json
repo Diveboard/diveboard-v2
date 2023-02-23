@@ -8,6 +8,7 @@
   "aboutPageRout": "/about-us",
   "diveManagerPageRout": "/dive-manager",
   "favouritesPageRout": "/favourites",
+  "communityPageRout": "/community",
   "feedsPageRout": "/feed",
   "galleryPageRout": "/gallery",
   "shopPageRout": "/shop",

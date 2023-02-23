@@ -31,6 +31,9 @@ export const ChartBlock: FC<Props> = ({
   // calculate avarage depth
   const avarageDepth = () => {
     let summAllDepth = 0;
+    if (!points?.length) {
+      return summAllDepth;
+    }
     points.forEach((itm) => {
       summAllDepth += itm.depth;
     });
@@ -39,15 +42,14 @@ export const ChartBlock: FC<Props> = ({
 
   const convertTankName = (tank: Tank) => {
     const material = tank?.material ? tank.material.charAt(0).toUpperCase() + tank.material.slice(1) : '';
-    return `${tank?.volume || ''} ${tank?.size || ''} ${material} ${tank?.pressureStart || ''} -> ${tank?.pressureEnd || ''} ${tank?.pressureMeasures || ''}`;
+    return `${tank?.volume || ''} ${tank?.volumeUnit || ''} ${material} ${tank?.pressureStart || ''} -> ${tank?.pressureEnd || ''} ${tank?.pressureMeasures || ''}`;
   };
-
   return (
     <div className={styles.chartWrapper}>
       <DivePageMobContainer>
         <DivePageTitle title="Dive Profile" />
       </DivePageMobContainer>
-      {!!points.length && (
+      {!!points?.length && (
         <div className={styles.depthChartMargin} id="no_border_radius">
           <DepthChart points={points} />
         </div>

@@ -1,56 +1,22 @@
 import React from 'react';
+import { DocumentReference } from '@firebase/firestore';
 import { Title } from '../Title';
 import { ButtonGroup } from '../../../ButtonGroup';
 import styles from './styles.module.scss';
 import { DesktopPhotoBlock } from '../../../DivePage/DesktopPhotoBlock';
 
 type Props = {
-  pictures: Array<string>
+  pictures: Array<{
+    pictureRef: DocumentReference
+  }>
+  picturesData: Array<string>
 };
 
-export const PicturesBlock = ({ pictures }: Props) => {
+export const PicturesBlock = ({ pictures, picturesData }: Props) => {
   const buttons = [{
     connectedMode: 'all',
     text: 'All pictures',
-  },
-  {
-    connectedMode: 'favourites',
-    text: 'Favourites',
-  },
-  ];
-
-  // const photos = [
-  //   {
-  //     imgScr: '/TEST_IMG_THEN_DELETE/photo2.jpg',
-  //     favorites: 150,
-  //     author: 'Ivan Kudrja',
-  //   },
-  //   {
-  //     imgScr: '/TEST_IMG_THEN_DELETE/photo3.jpg',
-  //     favorites: 150,
-  //     author: 'Ivan Kudrja',
-  //   },
-  //   {
-  //     imgScr: '/TEST_IMG_THEN_DELETE/photo4.jpg',
-  //     favorites: 150,
-  //     author: 'Ivan Kudrja',
-  //   },
-  //   {
-  //     imgScr: '/TEST_IMG_THEN_DELETE/shark.jpg',
-  //     favorites: 150,
-  //     author: 'Ivan Kudrja',
-  //   },
-  //   {
-  //     imgScr: '/TEST_IMG_THEN_DELETE/photo5.jpg',
-  //     favorites: 150,
-  //     author: 'Ivan Kudrja',
-  //   },
-  //   {
-  //     imgScr: '/TEST_IMG_THEN_DELETE/photo6.jpg',
-  //     favorites: 150,
-  //     author: 'Ivan Kudrja',
-  //   },
-  // ];
+  }];
 
   return (
     <div className={styles.picturesWrapper}>
@@ -63,7 +29,7 @@ export const PicturesBlock = ({ pictures }: Props) => {
         onClick={() => {}}
       />
       <div className={styles.imagesContainer}>
-        <DesktopPhotoBlock photos={pictures} />
+        <DesktopPhotoBlock photos={picturesData} pictures={pictures} />
       </div>
 
       {/* <PhotoGroup photos={pictures.slice(0, 6)} /> */}

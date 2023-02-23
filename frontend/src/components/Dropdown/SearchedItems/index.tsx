@@ -15,7 +15,8 @@ type Props = {
   focus?: boolean;
   setBounds?: (bounds: Bounds) => void;
   searchRef?: React.RefObject<HTMLDivElement>;
-  setLocation?: (bounds: Coords) => void;
+  setLocation?: (coords: Coords) => void;
+  setNewLocationCountry?: (val: { bounds: Bounds, name: string }) => void;
 };
 
 export const SearchedItems: FC<Props> = ({
@@ -27,6 +28,7 @@ export const SearchedItems: FC<Props> = ({
   setBounds,
   searchRef,
   setLocation,
+  setNewLocationCountry,
 }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -73,6 +75,14 @@ export const SearchedItems: FC<Props> = ({
         setItems([]);
         setOpen(false);
         setValue(item.name);
+        if (setNewLocationCountry && item.countryRef) {
+          const { bounds, name } = await firestoreGeoDataService
+            .getCountryByRef(item.countryRef);
+          setNewLocationCountry({ bounds, name });
+          const lat = (bounds.sw.lat + bounds.sw.lat) / 2;
+          const lng = (bounds.ne.lng + bounds.ne.lng) / 2;
+          setLocation({ lat, lng });
+        }
         if (item.bounds && setBounds) {
           setBounds(item.bounds);
         }

@@ -4,7 +4,7 @@ import styles from './styles.module.scss';
 import { InputLabelWrapper } from '../../../../inputLabelWrapper';
 import { Input } from '../../../../../../Input/CommonInput';
 import { Dropdown } from '../../../../../../Dropdown/Dropdawn';
-import { ArrayElement, SetTankParametersType } from '../../../../types/commonTypes';
+import { ArrayElement, SetTankParametersType, TankType } from '../../../../types/commonTypes';
 import { MarginWrapper } from '../../../../../../MarginWrapper';
 import { Button } from '../../../../../../Buttons/Button';
 
@@ -17,7 +17,7 @@ export const Tank: FC<Props> = ({
   mixture,
   o2,
   he,
-  size,
+  volumeUnit,
   volume,
   pressureStart,
   pressureEnd,
@@ -29,11 +29,9 @@ export const Tank: FC<Props> = ({
     <InputLabelWrapper label="Cylinder">
       <div className={styles.row}>
         <Dropdown
-          item={cylinder}
-          setItem={
-              setTankParameters.setCylinder
-            }
-          allItems={['1x', '2x']}
+          item={`${cylinder}x`}
+          setItem={(item) => setTankParameters.setCylinder(+item as TankType['cylinder'])}
+          allItems={['1', '2']}
           width={112}
         />
         <Input
@@ -45,15 +43,16 @@ export const Tank: FC<Props> = ({
         />
 
         <Dropdown
-          item={size}
-          setItem={
-              setTankParameters.setSize
-            }
+          item={volumeUnit || 'cuft'}
+          setItem={(item) => {
+            console.log(item);
+            setTankParameters.setVolumeUnit(item as TankType['volumeUnit']);
+          }}
           allItems={['L', 'cuft']}
           width={112}
         />
         <Dropdown
-          item={material}
+          item={material.toLowerCase() || 'aluminum'}
           setItem={
               setTankParameters.setMaterial
             }
@@ -68,7 +67,7 @@ export const Tank: FC<Props> = ({
       <InputLabelWrapper label="Mixture">
         <div className={styles.mixture}>
           <Dropdown
-            item={mixture}
+            item={mixture.toLowerCase() || 'air'}
             setItem={
               setTankParameters.setMixture
             }
@@ -130,7 +129,7 @@ export const Tank: FC<Props> = ({
           </div>
 
           <Dropdown
-            item={pressureMeasures}
+            item={pressureMeasures || 'psi'}
             setItem={
                 setTankParameters.setMeasures
               }

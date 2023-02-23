@@ -23,7 +23,7 @@ const getPointCircleWidth = (count: number) => {
 };
 
 type Props = {
-  divesCount: number;
+  divesCount?: number;
   diveName: string;
   // eslint-disable-next-line react/no-unused-prop-types
   lat?: number;
@@ -32,7 +32,7 @@ type Props = {
   onClick?:(name: string)=>void
 };
 
-export const DivePoint: FC<Props> = ({ divesCount, diveName, onClick }) => {
+export const DivePoint: FC<Props> = ({ divesCount = 1, diveName, onClick }) => {
   const memoizedSizes = useMemo(() => getPointCircleWidth(divesCount), [divesCount]);
   const [showDiveName, setShowDiveName] = useState(false);
   return (
@@ -67,7 +67,7 @@ export const DivePoint: FC<Props> = ({ divesCount, diveName, onClick }) => {
           </div>
         </div>
       </div>
-      {showDiveName
+      {showDiveName && diveName
         && (
         <div className={styles.pointNameWrapper}>
           <span className={styles.pointName}>{diveName}</span>

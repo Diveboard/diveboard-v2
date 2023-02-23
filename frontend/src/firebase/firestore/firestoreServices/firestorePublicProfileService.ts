@@ -1,159 +1,159 @@
 import {
   doc,
   setDoc,
-  updateDoc,
-  arrayUnion,
-  arrayRemove,
   getDoc,
   collection,
   query,
   getDocs,
   orderBy,
   startAt,
-  limit,
+  limit, DocumentReference,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
-import { firestorePaths } from '../firestorePaths';
-import { UserType } from '../../../types';
+import { PathEnum } from '../firestorePaths';
 import { firestoreDivesService } from './firestoreDivesService';
-import { UserSettingsType } from '../models';
+import { BuddiesType, UserSettingsType } from '../models';
 
 export const firestorePublicProfileService = {
   setEmail: async (email: string, userId: string) => {
     try {
-      const ref = doc(db, firestorePaths.users.path, userId);
+      const ref = doc(db, PathEnum.USERS, userId);
       await setDoc(ref, { email }, { merge: true });
     } catch (e) {
-      throw new Error('set mail error');
+      throw new Error(e.message);
     }
   },
 
   setPhotoURL: async (photoUrl: string, userId: string) => {
     try {
-      const ref = doc(db, firestorePaths.users.path, userId);
+      const ref = doc(db, PathEnum.USERS, userId);
       await setDoc(ref, { photoUrl }, { merge: true });
     } catch (e) {
-      throw new Error('set photo error');
+      throw new Error(e.message);
     }
   },
 
   setName: async (firstName: string, lastName: string, userId: string) => {
     try {
-      const ref = doc(db, firestorePaths.users.path, userId);
+      const ref = doc(db, PathEnum.USERS, userId);
       await setDoc(ref, { firstName, lastName }, { merge: true });
     } catch (e) {
-      throw new Error('set name error');
+      throw new Error(e.message);
     }
   },
 
   setCountry: async (country: string, userId: string) => {
     try {
-      const ref = doc(db, firestorePaths.users.path, userId);
+      const ref = doc(db, PathEnum.USERS, userId);
       await setDoc(ref, { country }, { merge: true });
     } catch (e) {
-      throw new Error('set country error');
+      throw new Error(e.message);
     }
   },
   setAbout: async (about: string, userId: string) => {
     try {
-      const ref = doc(db, firestorePaths.users.path, userId);
+      const ref = doc(db, PathEnum.USERS, userId);
       await setDoc(ref, { about }, { merge: true });
     } catch (e) {
-      throw new Error('set country error');
-    }
-  },
-
-  setQualification: async (qualification: string, userId: string) => {
-    try {
-      const ref = doc(db, firestorePaths.users.path, userId);
-      await updateDoc(ref, { qualifications: arrayUnion(qualification) });
-    } catch (e) {
-      throw new Error('set qualification error');
-    }
-  },
-
-  deleteQualification: async (qualification: string, userId: string) => {
-    try {
-      const ref = doc(db, firestorePaths.users.path, userId);
-      await updateDoc(ref, { qualifications: arrayRemove(qualification) });
-    } catch (e) {
-      throw new Error('delete qualification error');
+      throw new Error(e.message);
     }
   },
 
   getUserById: async (userId: string) => {
     try {
-      const docRef = doc(db, firestorePaths.users.path, userId);
+      const docRef = doc(db, PathEnum.USERS, userId);
       const docSnap = await getDoc(docRef);
-      return { ...docSnap.data(), uid: docSnap.id } as UserSettingsType | undefined;
+      const data = docSnap.data();
+      if (!data) {
+        return null;
+      }
+      return { ...data, uid: docSnap.id } as UserSettingsType | undefined;
     } catch (e) {
-      throw new Error('get user data error');
+      throw new Error(e.message);
     }
   },
 
-  getBuddiesInfo: async (usersIds: Array<{ id?: string, name?: string }>, spotId?: string) => {
+  getUserByRef: async (userRef: DocumentReference) => {
+    try {
+      const docSnap = await getDoc(userRef);
+      const data = docSnap.data();
+      if (!data) {
+        return null;
+      }
+      return { ...data, uid: docSnap.id } as UserSettingsType | undefined;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
+  getBuddiesInfo: async (usersIds: Array<BuddiesType>, length?: number) => {
     try {
       const users = [];
-      for (let i = 0; i < usersIds.length; i++) {
-        if (usersIds[i].id) {
-          const docRef = doc(db, firestorePaths.users.path, usersIds[i].id);
+      const size = (!length || length > usersIds.length) ? usersIds.length : length;
+      for (let i = 0; i < size; i++) {
+        if (usersIds[i].userRef) {
           // eslint-disable-next-line no-await-in-loop
-          const docSnap = await getDoc(docRef);
+          const docSnap = await getDoc(usersIds[i].userRef);
           if (docSnap.data()) {
-            const { firstName, lastName, photoUrl } = docSnap.data();
+            const { photoUrl } = docSnap.data();
             // eslint-disable-next-line no-await-in-loop
-            const diveTotal = await firestoreDivesService.getDivesCountByUserId(usersIds[i].id);
-            // eslint-disable-next-line no-await-in-loop
-            const divesOnSpot = spotId ? await firestoreDivesService
-              .getDivesCountByUserIdInSpot(usersIds[i].id, spotId) : 0;
+            const diveTotal = await firestoreDivesService
+              .getDivesCountByUserId(usersIds[i].userRef.id);
             users.push({
-              id: usersIds[i].id,
-              firstName,
-              lastName,
+              ...usersIds[i],
               photoUrl,
               diveTotal,
-              divesOnSpot,
+              id: usersIds[i].userRef.id,
             });
           }
         } else {
           users.push({
-            id: usersIds[i]?.id,
-            firstName: usersIds[i]?.name,
+            ...usersIds[i],
             diveTotal: 1,
-            divesOnSpot: 0,
+            id: i,
           });
         }
       }
       return users;
     } catch (e) {
-      console.log(e.message);
-      throw new Error('get user error');
+      throw new Error(e.message);
     }
   },
 
   getUserPredictionsByName: async (predictionName: string) => {
-    const users:Omit<UserType, 'about' | 'country' | 'qualifications' | 'email'>[] = [];
+    const users: BuddiesType[] = [];
 
     try {
-      const docRef = collection(db, firestorePaths.users.path);
+      const docRef = collection(db, PathEnum.USERS);
       const q = query(
         docRef,
         orderBy('firstName'),
         startAt(predictionName.trim()),
-        limit(15),
+        limit(20),
       );
       const querySnapshot = await getDocs(q);
 
       querySnapshot.forEach((document) => {
-        const { firstName, photoUrl, lastName } = document.data() as Omit<UserType, 'uid'>;
+        const {
+          firstName,
+          photoUrl,
+          lastName,
+          settings,
+          email,
+        } = document.data() as UserSettingsType;
         users.push({
-          uid: document.id, firstName, lastName, photoUrl,
-        });
+          id: document.id,
+          userRef: document.ref,
+          email,
+          notify: settings.notifications.instant,
+          name: `${firstName} ${lastName}`,
+          type: 'internal',
+          photoUrl,
+        } as BuddiesType);
       });
       return users;
     } catch (e) {
-      console.log(e.message);
-      throw new Error('get users by name predictions  error');
+      throw new Error(e.message);
     }
   },
 

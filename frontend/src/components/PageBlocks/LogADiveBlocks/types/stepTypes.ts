@@ -1,8 +1,10 @@
+import { DocumentReference } from '@firebase/firestore';
 import {
-  Buddy, GearsVariantsType, SafetySpot, ScoreType,
+  GearsVariantsType, SafetySpot, ScoreType,
 } from './commonTypes';
 import { initialDiveDataState } from '../LogDiveData/state';
 import { SurveyDanType } from '../../../../types';
+import { BuddiesType, MediaUrls, SpeciesType } from '../../../../firebase/firestore/models';
 
 export type FirstStepType = {
   overview: {
@@ -34,9 +36,9 @@ export type FirstStepType = {
 
 export type Tank = {
   id: number;
-  cylinder: '1x' | '2x';
+  cylinder: 1 | 2;
   volume: number;
-  size: 'L' | 'cuft';
+  volumeUnit: 'L' | 'cuft';
   material: 'steel' | 'aluminum' | 'carbon';
   mixture: 'air' | 'nitrox' | 'trimix';
   o2?:number;
@@ -48,12 +50,11 @@ export type Tank = {
 
 export type SecondStepType = {
   parameters: {
-    time: string;
     date: Date;
     maxDepth: number;
     duration: number;
     surfaceInterval: number;
-    safetySpots: SafetySpot[];
+    safetyStops: SafetySpot[];
   };
 
   advancedParameters: {
@@ -72,18 +73,16 @@ export type ThirdStepType = {
   spotId: string | null;
 };
 export type FourthStepType = {
-  species: string[];
+  species: SpeciesType[]
 };
 
 export type FifthStepType = {
-  diveCenter: string;
-  guideName: string;
-  buddies: Buddy[];
+  buddies: BuddiesType[];
 };
 
 export type SixthStepType = {
   files: { tags: string; file: File }[];
-  mediaUrl: string[];
+  mediaUrl: MediaUrls[];
 };
 
 export type SeventhStepType = {
@@ -99,13 +98,13 @@ export type SeventhStepType = {
 };
 
 export type EighthStepType = {
-  surveyId?: string;
+  surveyRef?: DocumentReference;
   danSurvey?: SurveyDanType;
   sendToDAN?: boolean;
   saveDAN?: boolean;
 };
 
-export type PublishingMode = 'public' | 'private' | 'friends only';
+export type PublishingMode = 'PUBLIC' | 'PRIVATE';
 
 export type NinthStepType = {
   publishingMode: PublishingMode;

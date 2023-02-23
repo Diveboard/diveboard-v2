@@ -2,6 +2,7 @@ import React, {
   FC, useContext, useEffect, useState,
 } from 'react';
 
+import { useRouter } from 'next/router';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { Button } from '../../../../Buttons/Button';
 import { Input } from '../../../../Input/CommonInput';
@@ -15,14 +16,29 @@ import { StepProps } from '../../types/commonTypes';
 import stylesContainer from '../../styles.module.scss';
 import styles from './styles.module.scss';
 import { StepsIndicator } from '../../StepsIndicator';
+import { MediaUrls } from '../../../../../firebase/firestore/models';
+import { firestoreGalleryService } from '../../../../../firebase/firestore/firestoreServices/firestoreGalleryService';
+import { notify } from '../../../../../utils/notify';
+import { firestoreDivesService } from '../../../../../firebase/firestore/firestoreServices/firestoreDivesService';
+import { AuthStatusContext } from '../../../../../layouts/AuthLayout';
 
-export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
+export const SixthStep: FC<StepProps> = (
+  { step, setStep },
+) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
   const isMobile = useWindowWidth(500, 768);
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
-  const [mediaUrl, setMediaUrl] = useState<string[]>([]);
+  const [mediaUrl, setMediaUrl] = useState<MediaUrls[]>([]);
   const [files, setFiles] = useState<{ tags: string; file: File }[]>([]);
+
+  const {
+    userAuth,
+  } = useContext(AuthStatusContext);
+
+  const router = useRouter();
+
+  const { id: diveId } = router.query;
 
   const checkFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
@@ -34,15 +50,14 @@ export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
       },
     ]);
   };
-
   const addUrlHandler = () => {
     const urlReg = /^(ftp|http|https):\/\/[^ "]+$/;
     if (url.match(urlReg)) {
-      if (mediaUrl.includes(url)) {
+      if (mediaUrl.some((img) => img.url === url)) {
         setError('duplicate url');
         return;
       }
-      setMediaUrl((prevMediaUrl) => [...prevMediaUrl, url]);
+      setMediaUrl((prevMediaUrl) => [...prevMediaUrl, { url }]);
       setUrl('');
     } else {
       setError('incorrect url');
@@ -52,9 +67,24 @@ export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
   const filesComponents = files.map((item) => (
     <FileWithTags key={item.file.lastModified} file={item} setFile={setFiles} />
   ));
+  const deleteUrlHandler = async (imgUrl: MediaUrls) => {
+    try {
+      if (imgUrl.id) {
+        await firestoreGalleryService.deleteImageById(imgUrl.id, imgUrl.url);
+        await firestoreDivesService.deletePictureFromDive(
+          userAuth.uid,
+          diveId as string,
+          imgUrl.id,
+        );
+      }
+      setMediaUrl((prevUrls) => prevUrls.filter((item) => item.url !== imgUrl.url));
+    } catch (e) {
+      notify(e.message);
+    }
+  };
 
   const urlsComponent = mediaUrl.map((item) => (
-    <AddedUrl key={item} url={item} setMediaUrl={setMediaUrl} />
+    <AddedUrl key={item.id} mediaUrl={item} deleteUrlHandler={deleteUrlHandler} />
   ));
 
   useEffect(() => {
@@ -74,8 +104,6 @@ export const SixthStep: FC<StepProps> = ({ step, setStep }) => {
       mediaUrl,
     });
   };
-
-  // TODO: Delete file from storage
 
   return (
     <>

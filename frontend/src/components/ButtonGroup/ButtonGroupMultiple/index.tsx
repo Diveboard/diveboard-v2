@@ -5,39 +5,26 @@ import styles from '../styles.module.scss';
 type Props<T> = {
   items: T[];
   onClick: (selected: T) => void
-  mode?: string[];
-  setMode?: React.Dispatch<React.SetStateAction<string[]>>;
+  mode?: 'selected' | 'searched';
 };
 
-export const ButtonGroupMultiple = <T extends { name: string, imgSrc?: string }>({
+export const ButtonGroupMultiple = <T extends { name: string, photoUrl?: string }>({
   items,
   onClick,
-  mode,
-  setMode,
+  mode = 'searched',
 }: Props<T>) => {
   const buttons = items.map((btn) => {
-    // eslint-disable-next-line no-nested-ternary
-    const style = !mode
-      ? `${styles.btn} ${styles.notActive}`
-      : mode.includes(btn.name) ? `${styles.btn} ${styles.active}` : `${styles.btn} ${styles.notActive}`;
+    const style = `${styles.btn} ${mode === 'searched' ? styles.notActive : styles.active}`;
 
     return (
       <button
         key={btn.name}
         className={style}
-        onClick={() => {
-          setMode && setMode((prev) => {
-            if (prev.includes(btn.name)) {
-              return prev.filter((item) => item !== btn.name);
-            }
-            return [...prev, btn.name];
-          });
-          onClick(btn);
-        }}
+        onClick={() => onClick(btn)}
       >
-        {btn.imgSrc ? (
+        {btn.photoUrl ? (
           <div className={styles.withImg}>
-            <ButtonImage src={btn.imgSrc} />
+            <ButtonImage src={btn.photoUrl} />
             {btn.name}
           </div>
         ) : btn.name}

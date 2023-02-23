@@ -35,7 +35,6 @@ type Props = {
 
 const DiveManager = ({ userId, userDives }: Props) => {
   const [checkboxItem, setCheckboxItem] = useState(false);
-
   const [isChangeSelectAll, setChangeSelectAll] = useState(false);
   const [isShowSettings, setShowSettings] = useState(false);
   const [isShowPopupCopy, setShowPopupCopy] = useState(false);
@@ -45,7 +44,6 @@ const DiveManager = ({ userId, userDives }: Props) => {
   const [isBackdrop, setBackdrop] = useState(false);
 
   const [copiestData, setCopiestData] = useState(undefined);
-
   const [isLoading, setLoading] = useState(false);
   const [isFetching, setFetching] = useState(false);
 
@@ -89,22 +87,26 @@ const DiveManager = ({ userId, userDives }: Props) => {
         setLoading(false);
       }
     } catch (e) {
-      notify('Something went wrong');
+      setLoading(false);
+      notify(e.message);
     }
   };
-
   const dropdownList = [
     {
       id: 1,
       title: 'Print',
       svgItem: <Print />,
-      onClick: () => {}, // TODO change
+      onClick: () => {
+        setBackdrop(false);
+      },
     },
     {
       id: 2,
       title: 'Export',
       svgItem: <Export />,
-      onClick: () => {}, // TODO change
+      onClick: () => {
+        setBackdrop(false);
+      },
     },
     {
       id: 3,
@@ -116,7 +118,7 @@ const DiveManager = ({ userId, userDives }: Props) => {
         if (diveForEdit.length !== 1) {
           notify('Choose one item for edit');
         } else {
-          router.push(`edit-dive/${diveForEdit[0].dive.id}`);
+          router.push(`edit-dive/${diveForEdit[0].dive.id}#1`);
         }
       },
     },
@@ -124,7 +126,10 @@ const DiveManager = ({ userId, userDives }: Props) => {
       id: 4,
       title: 'Copy Property',
       svgItem: <CopyProperty />,
-      onClick: setShowPopupCopy,
+      onClick: () => {
+        setShowPopupCopy(true);
+        setBackdrop(true);
+      },
     },
     {
       id: 5,
@@ -149,13 +154,19 @@ const DiveManager = ({ userId, userDives }: Props) => {
       id: 6,
       title: 'Unpublish',
       svgItem: <Unpublish />,
-      onClick: setShowPopupUnpublish,
+      onClick: () => {
+        setShowPopupUnpublish(true);
+        setBackdrop(true);
+      },
     },
     {
       id: 7,
       title: 'Delete',
       svgItem: <Delete />,
-      onClick: setShowPopupDelete,
+      onClick: () => {
+        setShowPopupDelete(true);
+        setBackdrop(true);
+      },
     },
   ];
 
@@ -212,7 +223,8 @@ const DiveManager = ({ userId, userDives }: Props) => {
         notify('Choose at least one dive');
       }
     } catch (e) {
-      notify('Something went wrong');
+      setLoading(false);
+      notify(e.message);
     }
   };
 
@@ -231,18 +243,19 @@ const DiveManager = ({ userId, userDives }: Props) => {
         notify('Choose at least one dive');
       }
     } catch (e) {
-      notify('Something went wrong');
+      setLoading(false);
+      notify(e.message);
     }
   };
 
-  const backdropHandler = (val: boolean) => {
-    setBackdrop(val);
-  };
+  // const backdropHandler = (val: boolean) => {
+  //   setBackdrop(val);
+  // };
 
   useEffect(() => {
     function handleEscapeKey(event: KeyboardEvent) {
       if (event.code === 'Escape') {
-        backdropHandler(false);
+        setBackdrop(false);
         closePopup();
       }
     }
@@ -276,7 +289,8 @@ const DiveManager = ({ userId, userDives }: Props) => {
       }
       setFetching(false);
     } catch (e) {
-      notify('Something went wrong');
+      setLoading(false);
+      notify(e.message);
     }
   };
 
@@ -297,7 +311,8 @@ const DiveManager = ({ userId, userDives }: Props) => {
           setOldestDives(newDives);
           setLoading(false);
         } catch (e) {
-          notify('Something went wrong');
+          setLoading(false);
+          notify(e.message);
         }
       }
     }
@@ -313,7 +328,8 @@ const DiveManager = ({ userId, userDives }: Props) => {
           setDraftDives(newDives);
           setLoading(false);
         } catch (e) {
-          notify('Something went wrong');
+          setLoading(false);
+          notify(e.message);
         }
       }
     }
@@ -394,7 +410,6 @@ const DiveManager = ({ userId, userDives }: Props) => {
               dropdownList={dropdownList}
               dropdownButtons={[dropdownButton, dropdownKebab]}
               hideDropdown={hideDropdown}
-              showBackdrop={backdropHandler}
             />
             )}
             <div className={styles.checkbox__mobile}>
@@ -412,7 +427,7 @@ const DiveManager = ({ userId, userDives }: Props) => {
             : (
               <>
                 <div className={styles.divelist}>{renderDives}</div>
-                {!!dives?.length && dives.length % 7 === 0 && sortType !== 'drafts' && (
+                {!!dives?.length && dives.length >= 7 && sortType !== 'drafts' && (
                   <div
                     className={styles.viewMore}
                     onClick={fetchMoreDives}

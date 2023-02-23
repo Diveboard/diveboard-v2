@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { DocumentReference } from '@firebase/firestore';
 import { SpeciesMobile } from '../../../DivePage/SpeciesIdentified/SpeciesMobile';
 import { SpeciesIdentified } from '../../../DivePage/SpeciesIdentified/SpeciesSlider';
 import { useWindowWidth } from '../../../../hooks/useWindowWidth';
@@ -11,25 +12,30 @@ import {
   convertCalToFar,
   convertMetersToFeet,
 } from '../../../../utils/unitSystemConverter';
+import { Coords } from '../../../../types';
 
 type Props = {
   location: {
     country: string;
     region: string;
     location: string;
-    coords?: {
-      lat: number;
-      lng: number;
-    }
   },
-  species: Array<SpeciesType>
+  stats: any;
+  divesCount: number;
+  coords: Coords;
+  speciesData: Array<SpeciesType>
+  species: Array<{
+    specieRef: DocumentReference
+  }>
 };
 
-export const Info = ({ location, species }: Props) => {
+export const Info = ({
+  location, speciesData, species, coords, stats, divesCount,
+}: Props) => {
   const isMobile = useWindowWidth(200, 769);
   const speciesBlock = isMobile
-    ? <SpeciesMobile speciesList={species} />
-    : <SpeciesIdentified speciesList={species} />;
+    ? <SpeciesMobile speciesList={speciesData} species={species} />
+    : <SpeciesIdentified speciesList={speciesData} species={species} />;
 
   const {
     userAuth,
@@ -37,29 +43,29 @@ export const Info = ({ location, species }: Props) => {
 
   const convertTempSystem = (value: number): string => {
     if (!userAuth) {
-      return `${value} ºC`;
+      return `${value.toFixed(2)} ºC`;
     }
     const userUnitSystem = userAuth.settings.preferences.unitSystem;
     if (userUnitSystem === 'IMPERIAL') {
-      return `${convertCalToFar(value)} ºF`;
+      return `${convertCalToFar(value).toFixed(2)} ºF`;
     }
-    return `${value} ºC`;
+    return `${value.toFixed(2)} ºC`;
   };
 
   const convertDepth = (value): string => {
+    const userUnitSystem = userAuth ? userAuth.settings.preferences.unitSystem : 'METRIC';
     if (!userAuth) {
-      return `${value} m`;
+      return `${value.toFixed(2)} m`;
     }
-    const userUnitSystem = userAuth.settings.preferences.unitSystem;
     if (userUnitSystem === 'IMPERIAL') {
-      return `${convertMetersToFeet(value)} ft`;
+      return `${convertMetersToFeet(value).toFixed(2)} ft`;
     }
-    return `${value} m`;
+    return `${value.toFixed(2)} m`;
   };
 
   return (
     <div className={styles.info}>
-      {!isMobile && <h2>Info</h2>}
+      {isMobile === false && <h2>Info</h2>}
       <div className={styles.itemsWrapper}>
         <div className={styles.item}>
           <div className={styles.header}>
@@ -67,13 +73,23 @@ export const Info = ({ location, species }: Props) => {
             <span>Stats</span>
           </div>
 
-          <InfoItem name="Average depth:" value={convertDepth(11)} />
-          <InfoItem name="Visibility:" value="good" />
-          <InfoItem name="Average current:" value="light" />
-          <InfoItem name="Average temperature on surface:" value={convertTempSystem(26)} />
-          <InfoItem name="Average temperature on bottom:" value={convertTempSystem(34)} />
-          <InfoItem name="Dives Logged:" value="60" />
-          <InfoItem name="Divers:" value="20" />
+          {stats.averageDepth?.depth && <InfoItem name="Average depth:" value={convertDepth(stats.averageDepth.depth)} /> }
+          {stats.visibility && <InfoItem name="Visibility:" value={stats.visibility.toLowerCase()} /> }
+          {stats.averageCurrent && <InfoItem name="Average current:" value={stats.averageCurrent.toLowerCase()} /> }
+          {stats.averageTemperatureOnSurface?.temperature && (
+          <InfoItem
+            name="Average temperature on surface:"
+            value={convertTempSystem(stats.averageTemperatureOnSurface.temperature)}
+          />
+          )}
+          {stats.averageTemperatureOnBottom?.temperature && (
+          <InfoItem
+            name="Average temperature on bottom:"
+            value={convertTempSystem(stats.averageTemperatureOnBottom.temperature)}
+          />
+          )}
+          {!!stats.divers && <InfoItem name="Dives Logged:" value={stats.divers} />}
+          {!!divesCount && <InfoItem name="Divers:" value={divesCount.toString()} /> }
 
         </div>
 
@@ -85,7 +101,7 @@ export const Info = ({ location, species }: Props) => {
           <InfoItem name="Country:" country={location.country} value={location.country} />
           <InfoItem name="Region:" value={location.region} />
           <InfoItem name="Location:" value={location.location} />
-          {location?.coords && <InfoItem name="Coordinates:" value={`${location.coords.lat}°; ${location.coords.lng}°`} /> }
+          {coords && <InfoItem name="Coordinates:" value={`${coords.lat}°; ${coords.lng}°`} /> }
         </div>
 
         { !!species?.length && (

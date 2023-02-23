@@ -11,6 +11,9 @@ export const MobileTabs: FC<Props> = ({
   setMode,
 }) => {
   const setItemStyle = (itemName: typeof mode, currentMode: typeof mode) => {
+    if (itemName === 'shops') {
+      return `${styles.panelItem} ${styles.panelDisable}`;
+    }
     if (itemName === currentMode) {
       return `${styles.panelItem} ${styles.activePanel}`;
     }
@@ -33,7 +36,6 @@ export const MobileTabs: FC<Props> = ({
       </div>
       <div
         className={setItemStyle('shops', mode)}
-        onClick={() => { setMode('shops'); }}
       >
         Shops
       </div>

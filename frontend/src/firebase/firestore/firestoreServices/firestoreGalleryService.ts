@@ -1,15 +1,74 @@
 import {
   deleteObject, getDownloadURL, ref, StorageReference, uploadBytes,
 } from 'firebase/storage';
+import {
+  addDoc,
+  collection, deleteDoc, doc, DocumentReference, getDoc,
+  getDocs, limit, orderBy, query, startAfter, Timestamp, where,
+} from '@firebase/firestore';
 import { storage } from '../../storage/firebaseStorage';
+import { db } from '../firebaseFirestore';
+import { firestorePublicProfileService } from './firestorePublicProfileService';
+import { firestoreSpotsService } from './firestoreSpotsService';
+import { PathEnum } from '../firestorePaths';
 
 export const firestoreGalleryService = {
+  getBestPictures: async (bestPictures: { [key: string]: DocumentReference }, length?: number) => {
+    try {
+      const picsIds = Object.keys(bestPictures);
+      const size = length || picsIds.length;
+      const pics = [];
+      for (let i = 0; i < size; i++) {
+        const docRef = doc(db, `${PathEnum.PICTURES}/${picsIds[i]}`);
+        // eslint-disable-next-line no-await-in-loop
+        const docSnap = await getDoc(docRef);
+        const data = docSnap.data();
+        if (data) {
+          pics.push(data.url);
+        }
+      }
+      return pics;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
+  getPicById: async (id: string) => {
+    try {
+      const docRef = doc(db, `${PathEnum.PICTURES}/${id}`);
+      const docSnap = await getDoc(docRef);
+      const data = docSnap.data();
+      return data;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
+  getMediaUrls: async (pictures: { [key: string]: DocumentReference }) => {
+    try {
+      const picsIds = Object.keys(pictures);
+      const pics = [];
+      for (let i = 0; i < picsIds.length; i++) {
+        const docRef = doc(db, `${PathEnum.PICTURES}/${picsIds[i]}`);
+        // eslint-disable-next-line no-await-in-loop
+        const docSnap = await getDoc(docRef);
+        const data = docSnap.data();
+        if (data) {
+          pics.push({ url: data.url, ref: docSnap.ref, id: docSnap.id });
+        }
+      }
+      return pics;
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
   uploadGalleryFile: async (userId: string, image: File) => {
     try {
       const storageRef = ref(storage, `${userId}/gallery/${image.name}`);
       return await uploadBytes(storageRef, image);
     } catch (e) {
-      throw new Error('upload avatar error');
+      throw new Error(e.message);
     }
   },
 
@@ -17,7 +76,7 @@ export const firestoreGalleryService = {
     try {
       return await getDownloadURL(reference);
     } catch (e) {
-      throw new Error('get avatar url error');
+      throw new Error(e.message);
     }
   },
 
@@ -25,7 +84,125 @@ export const firestoreGalleryService = {
     try {
       return await deleteObject(reference);
     } catch (e) {
-      throw new Error('get avatar url error');
+      throw new Error(e.message);
+    }
+  },
+
+  deleteImageById: async (id: string, reference?: string) => {
+    try {
+      const imgRef = doc(db, `${PathEnum.PICTURES}/${id}`);
+      if (reference && reference.includes('https://firebasestorage')) {
+        const pathReference = ref(storage, reference);
+        if (pathReference) {
+          await deleteObject(pathReference);
+        }
+      }
+      return await deleteDoc(imgRef);
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
+  addImgToGallery: async (imgData: any) => {
+    try {
+      const spotData = imgData.spot ? await firestoreSpotsService.getSpotByRef(imgData.spot) : null;
+      const userRef = doc(db, `${PathEnum.USERS}/${imgData.user}`);
+      delete imgData.user;
+      const res = await addDoc(collection(db, PathEnum.PICTURES), {
+        ...imgData,
+        locationName: spotData ? spotData.locationName : null,
+        regionName: spotData ? spotData.regionName : null,
+        countryName: spotData ? spotData.countryName : null,
+        spotRef: spotData ? spotData.ref : null,
+        userRef,
+      });
+      return [res.id, res];
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
+  getGalleryByLocation: async (searchName: string) => {
+    try {
+      const upperGeonames = searchName.trim()
+        .charAt(0)
+        .toUpperCase() + searchName.slice(1);
+      const gallery = [];
+      const docRef = collection(db, PathEnum.PICTURES);
+      const q = query(
+        docRef,
+        where('locationName', '>=', upperGeonames),
+        limit(150),
+      );
+
+      const querySnapshot = await getDocs(q);
+
+      const promises = [];
+
+      querySnapshot.forEach((img) => {
+        const data = img.data();
+        if (data) {
+          promises.push(firestorePublicProfileService.getUserByRef(data.userRef));
+          gallery.push({ ...img.data(), imageId: img.id });
+        }
+      });
+      return await Promise.all(promises).then((values) => values.map((user, idx) => {
+        if (user) {
+          gallery[idx].user = {
+            lastName: user.lastName || '',
+            firstName: user.firstName || '',
+            photoUrl: user.photoUrl || null,
+            userId: user.uid,
+          };
+        }
+        return gallery[idx];
+      }));
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
+  getGallery: async (sort: 'asc' | 'desc' = 'desc', lastDate: Timestamp = null, size = 80) => {
+    try {
+      const gallery = [];
+      const docRef = collection(db, PathEnum.PICTURES);
+      const first = query(
+        docRef,
+        orderBy('createdAt', sort),
+        limit(size),
+      );
+
+      const next = query(
+        docRef,
+        orderBy('createdAt', sort),
+        startAfter(lastDate),
+        limit(size),
+      );
+
+      const q = lastDate ? next : first;
+
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((img) => gallery.push({ ...img.data(), imageId: img.id }));
+      for (let i = 0; i < gallery.length; i++) {
+        if (gallery[i].user) {
+          const {
+            lastName,
+            firstName,
+            photoUrl,
+            // eslint-disable-next-line no-await-in-loop
+          } = await firestorePublicProfileService.getUserByRef(gallery[i].userRef);
+          gallery[i].user = {
+            lastName,
+            firstName,
+            photoUrl,
+            userId: gallery[i].user.id,
+          };
+        }
+      }
+      return gallery;
+    } catch (e) {
+      throw new Error(e.message);
     }
   },
 

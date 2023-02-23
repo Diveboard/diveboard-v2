@@ -11,8 +11,7 @@ export const DeskTopPhotoGroup: FC<PhotoGroupProps> = ({ photos }) => {
     if (index % 3 === 0) {
       return (
         <PhotoCard
-          imgUrl={photo.img}
-          favourites={0}
+          imgUrl={photo.url}
           size="normal"
           authorName="Author"
         />
@@ -20,8 +19,7 @@ export const DeskTopPhotoGroup: FC<PhotoGroupProps> = ({ photos }) => {
     }
     return (
       <PhotoCard
-        imgUrl={photo.img}
-        favourites={0}
+        imgUrl={photo.url}
         size="small"
         authorName="Author"
       />

@@ -1,0 +1,24 @@
+.wrapper {
+  .buddiesBlock {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .viewMore {
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    color: #0059DE;
+    padding-top: 15px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .wrapper {
+    margin-bottom: 30px;
+    width: 100%;
+  }
+}

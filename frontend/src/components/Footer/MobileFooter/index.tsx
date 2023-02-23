@@ -27,11 +27,11 @@ export const FooterMobile: FC = () => {
           <Icon iconName="logo-gold" width={189} height={27} />
 
           <span className={styles.donateText}>
-            Help keep Diveboard kickin’ ! DIveboard is a non-profit and relies
+            Help keep Diveboard kickin’! Diveboard is a non-profit and relies
             on your generous support to keep the platform running.
           </span>
 
-          <ArrowLink text="Donate" color="#FFFFFF" link="/donate" />
+          <ArrowLink text="Donate" color="#FFFFFF" link={pageRoutes.donatePageRoute} />
         </div>
 
         <div className={styles.contentGroup}>
@@ -41,19 +41,19 @@ export const FooterMobile: FC = () => {
             </a>
           </Link>
 
-          <Link href="/">
+          <Link href={pageRoutes.shopPageRout}>
             <a>
               <span className={styles.linkText}>Diveboard for Dive Shops</span>
             </a>
           </Link>
 
-          <Link href="/">
+          <Link href={pageRoutes.mainPageRoute}>
             <a>
               <span className={styles.linkText}>TOS / Privacy</span>
             </a>
           </Link>
 
-          <Link href="/">
+          <Link href={pageRoutes.supportPageRout}>
             <a>
               <span className={styles.linkText}>Contact Us</span>
             </a>
@@ -64,7 +64,7 @@ export const FooterMobile: FC = () => {
           <div className={styles.socialsWrapper}>
             <span className={styles.socialsTitle}>Join Us on Socials</span>
             <div className={styles.socials}>
-              <Link href="https://discord.gg/rkKFRjns">
+              <Link href="https://discord.gg/rmqJajR7">
                 <a>
                   <Icon iconName="discord" size={34} />
                 </a>

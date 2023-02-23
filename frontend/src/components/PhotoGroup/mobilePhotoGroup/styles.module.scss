@@ -1,10 +1,15 @@
+.speciesBlock {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .scrollWrapper {
   margin-top: 16px;
   overflow-x: scroll;
   display: flex;
   justify-content: space-between;
   flex-wrap: nowrap;
-  padding-bottom: 30px;
 
   >div{
     margin-right: 15px;
@@ -13,4 +18,16 @@
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+.viewMore {
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  color: #0059DE;
+}
+
+.pt-15 {
+  padding-top: 15px;
 }

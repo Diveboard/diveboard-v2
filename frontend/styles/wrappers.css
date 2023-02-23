@@ -1,0 +1,21 @@
+.community-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: calc(100vh - 238px);
+    padding: 40px 50px;
+    text-align: center;
+    max-width: 570px;
+    margin: 0 auto;
+    gap: 40px;
+}
+
+.community-btn {
+    background-color: #FDC90D;
+    border-radius: 30px;
+    padding: 18px 57px;
+    color: #000345;
+    font-size: 18px;
+    font-weight: 600;
+}

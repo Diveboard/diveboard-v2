@@ -1,3 +1,4 @@
+import { DocumentReference, Timestamp } from '@firebase/firestore';
 import { Coords } from '../../types';
 import {
   EighthStepType,
@@ -59,45 +60,72 @@ export type NotificationsType = {
 };
 
 export type SpeciesType = {
-  id: string;
-  cname: { name: string, language: string }[];
-  sname: string;
   category: string;
-  coords: Coords[];
-  old_eolsnames_id: number;
+  id: string
   imgSrc: string
+  oldId: string
+  sname: string
+  ref: DocumentReference;
+  coords?: Coords[];
 };
 
 export type BuddiesType = {
-  id: string;
-  firstName: string;
-  lastName?: string;
+  name: string;
+  email: string;
+  userRef?: DocumentReference;
+  notify: boolean;
+  oldId?: number;
+  type: 'internal' | 'external';
   photoUrl?: string;
-  diveTotal: number;
-  divesOnSpot: number;
+  diveTotal?: number;
+  id?: string;
 };
 
 export type SpeciesTypeWithoutId = Omit<SpeciesType, 'id'>;
 
 type DiveActivities = Capitalize<keyof Omit<FirstStepType['diveActivities'], 'other'>>[] | string[];
 
+export type UserCommentType = {
+  firstName: string;
+  lastName: string;
+  userId: string;
+  photoUrl: string;
+};
+
+export type CommentType = {
+  comment: string;
+  replyTo?: UserCommentType | null;
+  author: UserCommentType;
+  createdAt: Timestamp;
+};
+
+export type MediaUrls = {
+  url: string,
+  ref?: DocumentReference,
+  id?: string
+};
+
 export type DiveType = {
   id?: string;
+  ref?: DocumentReference;
   draft: boolean;
   surveyId?: string;
   diveActivities: DiveActivities;
   diveData: SecondStepType['parameters'] & SecondStepType['advancedParameters'];
   tanks: SecondStepType['tanks'];
-  species: string[];
+  species: SpeciesType[];
   diveCenter: { id: string; guide: string };
   buddies: FifthStepType['buddies'];
-  externalImgsUrls: string[];
+  pictures: MediaUrls[];
   aboutDive: FirstStepType['overview']
   & FirstStepType['diveReviews']
   oldId: number | null
   unitSystem: UnitSystem;
   saves: number;
   spotId: string | null;
+  spotRef: DocumentReference;
+  comments?: Array<CommentType>;
+  locationName?: string;
 }
 & SeventhStepType
 & EighthStepType
@@ -111,22 +139,12 @@ export type SpotType = {
   lat: number;
   lng: number;
   zoom: number;
-  location: {
-    location: string; // name
-    country: string; // name
-    region: string; // name
-  };
-  bestPictures: {
-    userId: string;
-    diveId: string;
-    pictureId: string;
-  }[];
+  locationName: string;
+  regionName: string;
+  countryName: string;
+  bestPictures: { [key: string]: DocumentReference };
   species: string[] // species id
-  dives: {
-    id: number;
-    userId: string;
-    divesId: string[]
-  }[]
+  dives: { [key: string]: DocumentReference };
   shops: string[] // shops id
   stats: {
     averageDepth: {

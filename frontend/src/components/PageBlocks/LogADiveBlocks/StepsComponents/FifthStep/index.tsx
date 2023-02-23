@@ -2,6 +2,7 @@ import React, {
   FC, useContext, useEffect, useState,
 } from 'react';
 import Script from 'next/script';
+import { doc } from '@firebase/firestore';
 import { Input } from '../../../../Input/CommonInput';
 import { StepsNavigation } from '../../StepsNavigation';
 import { MarginWrapper } from '../../../../MarginWrapper';
@@ -19,21 +20,14 @@ import { StepProps } from '../../types/commonTypes';
 import { FifthStepType } from '../../types/stepTypes';
 import containerStyle from '../../styles.module.scss';
 import styles from './style.module.scss';
-import {
-  firestoreShopsService,
-} from '../../../../../firebase/firestore/firestoreServices/firestoreShopsService';
-import {
-  firestoreGuidesService,
-} from '../../../../../firebase/firestore/firestoreServices/firestoreGuidesService';
-import { firestoreBuddiesService } from '../../../../../firebase/firestore/firestoreServices/firestoreBuddiesService';
 import { StepsIndicator } from '../../StepsIndicator';
 import { AuthStatusContext } from '../../../../../layouts/AuthLayout';
-
-export type BuddyItemType = {
-  id: string;
-  name: string;
-  imgSrc: string;
-} | { name: string; email: string };
+import { BuddiesType } from '../../../../../firebase/firestore/models';
+import { notify } from '../../../../../utils/notify';
+import {
+  firestorePublicProfileService,
+} from '../../../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
+import { db } from '../../../../../firebase/firestore/firebaseFirestore';
 
 export const FifthStep: FC<StepProps> = ({
   step,
@@ -50,7 +44,7 @@ export const FifthStep: FC<StepProps> = ({
   // const [selectedDiveCenter, setSelectedDiveCenter] = useState('');
   // const [selectedGuide, setSelectedGuide] = useState('');
 
-  const [selectedBuddies, setSelectedBuddies] = useState<BuddyItemType[]>([]);
+  const [selectedBuddies, setSelectedBuddies] = useState<BuddiesType[]>([]);
 
   const [openPopup, setOpenPopup] = useState(false);
   const [checkRequestDC, setCheckRequestDC] = useState(false);
@@ -62,37 +56,35 @@ export const FifthStep: FC<StepProps> = ({
   const { shops, guides } = useGetShops();
 
   const fifthStepData: FifthStepType = {
-    diveCenter,
-    guideName,
-    buddies: selectedBuddies.map((item) => {
-      if ('id' in item) {
-        return { id: item.id };
-      }
-      return item;
-    }),
+    buddies: selectedBuddies,
   };
 
   useEffect(() => {
     const data = getStepData(5) as FifthStepType;
-    if (Object.values(data).every((item) => !!item)) {
-      (async () => {
-        const diveboardBuddies = [];
-        const newBuddies = [];
-        data?.buddies.forEach((buddy) => {
-          // @ts-ignore
-          if (buddy.id) {
-            // @ts-ignore
-            diveboardBuddies.push(buddy.id);
-          } else {
-            newBuddies.push(buddy);
-          }
-        });
-        const buddies = await firestoreBuddiesService.getBuddiesByIds(diveboardBuddies);
-        setSelectedBuddies([...buddies, ...newBuddies]);
-        // TODO: Add dive center
-        // TODO: Add guide
-      })();
-    }
+    (async () => {
+      try {
+        if (data?.buddies?.length) {
+          const diveBuddies: Array<BuddiesType> = [];
+          data.buddies.forEach((buddy) => {
+            if (buddy.userRef) {
+              // @ts-ignore
+              const segments = buddy.userRef?._key?.path?.segments;
+              const id = segments[segments.length - 1];
+              diveBuddies.push({
+                ...buddy,
+                userRef: doc(db, `users/${id}`),
+              });
+            } else {
+              diveBuddies.push(buddy);
+            }
+          });
+          const buddies = await firestorePublicProfileService.getBuddiesInfo(diveBuddies);
+          setSelectedBuddies(buddies);
+        }
+      } catch (e) {
+        notify(e.message);
+      }
+    })();
   }, [step]);
 
   if (step !== 5) {
@@ -124,8 +116,10 @@ export const FifthStep: FC<StepProps> = ({
             inputValue={diveCenter}
             setInputValue={setDiveCenter}
             recommendedItems={shops}
+            disabled
             // @ts-ignore
-            onSearchHandler={firestoreShopsService.getShopsByName}
+            // onSearchHandler={firestoreShopsService.getShopsByName}
+            onSearchHandler={() => {}}
           />
 
           <MarginWrapper top={10}>
@@ -142,8 +136,10 @@ export const FifthStep: FC<StepProps> = ({
             inputValue={guideName}
             setInputValue={setGuideName}
             recommendedItems={guides}
+            disabled
             // @ts-ignore
-            onSearchHandler={firestoreGuidesService.getGuidesByGuideName}
+            // onSearchHandler={firestoreGuidesService.getGuidesByGuideName}
+            onSearchHandler={() => {}}
           />
 
           <h3>

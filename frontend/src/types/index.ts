@@ -1,9 +1,9 @@
-import { DocumentReference } from '@firebase/firestore';
+import { DocumentReference, Timestamp } from '@firebase/firestore';
 import {
   FirstStepType,
   SecondStepType,
 } from '../components/PageBlocks/LogADiveBlocks/types/stepTypes';
-import { UnitSystem } from '../firebase/firestore/models';
+import { MediaUrls, UnitSystem } from '../firebase/firestore/models';
 
 export type UserType = {
   uid: null | string;
@@ -17,10 +17,24 @@ export type UserType = {
 };
 
 export type ImageInfo = {
-  img: string,
-  date: Date | null,
-  draft: boolean,
-  spot: string
+  url: string,
+  createdAt: Timestamp,
+  updated_A?: Timestamp,
+  videoUrl: string | null,
+  media: 'IMAGE' | 'VIDEO',
+  spot: DocumentReference,
+  user: {
+    firstName: string,
+    lastName: string,
+    photoUrl?: string,
+    userId: string
+  },
+  locationName: string,
+  countryName: string,
+  regionName: string,
+  width: number,
+  height: number,
+  imageId: string,
 };
 
 export type DiveType =
@@ -35,6 +49,7 @@ export type DiveType =
     comments: CommentType[];
     species: SpeciesType[];
     unitSystem: UnitSystem;
+    pictures: MediaUrls[];
   }
   & FirstStepType['overview']
   & Omit<SecondStepType['parameters'], 'surfaceInterval'>
@@ -78,6 +93,7 @@ export type SearchedLocationType = {
   name: string,
   bounds?: Bounds,
   geonameRef: DocumentReference
+  countryRef?: DocumentReference
 };
 
 export type Bounds = {

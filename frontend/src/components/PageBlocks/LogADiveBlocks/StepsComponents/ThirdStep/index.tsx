@@ -3,7 +3,6 @@ import React, {
 } from 'react';
 import { LogADiveDiveMap } from './NewDiveMap';
 import { StepsNavigation } from '../../StepsNavigation';
-import { ButtonGroup } from '../../../../ButtonGroup';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { useUserLocation } from '../../../../../hooks/useUserLocation';
 import { MarkerType, StepProps } from '../../types/commonTypes';
@@ -13,45 +12,45 @@ import styles from './styles.module.scss';
 import { firestoreSpotsService } from '../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
 import { StepsIndicator } from '../../StepsIndicator';
 import { Bounds } from '../../../../../types';
+import { Button } from '../../../../ButtonGroup/Button';
 
 export const ThirdStep: FC<StepProps> = ({
   step,
   setStep,
 }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
-  const [data, setData] = useState<ThirdStepType>(undefined);
+  const [data, setData] = useState<ThirdStepType>(null);
   const userLocation = useUserLocation();
-  const [location, setLocation] = useState({
-    lat: 41.5,
-    lng: 30.33,
-  });
+  const [location, setLocation] = useState(null);
   const [newSpotName, setNewSpotName] = useState('');
+  const [defaultSpot, setDefaultSpot] = useState(null);
   const [bounds, setBounds] = useState<Bounds>(undefined);
 
   const [markers, setMarkers] = useState<MarkerType[]>([]);
 
   const [createSpotMode, setCreateSpotMode] = useState(false);
   const [newPointCoords, setNewPointCoords] = useState({
-    lat: location.lat,
-    lng: location.lng,
+    lat: location?.lat,
+    lng: location?.lng,
   });
 
   const [zoom, setZoom] = useState(5);
 
-  const [clickedPoint, setClickedPoint] = useState('');
+  // const [clickedPoint, setClickedPoint] = useState('');
 
   const createdNewSpotId = useRef<string>();
 
   const buttons = useMemo(() => markers.map((item) => ({
     connectedMode: item.name,
     text: item.name,
+    id: item.id,
   })), [markers]);
 
   useEffect(() => {
-    if (userLocation) {
+    if (userLocation && !data?.spotId) {
       setLocation(userLocation);
     }
-  }, [userLocation]);
+  }, [userLocation, data]);
 
   useEffect(() => {
     if (!createSpotMode && newSpotName && markers.length) {
@@ -70,8 +69,11 @@ export const ThirdStep: FC<StepProps> = ({
         const spot = await firestoreSpotsService.getSpotById(
           spotId,
         );
+        setDefaultSpot({
+          id: spotId,
+          text: spot.name,
+        });
         setLocation({ lat: spot.lat, lng: spot.lng });
-        setClickedPoint(spot.name);
       }
     })();
   }, [step]);
@@ -94,7 +96,6 @@ export const ThirdStep: FC<StepProps> = ({
           boundsCoors={bounds}
           location={location}
           setLocation={setLocation}
-          markers={markers}
           setMarkers={setMarkers}
           zoom={zoom}
           setZoom={setZoom}
@@ -103,19 +104,28 @@ export const ThirdStep: FC<StepProps> = ({
           setNewPoint={setCreateSpotMode}
           setNewPointCoords={setNewPointCoords}
           createdNewSpotId={createdNewSpotId.current}
-          setChosenPointId={(res) => setData({ spotId: res })}
-          setButton={setClickedPoint}
+          spotId={data.spotId}
         />
         {!createSpotMode && (
           <div className={styles.pointsBtnGroup}>
-            <ButtonGroup
-              buttons={buttons}
-              onClick={(buttonName) => {
-                const spot = markers.find((item) => item.name === buttonName);
-                setData({ spotId: spot.id });
-              }}
-              defaultChecked={newSpotName || clickedPoint}
+            {defaultSpot?.id && (
+            <Button
+              button={defaultSpot}
+              onClick={() => {}}
+              defaultBtnId={defaultSpot.id}
             />
+            )}
+            {buttons.map((btn) => (
+              <Button
+                button={btn}
+                onClick={(button) => {
+                  const newMarkers = markers.filter((item) => item.id !== button.id);
+                  setMarkers(newMarkers);
+                  setDefaultSpot(button);
+                  setData({ spotId: button.id });
+                }}
+              />
+            ))}
           </div>
         )}
 
@@ -131,10 +141,10 @@ export const ThirdStep: FC<StepProps> = ({
             setLocation={(loc) => {
               setNewPointCoords(loc);
               setLocation(loc);
-              setClickedPoint(newSpotName);
             }}
-            setData={(id) => {
+            setData={({ id, text }) => {
               setData({ spotId: id });
+              setDefaultSpot({ id, text });
             }}
           />
         )}

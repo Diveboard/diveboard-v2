@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { PhotoCard } from '../../../../Cards/PhotoCard';
 import { ArrowLink } from '../../../../ArrowLink';
 import styles from './styles.module.scss';
-import { photos } from '../../../../DivePage/DIVE_PAGE_DUMMY_DATA';
 import pagesRoutes from '../../../../../routes/pagesRoutes.json';
+import { ImageInfo } from '../../../../../types';
 
-export const PhotoDivesBlock = () => (
+type Props = {
+  gallery: Array<ImageInfo>
+};
+export const PhotoDivesBlock: FC<Props> = ({ gallery }): JSX.Element => (
   <div className={styles.photoDivesWrapper}>
     <h2 className={styles.title}>Photos From Our Divers</h2>
 
@@ -13,25 +16,21 @@ export const PhotoDivesBlock = () => (
       <div className={styles.leftGroup}>
         <div className={styles.column}>
           <PhotoCard
-            imgUrl={photos[0].img}
-            favourites={136}
+            imgUrl={gallery[0].url}
             size="normal"
           />
           <PhotoCard
-            imgUrl={photos[1].img}
-            favourites={136}
+            imgUrl={gallery[1].url}
             size="small"
           />
         </div>
         <div className={styles.column}>
           <PhotoCard
-            imgUrl={photos[2].img}
-            favourites={136}
+            imgUrl={gallery[2].url}
             size="small"
           />
           <PhotoCard
-            imgUrl={photos[3].img}
-            favourites={136}
+            imgUrl={gallery[3].url}
             size="normal"
           />
         </div>
@@ -39,25 +38,21 @@ export const PhotoDivesBlock = () => (
       <div className={styles.rightGroup}>
         <div className={styles.column}>
           <PhotoCard
-            imgUrl={photos[4].img}
-            favourites={136}
+            imgUrl={gallery[4].url}
             size="normal"
           />
           <PhotoCard
-            imgUrl={photos[5].img}
-            favourites={136}
+            imgUrl={gallery[5].url}
             size="small"
           />
         </div>
         <div className={styles.column}>
           <PhotoCard
-            imgUrl={photos[2].img}
-            favourites={136}
+            imgUrl={gallery[6].url}
             size="small"
           />
           <PhotoCard
-            imgUrl={photos[3].img}
-            favourites={136}
+            imgUrl={gallery[7].url}
             size="normal"
           />
         </div>

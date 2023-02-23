@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import { DocumentReference } from '@firebase/firestore';
 import { useWindowWidth } from '../../../hooks/useWindowWidth';
-import { MobilePhotoGroup } from '../../PhotoGroup/mobilePhotoGroup';
-import { photos } from '../../DivePage/DIVE_PAGE_DUMMY_DATA';
 import { DesktopPhotoBlock } from '../../DivePage/DesktopPhotoBlock';
-import { LinkedButton } from '../../Buttons/LinkedButton';
 import { Info } from './Info';
 import { DivesInSpot } from './DivesInSpot';
 import { MobileTabs } from './MobileTabs';
@@ -13,60 +11,25 @@ import styles from './styles.module.scss';
 import { DiveType, SpeciesType, SpotType } from '../../../firebase/firestore/models';
 import { Icon } from '../../Icons/Icon';
 
-const images: {
-  id: number;
-  src: string;
-  savesNumber: number;
-  saved: boolean;
-  author: string;
-}[] = [
-  {
-    id: 1,
-    src: '/TEST_IMG_THEN_DELETE/fish.jpg',
-    savesNumber: 100,
-    saved: false,
-    author: 'Kolja',
-  }, {
-    id: 2,
-    src: '/TEST_IMG_THEN_DELETE/photo3.jpg',
-    savesNumber: 50,
-    saved: true,
-    author: 'Kolja',
-  }, {
-    id: 3,
-    src: '/TEST_IMG_THEN_DELETE/photo6.jpg',
-    savesNumber: 30,
-    saved: true,
-    author: 'Kolja',
-  }, {
-    id: 4,
-    src: '/TEST_IMG_THEN_DELETE/photo7.jpg',
-    savesNumber: 12,
-    saved: false,
-    author: 'Kolja',
-  }, {
-    id: 5,
-    src: '/TEST_IMG_THEN_DELETE/photo8.jpg',
-    savesNumber: 33,
-    saved: true,
-    author: 'Kolja',
-  },
-];
-
 type Props = {
   spot: SpotType;
   dives: Array<DiveType>
-  species: Array<SpeciesType>
+  species: Array<{
+    specieRef: DocumentReference
+  }>
+  pictures: Array<{
+    pictureRef: DocumentReference
+  }>
+  speciesData: Array<SpeciesType>
+  picturesData: Array<string>
 };
 
-export const SpotBlocks = ({ spot, dives, species }: Props) => {
+export const SpotBlocks = ({
+  spot, dives, speciesData, picturesData, species, pictures,
+}: Props) => {
   const router = useRouter();
   const isMobile = useWindowWidth(500, 769);
   const [tab, setTab] = useState<'info' | 'dives' | 'shops'>('info');
-
-  const renderPhotoBlock = isMobile
-    ? <MobilePhotoGroup photos={photos.map((i) => i.img)} />
-    : <DesktopPhotoBlock photos={photos.map((i) => i.img)} />;
 
   return (
     <div className={styles.spotBlock}>
@@ -81,20 +44,34 @@ export const SpotBlocks = ({ spot, dives, species }: Props) => {
                 {spot?.name}
               </h1>
             </div>
-            <LinkedButton link="" iconName="share-link" iconSize={40} />
+            {/* <LinkedButton link="" iconName="share-link" iconSize={40} /> */}
           </div>
-          {renderPhotoBlock}
+          <DesktopPhotoBlock photos={picturesData} pictures={pictures} />
         </>
       )}
 
-      {isMobile && <MobileSpotHeader spotName={spot?.name} images={images} />}
+      {isMobile
+          && <MobileSpotHeader spotName={spot?.name} images={picturesData} pictures={pictures} />}
 
       {isMobile && <MobileTabs mode={tab} setMode={setTab} />}
       <div className={styles.wrapper}>
-        {isMobile ? tab === 'info'
-            && <Info location={spot?.location} species={species} />
-          : <Info location={spot?.location} species={species} />}
-        {isMobile ? tab === 'dives' && <DivesInSpot dives={dives} /> : <DivesInSpot dives={dives} />}
+        {((isMobile && tab === 'info') || isMobile === false) && (
+        <Info
+          location={{
+            country: spot.countryName,
+            region: spot.regionName,
+            location: spot.locationName,
+          }}
+          species={species} // species
+          speciesData={speciesData} // speciesData
+          coords={{ lat: spot.lat, lng: spot.lng }}
+          stats={spot.stats}
+          divesCount={Object.keys(spot.dives).length}
+        />
+        )}
+        {((isMobile && tab === 'dives') || isMobile === false) && (
+        <DivesInSpot spotDivesIds={spot.dives} dives={dives} />
+        )}
         {/* {isMobile ? tab === 'shops' && <ShopsInSpot /> : <ShopsInSpot />} */}
       </div>
 

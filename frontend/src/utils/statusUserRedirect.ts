@@ -12,7 +12,7 @@ export const statusUserRedirect = async (
     await push(pageRoutes.settingsPageRout);
   } else if (diveUser === 'newUser' && mode === 'login') {
     localStorage.setItem('diveBoardUser', 'oldUser');
-    setMode('community');
+    await push('/community');
   } else {
     await push(`/logbook/${uid}`);
   }

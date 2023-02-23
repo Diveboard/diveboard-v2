@@ -43,9 +43,8 @@ export const PreStep: FC<Pick<StepProps, 'setStep'>> = ({ setStep }) => {
             +dive.time.minute,
           ),
           maxDepth: +dive.greatestdepth,
-          safetySpots: dive.samples.waypoint
+          safetyStops: dive.samples.waypoint
             .map((spot) => ({ id: +spot.divetime, depth: +spot.depth, period: +spot.divetime })),
-          time: `${dive.time.hour} : ${dive.time.minute}`,
           duration: +dive.samples.waypoint[dive.samples.waypoint.length - 1].divetime / 60,
         },
         advancedParameters: {

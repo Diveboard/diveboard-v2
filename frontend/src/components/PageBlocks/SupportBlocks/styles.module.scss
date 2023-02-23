@@ -1,0 +1,81 @@
+.supportWrapper {
+  min-height: calc(100vh - 238px);
+  padding-top: 110px;
+  max-width: 760px;
+  margin: 0 auto;
+
+  h1 {
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 48px;
+    color: #000345;
+    margin-bottom: 30px;
+  }
+
+  .supportBlocksWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+
+    .supportBlock {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0px 25px 40px -15px rgba(0, 62, 89, 0.12);
+      border-radius: 20px;
+      padding: 40px 40px 60px;
+      height: 380px;
+      width: 100%;
+
+      p {
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 24px;
+        color: #000345;
+        text-align: center;
+      }
+
+      .discordBth {
+        background: #5865F2;
+        border-radius: 10px;
+        padding: 18px 47px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        cursor: pointer;
+      }
+
+      .contactEmail {
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 24px;
+        color: #0059DE;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .supportWrapper {
+    padding: 70px 20px 80px;
+
+    h1 {
+      font-weight: 600;
+      font-size: 24px;
+      line-height: 30px;
+    }
+
+    .supportBlocksWrapper {
+      flex-direction: column;
+
+      .supportBlock {
+        padding: 40px 10px 30px;
+      }
+    }
+  }
+}
+
+

@@ -12,6 +12,7 @@ import { SearchDropdownPanel } from '../../../../Dropdown/SearchedItems/SearchDr
 import { firestoreGeoDataService } from '../../../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
 import { useDebounce } from '../../../../../hooks/useDebounce';
 import { useOutsideClick } from '../../../../../hooks/useOutsideClick';
+import { notify } from '../../../../../utils/notify';
 
 export const MainBannerBlock = () => {
   const isWidth = useWindowWidth(500, 768);
@@ -47,8 +48,12 @@ export const MainBannerBlock = () => {
 
   const fetchRegions = async () => {
     if (inputRegion && isFetch) {
-      const res = await firestoreGeoDataService.getGeonames(inputRegion);
-      setRegions(res);
+      try {
+        const res = await firestoreGeoDataService.getGeonames(inputRegion);
+        setRegions(res);
+      } catch (e) {
+        notify('Something went wrong');
+      }
     }
   };
 

@@ -17,7 +17,7 @@ export type ArrayElement<ArrayType extends readonly unknown[]> =
 export type TankType = ArrayElement<SecondStepType['tanks']>;
 
 type CylinderType = TankType['cylinder'];
-type SizeType = TankType['size'];
+type VolumeUnitType = TankType['volumeUnit'];
 type MaterialType = TankType['material'];
 type MixtureType = TankType['mixture'];
 type MeasuresType = TankType['pressureMeasures'];
@@ -26,7 +26,7 @@ export type SetTankParametersType = {
   setTankParameters: {
     setCylinder: (cylinder: CylinderType) => void
     setVolume: (volume: string) => void
-    setSize: (size: SizeType) => void
+    setVolumeUnit: (volumeUnit: VolumeUnitType) => void
     setMaterial:(material: MaterialType) => void
     setMixture: (mixture:MixtureType)=>void
     setO2: (o2: string) => void

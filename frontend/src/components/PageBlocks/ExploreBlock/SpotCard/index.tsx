@@ -9,7 +9,6 @@ type Props = {
   name: string
   depth: string
   imgSrc: string
-  favorite: boolean
   country?: string
 };
 
@@ -18,7 +17,6 @@ const SpotCard: FC<Props> = ({
   depth,
   region,
   imgSrc,
-  favorite,
   country,
 }) => (
   <div className={styles.wrapper}>
@@ -33,15 +31,16 @@ const SpotCard: FC<Props> = ({
     <div className={styles.description}>
       <div className={styles.region}>
         {`${flag(country)} ${region}`}
-        <div className={styles.favIcon}><Icon iconName={favorite ? 'heart filled in' : 'heart'} size={16} /></div>
       </div>
       <span className={styles.name}>{name}</span>
+      {depth && (
       <div className={styles.depth}>
         <Icon iconName="depth" size={16} />
         Depth:
         {' '}
         <b>{depth}</b>
       </div>
+      )}
     </div>
   </div>
 );

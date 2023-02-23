@@ -59,7 +59,7 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
   useEffect(() => {
     const data = getStepData(9) as NinthStepType;
     if (data.publishingMode) {
-      setPublishingMode(data.publishingMode);
+      setPublishingMode(data.publishingMode.toLowerCase());
     }
   }, [step]);
 
@@ -69,6 +69,7 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
 
   const publishStepsData = async () => {
     try {
+      setLoading(true);
       const data = await convertAllStepsData(
         allStepsData,
         userId,
@@ -78,7 +79,6 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
       if (!saveDAN) {
         data.danSurvey = null;
       }
-      setLoading(true);
       if (diveId) {
         // @ts-ignore
         await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data, sendToDAN);
@@ -89,7 +89,8 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
       setLoading(false);
       setStep(10);
     } catch (e) {
-      notify('Something went wrong');
+      setLoading(false);
+      notify(e.message);
     }
   };
 

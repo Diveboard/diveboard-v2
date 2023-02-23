@@ -17,3 +17,15 @@
     background-color: #FFFFFF;
   }
 }
+
+@media (max-width: 768px) {
+  .dropdown {
+    .itemsWrapper {
+      top: 40px;
+      right: -15px;
+      left: unset;
+      width: 100vw;
+    }
+  }
+}
+

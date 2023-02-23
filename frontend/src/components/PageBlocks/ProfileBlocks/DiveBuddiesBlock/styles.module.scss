@@ -1,5 +1,6 @@
 .blockWrapper {
-  margin-top: 75px;
+  margin-top: 40px;
+  margin-bottom: 40px;
 
   .cardsWrapper {
 
@@ -14,8 +15,12 @@
   }
 
   .arrowLinkWrapper {
-    margin-top: 26px;
-    margin-bottom: 61px;
+    margin-top: 15px;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    color: #0059DE;
+    cursor: pointer;
   }
 
 }

@@ -1,5 +1,5 @@
 import React, {
-  FC, useContext, useState,
+  FC, useState,
 } from 'react';
 import { name } from 'country-emoji';
 import { SettingsGroup } from '../SettingsGroup';
@@ -10,7 +10,6 @@ import { EditedProfileName } from '../SettingsItemContent/EditedContent/EditedPr
 import { EditedProfileEmail } from '../SettingsItemContent/EditedContent/EditedProfileEmail';
 import { EditedProfileCountry } from '../SettingsItemContent/EditedContent/EditedProfileCountry';
 import { EditedProfileAbout } from '../SettingsItemContent/EditedContent/EditedProfileAbout';
-import { NetworkStatusContext } from '../../../../layouts/NetworkStatus';
 import coverStyles from './styles.module.scss';
 import styles from '../itemContentStyle.module.scss';
 import { UserSettingsType } from '../../../../firebase/firestore/models';
@@ -21,8 +20,6 @@ type Props = {
 };
 
 export const PersonalInfo: FC<Props> = ({ user, title = true }) => {
-  const isOffline = useContext(NetworkStatusContext);
-
   const [userInfo, setUserInfo] = useState(user);
 
   return (
@@ -73,9 +70,6 @@ export const PersonalInfo: FC<Props> = ({ user, title = true }) => {
           <EditedProfileAbout userAbout={userInfo?.about} setUserInfo={setUserInfo} />
         </SettingsItem>
       </SettingsGroup>
-      <div className={`${coverStyles.opacityCover} ${!isOffline && coverStyles.hidden}`}>
-        <span>You can't edit 'Personal info' in offline mode</span>
-      </div>
     </div>
   );
 };

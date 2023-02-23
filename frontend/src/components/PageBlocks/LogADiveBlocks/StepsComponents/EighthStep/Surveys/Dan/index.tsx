@@ -2,6 +2,7 @@ import React, {
   FC, useContext, useEffect, useRef, useState,
 } from 'react';
 import Image from 'next/image';
+import { doc, DocumentReference } from '@firebase/firestore';
 import styles from './styles.module.scss';
 import { DanCard } from './DanCard';
 import { StepType } from '../../../../types/commonTypes';
@@ -13,11 +14,13 @@ import { LogDiveDataContext } from '../../../../LogDiveData/logDiveContext';
 import { EighthStepType } from '../../../../types/stepTypes';
 import { firestoreSurveyService } from '../../../../../../../firebase/firestore/firestoreServices/firestoreSurveyService';
 import { AuthStatusContext } from '../../../../../../../layouts/AuthLayout';
+import { notify } from '../../../../../../../utils/notify';
+import { db } from '../../../../../../../firebase/firestore/firebaseFirestore';
 
 type Props = {
   setSurvey: React.Dispatch<React.SetStateAction<SurveyDanType>>;
   setStep: React.Dispatch<React.SetStateAction<StepType>>
-  surveyId?: string;
+  surveyRef?: DocumentReference;
   sendToDAN: boolean;
   setSendTODAN: (val: boolean) => void;
   survey: SurveyDanType;
@@ -26,7 +29,7 @@ type Props = {
 };
 
 export const DanSurvey: FC<Props> = ({
-  survey, setSurvey, setStep, surveyId, sendToDAN, setSendTODAN, setSaveDAN,
+  survey, setSurvey, setStep, surveyRef, sendToDAN, setSendTODAN, setSaveDAN,
   setSurveyMode,
 }) => {
   const [progress, setProgress] = useState(0);
@@ -39,12 +42,23 @@ export const DanSurvey: FC<Props> = ({
 
   useEffect(() => {
     (async () => {
-      const data = getStepData(8) as EighthStepType;
-      if (surveyId && !data.danSurvey) {
-        setLoading(true);
-        const danSurvey = await firestoreSurveyService.getSurveyById(userAuth.uid, surveyId);
-        setSurvey(danSurvey as SurveyDanType);
+      try {
+        const data = getStepData(8) as EighthStepType;
+        if (surveyRef && !data.danSurvey) {
+          setLoading(true);
+          // @ts-ignore
+          const segments = surveyRef?._key?.path?.segments;
+          const ref = doc(db, `${segments.slice(segments.length - 4).join('/')}`);
+          const danSurvey = await firestoreSurveyService.getSurveyById(userAuth.uid, ref);
+          // const danSurveys = await firestoreSurveyService.getUserSurveys(userAuth.uid);
+          if (danSurvey) {
+            setSurvey(danSurvey as SurveyDanType);
+          }
+          setLoading(false);
+        }
+      } catch (e) {
         setLoading(false);
+        notify(e.message);
       }
     })();
   }, []);
@@ -130,7 +144,7 @@ export const DanSurvey: FC<Props> = ({
         <DanCard
           progress={progress}
           setStep={setStep}
-          isSentToDAN={survey.sent || false}
+          isSentToDAN={survey?.sent || false}
           sendToDAN={sendToDAN}
           setSendTODAN={setSendTODAN}
           survey={survey}

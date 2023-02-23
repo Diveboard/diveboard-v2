@@ -55,12 +55,12 @@ export const DiveItem: FC<Props> = ({
   const convertDepth = (dive): string => {
     const userUnitSystem = userAuth.settings.preferences.unitSystem;
     if (dive.unitSystem === userUnitSystem) {
-      return `${dive.diveData?.maxDepth} ${userUnitSystem === 'METRIC' ? 'm' : 'ft'}`;
+      return `${dive.diveData?.maxDepth || 0} ${userUnitSystem === 'METRIC' ? 'm' : 'ft'}`;
     }
     if (userUnitSystem === 'METRIC') {
-      return `${convertFeetToMeters(dive.diveData?.maxDepth)} m`;
+      return `${dive.diveData?.maxDepth ? convertFeetToMeters(dive.diveData?.maxDepth) : 0} m`;
     }
-    return `${convertMetersToFeet(dive.diveData?.maxDepth)} ft`;
+    return `${dive.diveData?.maxDepth ? convertMetersToFeet(dive.diveData?.maxDepth) : 0} ft`;
   };
 
   const convertAltitude = (diveUnitSystem: UnitSystem, value: number): number => {
@@ -100,7 +100,7 @@ export const DiveItem: FC<Props> = ({
       </div>
       <div className={styles.infowrapper}>
         <DiveInfo
-          diveTime={itm.diveData?.duration}
+          diveTime={itm.diveData?.duration || 0}
           deepness={convertDepth(itm)}
           diversCount={itm.buddies?.length}
         />

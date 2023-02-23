@@ -14,7 +14,7 @@ type Props = {
 
 export const SpeciesCardItem: FC<Props> = ({
   species: {
-    id, sname, cname, imgSrc,
+    id, sname, imgSrc,
   }, selectedSpeciesHandler, check,
 }) => {
   const [isErrorImg, setErrorImg] = useState(false);
@@ -26,7 +26,7 @@ export const SpeciesCardItem: FC<Props> = ({
   };
 
   const definedSrc = () => {
-    if (imgSrc.length === 0 || isErrorImg) {
+    if (!imgSrc || isErrorImg) {
       return '/images/default-species.svg';
     }
     return imgSrc;
@@ -48,7 +48,7 @@ export const SpeciesCardItem: FC<Props> = ({
         </div>
 
         <div className={styles.titleWrapper}>
-          <div className={styles.title}>{cname[0].name}</div>
+          {/* <div className={styles.title}>{cname[0].name}</div> */}
           <div className={styles.description}>{sname}</div>
         </div>
       </div>

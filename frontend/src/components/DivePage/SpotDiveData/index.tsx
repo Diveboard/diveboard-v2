@@ -33,7 +33,7 @@ export const SpotDiveData: FC<Props> = ({
   const router = useRouter();
   const diveTypeList = () => dive.diveActivities.join(', ');
 
-  const spotName = spot ? `${spot.location?.location || ''}, ${spot.location?.country || ''}, ${spot.location?.region || ''}` : '';
+  const spotName = spot ? `${spot?.locationName || ''}, ${spot?.countryName || ''}, ${spot?.regionName || ''}` : '';
 
   const moreButtonHandler = () => {
     setShowMore(true);
@@ -43,15 +43,15 @@ export const SpotDiveData: FC<Props> = ({
     setShowMore(false);
   };
 
-  const shareButtonHandler = async () => {
-    const data = {
-      title: 'DiveBoard',
-      url: location.href,
-      text: 'Share your dive',
-    };
-    console.log(data);
-    // if (navigator.canShare(data)) await navigator.share(data);
-  };
+  // const shareButtonHandler = async () => {
+  //   const data = {
+  //     title: 'DiveBoard',
+  //     url: location.href,
+  //     text: 'Share your dive',
+  //   };
+  //   console.log(data);
+  //   // if (navigator.canShare(data)) await navigator.share(data);
+  // };
 
   const renderNotes = (text: string) => {
     if (text.length > 180) {
@@ -87,7 +87,7 @@ export const SpotDiveData: FC<Props> = ({
       return `${value} m`;
     }
     const userUnitSystem = userAuth.settings.preferences.unitSystem;
-    if (dive.unitSystem === userUnitSystem) {
+    if (dive.unitSystem.toLowerCase() === userUnitSystem.toLowerCase()) {
       return `${value} ${userUnitSystem === 'METRIC' ? 'ºC' : 'ºF'}`;
     }
     if (userUnitSystem === 'METRIC') {
@@ -101,7 +101,7 @@ export const SpotDiveData: FC<Props> = ({
       return `${dive.diveData?.maxDepth} m`;
     }
     const userUnitSystem = userAuth.settings.preferences.unitSystem;
-    if (dive.unitSystem === userUnitSystem) {
+    if (dive.unitSystem.toLowerCase() === userUnitSystem) {
       return `${dive.diveData?.maxDepth} ${userUnitSystem === 'METRIC' ? 'm' : 'ft'}`;
     }
     if (userUnitSystem === 'METRIC') {
@@ -129,46 +129,43 @@ export const SpotDiveData: FC<Props> = ({
               <div className={styles.backBtnWrapper} onClick={() => router.back()}>
                 <Icon size={40} iconName="back-button" />
               </div>
-              <div className={styles.rightContentMob}>
-                <span className={styles.share} onClick={shareButtonHandler}>
-                  <Icon iconName="share-dive" size={16} />
-                </span>
-                <KebabButton className="saves">
-                  <span>
-                    0 Saves
-                  </span>
-                  <Icon iconName="heart" size={16} />
-                </KebabButton>
-              </div>
+              {/* <div className={styles.rightContentMob}> */}
+              {/*  <span className={styles.share} onClick={shareButtonHandler}> */}
+              {/*    <Icon iconName="share-dive" size={16} /> */}
+              {/*  </span> */}
+              {/* <KebabButton className="saves"> */}
+              {/*  <span> */}
+              {/*    0 Saves */}
+              {/*  </span> */}
+              {/*  <Icon iconName="heart" size={16} /> */}
+              {/* </KebabButton> */}
+              {/* </div> */}
             </div>
             <div className={styles.leftContentWrapper} onClick={() => router.push(`/logbook/${user.uid}`)}>
               <ProfileImage imgSrc={user?.photoUrl} size={74} />
               <div className={styles.spotTitleWrapper}>
                 <div className={styles.spotTitle}>
-                  {user?.firstName}
-                  {' '}
-                  in
-                  {' '}
-                  {spot?.name}
+                  {user?.firstName || user?.nickname}
+                  {spot?.name && ` in ${spot.name}`}
                 </div>
                 <div className={styles.spotCountryWrapper}>
-                  <div>{spot && flag(spot.location?.country)}</div>
+                  <div>{spot && flag(spot.countryName)}</div>
                   <div className={styles.spotLocation}>{spotName}</div>
                 </div>
               </div>
             </div>
           </div>
-          <div className={styles.rightContent}>
-            <span className={styles.share} onClick={shareButtonHandler}>
-              <Icon iconName="share-dive" size={16} />
-            </span>
-            <KebabButton className="saves">
-              <span>
-                0 Saves
-              </span>
-              <Icon iconName="heart" size={16} />
-            </KebabButton>
-          </div>
+          {/* <div className={styles.rightContent}> */}
+          {/*  <span className={styles.share} onClick={shareButtonHandler}> */}
+          {/*    <Icon iconName="share-dive" size={16} /> */}
+          {/*  </span> */}
+          {/*  <KebabButton className="saves"> */}
+          {/*    <span> */}
+          {/*      0 Saves */}
+          {/*    </span> */}
+          {/*    <Icon iconName="heart" size={16} /> */}
+          {/*  </KebabButton> */}
+          {/* </div> */}
         </div>
         <div className={styles.diveDataWrapper}>
           <div className={styles.diveInfo}>

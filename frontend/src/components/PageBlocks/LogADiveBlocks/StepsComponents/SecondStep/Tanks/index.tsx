@@ -16,16 +16,16 @@ export const Tanks:FC<Props> = ({ tanks, setTanks }) => {
   const add = () => {
     setTanks([...tanks, {
       id: incrementId(tanks),
-      cylinder: undefined,
-      volume: undefined,
-      size: undefined,
-      material: undefined,
-      mixture: undefined,
-      pressureStart: 0,
-      pressureEnd: undefined,
-      pressureMeasures: undefined,
-      o2: undefined,
-      he: undefined,
+      cylinder: 1,
+      volume: 80.1,
+      volumeUnit: 'cuft',
+      material: 'aluminum',
+      mixture: 'air',
+      pressureStart: 3000,
+      pressureEnd: 5000,
+      pressureMeasures: 'psi',
+      o2: 21,
+      he: 0,
     }]);
   };
 
@@ -33,7 +33,7 @@ export const Tanks:FC<Props> = ({ tanks, setTanks }) => {
     id,
     cylinder,
     volume,
-    size,
+    volumeUnit,
     material,
     mixture,
     o2,
@@ -49,7 +49,7 @@ export const Tanks:FC<Props> = ({ tanks, setTanks }) => {
         id={id}
         cylinder={cylinder}
         volume={volume}
-        size={size}
+        volumeUnit={volumeUnit}
         material={material}
         o2={o2}
         he={he}

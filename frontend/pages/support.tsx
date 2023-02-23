@@ -3,11 +3,12 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
+import { SupportBlock } from '../src/components/PageBlocks/SupportBlocks';
 
 const Support: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
     <MainLayout>
-      Support
+      <SupportBlock />
     </MainLayout>
   </AuthLayout>
 );

@@ -7,7 +7,6 @@ type Props = {
   title: string;
   onClick?: React.Dispatch<React.SetStateAction<boolean>>;
   hideDropdown?: (status: boolean) => void;
-  showBackdrop: (status: boolean) => void;
 };
 // it`s a kostyl for color icons
 const classNameDefinition = (title: string) => (title === 'Print' || title === 'Export' || title === 'Edit Dive' || title === 'Copy Property'
@@ -15,13 +14,12 @@ const classNameDefinition = (title: string) => (title === 'Print' || title === '
   : styles.item);
 
 export const SetDropdownItem: FC<Props> = ({
-  title, children, onClick, hideDropdown, showBackdrop,
+  title, children, onClick, hideDropdown,
 }) => {
   const handleClick = () => {
     onClick(true);
     hideDropdown(false);
     if (title !== 'Edit Dive' && title !== 'Paste properties') {
-      showBackdrop(true);
       document.body.style.overflow = 'hidden';
     }
   };

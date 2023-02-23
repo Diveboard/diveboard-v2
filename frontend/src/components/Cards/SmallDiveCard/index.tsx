@@ -1,5 +1,7 @@
 import React, { FC, useContext } from 'react';
 import Image from 'next/image';
+import { DocumentReference } from '@firebase/firestore';
+import { useRouter } from 'next/router';
 import { Icon, imageLoader } from '../../Icons/Icon';
 import { month } from '../../../utils/date';
 import styles from './style.module.scss';
@@ -11,25 +13,29 @@ type Props = {
   imgSrc: string;
   date: Date;
   diverName: string;
-  diveTime: string;
+  duration: number;
   deepness: number;
   diversCount: number;
-  diveUnitSystem: UnitSystem
+  diveUnitSystem: UnitSystem;
+  diveRef: DocumentReference
 };
 
 export const SmallDiveCard: FC<Props> = ({
   imgSrc,
   date,
-  diveTime,
   diverName,
   diversCount,
   deepness,
+  duration,
   diveUnitSystem,
+  diveRef,
 }) => {
   const diveDate = `${month[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
   const {
     userAuth,
   } = useContext(AuthStatusContext);
+
+  const router = useRouter();
 
   const displayDeepness = (): string => {
     if (!userAuth) {
@@ -46,11 +52,22 @@ export const SmallDiveCard: FC<Props> = ({
   };
 
   return (
-    <div className={styles.diveCard}>
+    <div
+      className={styles.diveCard}
+      onClick={() => {
+        // @ts-ignore
+        const segments = diveRef?._key?.path?.segments;
+        if (segments?.length) {
+          const path = `/user/${segments[segments.length - 3]}/dive/${segments[segments.length - 1]}`;
+          router.push(path);
+        }
+      }}
+    >
       <div className={styles.imgWrapper}>
         <Image
           src={imgSrc || '/appIcons/no-photo.svg'}
-          layout="fill"
+          width={imgSrc ? 100 : 80}
+          height={imgSrc ? 100 : 80}
           loader={imageLoader}
           className={styles.img}
           unoptimized
@@ -65,7 +82,7 @@ export const SmallDiveCard: FC<Props> = ({
           <div className={styles.dataItem}>
             <Icon iconName="time" size={16} />
             <span>
-              {diveTime}
+              {duration}
               {' '}
               min
             </span>

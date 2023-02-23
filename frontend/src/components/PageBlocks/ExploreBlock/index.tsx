@@ -4,76 +4,24 @@ import React, {
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import GoogleMapReact from 'google-map-react';
+import supercluster from 'points-cluster';
 import styles from './styles.module.scss';
 import { SearchAnimatedInput } from '../../Input/SearchAnimatedInput';
 import SpotCard from './SpotCard';
-import FavoritesBlock from '../../Cards/PhotoCard/FavoritesBlock';
 import { Icon } from '../../Icons/Icon';
 import { ExploreMap } from './ExploreMap';
 import { firestoreGeoDataService } from '../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
 import { useDebounce } from '../../../hooks/useDebounce';
 import { SearchDropdownPanel } from '../../Dropdown/SearchedItems/SearchDropdownPanel';
-import { firestoreSpotsService } from '../../../firebase/firestore/firestoreServices/firestoreSpotsService';
 import { useOutsideClick } from '../../../hooks/useOutsideClick';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
 import { convertCalToFar, convertMetersToFeet } from '../../../utils/unitSystemConverter';
 import { notify } from '../../../utils/notify';
-// import { ShopCard } from '../../Cards/ShopsCard';
+import { firestoreSpotsService } from '../../../firebase/firestore/firestoreServices/firestoreSpotsService';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
 });
-
-// const markerPoints = [
-//   {
-//     id: 1,
-//     divesCount: 234,
-//     lat: 41.5,
-//     lng: 30.33,
-//     diveName: 'Aloha',
-//   }, {
-//     id: 2,
-//     divesCount: 2,
-//     lat: 41.95,
-//     lng: 29.33,
-//     diveName: 'Shark',
-//   }, {
-//     id: 3,
-//     divesCount: 34,
-//     lat: 41.7,
-//     lng: 28.33,
-//     diveName: 'YO',
-//   }, {
-//     id: 4,
-//     divesCount: 13,
-//     lat: 42.2,
-//     lng: 32.33,
-//     diveName: 'Miran',
-//   },
-// ];
-
-// const fakeSpot = {
-//   region: 'Egypt, Sharm El Shaikh',
-//   spotName: 'Shark and Yolana Reef',
-//   depth: '24 m',
-//   imgSrc: '/TEST_IMG_THEN_DELETE/egypt.png',
-//   favorite: false,
-// };
-
-// @ts-ignore
-// const fakeSpots: typeof fakeSpot[] = Array.from({ length: 10 }).fill(fakeSpot);
-
-// const fakeShop = {
-//   imgSrc: '/TEST_IMG_THEN_DELETE/fish.jpg',
-//   addedToFavourite: false,
-//   shopName: 'Dive Africa Sharm',
-//   place: 'Egypt, Sharm El Shaikh',
-//   score: 2.5,
-//   scoredCount: 112,
-// };
-
-// const fakeShops: typeof fakeShop[] = Array.from({ length: 10 }).fill(fakeShop);
 
 const tabs = ['Spots', 'Shops', 'Region'];
 
@@ -108,25 +56,21 @@ const options = {
   colors: ['#FDC90D80'],
 };
 
-// const series = [
-//   {
-//     name: 'series-1',
-//     data: [30, 40, 45, 77, 95, 80, 63, 50, 49, 60, 70, 91],
-//   },
-// ];
-
 const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [touchStartY, setTouchStartY] = useState(null);
+  const [bounds, setBounds] = useState(null);
+  const [clusters, setClusters] = useState([]);
   // const [chosenSpot, setChosenSpot] = useState(null);
 
+  const [zoom, setZoom] = useState(7);
   const [inputRegion, setInputRegion] = useState(null);
   const [isFetch, setIsFetch] = useState(true);
   const [regions, setRegions] = useState([]);
   const [region, setRegion] = useState(undefined);
   const [spots, setSpots] = useState([]);
-  const [markerPoints, setMarkerPoints] = useState([]);
+  const [isLoading, setLoading] = useState(false);
 
   const [mapCoords, setMapsCoords] = useState({
     lat: 40.95,
@@ -180,17 +124,31 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     }
   };
 
-  // const handleChoseSpot = (index: number): void => {
-  //   const sidebar = document.getElementById('sidebar');
-  //   const navbar = document.getElementById('navbar');
-  //   navbar.style.visibility = 'hidden';
-  //   sidebar.style.top = 'unset';
-  //   sidebar.style.bottom = '0';
-  //   sidebar.style.maxHeight = '60px';
-  //   setChosenSpot(index);
-  // };
+  const getClusters = (props, markersItems) => {
+    const superClusters = supercluster(markersItems, {
+      minZoom: 0,
+      maxZoom: 16,
+      radius: 20,
+    });
+    return superClusters({ bounds: props.bounds, zoom: props.zoom });
+  };
+
+  const onMapChange = async (e) => {
+    try {
+      setLoading(true);
+      const markersItems = await firestoreSpotsService
+        .getAllSpotsInMapViewport(e.bounds);
+      setSpots(markersItems);
+      setClusters(getClusters(e, markersItems));
+      setLoading(false);
+    } catch (message) {
+      setLoading(false);
+      notify(message);
+    }
+  };
 
   useDebounce(searchQuery, setInputRegion, 1000);
+  useDebounce(bounds, onMapChange, 1500);
 
   const fetchRegions = async () => {
     if (inputRegion && isFetch) {
@@ -288,25 +246,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     </SearchAnimatedInput>
   );
 
-  const onMapChange = async (e: GoogleMapReact.ChangeEventValue) => {
-    try {
-      const markersItems = await firestoreSpotsService
-        .getAllSpotsInMapViewport({
-          ne: e.bounds.ne,
-          sw: e.bounds.sw,
-        });
-      setMarkerPoints(markersItems.map((s) => ({
-        id: s.id,
-        lat: s.lat,
-        lng: s.lng,
-        divesCount: s.dives,
-        diveName: s.name,
-      })));
-      setSpots(markersItems);
-    } catch (ev) {
-      notify('Something went wrong');
-    }
-  };
   const searchRef = useRef(null);
 
   useOutsideClick(() => setRegions([]), searchRef);
@@ -375,9 +314,8 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
                 <SpotCard
                   region={spot.location?.region}
                   name={spot.name}
-                  depth={spot.stats?.averageDepth?.metric}
+                  depth={spot.averageDepth?.depth || ''}
                   imgSrc={spot.bestPictures?.length ? spot.bestPictures[0] : '/images/fish.jpg'}
-                  favorite={false}
                   country={spot.location?.country}
                 />
               </span>
@@ -400,7 +338,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
           <>
             <div className={styles.regionTitle}>
               <h1>{region?.name}</h1>
-              <FavoritesBlock isFavorite={false} count={0} />
+              {/* <FavoritesBlock isFavorite={false} count={0} /> */}
             </div>
             { region?.area && (
             <div className={styles.subtitle}>
@@ -481,23 +419,14 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
       <div className={styles.map} id="map">
         <ExploreMap
           coords={mapCoords}
-          zoom={7}
-          points={markerPoints}
+          zoom={zoom}
           isMobile={isMobile}
           renderInput={<div ref={searchRef}>{renderInput}</div>}
-          onMapChange={onMapChange}
+          onMapChange={setBounds}
+          clusters={clusters}
+          isLoading={isLoading}
+          setZoom={setZoom}
         />
-        {/* {typeof chosenSpot === 'number' && ( */}
-        {/* <div className={styles.chosenSpot}> */}
-        {/*  <SpotCard */}
-        {/*    region={fakeSpots[chosenSpot].region} */}
-        {/*    name={fakeSpots[chosenSpot].spotName} */}
-        {/*    depth={fakeSpots[chosenSpot].depth} */}
-        {/*    imgSrc={fakeSpots[chosenSpot].imgSrc} */}
-        {/*    favorite={fakeSpots[chosenSpot].favorite} */}
-        {/*  /> */}
-        {/* </div> */}
-        {/* )} */}
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ export const MainLayout: FC<Props> = ({ isHideMobileHeader = false, isFilled, ch
       {children}
       {isMobile === false && <Footer /> }
       {isMobile === true && <FooterMobile /> }
-      {isMobile === true && <MobileNavBar loggedIn={!!userAuth} />}
+      {isMobile === true && <MobileNavBar uid={userAuth?.uid || null} />}
     </>
   );
 };

@@ -42,12 +42,11 @@ const firstStep: FirstStepType = {
 
 const secondStep: SecondStepType = {
   parameters: {
-    time: '',
     date: null,
     maxDepth: undefined,
     duration: undefined,
     surfaceInterval: undefined,
-    safetySpots: [
+    safetyStops: [
       {
         id: 1,
         period: undefined,
@@ -76,8 +75,6 @@ const fourthStep: FourthStepType = {
 };
 
 const fifthStep: FifthStepType = {
-  diveCenter: undefined,
-  guideName: undefined,
   buddies: undefined,
 };
 

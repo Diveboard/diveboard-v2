@@ -2,6 +2,7 @@ import React, {
   FC, useContext, useEffect, useState,
 } from 'react';
 
+import { DocumentReference } from '@firebase/firestore';
 import { StepsNavigation } from '../../StepsNavigation';
 import { SurveyCard } from './SurveyCard';
 import { DanSurvey } from './Surveys/Dan';
@@ -21,23 +22,22 @@ export const EighthStep: FC<StepProps> = ({
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
   const [currentSurveyMode, setCurrentSurveyMode] = useState('');
   const [survey, setSurvey] = useState<SurveyDanType>(InitialDANFormState);
-  const [surveyId, setSurveyId] = useState<string>('');
+  const [surveyRef, setSurveyRef] = useState<DocumentReference>(null);
   const [sendToDAN, setSendTODAN] = useState<boolean>(false);
   const [saveDAN, setSaveDAN] = useState<boolean>(false);
 
   useEffect(() => {
     const data = getStepData(8) as EighthStepType;
-    if (data.surveyId) {
-      setSurveyId(data.surveyId);
+    if (data.surveyRef) {
+      setSurveyRef(data.surveyRef);
     }
   }, [step]);
 
   if (step !== 8) {
     return null;
   }
-
   const eighthStep: EighthStepType = {
-    surveyId, danSurvey: survey, sendToDAN, saveDAN,
+    surveyRef, danSurvey: survey, sendToDAN, saveDAN,
   };
 
   return (
@@ -75,7 +75,7 @@ export const EighthStep: FC<StepProps> = ({
             survey={survey}
             setSurvey={setSurvey}
             setStep={setStep}
-            surveyId={surveyId}
+            surveyRef={surveyRef}
             sendToDAN={sendToDAN}
             setSendTODAN={setSendTODAN}
             setSaveDAN={setSaveDAN}

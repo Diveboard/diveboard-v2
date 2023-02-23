@@ -4,18 +4,29 @@ import { MainLayout } from '../src/layouts/MainLayout';
 import { AuthLayout } from '../src/layouts/AuthLayout';
 import { firebaseAdmin } from '../src/firebase/firebaseAdmin';
 import pageRoutes from '../src/routes/pagesRoutes.json';
+import { Icon } from '../src/components/Icons/Icon';
 
 const Feed: InferGetServerSidePropsType<typeof getServerSideProps> = ({ user }) => (
   <AuthLayout user={user}>
     <MainLayout>
       <div style={{
-        height: '80vh',
         display: 'flex',
-        justifyContent: 'center',
         alignItems: 'center',
+        justifyContent: 'center',
+        height: 'calc(100vh - 238px)',
+        margin: '0 40px',
       }}
       >
-        Feed
+        <div>
+          <Icon iconName="diveboard-logo" size={100} />
+          <h1 style={{
+            textAlign: 'center',
+            color: '#000345',
+          }}
+          >
+            Feed page is coming soon
+          </h1>
+        </div>
       </div>
     </MainLayout>
   </AuthLayout>

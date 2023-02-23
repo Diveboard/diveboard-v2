@@ -4,41 +4,49 @@ import { SelectedSpecies } from '../SelectedSpecies';
 import { SpeciesCategory } from '../SpeciesCategory';
 import { SpeciesType } from '../../../../../../firebase/firestore/models';
 import styles from './styles.module.scss';
+import { speciesCategories } from '../../../../../../utils/speciesCategories';
 
 type Props = {
   currentSpeciesMode: string;
   setCurrentSpeciesMode: React.Dispatch<React.SetStateAction<string>>;
   mySpecies: SpeciesType[];
-  queriedSpecies: SpeciesType[];
   searchedSpecies: SpeciesType[];
-  selectedSpecies: SpeciesType[]
-  setSelectedSpecies: React.Dispatch<React.SetStateAction<SpeciesType[]>>
+  selectedSpecies: SpeciesType[];
+  setSelectedSpecies: React.Dispatch<React.SetStateAction<SpeciesType[]>>;
+  localSpecies: Array<any>;
+  speciesMode: 'all' | 'local';
 };
 
 export const SpeciesList: FC<Props> = ({
   currentSpeciesMode,
   setCurrentSpeciesMode,
   mySpecies,
-  queriedSpecies,
   searchedSpecies,
   selectedSpecies,
   setSelectedSpecies,
+  localSpecies,
+  speciesMode,
 }) => {
-  const categories = queriedSpecies.map((item) => item.category);
-  const categoriesSet = new Set(categories);
-  const categoriesArray = Array.from(categoriesSet);
-  const categoriesGrouped = categoriesArray.map((item : string) => ({
-    category: item,
-    categorySpecies: queriedSpecies.filter((species) => species.category === item),
-  }));
-
-  const categoriesComponents = categoriesGrouped.map((item) => (
+  const allSpeciesBlock = Object.entries(speciesCategories).map(([key, value]) => (
     <SpeciesCategory
-      key={item.category}
-      title={item.category}
+      key={key}
+      title={key}
       currentMode={currentSpeciesMode}
       setCurrentMode={setCurrentSpeciesMode}
-      speciesList={item.categorySpecies}
+      amount={value}
+      selectedSpeciesList={selectedSpecies}
+      setSelectedSpeciesList={setSelectedSpecies}
+    />
+  ));
+
+  const localSpeciesBlock = localSpecies && Object.entries(localSpecies).map(([key]) => (
+    <SpeciesCategory
+      key={key}
+      title={key}
+      currentMode={currentSpeciesMode}
+      setCurrentMode={setCurrentSpeciesMode}
+      amount={localSpecies[key].length}
+      speciesList={localSpecies[key]}
       selectedSpeciesList={selectedSpecies}
       setSelectedSpeciesList={setSelectedSpecies}
     />
@@ -52,17 +60,21 @@ export const SpeciesList: FC<Props> = ({
         speciesList={selectedSpecies}
         setSpeciesList={setSelectedSpecies}
       />
+      {!!mySpecies.length && (
       <SpeciesCategory
         title="my species"
         currentMode={currentSpeciesMode}
+        amount={mySpecies.length}
         setCurrentMode={setCurrentSpeciesMode}
         speciesList={mySpecies}
         selectedSpeciesList={selectedSpecies}
         setSelectedSpeciesList={setSelectedSpecies}
       />
+      )}
       {!!searchedSpecies.length && (
       <SpeciesCategory
         title="search results"
+        amount={searchedSpecies.length}
         currentMode={currentSpeciesMode}
         setCurrentMode={setCurrentSpeciesMode}
         speciesList={searchedSpecies}
@@ -70,7 +82,7 @@ export const SpeciesList: FC<Props> = ({
         setSelectedSpeciesList={setSelectedSpecies}
       />
       )}
-      {categoriesComponents}
+      {speciesMode === 'all' ? allSpeciesBlock : localSpeciesBlock}
     </div>
   );
 };

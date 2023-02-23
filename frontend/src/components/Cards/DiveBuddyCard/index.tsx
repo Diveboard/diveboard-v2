@@ -8,8 +8,8 @@ type Props = {
   imgSrc: string;
   name: string;
   onDiveBoard: number;
-  total: number;
-  onSpot: number;
+  total?: number;
+  onSpot?: number;
   onClick: () => void
 };
 
@@ -41,13 +41,20 @@ export const DiveBuddyCard: FC<Props> = ({
           <Icon iconName="oxygen-tank" size={16} />
           <div className={styles.divesTextWrapper}>
             <span className={styles.bold}>{onDiveBoard}</span>
-            <span>dives on Diveboard</span>
+            <span>
+              {onDiveBoard > 1 ? 'dives' : 'dive'}
+              {' '}
+              on Diveboard
+            </span>
+            {total && (
             <span>
               {'total: '}
               <span className={styles.bold}>{total}</span>
             </span>
+            )}
           </div>
         </span>
+        {!!onSpot && (
         <span>
           <Icon iconName="dive" size={16} />
           <div className={styles.divesTextWrapper}>
@@ -55,6 +62,7 @@ export const DiveBuddyCard: FC<Props> = ({
             dives on this spot
           </div>
         </span>
+        )}
       </div>
     </div>
   );

@@ -14,11 +14,10 @@ type Props = {
   }[];
   dropdownButtons: React.RefObject<HTMLDivElement>[];
   hideDropdown: (status: boolean) => void;
-  showBackdrop: (status: boolean) => void;
 };
 
 export const SetDropdown: FC<Props> = ({
-  hideDropdown, dropdownList, showBackdrop, dropdownButtons,
+  hideDropdown, dropdownList, dropdownButtons,
 }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -30,7 +29,6 @@ export const SetDropdown: FC<Props> = ({
       title={item.title}
       onClick={item.onClick}
       hideDropdown={hideDropdown}
-      showBackdrop={showBackdrop}
     >
       {item.svgItem}
     </SetDropdownItem>

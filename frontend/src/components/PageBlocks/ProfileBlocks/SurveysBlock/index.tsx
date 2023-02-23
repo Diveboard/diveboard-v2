@@ -1,19 +1,21 @@
 import React, { FC } from 'react';
+import { DocumentReference } from '@firebase/firestore';
 import { Title } from '../Title';
 import { SurveyCard } from '../../LogADiveBlocks/StepsComponents/EighthStep/SurveyCard';
 import style from './styles.module.scss';
 
 type Props = {
-  surveysNumber: number;
+  surveys: Array<DocumentReference>;
 };
 
-export const SurveysBlock: FC<Props> = ({ surveysNumber }) => (
+export const SurveysBlock: FC<Props> = ({ surveys }) => (
   <>
-    <Title title="Surveys" />
+    <Title title={`Surveys (${surveys.length})`} />
     <div className={style.blockWrapper}>
-      {Array.from({ length: surveysNumber }, (_, i) => i + 1).map((survey) => (
+      {surveys.map((survey, idx) => (
         <SurveyCard
-          key={survey}
+          // eslint-disable-next-line react/no-array-index-key
+          key={idx}
           surveyType="General"
           title="Dan - Diver’s Alert Network"
           description="Studies the medical impact of decompression on the organism"

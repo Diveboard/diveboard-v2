@@ -1,6 +1,15 @@
 .mapWrapper {
   width: 100%;
   height: 100%;
+  position: relative;
+
+  .loader {
+    z-index: 100;
+    top: 100px;
+    left: 25px;
+    position: absolute;
+    color: white;
+  }
 }
 
 .inputWrapper {

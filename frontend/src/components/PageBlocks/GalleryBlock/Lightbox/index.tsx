@@ -1,11 +1,13 @@
 import React, { FC, useEffect, useRef } from 'react';
+import { Timestamp } from '@firebase/firestore';
 import styles from './styles.module.scss';
 import { Icon } from '../../../Icons/Icon';
 import { useOutsideClick } from '../../../../hooks/useOutsideClick';
 import { ProfileImage } from '../../SettingsBlocks/SettingsItemContent/NotEditedContent/ProfileImage';
-import { ImageInfo, UserType } from '../../../../types';
+import { ImageInfo } from '../../../../types';
 import { month } from '../../../../utils/date';
 import { downloadFile } from '../../../../utils/download';
+import { convertTimestampDate } from '../../../../utils/convertTimestampDate';
 
 type Props = {
   image: ImageInfo;
@@ -13,7 +15,12 @@ type Props = {
   onClose: () => void;
   handleNextSlide: () => void;
   handlePrevSlide: () => void;
-  user?: UserType;
+  user?: {
+    firstName: string,
+    lastName: string,
+    photoUrl?: string,
+    userId: string
+  };
 };
 
 export const Lightbox: FC<Props> = ({
@@ -39,8 +46,8 @@ export const Lightbox: FC<Props> = ({
 
   if (!open) return null;
 
-  const convertDate = (dateStr: Date) => {
-    const date = new Date(dateStr);
+  const convertDate = (dateStr: Timestamp) => {
+    const date = new Date(convertTimestampDate(dateStr));
     return `${month[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
   };
 
@@ -61,11 +68,11 @@ export const Lightbox: FC<Props> = ({
               <Icon iconName="back-button" size={30} />
             </a>
             <div className={styles.btnsGroup}>
-              <span onClick={async () => downloadFile(image.img)}>
+              <span onClick={async () => downloadFile(image.url)}>
                 <Icon iconName="download" size={30} />
               </span>
               <a
-                href={image.img}
+                href={image.url}
                 download
                 target="_blank"
                 rel="noreferrer"
@@ -79,8 +86,8 @@ export const Lightbox: FC<Props> = ({
           {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
           <img
             className={styles.img}
-            src={image.img}
-            alt="image"
+            src={image.url}
+            alt="gallery"
           />
           <div className={styles.imgData}>
             <div className={styles.avatar}>
@@ -88,13 +95,17 @@ export const Lightbox: FC<Props> = ({
                 imgSrc={user?.photoUrl || '/appIcons/no-photo.svg'}
                 size={44}
               />
-              <span className={styles.authorName}>{user?.firstName}</span>
+              <span className={styles.authorName}>
+                {user?.firstName || user?.lastName ? `${user?.firstName || ''} ${user?.lastName || ''}` : 'Author'}
+              </span>
             </div>
             <div className={styles.imgDataText}>
               <span className={styles.date}>
-                {convertDate(image.date)}
+                {convertDate(image.createdAt)}
               </span>
-              <span className={styles.place}>{image.spot}</span>
+              <span className={styles.place}>
+                {`${image.locationName || ''}, ${image.countryName || ''}, ${image.regionName || ''}`}
+              </span>
               {/* <span className={styles.camera}>Camera: NIKON D800E</span> */}
             </div>
           </div>

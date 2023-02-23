@@ -1,26 +1,29 @@
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import { useRouter } from 'next/router';
 import { flag } from 'country-emoji';
 import {
   ProfileImage,
 } from '../../SettingsBlocks/SettingsItemContent/NotEditedContent/ProfileImage';
 import { Icon } from '../../../Icons/Icon';
-import { LinkedButton } from '../../../Buttons/LinkedButton';
 import { Button } from '../../../Buttons/Button';
 import { DiveData } from './DiveData';
 import pageRoutes from '../../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
-import { DiveType, SpotType } from '../../../../firebase/firestore/models';
-import { AuthStatusContext } from '../../../../layouts/AuthLayout';
-import { convertFeetToMeters, convertMetersToFeet } from '../../../../utils/unitSystemConverter';
 
 type Props = {
   imgSrc: string;
   name: string;
   country: string;
-  followersCount: number;
   about: string;
-  dives: Array<DiveType & { spot: SpotType, date: string }>;
+  stats: {
+    diveIn: Array<string>,
+    thisYear: number,
+    mostDives: string,
+    divesPublished: number,
+    totalUnderwaterTime: string,
+    deepestDive: string,
+    longestDive: string,
+  }
   isItOwnProfile: boolean;
 };
 
@@ -29,95 +32,10 @@ export const PersonalProfileData: FC<Props> = ({
   name,
   imgSrc,
   country,
-  followersCount,
-  dives,
+  stats,
   isItOwnProfile,
 }) => {
   const router = useRouter();
-
-  const {
-    userAuth,
-  } = useContext(AuthStatusContext);
-
-  const getDiveCountries = () => {
-    const diveIn = [];
-    dives.forEach((dive) => {
-      if (dive.spot?.location?.country) {
-        diveIn.push(dive.spot?.location?.country);
-      }
-    });
-    return diveIn;
-  };
-
-  const countries = dives.length ? getDiveCountries() : [];
-
-  const getDivesPublished = () => {
-    const divesPublished = dives.filter((dive) => !dive.draft && dive.publishingMode === 'public');
-    return `${divesPublished.length} (Total: ${dives.length})`;
-  };
-
-  const getCountThisYearDives = () => {
-    const divesThisYear = dives.filter((dive) => (
-      new Date(dive.date).getFullYear() === new Date().getFullYear()
-    ));
-    return divesThisYear.length;
-  };
-
-  const getMostDives = () => countries
-    .sort((a, b) => countries
-      .filter((v) => v === a).length - countries.filter((v) => v === b).length)
-    .pop();
-
-  const convertMinutes = (num) => {
-    const d = Math.floor(num / 1440); // 60*24
-    const h = Math.floor((num - (d * 1440)) / 60);
-    const m = Math.round(num % 60);
-    if (d > 0) {
-      return `${d} days, ${h} hours, ${m} minutes`;
-    }
-    if (h > 0) {
-      return `${h} hours, ${m} minutes`;
-    }
-    return `${m} minutes`;
-  };
-
-  const getTotalUnderwaterTime = () => {
-    const totalDuration = dives
-      .reduce((acc, i) => acc + (i.diveData?.duration ? i.diveData.duration : 0), 0);
-    return convertMinutes(totalDuration);
-  };
-
-  const convertDepth = (dive): number => {
-    if (!userAuth) {
-      return dive.diveData?.maxDepth;
-    }
-    const userUnitSystem = userAuth.settings.preferences.unitSystem;
-    if (dive.unitSystem === userUnitSystem) {
-      return dive.diveData?.maxDepth;
-    }
-    if (userUnitSystem === 'METRIC') {
-      return convertFeetToMeters(dive.diveData?.maxDepth);
-    }
-    return convertMetersToFeet(dive.diveData?.maxDepth);
-  };
-
-  const getDeepestDive = () => {
-    const deepestDive = dives.reduce(
-      (prev, current) => (
-        ((convertDepth(prev) || 0) > (convertDepth(current) || 0)) ? prev : current),
-    );
-    const location = deepestDive?.spot?.location;
-    return `${convertDepth(deepestDive) || 0} ${!userAuth || userAuth.settings.preferences.unitSystem === 'METRIC' ? 'm' : 'ft'} in ${location?.location}, ${location?.country}`;
-  };
-
-  const getLongestDive = () => {
-    const longestDive = dives.reduce(
-      (prev, current) => (
-        ((prev.diveData?.duration || 0) > (current.diveData?.duration || 0)) ? prev : current),
-    );
-    const location = longestDive?.spot?.location;
-    return `${convertMinutes(longestDive?.diveData?.duration || 0)} in ${location?.location}, ${location?.country}`;
-  };
 
   return (
     <div className={styles.blockWrapper}>
@@ -137,37 +55,39 @@ export const PersonalProfileData: FC<Props> = ({
               </div>
               )}
 
-              <div className={styles.followersWrapper}>
-                <span className={styles.thinText}>Followers:</span>
-                <span className={styles.thinText}>{followersCount}</span>
-              </div>
+              {/* <div className={styles.followersWrapper}> */}
+              {/*  <span className={styles.thinText}>Followers:</span> */}
+              {/*  <span className={styles.thinText}>{followersCount}</span> */}
+              {/* </div> */}
             </div>
           </div>
         </div>
 
-        <div className={styles.rightContent}>
-          {!isItOwnProfile && (
-          <Button backgroundColor="transparent" border="none" borderRadius={30}>
-            <span className={styles.followText}>Follow</span>
-            <Icon iconName="plus" size={14} />
-          </Button>
-          )}
-          <LinkedButton link="/" iconName="share" iconSize={40} />
-        </div>
+        {/* <div className={styles.rightContent}> */}
+        {/* {!isItOwnProfile && ( */}
+        {/* <Button backgroundColor="transparent" border="none" borderRadius={30}> */}
+        {/*  <span className={styles.followText}>Follow</span> */}
+        {/*  <Icon iconName="plus" size={14} /> */}
+        {/* </Button> */}
+        {/* )} */}
+        {/* <LinkedButton link="/" iconName="share" iconSize={40} /> */}
+        {/* </div> */}
       </div>
 
       <div className={styles.diveDataWrapper}>
+        {stats && (
         <DiveData
           qualification=""
-          diveIn={Array.from(new Set(countries)).join(', ')}
-          divesPublished={!!dives.length && getDivesPublished()}
-          thisYear={!!dives.length && getCountThisYearDives()}
-          mostDives={!!dives.length && getMostDives()}
-          totalUnderwaterTime={!!dives.length && getTotalUnderwaterTime()}
-          deepestDive={!!dives.length && getDeepestDive()}
-          longestDive={!!dives.length && getLongestDive()}
+          diveIn={stats.diveIn?.join(', ')}
+          divesPublished={stats.divesPublished}
+          thisYear={stats.thisYear}
+          mostDives={stats.mostDives}
+          totalUnderwaterTime={stats.totalUnderwaterTime}
+          deepestDive={stats.deepestDive}
+          longestDive={stats.longestDive}
           aboutDiver={about}
         />
+        )}
 
         {isItOwnProfile && (
         <div className={styles.btnWrapper}>

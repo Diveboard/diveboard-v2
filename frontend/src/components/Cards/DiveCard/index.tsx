@@ -10,10 +10,9 @@ import { convertFeetToMeters, convertMetersToFeet } from '../../../utils/unitSys
 type Props = {
   imgSrc: string;
   tagsNumber: string;
-  addedToFavourite: boolean;
   date: Date;
   diveName;
-  diveTime: string;
+  duration: number;
   deepness: number;
   diversCount: number;
   onClick: () => void;
@@ -25,11 +24,10 @@ export const DiveCard: FC<Props> = ({
   imgSrc,
   tagsNumber,
   date,
-  diveTime,
+  duration,
   diveName,
   diversCount,
   deepness,
-  addedToFavourite,
   diveUnitSystem,
 }) => {
   const diveDate = `${month[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
@@ -67,30 +65,35 @@ export const DiveCard: FC<Props> = ({
         #
         {tagsNumber}
       </span>
-      <span className={styles.favourite}>
-        <Icon
-          iconName={addedToFavourite ? 'heart filled in' : 'heart'}
-          size={16}
-        />
-      </span>
+      {/* <span className={styles.favourite}> */}
+      {/*  <Icon */}
+      {/*    iconName={addedToFavourite ? 'heart filled in' : 'heart'} */}
+      {/*    size={16} */}
+      {/*  /> */}
+      {/* </span> */}
 
       <div className={styles.footer}>
         <span className={styles.date}>{diveDate}</span>
         <span className={styles.diveName}>{diveName}</span>
 
         <div className={styles.dataWrapper}>
+          {!!duration && (
           <div className={styles.dataItem}>
             <Icon iconName="time" size={16} />
             <span>
-              {diveTime}
+              {duration}
             </span>
           </div>
+          ) }
+          {!!deepness && (
           <div className={styles.dataItem}>
             <Icon iconName="depth" size={16} />
             <span>
               {displayDeepness()}
             </span>
           </div>
+          )}
+          {!!diversCount && (
           <div className={styles.dataItem}>
             <Icon iconName="divers" size={16} />
             <span>
@@ -99,6 +102,7 @@ export const DiveCard: FC<Props> = ({
               divers
             </span>
           </div>
+          )}
         </div>
       </div>
     </div>

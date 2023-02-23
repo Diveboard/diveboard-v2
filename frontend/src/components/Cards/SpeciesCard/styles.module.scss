@@ -11,10 +11,13 @@
   .imgWrapper {
     position: relative;
     height: 232px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     .img {
       border-radius: 15px 15px 0 0;
-      object-fit: cover;
+      object-fit: contain;
       object-position: center;
     }
   }
