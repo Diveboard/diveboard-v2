@@ -14,6 +14,7 @@ import { FourthStepType, ThirdStepType } from '../../types/stepTypes';
 import styles from './styles.module.scss';
 import { StepsIndicator } from '../../StepsIndicator';
 import { notify } from '../../../../../utils/notify';
+import { firestoreSpotsService } from '../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
 
 export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, userId }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
@@ -24,6 +25,7 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
   const [searchValue, setSearchValue] = useState('');
   const [searchedSpecies, setSearchedSpecies] = useState<SpeciesType[]>([]);
   const [mySpecies, setMySpecies] = useState<SpeciesType[]>([]);
+  const [localSpecies, setLocalSpecies] = useState(null);
   const [selectedSpecies, setSelectedSpecies] = useState<SpeciesType[]>([]);
 
   const [loading, setLoading] = useState(false);
@@ -53,7 +55,6 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
       } catch (ev) {
         notify(ev);
       }
-
       if (data.species && Array.isArray(data.species)) {
         setSelectedSpecies(data.species);
       }
@@ -63,17 +64,21 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
   useEffect(() => {
     if (spotId) {
       (async () => {
-        setSpeciesMode('local');
-        setLoading(true);
-        // const spotCoords = await firestoreSpotsService.getSpotCoordsById(
-        //   spotId,
-        // );
-        // const species = await firestoreSpeciesServices.getLocalSpecies(
-        //   spotCoords,
-        // );
-        // console.log(species)
-        // console.log(species)
-        // setQueriedLocalSpecies(species);
+        try {
+          setSpeciesMode('local');
+          setLoading(true);
+          if (spotId) {
+            const spot = await firestoreSpotsService.getSpotById(
+              spotId,
+            );
+            const species = await firestoreSpeciesServices.getLocalSpecies(
+              { lat: spot.lat, lng: spot.lng },
+            );
+            setLocalSpecies(species);
+          }
+        } catch (ev) {
+          notify(ev);
+        }
         setLoading(false);
       })();
     }
@@ -143,6 +148,8 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
               currentSpeciesMode={currentSpeciesMode}
               setCurrentSpeciesMode={setCurrentSpeciesMode}
               mySpecies={mySpecies}
+              localSpecies={localSpecies}
+              speciesMode={speciesMode}
               searchedSpecies={searchedSpecies}
               selectedSpecies={selectedSpecies}
               setSelectedSpecies={setSelectedSpecies}

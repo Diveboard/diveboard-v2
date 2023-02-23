@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { SpeciesType } from '../../../../../../firebase/firestore/models';
 import { SpeciesListItem } from '../SpeciesList/SpeciesListItem';
 import { SpeciesCardList } from '../SpeciesCardList';
@@ -30,24 +30,20 @@ export const SpeciesCategory: FC<Props> = ({
   const [fetchedSpeciesList, setSpeciesList] = useState(speciesList);
   const [isLoading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (title === 'my species') {
-      setSpeciesList(speciesList);
-    }
-  }, [speciesList]);
-
   const clickHandler = async (key) => {
     setCurrentMode(key);
-    try {
-      if (title !== 'search results' && title !== 'my species') {
+    if (speciesList?.length) {
+      setSpeciesList(speciesList);
+    } else {
+      try {
         setLoading(true);
         const res = await firestoreSpeciesServices.getSpeciesByCategory(key);
         setSpeciesList(res);
         setLoading(false);
+      } catch (e) {
+        setLoading(false);
+        notify(e.message);
       }
-    } catch (e) {
-      setLoading(false);
-      notify(e.message);
     }
   };
   return (

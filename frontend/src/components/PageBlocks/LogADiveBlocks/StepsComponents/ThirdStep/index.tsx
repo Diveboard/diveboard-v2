@@ -74,7 +74,6 @@ export const ThirdStep: FC<StepProps> = ({
           text: spot.name,
         });
         setLocation({ lat: spot.lat, lng: spot.lng });
-        // setClickedPoint(spot.name);
       }
     })();
   }, [step]);

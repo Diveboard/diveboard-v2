@@ -24,23 +24,30 @@ export const firestoreSpeciesServices = {
         docRef,
         where('lat', '==', +coords.lat.toFixed(0)),
         where('lng', '==', +coords.lng.toFixed(0)),
-        limit(45),
+        limit(1000),
       );
       const querySnapshot = await getDocs(q);
+      const promises = [];
       querySnapshot.forEach((fishDoc) => {
         const fishesData = fishDoc.data();
+        promises.push(getDoc(fishesData.specieRef));
         fishes.push({ id: fishDoc.id, ...fishesData });
       });
 
-      for (let i = 0; i < fishes.length; i++) {
-        // console.log(fishes[i].specieRef.id);
-        const specieRef = doc(db, `${PathEnum.SPECIES}/0086QI2FXX99BJ9nD2Dw`);
-        // eslint-disable-next-line no-await-in-loop
-        const specie = await getDoc(specieRef);
-        fishes[i] = { id: fishes[i].id, ...specie.data() };
-      }
-      // console.log(fishes);
-      return fishes;
+      const categories = {};
+
+      await Promise.all(promises)
+        .then((values) => values
+          .forEach((value) => {
+            const data = value.data();
+            if (categories[data.category]) {
+              categories[data.category] = [...categories[data.category], { ...data, id: value.id }];
+            } else {
+              categories[data.category] = [{ ...data, id: value.id }];
+            }
+            return { ...data, id: data.id };
+          }));
+      return categories;
     } catch (e) {
       throw new Error(e.message);
     }

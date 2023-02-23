@@ -11,8 +11,10 @@ type Props = {
   setCurrentSpeciesMode: React.Dispatch<React.SetStateAction<string>>;
   mySpecies: SpeciesType[];
   searchedSpecies: SpeciesType[];
-  selectedSpecies: SpeciesType[]
-  setSelectedSpecies: React.Dispatch<React.SetStateAction<SpeciesType[]>>
+  selectedSpecies: SpeciesType[];
+  setSelectedSpecies: React.Dispatch<React.SetStateAction<SpeciesType[]>>;
+  localSpecies: Array<any>;
+  speciesMode: 'all' | 'local';
 };
 
 export const SpeciesList: FC<Props> = ({
@@ -22,22 +24,29 @@ export const SpeciesList: FC<Props> = ({
   searchedSpecies,
   selectedSpecies,
   setSelectedSpecies,
+  localSpecies,
+  speciesMode,
 }) => {
-  // const categories = queriedSpecies.map((item) => item.category);
-  // const categoriesSet = new Set(categories);
-  // const categoriesArray = Array.from(categoriesSet);
-  // const categoriesGrouped = categoriesArray.map((item : string) => ({
-  //   category: item,
-  //   categorySpecies: queriedSpecies.filter((species) => species.category === item),
-  // }));
-
-  const categoriesComponents = Object.entries(speciesCategories).map(([key, value]) => (
+  const allSpeciesBlock = Object.entries(speciesCategories).map(([key, value]) => (
     <SpeciesCategory
       key={key}
       title={key}
       currentMode={currentSpeciesMode}
       setCurrentMode={setCurrentSpeciesMode}
       amount={value}
+      selectedSpeciesList={selectedSpecies}
+      setSelectedSpeciesList={setSelectedSpecies}
+    />
+  ));
+
+  const localSpeciesBlock = localSpecies && Object.entries(localSpecies).map(([key]) => (
+    <SpeciesCategory
+      key={key}
+      title={key}
+      currentMode={currentSpeciesMode}
+      setCurrentMode={setCurrentSpeciesMode}
+      amount={localSpecies[key].length}
+      speciesList={localSpecies[key]}
       selectedSpeciesList={selectedSpecies}
       setSelectedSpeciesList={setSelectedSpecies}
     />
@@ -73,7 +82,7 @@ export const SpeciesList: FC<Props> = ({
         setSelectedSpeciesList={setSelectedSpecies}
       />
       )}
-      {categoriesComponents}
+      {speciesMode === 'all' ? allSpeciesBlock : localSpeciesBlock}
     </div>
   );
 };
