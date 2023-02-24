@@ -11,7 +11,7 @@ export const PlatformVariants = ['', 'beach/shore', 'pier', 'small boat', 'chart
 export const ThermalVariants = ['', 'comfortable', 'cold', 'very cold', 'hot'];
 export const LoadVariants = ['', 'resting', 'light', 'moderate', 'severe', 'exhausting'];
 export const DecompressionVariants = ['', 'safety spots', 'in water', 'in chamber', 'other', 'none'];
-export const ProblemsVariants = ['', '', 'none', 'equalization', 'vertigo', 'out of air', 'buoyancy', 'shared air', 'rapid ascent', 'sea sickness', 'other'];
+export const ProblemsVariants = ['', 'none', 'equalization', 'vertigo', 'out of air', 'buoyancy', 'shared air', 'rapid ascent', 'sea sickness', 'other'];
 export const EquipmentVariants = ['', 'none', 'face mask', 'fins', 'weighting belt', 'BC', 'thermal protection', 'dive computer', 'depth gauge', 'pressure gauge', 'breathing apparatus', 'deco reel', 'other'];
 
 export const BooleanVariants = ['', 'yes', 'no'];

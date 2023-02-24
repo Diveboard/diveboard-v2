@@ -1,13 +1,18 @@
 import React, { FC, useEffect, useState } from 'react';
 
-import Slider from 'react-slick';
 import { doc, DocumentReference } from '@firebase/firestore';
+import dynamic from 'next/dynamic';
+import styles from './speciesSlider.module.scss';
 import { SpeciesCard } from '../../../Cards/SpeciesCard';
 import { Arrow } from '../../DesktopPhotoBlock/SampleArrow/sampleArrow';
 import { SpeciesType } from '../../../../firebase/firestore/models';
 import { db } from '../../../../firebase/firestore/firebaseFirestore';
 import { notify } from '../../../../utils/notify';
 import { firestoreSpeciesServices } from '../../../../firebase/firestore/firestoreServices/firestoreSpeciesServices';
+
+const Slider = dynamic(() => import('react-slick'), {
+  ssr: false,
+});
 
 type Props = {
   speciesList: Array<SpeciesType>
@@ -75,18 +80,35 @@ export const SpeciesIdentified: FC<Props> = ({ speciesList, species }): JSX.Elem
       },
     ],
   };
-
   return (
-    <Slider {...settings}>
-      { species.map((itm, idx) => (
-        <SpeciesCard
-          key={speciesForRender[idx]?.id}
-          imgSrc={speciesForRender[idx]?.imgSrc}
-          speciesName={speciesForRender[idx]?.sname}
-          scientificName={speciesForRender[idx]?.category}
-          className="smallCard"
-        />
-      ))}
-    </Slider>
+    <div>
+      {species?.length < 3
+        ? (
+          <div className={styles.cardSpecsBlock}>
+            { species.map((itm, idx) => (
+              <SpeciesCard
+                key={speciesForRender[idx]?.id}
+                imgSrc={speciesForRender[idx]?.imgSrc}
+                speciesName={speciesForRender[idx]?.sname}
+                scientificName={speciesForRender[idx]?.category}
+              />
+            ))}
+          </div>
+        )
+        : (
+          <Slider {...settings}>
+            {species.map((itm, idx) => (
+              <SpeciesCard
+                key={speciesForRender[idx]?.id}
+                imgSrc={speciesForRender[idx]?.imgSrc}
+                speciesName={speciesForRender[idx]?.sname}
+                scientificName={speciesForRender[idx]?.category}
+                className="smallCard"
+              />
+            ))}
+          </Slider>
+        )}
+    </div>
+
   );
 };
