@@ -62,7 +62,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const [touchStartY, setTouchStartY] = useState(null);
   const [bounds, setBounds] = useState(null);
   const [clusters, setClusters] = useState([]);
-  // const [chosenSpot, setChosenSpot] = useState(null);
 
   const [zoom, setZoom] = useState(7);
   const [inputRegion, setInputRegion] = useState(null);
@@ -82,7 +81,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const { location, type } = router.query;
 
   const handleSidebar = (e): void => {
-    // setChosenSpot(null);
     const yTouch = e.changedTouches[0].screenY;
     const sidebar = document.getElementById('sidebar');
     const navbar = document.getElementById('navbar');
@@ -137,7 +135,10 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     try {
       setLoading(true);
       const markersItems = await firestoreSpotsService
-        .getAllSpotsInMapViewport(e.bounds, 2500);
+        .getAllSpotsInMapViewport(e.bounds, 500);
+      const { lat, lng, location: { region: regionName } } = markersItems[0];
+      const area = await firestoreGeoDataService.getAreaByCoords({ lat, lng });
+      setRegion({ area, name: regionName });
       setSpots(markersItems);
       setClusters(getClusters(e, markersItems));
       setLoading(false);
@@ -170,7 +171,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
 
   const searchArea = async (geo, item) => {
     let area;
-
     if (item.name) {
       setRegion({ ...region, name: item.name });
     }
