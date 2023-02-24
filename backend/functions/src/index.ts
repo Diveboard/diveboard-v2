@@ -35,7 +35,7 @@ export const authStart = functions.https.onCall(async (request, context): Promis
         const customer = await stripe.customers.create({
             email: data.email,
         });
-
+        
         await admin.firestore().collection('user-stripe').doc(user.uid).create({
             customerId: customer.id,
         });
@@ -191,9 +191,9 @@ export const oneTimeDonation = functions.https.onCall(async (request, context): 
 const subscriptions: {
     [key: string]: string;
 } = {
-    'fiveForTwelve': 'price_1KgrFKFgvOVu5NAtdLUTc46i',
-    'threeForTwelve': 'price_1KgrEUFgvOVu5NAtPvQHvJT2',
-}
+    'fiveForTwelve': 'price_1Meg0FDVvZMVepMoOPhIOXrY',
+    'threeForTwelve': 'price_1MefzzDVvZMVepMoAZ7dDG7F',
+};
 
 export const subDonation = functions.https.onCall(async (request, context): Promise<any> => {
     const user = await userExpectedInRequest(context);
@@ -202,9 +202,28 @@ export const subDonation = functions.https.onCall(async (request, context): Prom
     if (!subscriptions) {
         throw new functions.https.HttpsError('invalid-argument', Errors.STRIPE_INVALID_SUBSCRIPTION)
     }
-
-    const stripeDoc = await admin.firestore().collection('user-stripe').doc(user.uid).get();
-    const stripeData = stripeDoc.data();
+    
+    let stripeDoc = await admin.firestore().collection('user-stripe').doc(user.uid).get();
+    let stripeData = stripeDoc.data();
+    
+    if (!stripeData) {
+        console.log('NO STRIPE DATA. TRYING TO CREATE A NEW ONE...')
+        
+        const authUser = await admin.auth().getUser(user.uid)
+        
+        const customer = await stripe.customers.create({
+            email: authUser.email,
+            name: authUser.displayName,
+            phone: authUser.phoneNumber,
+        });
+        
+        await admin.firestore().collection('user-stripe').doc(user.uid).create({
+            customerId: customer.id,
+        });
+        
+        stripeDoc = await admin.firestore().collection('user-stripe').doc(user.uid).get();
+        stripeData = stripeDoc.data();
+    }
 
     if (!data.token && !stripeData!.defaultSource) {
         throw new functions.https.HttpsError('invalid-argument', Errors.STRIPE_NO_DEFAULT_METHOD)
