@@ -54,7 +54,7 @@ export const firestoreSpotsService = {
     }
   },
 
-  getAllSpotsInMapViewport: async (bounds: Bounds) => {
+  getAllSpotsInMapViewport: async (bounds: Bounds, limitNumber: number) => {
     try {
       const docRef = collection(db, PathEnum.SPOTS);
       const q = query(
@@ -63,7 +63,7 @@ export const firestoreSpotsService = {
         where('lat', '>', bounds.sw.lat),
         // where('lng', '<', bounds.ne.lng),
         // where('lng', '>', bounds.sw.lng),
-        limit(2500),
+        limit(limitNumber),
       );
       const querySnapshot = await getDocs(q);
       const spots = [];

@@ -4,7 +4,6 @@ import React, {
 
 import { Search } from './SearchBlock';
 import { SpeciesList } from './SpeciesList';
-import { Loader } from '../../../../Loader';
 import { StepsNavigation } from '../../StepsNavigation';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { firestoreSpeciesServices } from '../../../../../firebase/firestore/firestoreServices/firestoreSpeciesServices';
@@ -82,7 +81,7 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
         setLoading(false);
       })();
     }
-  }, [spotId]);
+  }, [spotId, step]);
 
   const fourthStepData: FourthStepType = {
     species: selectedSpecies,
@@ -142,19 +141,17 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
             <label htmlFor="all species">All</label>
           </div>
 
-          <Loader loading={loading} />
-          {!loading && (
-            <SpeciesList
-              currentSpeciesMode={currentSpeciesMode}
-              setCurrentSpeciesMode={setCurrentSpeciesMode}
-              mySpecies={mySpecies}
-              localSpecies={localSpecies}
-              speciesMode={speciesMode}
-              searchedSpecies={searchedSpecies}
-              selectedSpecies={selectedSpecies}
-              setSelectedSpecies={setSelectedSpecies}
-            />
-          )}
+          <SpeciesList
+            currentSpeciesMode={currentSpeciesMode}
+            setCurrentSpeciesMode={setCurrentSpeciesMode}
+            mySpecies={mySpecies}
+            localSpecies={localSpecies}
+            speciesMode={speciesMode}
+            searchedSpecies={searchedSpecies}
+            selectedSpecies={selectedSpecies}
+            setSelectedSpecies={setSelectedSpecies}
+            loading={loading}
+          />
 
           <div className={styles.sponsored}>
             Data provided through

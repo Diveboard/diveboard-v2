@@ -36,7 +36,6 @@ type Props = {
   createdNewSpotId: string;
   boundsCoors?: Bounds;
   newPointCoords?: { lat: number, lng: number };
-  spotId: string | null
 };
 
 export const LogADiveDiveMap: FC<Props> = ({
@@ -51,7 +50,6 @@ export const LogADiveDiveMap: FC<Props> = ({
   createdNewSpotId,
   boundsCoors,
   newPointCoords,
-  spotId,
 }) => {
   const [region, setRegion] = useState('');
   const [boundsCoords, setBoundsCoords] = useState(null);
@@ -95,7 +93,6 @@ export const LogADiveDiveMap: FC<Props> = ({
   };
 
   useEffect(() => {
-    // Handle add new spot
     if (boundsCoors) {
       bounds.current = boundsCoors;
       const lat = (boundsCoors.sw.lat + boundsCoors.ne.lat) / 2;
@@ -106,16 +103,6 @@ export const LogADiveDiveMap: FC<Props> = ({
       });
     }
   }, [boundsCoors]);
-
-  useEffect(() => {
-    if (!spotId) {
-      if (userLocation) {
-        setLocation(userLocation);
-      } else {
-        setLocation({ lat: 34, lng: 46 });
-      }
-    }
-  }, [userLocation, spotId]);
 
   useEffect(() => {
     if (setNewPositionMarker.current) {
@@ -131,9 +118,13 @@ export const LogADiveDiveMap: FC<Props> = ({
 
     if (!newPoint && bounds.current) {
       (async () => {
-        const markersItems = await firestoreSpotsService
-          .getAllSpotsInMapViewport(bounds.current);
-        setMarkers(markersItems);
+        try {
+          const markersItems = await firestoreSpotsService
+            .getAllSpotsInMapViewport(bounds.current, 1000);
+          setMarkers(markersItems);
+        } catch (e) {
+          notify(e.message);
+        }
       })();
     }
   }, [newPoint]);
@@ -166,7 +157,7 @@ export const LogADiveDiveMap: FC<Props> = ({
         .getAllSpotsInMapViewport({
           ne: e.bounds.ne,
           sw: e.bounds.sw,
-        });
+        }, 1000);
       setClusters(getClusters(e, markersItems));
       setMarkers(markersItems);
       setLoading(false);

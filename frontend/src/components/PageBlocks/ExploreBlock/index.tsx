@@ -137,7 +137,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     try {
       setLoading(true);
       const markersItems = await firestoreSpotsService
-        .getAllSpotsInMapViewport(e.bounds);
+        .getAllSpotsInMapViewport(e.bounds, 2500);
       setSpots(markersItems);
       setClusters(getClusters(e, markersItems));
       setLoading(false);

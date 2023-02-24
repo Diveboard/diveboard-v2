@@ -24,7 +24,7 @@ export const firestoreSpeciesServices = {
         docRef,
         where('lat', '==', +coords.lat.toFixed(0)),
         where('lng', '==', +coords.lng.toFixed(0)),
-        limit(1000),
+        limit(500),
       );
       const querySnapshot = await getDocs(q);
       const promises = [];

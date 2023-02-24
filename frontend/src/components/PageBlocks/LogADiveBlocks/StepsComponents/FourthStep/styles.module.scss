@@ -4,6 +4,7 @@
   @extend .container;
   margin-bottom: 50px;
   margin-top: 30px;
+  min-height: 321px;
 }
 
 .title {
@@ -47,7 +48,7 @@
   margin-top: 13px;
   font-weight: 400;
   font-size: 14px;
-  color: #000345; 
+  color: #000345;
 
   a {
     color: -webkit-link;
