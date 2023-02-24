@@ -63,7 +63,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const [bounds, setBounds] = useState(null);
   const [clusters, setClusters] = useState([]);
 
-  const [zoom, setZoom] = useState(7);
+  const [zoom, setZoom] = useState(9);
   const [inputRegion, setInputRegion] = useState(null);
   const [isFetch, setIsFetch] = useState(true);
   const [regions, setRegions] = useState([]);
@@ -72,8 +72,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const [isLoading, setLoading] = useState(false);
 
   const [mapCoords, setMapsCoords] = useState({
-    lat: 40.95,
-    lng: 30.33,
+    lat: 28.569488519424567, lng: 34.12370146779985,
   });
 
   const router = useRouter();
@@ -135,7 +134,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     try {
       setLoading(true);
       const markersItems = await firestoreSpotsService
-        .getAllSpotsInMapViewport(e.bounds, 500);
+        .getAllSpotsInMapViewport(e.bounds, 1500);
       const { lat, lng, location: { region: regionName } } = markersItems[0];
       const area = await firestoreGeoDataService.getAreaByCoords({ lat, lng });
       setRegion({ area, name: regionName });

@@ -59,10 +59,10 @@ export const firestoreSpotsService = {
       const docRef = collection(db, PathEnum.SPOTS);
       const q = query(
         docRef,
-        where('lat', '<', bounds.ne.lat),
-        where('lat', '>', bounds.sw.lat),
-        // where('lng', '<', bounds.ne.lng),
-        // where('lng', '>', bounds.sw.lng),
+        // where('lat', '<', bounds.ne.lat),
+        // where('lat', '>', bounds.sw.lat),
+        where('lng', '<', bounds.ne.lng),
+        where('lng', '>', bounds.sw.lng),
         limit(limitNumber),
       );
       const querySnapshot = await getDocs(q);
@@ -81,7 +81,7 @@ export const firestoreSpotsService = {
           averageDepth,
         } = document.data();
         const { id } = document;
-        if (lng < bounds.ne.lng && lng > bounds.sw.lng && name) {
+        if (lat < bounds.ne.lat && lat > bounds.sw.lat && name) {
           spots.push({
             id,
             name,
