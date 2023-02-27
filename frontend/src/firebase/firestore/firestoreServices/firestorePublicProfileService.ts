@@ -35,6 +35,7 @@ export const firestorePublicProfileService = {
 
   setName: async (firstName: string, lastName: string, userId: string) => {
     try {
+      console.log({ firstName, lastName })
       const ref = doc(db, PathEnum.USERS, userId);
       await setDoc(ref, { firstName, lastName }, { merge: true });
     } catch (e) {

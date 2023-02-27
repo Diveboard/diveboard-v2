@@ -1,7 +1,6 @@
 import React, { FC, useContext, useState } from 'react';
 import { Input } from '../../../../../Input/CommonInput';
 import { SaveThisButton } from '../SaveThisButton';
-import { updateUserName } from '../../../../../../firebase/user/userService';
 import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
 import styles from './styles.module.scss';
@@ -34,14 +33,13 @@ export const EditedProfileName: FC<Props> = ({ userName, setUserInfo }) => {
         firstName = nameValue.substring(0, nameValue.indexOf(' '));
         lastName = nameValue.substring(nameValue.indexOf(' ') + 1);
       }
-      await updateUserName(nameValue);
       setUserAuth({ ...userAuth, firstName, lastName });
       setUserInfo((prev) => ({ ...prev, firstName, lastName }));
       await firestorePublicProfileService.setName(firstName, lastName, userAuth.uid);
       setLoading(false);
       setEditedSettings({ settingsBlock: '', settingsItem: '' });
     } catch (e) {
-      notify('Something went wrong');
+      notify(e.message);
     }
   };
 

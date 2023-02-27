@@ -1,42 +1,19 @@
 import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { ToastContainer } from 'react-toastify';
-import { MainLayout } from '../src/layouts/MainLayout';
-import { AuthLayout } from '../src/layouts/AuthLayout';
-
 import DiveManagerBlock from '../src/components/DiveManager';
 import { firestoreDivesService } from '../src/firebase/firestore/firestoreServices/firestoreDivesService';
 import pageRoutes from '../src/routes/pagesRoutes.json';
-import { firestorePublicProfileService } from '../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
-import 'react-toastify/dist/ReactToastify.css';
 
 const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
-  user,
   dives,
 }) => (
-  <AuthLayout user={user}>
-    <MainLayout>
-      <ToastContainer />
-      <DiveManagerBlock userId={user.uid} userDives={dives} />
-    </MainLayout>
-  </AuthLayout>
+  <DiveManagerBlock userDives={dives} />
 );
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const uid = context.req.cookies.__session;
 
   if (!uid) {
-    return {
-      redirect: {
-        destination: pageRoutes.mainPageRoute,
-        permanent: false,
-      },
-    };
-  }
-
-  const user = await firestorePublicProfileService.getUserById(uid);
-
-  if (!user) {
     return {
       redirect: {
         destination: pageRoutes.mainPageRoute,
@@ -55,7 +32,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
-      user,
       dives,
     },
   };

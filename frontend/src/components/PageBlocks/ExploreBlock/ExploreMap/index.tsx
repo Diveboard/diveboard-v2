@@ -11,7 +11,6 @@ type Props = {
     lng: number;
   };
   zoom: number;
-  setZoom: (zoom: number) => void;
   isMobile?: boolean;
   renderInput?: JSX.Element;
   onMapChange: (e: GoogleMapReact.ChangeEventValue) => void;
@@ -25,7 +24,6 @@ export const ExploreMap: FC<Props> = ({
   isMobile,
   renderInput,
   onMapChange,
-  setZoom,
   isLoading = false,
   clusters,
 }) => (
@@ -49,9 +47,8 @@ export const ExploreMap: FC<Props> = ({
         }
       defaultCenter={coords}
       center={{ lat: coords.lat - 1, lng: coords.lng }}
-      defaultZoom={zoom}
+      defaultZoom={9}
       zoom={zoom}
-      onZoomAnimationEnd={(zo) => setZoom(zo)}
       options={(maps: Maps) => getMapOptions(maps)}
       onChange={onMapChange}
       draggable={!isLoading}

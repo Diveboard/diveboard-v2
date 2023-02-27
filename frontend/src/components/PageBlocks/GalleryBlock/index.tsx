@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Timestamp } from '@firebase/firestore';
 import styles from './styles.module.scss';
 import { ButtonGroup } from '../../ButtonGroup';
@@ -12,6 +12,7 @@ import { notify } from '../../../utils/notify';
 import { Loader } from '../../Loader';
 import { firestoreGeoDataService } from '../../../firebase/firestore/firestoreServices/firestoreGeoDataService';
 import { SearchDropdownPanel } from '../../Dropdown/SearchedItems/SearchDropdownPanel';
+import { NetworkStatusContext } from '../../../layouts/NetworkStatus';
 
 type Props = {
   images: Array<ImageInfo>
@@ -26,6 +27,7 @@ export const GalleryBlock = ({ images }: Props) => {
   const [isLoading, setLoading] = useState(false);
   const [fetchedImages, setFetchedImages] = useState(images);
   const [allFethed, setAllFetched] = useState(false);
+  const isOffline = useContext(NetworkStatusContext);
 
   useEffect(() => {
     document.body.style.overflow = 'overlay';
@@ -62,7 +64,7 @@ export const GalleryBlock = ({ images }: Props) => {
   };
 
   useEffect(() => {
-    if (sortType !== 'search') {
+    if (sortType !== 'search' && !isOffline) {
       loadMoreGallery();
     }
   }, [sortType]);

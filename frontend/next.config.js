@@ -54,7 +54,7 @@ module.exports = withPWA({
   pwa: {
     dest: 'public',
     disable: process.env.NODE_ENV === 'development',
-    publicExcludes: ['!assets/**/*'],
+    publicExcludes: ['!appIcons/**/*', '!images/**/*', '!species/**/*'],
     runtimeCaching,
     cacheOnFrontEndNav: true,
     fallbacks: {

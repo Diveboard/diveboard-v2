@@ -125,7 +125,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     const superClusters = supercluster(markersItems, {
       minZoom: 0,
       maxZoom: 16,
-      radius: 20,
+      radius: 50,
     });
     return superClusters({ bounds: props.bounds, zoom: props.zoom });
   };
@@ -133,13 +133,18 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const onMapChange = async (e) => {
     try {
       setLoading(true);
-      const markersItems = await firestoreSpotsService
-        .getAllSpotsInMapViewport(e.bounds, 1500);
-      const { lat, lng, location: { region: regionName } } = markersItems[0];
-      const area = await firestoreGeoDataService.getAreaByCoords({ lat, lng });
-      setRegion({ area, name: regionName });
-      setSpots(markersItems);
-      setClusters(getClusters(e, markersItems));
+      if (zoom < e.zoom) {
+        setClusters(getClusters(e, spots));
+      } else {
+        const markersItems = await firestoreSpotsService
+          .getAllSpotsInMapViewport(e.bounds, 1500);
+        const { lat, lng, location: { region: regionName } } = markersItems[0];
+        const area = await firestoreGeoDataService.getAreaByCoords({ lat, lng });
+        setRegion({ area, name: regionName });
+        setSpots(markersItems);
+        setClusters(getClusters(e, markersItems));
+      }
+      setZoom(e.zoom);
       setLoading(false);
     } catch (message) {
       setLoading(false);
@@ -424,7 +429,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
           onMapChange={setBounds}
           clusters={clusters}
           isLoading={isLoading}
-          setZoom={setZoom}
         />
       </div>
     </div>

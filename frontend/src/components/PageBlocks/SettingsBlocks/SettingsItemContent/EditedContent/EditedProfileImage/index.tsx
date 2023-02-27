@@ -2,7 +2,6 @@ import React, { FC, useContext, useState } from 'react';
 import { ProfileImage } from '../../NotEditedContent/ProfileImage';
 import { SaveThisButton } from '../SaveThisButton';
 import { getAvatarUrl, uploadAvatar } from '../../../../../../firebase/storage/storageService';
-import { updateUserAvatar } from '../../../../../../firebase/user/userService';
 import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
 import {
@@ -37,7 +36,6 @@ export const EditedProfileImage: FC<Props> = ({ imgSrc, setUserInfo }) => {
         setLoading(true);
         const res = await uploadAvatar(userAuth.uid, avatarFile);
         const url = await getAvatarUrl(res.ref);
-        await updateUserAvatar(url);
         if (res) {
           setUserAuth({ ...userAuth, photoUrl: url });
           await firestorePublicProfileService.setPhotoURL(url, userAuth.uid);

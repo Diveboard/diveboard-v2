@@ -15,7 +15,7 @@ export const GuestHeader: FC<{ isFilled?: boolean }> = ({ isFilled }): JSX.Eleme
   const isWidth = useWindowWidth(100, 1025);
 
   const scrolledHeaderStyle = () => {
-    if (isFilled === undefined) {
+    if (!isFilled) {
       return `${styles.header} ${styles.filled}`;
     }
     if (scrolled) {
