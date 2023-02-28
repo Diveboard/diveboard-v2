@@ -43,13 +43,14 @@ export const DiveBuddies: FC<Props> = ({ buddiesData, buddies }) => {
     setLoading(true);
     const buds = unics.slice(buddiesForRender.length, buddiesForRender.length + 4)
       .map((buddy) => {
-        if (buddy.userRef) {
+        const newBuddy = { ...buddy };
+        if (newBuddy.userRef) {
           // @ts-ignore
-          const segments = buddy.userRef?._key?.path?.segments;
+          const segments = newBuddy.userRef?._key?.path?.segments;
           const id = segments[segments.length - 1];
-          buddy.userRef = doc(db, `users/${id}`);
+          newBuddy.userRef = doc(db, `users/${id}`);
         }
-        return buddy;
+        return newBuddy;
       });
     try {
       const res = await firestorePublicProfileService.getBuddiesInfo(buds);

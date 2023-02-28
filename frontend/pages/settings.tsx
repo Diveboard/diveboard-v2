@@ -1,8 +1,6 @@
-import React from 'react';
-import { GetServerSideProps, NextPage } from 'next';
-import { ToastContainer } from 'react-toastify';
-import { AuthLayout } from '../src/layouts/AuthLayout';
-import { MainLayout } from '../src/layouts/MainLayout';
+import React, { useContext } from 'react';
+import { GetServerSideProps } from 'next';
+import { AuthStatusContext } from '../src/layouts/AuthLayout';
 import { useWindowWidth } from '../src/hooks/useWindowWidth';
 import {
   DesktopSettings,
@@ -10,54 +8,29 @@ import {
 import {
   MobileSettings,
 } from '../src/components/PageBlocks/SettingsBlocks/SettingsModes/MobileSettings';
-import { firestorePublicProfileService } from '../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
-import { UserSettingsType } from '../src/firebase/firestore/models';
-import 'react-toastify/dist/ReactToastify.css';
+import pageRoutes from '../src/routes/pagesRoutes.json';
 
-const Settings: NextPage<{ user: UserSettingsType }> = (props) => {
+const Settings = () => {
   const isWidth = useWindowWidth(500, 769);
-
-  const { user } = props;
-
-  return (
-    <AuthLayout user={user}>
-      <ToastContainer />
-      <MainLayout>
-        {!isWidth
-          ? <DesktopSettings user={user} />
-          : <MobileSettings user={user} />}
-      </MainLayout>
-    </AuthLayout>
-  );
+  const { userAuth } = useContext(AuthStatusContext);
+  if (!isWidth) {
+    return <DesktopSettings user={userAuth} />;
+  }
+  return <MobileSettings user={userAuth} />;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  try {
-    const uid = context.req.cookies.__session;
+  const uid = context.req.cookies.__session;
 
-    if (!uid) {
-      throw new Error('no user uid');
-    }
-
-    const user = await firestorePublicProfileService.getUserById(uid);
-
-    if (!user) {
-      throw new Error('no user');
-    }
-
-    return {
-      props: {
-        user,
-      },
-    };
-  } catch (e) {
+  if (!uid) {
     return {
       redirect: {
-        destination: '/auth',
+        destination: pageRoutes.authPageRout,
         permanent: false,
       },
     };
   }
+  return { props: {} };
 };
 
 export default Settings;

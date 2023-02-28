@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { name } from 'country-emoji';
 import { PersonalProfileData } from './PersonalProfileData';
 import { DivesMap } from './DivesMap';
@@ -15,24 +15,26 @@ import {
 } from '../../../firebase/firestore/models';
 import { SurveysBlock } from './SurveysBlock';
 import { convertMinutes } from '../../../utils/convertMinutes';
+import { AuthStatusContext } from '../../../layouts/AuthLayout';
 
 type Props = {
   dives: Array<DiveType & { spot: SpotType, date: string }>
   species: Array<SpeciesType>
   buddies: Array<BuddiesType>
   logbookUser: UserSettingsType
-  user: UserSettingsType
   data: any
   pictures: Array<string>
 };
 
 export const ProfileBlock = ({
-  dives, species, logbookUser, user, data, pictures, buddies,
+  dives, species, logbookUser, data, pictures, buddies,
 }: Props) => {
-  const [isItOwnProfile, setOwnProfile] = useState(user?.uid === logbookUser.uid);
+  const { userAuth } = useContext(AuthStatusContext);
+
+  const [isItOwnProfile, setOwnProfile] = useState(userAuth?.uid === logbookUser.uid);
 
   useEffect(() => {
-    setOwnProfile(user?.uid === logbookUser.uid);
+    setOwnProfile(userAuth?.uid === logbookUser.uid);
   }, [logbookUser.uid]);
 
   const getStats = () => {
@@ -87,7 +89,7 @@ export const ProfileBlock = ({
   };
   return (
     <div className={styles.profileBlockWrapper}>
-      {user?.uid && (
+      {userAuth?.uid && (
         <MobileAddButton
           iconName="new-dive-white"
           link={pagesRoutes.logDivePageRout}

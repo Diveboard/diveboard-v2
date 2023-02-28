@@ -1,5 +1,4 @@
 import React, { FC, useContext, useState } from 'react';
-
 import { Button } from '../../../../../Buttons/Button';
 import { Input } from '../../../../../Input/CommonInput';
 import { PasswordInput } from '../../../../../Input/PasswordInput';
@@ -23,6 +22,7 @@ import styles from './styles.module.scss';
 import editedStyle from '../../../editidStyle.module.scss';
 import { UserSettingsType } from '../../../../../../firebase/firestore/models';
 import { notify } from '../../../../../../utils/notify';
+import { deleteCache } from '../../../../../../utils/refreshCache';
 
 type Props = {
   userEmail: string;
@@ -84,6 +84,7 @@ export const EditedProfileEmail: FC<Props> = ({ userEmail, setUserInfo }) => {
 
         await firestorePublicProfileService.setEmail(emailValue, userAuth.uid);
         setUserInfo((prev) => ({ ...prev, email: emailValue }));
+        await deleteCache();
         setCodeLoading(false);
         setExpiresTime(null);
         setEditedSettings({

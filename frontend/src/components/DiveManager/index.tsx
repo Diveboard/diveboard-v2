@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useContext, useEffect, useRef, useState,
+} from 'react';
 
 import { useRouter } from 'next/router';
 import { Timestamp } from '@firebase/firestore';
@@ -27,20 +29,25 @@ import { firestoreDivesService } from '../../firebase/firestore/firestoreService
 import { Loader } from '../Loader';
 import { DiveType } from '../../types';
 import { notify } from '../../utils/notify';
+import { AuthStatusContext } from '../../layouts/AuthLayout';
+import { deleteCache } from '../../utils/refreshCache';
 
 type Props = {
-  userId: string;
   userDives: Array<DiveType>
 };
 
-const DiveManager = ({ userId, userDives }: Props) => {
+const DiveManager = ({ userDives }: Props) => {
   const [checkboxItem, setCheckboxItem] = useState(false);
   const [isChangeSelectAll, setChangeSelectAll] = useState(false);
   const [isShowSettings, setShowSettings] = useState(false);
   const [isShowPopupCopy, setShowPopupCopy] = useState(false);
   const [isShowPopupUnpublish, setShowPopupUnpublish] = useState(false);
   const [isShowPopupDelete, setShowPopupDelete] = useState(false);
+  const {
+    userAuth,
+  } = useContext(AuthStatusContext);
 
+  const userId = userAuth.uid;
   const [isBackdrop, setBackdrop] = useState(false);
 
   const [copiestData, setCopiestData] = useState(undefined);
@@ -143,10 +150,11 @@ const DiveManager = ({ userId, userDives }: Props) => {
             dives.filter((i) => i.checked).map((item) => item.dive.id),
             copiestData.values,
           );
-          notify('Successfully saved');
           await fetchDives();
+          await deleteCache();
+          notify('Successfully saved');
         } catch (e) {
-          notify('Something went wrong');
+          notify(e.message);
         }
       },
     },
@@ -217,8 +225,9 @@ const DiveManager = ({ userId, userDives }: Props) => {
       if (divesIds.length >= 1) {
         await firestoreDivesService.deleteDives(userId, divesIds);
         closePopup();
-        notify('Successfully deleted');
         await fetchDives();
+        await deleteCache();
+        notify('Successfully deleted');
       } else {
         notify('Choose at least one dive');
       }

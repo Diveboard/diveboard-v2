@@ -19,12 +19,12 @@ import { AuthStatusContext } from '../../../../../layouts/AuthLayout';
 import { Loader } from '../../../../Loader';
 import { StepsIndicator } from '../../StepsIndicator';
 import { notify } from '../../../../../utils/notify';
+import { deleteCache } from '../../../../../utils/refreshCache';
 
-export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
+export const NinthStep: FC<StepProps & { diveId?: string }> = ({
   step,
   setStep,
   diveId,
-  userId,
 }) => {
   const { userAuth } = useContext(AuthStatusContext);
   const { getStepData, setStepData, getAllStepsData } = useContext(LogDiveDataContext);
@@ -72,7 +72,7 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
       setLoading(true);
       const data = await convertAllStepsData(
         allStepsData,
-        userId,
+        userAuth.uid,
         userAuth.settings.preferences.unitSystem,
       );
       const { sendToDAN, saveDAN } = getStepData(8) as EighthStepType;
@@ -96,6 +96,7 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
       } else {
         notify('Fill all require data');
       }
+      await deleteCache();
       setLoading(false);
       setStep(10);
     } catch (e) {

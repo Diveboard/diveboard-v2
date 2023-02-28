@@ -62,7 +62,7 @@ export type NotificationsType = {
 export type SpeciesType = {
   category: string;
   id: string
-  imgSrc: string
+  imageSrc: string
   oldId: string
   sname: string
   ref: DocumentReference;

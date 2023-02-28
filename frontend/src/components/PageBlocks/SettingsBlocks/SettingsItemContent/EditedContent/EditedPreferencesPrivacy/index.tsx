@@ -10,6 +10,7 @@ import {
 import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
 import { notify } from '../../../../../../utils/notify';
+import { deleteCache } from '../../../../../../utils/refreshCache';
 
 type Props = {
   preferences: PreferencesType;
@@ -19,14 +20,25 @@ type Props = {
 export const EditedPreferencesPrivacy: FC<Props> = ({ preferences, setPreferences }) => {
   const [makePublic, setMakePublic] = useState(preferences.privacy.divesPublic);
   const [loading, setLoading] = useState(false);
-  const { userAuth } = useContext(AuthStatusContext);
+  const { userAuth, setUserAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
 
-  const setPrivacyPreferences = () => {
+  const setPrivacyPreferences = async () => {
     try {
       setLoading(true);
-      firestorePreferencesService.setPrivacy(makePublic, userAuth.uid);
+      await firestorePreferencesService.setPrivacy(makePublic, userAuth.uid);
+      setUserAuth({
+        ...userAuth,
+        settings: {
+          ...userAuth.settings,
+          preferences: {
+            ...userAuth.settings.preferences,
+            privacy: { divesPublic: makePublic },
+          },
+        },
+      });
       setPreferences({ ...preferences, privacy: { divesPublic: makePublic } });
+      await deleteCache();
       setLoading(false);
       setEditedSettings({ settingsBlock: '', settingsItem: '' });
     } catch (e) {

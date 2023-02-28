@@ -26,22 +26,21 @@ import { Popup } from '../../DiveManager/Popup';
 import KebabButton from '../../Buttons/KebabButton';
 import { MediaUrls, SpeciesType } from '../../../firebase/firestore/models';
 import { FirstStepType } from './types/stepTypes';
+import { deleteCache } from '../../../utils/refreshCache';
 
 type Props = {
   dive?: DiveType;
   diveId?: string;
-  userId: string;
   mediaUrls?: Array<MediaUrls>
   species?: Array<SpeciesType>
 };
 
 export const LogDiveBlock = ({
-  dive, diveId, userId, mediaUrls, species,
+  dive, diveId, mediaUrls, species,
 }: Props) => {
   const [step, setStep] = useState<StepType>(0);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isDraftPopupOpen, setDraftPopupOpen] = useState<boolean>(false);
-
   const {
     setCurrentStep, setData, getAllStepsData, setEmptyData, getStepData,
   } = useContext(LogDiveDataContext);
@@ -86,7 +85,7 @@ export const LogDiveBlock = ({
       setLoading(true);
       const data = await convertAllStepsData(
         allStepsData,
-        userId,
+        userAuth.uid,
         userAuth.settings.preferences.unitSystem,
         true,
       );
@@ -98,17 +97,18 @@ export const LogDiveBlock = ({
       ) {
         if (diveId) {
           // @ts-ignore
-          await firestoreDivesService.updateDiveData(userId, diveId, data);
+          await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data);
         } else {
           // @ts-ignore
-          await firestoreDivesService.setDiveData(data, userId);
+          await firestoreDivesService.setDiveData(data, userAuth.uid);
         }
+        await deleteCache();
         router.push('/dive-manager');
       } else {
         notify('Fill all require data');
       }
-      setLoading(false);
       setDraftPopupOpen(false);
+      setLoading(false);
     } catch (e) {
       setLoading(false);
       notify(e.message);
@@ -140,12 +140,12 @@ export const LogDiveBlock = ({
         <FirstStep step={step} setStep={setStep} />
         <SecondStep step={step} setStep={setStep} />
         <ThirdStep step={step} setStep={setStep} />
-        <FourthStep step={step} setStep={setStep} userId={userId} />
+        <FourthStep step={step} setStep={setStep} />
         <FifthStep step={step} setStep={setStep} />
         <SixthStep step={step} setStep={setStep} />
         <SeventhStep step={step} setStep={setStep} />
         <EighthStep step={step} setStep={setStep} />
-        <NinthStep step={step} setStep={setStep} diveId={diveId} userId={userId} />
+        <NinthStep step={step} setStep={setStep} diveId={diveId} />
         {step === 10 && <CongratsStep />}
         {isDraftPopupOpen && <Backdrop />}
         {isDraftPopupOpen && (

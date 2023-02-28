@@ -53,7 +53,7 @@ export const LatestSpecies = ({ speciesData, species }: Props) => {
             // eslint-disable-next-line react/no-array-index-key
             key={fish.id + idx}
             className={styles.speciesLogbookCard}
-            imgSrc={fish.imgSrc}
+            imgSrc={fish.imageSrc}
             speciesName={fish.sname}
             scientificName={fish.category}
           />

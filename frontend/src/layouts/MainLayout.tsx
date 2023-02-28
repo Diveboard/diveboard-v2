@@ -13,7 +13,11 @@ type Props = {
   isFilled?: boolean;
 };
 
-export const MainLayout: FC<Props> = ({ isHideMobileHeader = false, isFilled, children }) => {
+export const MainLayout: FC<Props> = ({
+  isHideMobileHeader = false,
+  isFilled = false,
+  children,
+}) => {
   const isMobile = useWindowWidth(500, 769);
   const { userAuth } = useContext(AuthStatusContext);
 
@@ -36,7 +40,7 @@ export const MainLayout: FC<Props> = ({ isHideMobileHeader = false, isFilled, ch
   return (
     <>
       <LogDiveProvider>
-        {headerComponent()}
+        {isMobile !== undefined && headerComponent()}
       </LogDiveProvider>
       {children}
       {isMobile === false && <Footer /> }
