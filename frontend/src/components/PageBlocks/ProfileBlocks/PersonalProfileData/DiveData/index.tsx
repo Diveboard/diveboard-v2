@@ -43,7 +43,7 @@ export const DiveData: FC <Props> = ({
             Dived in:
             {'  '}
           </span>
-          <span className={styles.boldText}>{stats.diveIn}</span>
+          <span className={styles.boldText}>{stats.diveIn.join(', ')}</span>
         </div>
         )}
         {!!stats?.divesPublished && (
