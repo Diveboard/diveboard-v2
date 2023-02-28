@@ -19,6 +19,7 @@ import { logOut } from '../../../firebase/auth/authService';
 import pageRoutes from '../../../routes/pagesRoutes.json';
 import styles from './styles.module.scss';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
+import { deleteCache } from '../../../utils/refreshCache';
 
 const burgerItems = [
   {
@@ -81,6 +82,7 @@ export const Burger: FC = () => {
     await logOut();
     await Cookies.remove('__session');
     setUserAuth(undefined);
+    await deleteCache();
     router.push(pageRoutes.mainPageRoute);
   };
 

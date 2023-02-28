@@ -9,6 +9,7 @@ import {
   firestorePreferencesService,
 } from '../../../../../../firebase/firestore/firestoreServices/firestorePreferencesService';
 import { notify } from '../../../../../../utils/notify';
+import { deleteCache } from '../../../../../../utils/refreshCache';
 
 type Props = {
   preferences: PreferencesType;
@@ -18,14 +19,25 @@ type Props = {
 export const EditedPreferencesUnitSystem: FC<Props> = ({ preferences, setPreferences }) => {
   const [checkedRadio, setCheckedRadio] = useState<UnitSystem>(preferences.unitSystem);
   const [loading, setLoading] = useState(false);
-  const { userAuth } = useContext(AuthStatusContext);
+  const { userAuth, setUserAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
 
-  const setMetricPreferences = () => {
+  const setMetricPreferences = async () => {
     try {
       setLoading(true);
-      firestorePreferencesService.setUnitSystem(checkedRadio as UnitSystem, userAuth.uid);
+      await firestorePreferencesService.setUnitSystem(checkedRadio as UnitSystem, userAuth.uid);
       setPreferences({ ...preferences, unitSystem: checkedRadio });
+      setUserAuth({
+        ...userAuth,
+        settings: {
+          ...userAuth.settings,
+          preferences: {
+            ...userAuth.settings.preferences,
+            unitSystem: checkedRadio,
+          },
+        },
+      });
+      await deleteCache();
       setLoading(false);
       setEditedSettings({ settingsBlock: '', settingsItem: '' });
     } catch (e) {

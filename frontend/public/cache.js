@@ -103,14 +103,13 @@ module.exports = [
   },
   {
     urlPattern: /\/_next\/data\/.+\/.+\.json?([^\?]+)(\?.*)?/i,
-    handler: 'NetworkFirst',
+    handler: 'StaleWhileRevalidate',
     options: {
       cacheName: 'next-data',
       expiration: {
         maxEntries: 32,
         maxAgeSeconds: 24 * 60 * 60, // 24 hours
       },
-      networkTimeoutSeconds: 10,
     },
   },
   {

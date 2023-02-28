@@ -9,6 +9,7 @@ import { TextArea } from '../../../../../Input/TextArea';
 import { MarginWrapper } from '../../../../../MarginWrapper';
 import { UserSettingsType } from '../../../../../../firebase/firestore/models';
 import { notify } from '../../../../../../utils/notify';
+import { deleteCache } from '../../../../../../utils/refreshCache';
 
 type Props = {
   userAbout: string;
@@ -31,6 +32,7 @@ export const EditedProfileAbout: FC<Props> = ({ userAbout, setUserInfo }) => {
       await firestorePublicProfileService.setAbout(about, userAuth.uid);
       setUserInfo((prev) => ({ ...prev, about }));
       setLoading(false);
+      await deleteCache();
       setEditedSettings({ settingsBlock: '', settingsItem: '' });
     } catch (e) {
       notify('Something went wrong');

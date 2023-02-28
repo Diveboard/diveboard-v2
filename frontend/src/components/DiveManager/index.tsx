@@ -30,6 +30,7 @@ import { Loader } from '../Loader';
 import { DiveType } from '../../types';
 import { notify } from '../../utils/notify';
 import { AuthStatusContext } from '../../layouts/AuthLayout';
+import { deleteCache } from '../../utils/refreshCache';
 
 type Props = {
   userDives: Array<DiveType>
@@ -149,10 +150,11 @@ const DiveManager = ({ userDives }: Props) => {
             dives.filter((i) => i.checked).map((item) => item.dive.id),
             copiestData.values,
           );
-          notify('Successfully saved');
           await fetchDives();
+          await deleteCache();
+          notify('Successfully saved');
         } catch (e) {
-          notify('Something went wrong');
+          notify(e.message);
         }
       },
     },
@@ -223,8 +225,9 @@ const DiveManager = ({ userDives }: Props) => {
       if (divesIds.length >= 1) {
         await firestoreDivesService.deleteDives(userId, divesIds);
         closePopup();
-        notify('Successfully deleted');
         await fetchDives();
+        await deleteCache();
+        notify('Successfully deleted');
       } else {
         notify('Choose at least one dive');
       }

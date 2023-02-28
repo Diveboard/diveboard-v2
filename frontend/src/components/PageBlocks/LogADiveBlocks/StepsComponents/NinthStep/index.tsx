@@ -19,6 +19,7 @@ import { AuthStatusContext } from '../../../../../layouts/AuthLayout';
 import { Loader } from '../../../../Loader';
 import { StepsIndicator } from '../../StepsIndicator';
 import { notify } from '../../../../../utils/notify';
+import { deleteCache } from '../../../../../utils/refreshCache';
 
 export const NinthStep: FC<StepProps & { diveId?: string }> = ({
   step,
@@ -95,6 +96,7 @@ export const NinthStep: FC<StepProps & { diveId?: string }> = ({
       } else {
         notify('Fill all require data');
       }
+      await deleteCache();
       setLoading(false);
       setStep(10);
     } catch (e) {

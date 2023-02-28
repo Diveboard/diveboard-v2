@@ -14,6 +14,7 @@ import {
 import styles from '../EditedProfileName/styles.module.scss';
 import { UserSettingsType } from '../../../../../../firebase/firestore/models';
 import { notify } from '../../../../../../utils/notify';
+import { deleteCache } from '../../../../../../utils/refreshCache';
 
 type Props = {
   userCountry: string;
@@ -37,6 +38,7 @@ export const EditedProfileCountry: FC<Props> = ({ userCountry, setUserInfo }) =>
       setUserInfo((prev) => ({ ...prev, country: code(country) }));
 
       setLoading(false);
+      await deleteCache();
       setEditedSettings({ settingsBlock: '', settingsItem: '' });
     } catch (e) {
       notify('Something went wrong');

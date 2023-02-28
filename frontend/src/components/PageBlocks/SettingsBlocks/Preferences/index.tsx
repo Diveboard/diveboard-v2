@@ -1,6 +1,4 @@
-import React, {
-  FC, useState,
-} from 'react';
+import React, { FC, useState } from 'react';
 import { SettingsGroup } from '../SettingsGroup';
 import { SettingsItem } from '../SettingsItem';
 import {

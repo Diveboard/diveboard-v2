@@ -26,6 +26,7 @@ import { Popup } from '../../DiveManager/Popup';
 import KebabButton from '../../Buttons/KebabButton';
 import { MediaUrls, SpeciesType } from '../../../firebase/firestore/models';
 import { FirstStepType } from './types/stepTypes';
+import { deleteCache } from '../../../utils/refreshCache';
 
 type Props = {
   dive?: DiveType;
@@ -96,17 +97,18 @@ export const LogDiveBlock = ({
       ) {
         if (diveId) {
           // @ts-ignore
-          await firestoreDivesService.updateDiveData(userId, diveId, data);
+          await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data);
         } else {
           // @ts-ignore
-          await firestoreDivesService.setDiveData(data, userId);
+          await firestoreDivesService.setDiveData(data, userAuth.uid);
         }
+        await deleteCache();
         router.push('/dive-manager');
       } else {
         notify('Fill all require data');
       }
-      setLoading(false);
       setDraftPopupOpen(false);
+      setLoading(false);
     } catch (e) {
       setLoading(false);
       notify(e.message);

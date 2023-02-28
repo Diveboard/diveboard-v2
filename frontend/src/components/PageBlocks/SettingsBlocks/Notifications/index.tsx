@@ -13,6 +13,7 @@ import { AuthStatusContext } from '../../../../layouts/AuthLayout';
 import { EditContext } from '../EditContextWrapper';
 import editedStyles from '../editidStyle.module.scss';
 import { notify } from '../../../../utils/notify';
+import { deleteCache } from '../../../../utils/refreshCache';
 
 type Props = {
   notifications: NotificationsType
@@ -32,7 +33,7 @@ export const Notification: FC<Props> = ({
   const [newsletters, setNewsletters] = useState(notifications.newsletters);
 
   const [loading, setLoading] = useState(false);
-  const { userAuth } = useContext(AuthStatusContext);
+  const { userAuth, setUserAuth } = useContext(AuthStatusContext);
   const { editedSettings } = useContext(EditContext);
 
   const styles = editedSettings.settingsBlock ? editedStyles.edited : editedStyles.active;
@@ -47,6 +48,14 @@ export const Notification: FC<Props> = ({
         newsletters,
       };
       await firestoreNotificationService.setNotifications(notificationData, userAuth.uid);
+      setUserAuth({
+        ...userAuth,
+        settings: {
+          ...userAuth.settings,
+          notifications: notificationData,
+        },
+      });
+      await deleteCache();
       setLoading(false);
       notify('Successfully saved');
     } catch (e) {

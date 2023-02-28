@@ -88,7 +88,7 @@ export const SpeciesIdentified: FC<Props> = ({ speciesList, species }): JSX.Elem
             { species.map((itm, idx) => (
               <SpeciesCard
                 key={speciesForRender[idx]?.id}
-                imgSrc={speciesForRender[idx]?.imgSrc}
+                imgSrc={speciesForRender[idx]?.imageSrc}
                 speciesName={speciesForRender[idx]?.sname}
                 scientificName={speciesForRender[idx]?.category}
               />
@@ -100,7 +100,7 @@ export const SpeciesIdentified: FC<Props> = ({ speciesList, species }): JSX.Elem
             {species.map((itm, idx) => (
               <SpeciesCard
                 key={speciesForRender[idx]?.id}
-                imgSrc={speciesForRender[idx]?.imgSrc}
+                imgSrc={speciesForRender[idx]?.imageSrc}
                 speciesName={speciesForRender[idx]?.sname}
                 scientificName={speciesForRender[idx]?.category}
                 className="smallCard"

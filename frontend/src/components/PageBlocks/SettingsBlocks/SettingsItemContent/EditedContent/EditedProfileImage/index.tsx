@@ -10,6 +10,7 @@ import {
 import styles from './styles.module.scss';
 import { UserSettingsType } from '../../../../../../firebase/firestore/models';
 import { notify } from '../../../../../../utils/notify';
+import { deleteCache } from '../../../../../../utils/refreshCache';
 
 type Props = {
   imgSrc: string;
@@ -40,6 +41,7 @@ export const EditedProfileImage: FC<Props> = ({ imgSrc, setUserInfo }) => {
           setUserAuth({ ...userAuth, photoUrl: url });
           await firestorePublicProfileService.setPhotoURL(url, userAuth.uid);
           setUserInfo((prev) => ({ ...prev, photoUrl: url }));
+          await deleteCache();
           setLoading(false);
           setEditedSettings({ settingsBlock: '', settingsItem: '' });
         }

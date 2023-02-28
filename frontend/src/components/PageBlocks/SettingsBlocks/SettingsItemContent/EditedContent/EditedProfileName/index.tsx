@@ -9,6 +9,7 @@ import {
 } from '../../../../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
 import { UserSettingsType } from '../../../../../../firebase/firestore/models';
 import { notify } from '../../../../../../utils/notify';
+import { deleteCache } from '../../../../../../utils/refreshCache';
 
 type Props = {
   userName: string;
@@ -36,6 +37,7 @@ export const EditedProfileName: FC<Props> = ({ userName, setUserInfo }) => {
       setUserAuth({ ...userAuth, firstName, lastName });
       setUserInfo((prev) => ({ ...prev, firstName, lastName }));
       await firestorePublicProfileService.setName(firstName, lastName, userAuth.uid);
+      await deleteCache();
       setLoading(false);
       setEditedSettings({ settingsBlock: '', settingsItem: '' });
     } catch (e) {
