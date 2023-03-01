@@ -3,6 +3,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { DivePageBlock } from '../../../../src/components/DivePage/divePageBlock';
 import { firestoreLogbookService } from '../../../../src/firebase/firestore/firestoreServices/firestoreLogbookService';
 import 'react-toastify/dist/ReactToastify.css';
+import ErrorBlock from '../../../../src/components/ErrorBlock';
 
 const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   dive,
@@ -15,20 +16,28 @@ const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   pictures,
   comments,
   picturesData,
-}) => (
-  <DivePageBlock
-    dive={dive}
-    user={diveUser}
-    spot={spot}
-    species={species}
-    speciesData={speciesData}
-    pictures={pictures}
-    picturesData={picturesData}
-    buddies={buddies}
-    buddiesData={buddiesData}
-    comments={comments}
-  />
-);
+  error,
+}) => {
+  if (error) {
+    return (
+      <ErrorBlock text={error} />
+    );
+  }
+  return (
+    <DivePageBlock
+      dive={dive}
+      user={diveUser}
+      spot={spot}
+      species={species}
+      speciesData={speciesData}
+      pictures={pictures}
+      picturesData={picturesData}
+      buddies={buddies}
+      buddiesData={buddiesData}
+      comments={comments}
+    />
+  );
+};
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
@@ -47,9 +56,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   } catch (e) {
     return {
-      redirect: {
-        destination: '_error',
-        permanent: false,
+      props: {
+        error: e.message,
       },
     };
   }

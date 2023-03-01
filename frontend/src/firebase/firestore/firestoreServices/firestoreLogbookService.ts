@@ -9,8 +9,7 @@ import { firestoreCommentsService } from './firestoreCommentsService';
 import { firestoreGalleryService } from './firestoreGalleryService';
 import { db } from '../firebaseFirestore';
 import { PathEnum } from '../firestorePaths';
-import { DiveType, SpeciesType, SpotType } from '../models';
-import { ImageInfo } from '../../../types';
+import { DiveType, SpotType } from '../models';
 
 export const firestoreLogbookService = {
   getDive: async (userId: string, diveId: string, withComments: boolean = false) => {
@@ -72,27 +71,29 @@ export const firestoreLogbookService = {
 
   loadDives: async (dives, size = 4) => {
     try {
-      const divesData = [];
+      const divesPromises = [];
+      const picturesPromises = [];
       for (let i = 0; i < size; i++) {
         if (dives[i]?.diveRef) {
-          // eslint-disable-next-line no-await-in-loop
-          const diveSnap: DocumentSnapshot<DiveType> = await getDoc(dives[i].diveRef);
-          const diveD = diveSnap.data();
-          if (diveD) {
-            if (diveD.pictures) {
-              const value: unknown = Object.values(diveD.pictures)[0];
-              if (value) {
-                // eslint-disable-next-line no-await-in-loop
-                const picSnap: DocumentSnapshot<ImageInfo> = await getDoc(
-                  value as DocumentReference<ImageInfo>,
-                );
-                diveD.pictures = [{ url: picSnap.data().url, id: picSnap.id, ref: picSnap.ref }];
-              }
-            }
-            divesData.push({ ...diveD, id: diveSnap.id });
-          }
+          divesPromises.push(getDoc(dives[i].diveRef));
         }
       }
+      const divesData = await Promise.all(divesPromises)
+        .then((values) => values
+          .map((value, idx) => {
+            const data = value.data();
+            if (Object.values(data.pictures).length) {
+              const val = Object.keys(data.pictures)[0];
+              picturesPromises.push(firestoreGalleryService.getPicById(val, idx));
+            }
+            return { ...data, id: value.id };
+          }));
+      await Promise.all(picturesPromises)
+        .then((values) => values.forEach((value) => {
+          if (value.idx !== -1) {
+            divesData[value.idx].pictures = [{ url: value.url, id: value.id, ref: value.ref }];
+          }
+        }));
       return divesData;
     } catch (e) {
       throw new Error(e.message);
@@ -101,17 +102,12 @@ export const firestoreLogbookService = {
 
   getLogbookData: async (uid: string) => {
     try {
-      const logbookUser = await firestorePublicProfileService.getUserById(uid as string);
       const docRef = doc(db, `${PathEnum.LOGBOOK}/${uid}`);
       const docSnap = await getDoc(docRef);
       const data = docSnap.data();
 
-      if (!logbookUser) {
-        throw new Error('Logbook is not exist');
-      }
       if (!data) {
         return {
-          logbookUser: JSON.parse(JSON.stringify(logbookUser)),
           data: null,
           divesData: [],
           pictures: [],
@@ -125,15 +121,21 @@ export const firestoreLogbookService = {
       let longestDiveName = '';
       let deepestDiveName = '';
       let divesData = [];
-      const picturesData = [];
-      const speciesData = [];
+      const speciesPromises = [];
+      const picturesPromises = [];
       let buddiesData = [];
       if (species?.length) {
-        for (let i = 0; i < species.length; i++) {
-          if (i < 4) {
-            // eslint-disable-next-line no-await-in-loop
-            const specieSnap: DocumentSnapshot<SpeciesType> = await getDoc(species[i].specieRef);
-            speciesData.push({ ...specieSnap.data(), id: specieSnap.id });
+        for (let i = 0; i < 4; i++) {
+          if (species[i]?.specieRef.id) {
+            speciesPromises.push(getDoc(species[i].specieRef));
+          }
+        }
+      }
+
+      if (pictures?.length) {
+        for (let i = 0; i < 5; i++) {
+          if (pictures[i]?.pictureRef.id) {
+            picturesPromises.push(firestoreGalleryService.getPicById(pictures[i].pictureRef.id));
           }
         }
       }
@@ -141,24 +143,18 @@ export const firestoreLogbookService = {
       if (buddies?.length) {
         buddiesData = await firestorePublicProfileService.getBuddiesInfo(buddies, 2);
       }
+      const picturesData = await Promise.all(picturesPromises)
+        .then((values) => values
+          .map((value) => value.url));
 
-      if (pictures?.length) {
-        for (let i = 0; i < pictures.length; i++) {
-          if (i < 5) {
-            if (pictures[i].pictureRef.id) {
-              // eslint-disable-next-line no-await-in-loop
-              const pic = await firestoreGalleryService.getPicById(pictures[i].pictureRef.id);
-              if (pic) {
-                picturesData.push(pic.url);
-              }
-            }
-          }
-        }
-      }
+      const speciesData = await Promise.all(speciesPromises)
+        .then((values) => values
+          .map((value) => ({ ...value.data(), id: value.id })));
 
       if (dives?.length) {
         divesData = await firestoreLogbookService.loadDives(dives, 4);
       }
+
       if (longestDive && longestDive?.spot) {
         const spotDoc: DocumentSnapshot<SpotType> = await getDoc(longestDive.spot);
         const spot = spotDoc.data();
@@ -176,7 +172,6 @@ export const firestoreLogbookService = {
         data.deepestDive.deepestDiveName = deepestDiveName;
       }
       return {
-        logbookUser: JSON.parse(JSON.stringify(logbookUser)),
         data: JSON.parse(JSON.stringify(data)),
         divesData: divesData.length ? JSON.parse(JSON.stringify(divesData)) : [],
         pictures: picturesData.length ? JSON.parse(JSON.stringify(picturesData)) : [],

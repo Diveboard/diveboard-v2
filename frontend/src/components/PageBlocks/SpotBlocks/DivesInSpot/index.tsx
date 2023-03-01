@@ -31,7 +31,6 @@ export const DivesInSpot = ({ dives, spotDivesIds }: Props) => {
       setLoading(true);
       setMoreClicked(!isMoreClicked);
 
-      // convert custom ref to document ref
       const resIds = Object.fromEntries(Object.entries(spotDivesIds)
         .slice(fetchedDives.length, fetchedDives.length + 8)
         .map(([key, value]) => {
@@ -69,7 +68,7 @@ export const DivesInSpot = ({ dives, spotDivesIds }: Props) => {
       </div>
       {isLoading ? <Loader loading={isLoading} /> : (
         <div>
-          {dives?.length !== Object.entries(spotDivesIds).length && (
+          {fetchedDives?.length !== Object.entries(spotDivesIds).length && (
           <span className={viewMoreStyles.viewMore} onClick={fetchMoreDives}>
             {`View ${dives?.length < Object.entries(spotDivesIds).length ? 'More' : 'Less'} Dives`}
           </span>
