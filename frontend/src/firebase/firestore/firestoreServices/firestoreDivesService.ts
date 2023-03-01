@@ -144,14 +144,14 @@ export const firestoreDivesService = {
     }
   },
 
-  getDivesCountByUserId: async (userId: string) => {
+  getDivesCountByUserId: async (userId: string, idx: number = -1) => {
     try {
       const docRef = collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`);
       const q = query(
         docRef,
       );
       const querySnapshot = await getDocs(q);
-      return querySnapshot.size;
+      return { size: querySnapshot.size, idx };
     } catch (e) {
       throw new Error(e.message);
     }
@@ -346,6 +346,20 @@ export const firestoreDivesService = {
     }
   },
 
+  getDiveByRef: async (
+    diveRef: DocumentReference,
+    idx: number = -1,
+  ) => {
+    try {
+      const docSnap = await getDoc(diveRef);
+      return {
+        ...docSnap.data(), id: docSnap.id, ref: docSnap.ref, idx,
+      };
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  },
+
   getDivesByRefs: async (
     divesRefs: { [key: string]: DocumentReference },
     slice: boolean | number = false,
@@ -353,30 +367,31 @@ export const firestoreDivesService = {
     try {
       const divesLength = Object.values(divesRefs).length;
       const size = !slice || divesLength < slice ? divesLength : slice;
+      const divesPromises = [];
+      const picturesPromises = [];
       const divesIds = typeof slice === 'number'
         ? Object.values(divesRefs).slice(0, slice)
         : Object.values(divesRefs);
       const dives = [];
       for (let i = 0; i < size; i++) {
-        // eslint-disable-next-line no-await-in-loop
-        const docSnap = await getDoc(divesIds[i]);
-        const data = docSnap.data();
-        if (!data) {
-          // eslint-disable-next-line no-continue
-          continue;
-        }
-        let pictures = [];
-        if (data?.pictures) {
-          const key = Object.keys(data.pictures)[0];
-          const value = Object.values(data.pictures)[0];
-          // @ts-ignore
-          // eslint-disable-next-line no-await-in-loop
-          pictures = await firestoreGalleryService.getBestPictures({ [key]: value });
-        }
-        dives.push({
-          ...data, id: docSnap.id, ref: docSnap.ref, pictures: [{ url: pictures[0] || '' }],
-        });
+        divesPromises.push(firestoreDivesService.getDiveByRef(divesIds[i], i));
       }
+      await Promise.all(divesPromises)
+        .then((values) => values.forEach((value) => {
+          if (value) {
+            if (value.pictures) {
+              const key = Object.keys(value.pictures)[0];
+              picturesPromises.push(firestoreGalleryService.getPicById(key, value.idx));
+            }
+            dives.push(value);
+          }
+        }));
+      await Promise.all(picturesPromises)
+        .then((values) => values.forEach((value) => {
+          if (value.idx !== -1) {
+            dives[value.idx].pictures = [{ url: value.url || '' }];
+          }
+        }));
       return dives;
     } catch (e) {
       throw new Error(e.message);

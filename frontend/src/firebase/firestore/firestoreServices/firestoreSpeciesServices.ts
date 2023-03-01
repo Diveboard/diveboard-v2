@@ -56,17 +56,21 @@ export const firestoreSpeciesServices = {
   getSpeciesByRefs: async (speciesRefs: { [key: string]: DocumentReference }, length?: number) => {
     try {
       const speciesRefsIds = Object.keys(speciesRefs);
+      const speciesPromises = [];
       const size = length || speciesRefsIds.length;
       const species = [];
       for (let i = 0; i < size; i++) {
         const docRef = doc(db, `${PathEnum.SPECIES}/${speciesRefsIds[i]}`);
-        // eslint-disable-next-line no-await-in-loop
-        const docSnap = await getDoc(docRef);
-        const data = docSnap.data();
-        if (data) {
-          species.push({ id: docSnap.id, ref: docSnap.ref, ...data });
-        }
+        speciesPromises.push(getDoc(docRef));
       }
+      await Promise.all(speciesPromises)
+        .then((values) => values.forEach((value) => {
+          const specie = value.data();
+          if (specie) {
+            species.push({ id: specie.id, ref: specie.ref, ...specie });
+          }
+        }));
+
       return species;
     } catch (e) {
       throw new Error(e.message);

@@ -5,19 +5,27 @@ import { firestoreSpotsService } from '../../src/firebase/firestore/firestoreSer
 import { firestoreDivesService } from '../../src/firebase/firestore/firestoreServices/firestoreDivesService';
 import { firestoreSpeciesServices } from '../../src/firebase/firestore/firestoreServices/firestoreSpeciesServices';
 import { firestoreGalleryService } from '../../src/firebase/firestore/firestoreServices/firestoreGalleryService';
+import ErrorBlock from '../../src/components/ErrorBlock';
 
 const Spot: InferGetServerSidePropsType<typeof getServerSideProps> = ({
-  spot, dives, speciesData, species, pictures, picturesData,
-}) => (
-  <SpotBlocks
-    spot={spot}
-    dives={dives}
-    species={species}
-    speciesData={speciesData}
-    pictures={pictures}
-    picturesData={picturesData}
-  />
-);
+  spot, dives, speciesData, species, pictures, picturesData, error,
+}) => {
+  if (error) {
+    return (
+      <ErrorBlock text={error} />
+    );
+  }
+  return (
+    <SpotBlocks
+      spot={spot}
+      dives={dives}
+      species={species}
+      speciesData={speciesData}
+      pictures={pictures}
+      picturesData={picturesData}
+    />
+  );
+};
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
@@ -64,9 +72,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   } catch (e) {
     return {
-      redirect: {
-        destination: '/_error',
-        permanent: false,
+      props: {
+        error: e.message,
       },
     };
   }

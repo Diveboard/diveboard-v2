@@ -17,28 +17,32 @@ export const firestoreGalleryService = {
     try {
       const picsIds = Object.keys(bestPictures);
       const size = length || picsIds.length;
+      const picsPromises = [];
+
       const pics = [];
       for (let i = 0; i < size; i++) {
         const docRef = doc(db, `${PathEnum.PICTURES}/${picsIds[i]}`);
-        // eslint-disable-next-line no-await-in-loop
-        const docSnap = await getDoc(docRef);
-        const data = docSnap.data();
-        if (data) {
-          pics.push(data.url);
-        }
+        picsPromises.push(getDoc(docRef));
       }
+      await Promise.all(picsPromises)
+        .then((values) => values.forEach((value) => {
+          const pic = value.data();
+          if (pic) {
+            pics.push(pic.url);
+          }
+        }));
       return pics;
     } catch (e) {
       throw new Error(e.message);
     }
   },
 
-  getPicById: async (id: string) => {
+  getPicById: async (id: string, idx: number = -1) => {
     try {
       const docRef = doc(db, `${PathEnum.PICTURES}/${id}`);
       const docSnap = await getDoc(docRef);
       const data = docSnap.data();
-      return data;
+      return { ...data, idx };
     } catch (e) {
       throw new Error(e.message);
     }
@@ -47,17 +51,16 @@ export const firestoreGalleryService = {
   getMediaUrls: async (pictures: { [key: string]: DocumentReference }) => {
     try {
       const picsIds = Object.keys(pictures);
-      const pics = [];
+      const picturesPromises = [];
       for (let i = 0; i < picsIds.length; i++) {
         const docRef = doc(db, `${PathEnum.PICTURES}/${picsIds[i]}`);
-        // eslint-disable-next-line no-await-in-loop
-        const docSnap = await getDoc(docRef);
-        const data = docSnap.data();
-        if (data) {
-          pics.push({ url: data.url, ref: docSnap.ref, id: docSnap.id });
-        }
+        picturesPromises.push(getDoc(docRef));
       }
-      return pics;
+      return await Promise.all(picturesPromises)
+        .then((values) => values.map((value) => {
+          const data = value.data();
+          return { url: data.url, ref: value.ref, id: value.id };
+        }));
     } catch (e) {
       throw new Error(e.message);
     }
