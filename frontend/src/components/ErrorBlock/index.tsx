@@ -9,7 +9,7 @@ type Props = {
 
 const ErrorBlock = ({ text, subtitle }: Props) => (
   <div className={styles.mainWrapper}>
-    <div>
+    <div className={styles.blockWrapper}>
       <Icon iconName="diveboard-logo" size={100} />
       <h1 className={styles.h1Title}>
         {text}
