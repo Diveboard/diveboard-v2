@@ -168,6 +168,8 @@ export const firestoreGalleryService = {
   getGallery: async (sort: 'asc' | 'desc' = 'desc', lastDate: Timestamp = null, size = 80) => {
     try {
       const gallery = [];
+      const usersPromises = [];
+      const usersIds = {};
       const docRef = collection(db, PathEnum.PICTURES);
       const first = query(
         docRef,
@@ -186,24 +188,30 @@ export const firestoreGalleryService = {
 
       const querySnapshot = await getDocs(q);
 
-      querySnapshot.forEach((img) => gallery.push({ ...img.data(), imageId: img.id }));
-      for (let i = 0; i < gallery.length; i++) {
-        if (gallery[i].user) {
-          const {
-            lastName,
-            firstName,
-            photoUrl,
-            // eslint-disable-next-line no-await-in-loop
-          } = await firestorePublicProfileService.getUserByRef(gallery[i].userRef);
-          gallery[i].user = {
-            lastName,
-            firstName,
-            photoUrl,
-            userId: gallery[i].user.id,
-          };
+      querySnapshot.forEach((img) => {
+        const data = img.data();
+        gallery.push({ ...data, imageId: img.id });
+        if (data.userRef?.id) {
+          if (usersIds[data.userRef.id] === undefined) {
+            usersIds[data.userRef.id] = {};
+            usersPromises.push(firestorePublicProfileService.getUserByRef(data.userRef));
+          }
         }
-      }
-      return gallery;
+      });
+      await Promise.all(usersPromises)
+        .then((values) => values
+          .forEach((value) => {
+            usersIds[value.uid] = {
+              lastName: value.lastName,
+              firstName: value.firstName || value.nickname,
+              photoUrl: value.photoUrl,
+              userId: value.uid,
+            };
+          }));
+      return gallery.map((pic) => ({
+        ...pic,
+        user: usersIds[pic.userRef.id],
+      }));
     } catch (e) {
       throw new Error(e.message);
     }

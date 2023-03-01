@@ -47,11 +47,12 @@ export const GalleryBlock = ({ images }: Props) => {
     }
   };
 
-  const loadMoreGallery = async (lastDate?: Timestamp) => {
+  const loadMoreGallery = async (sortT: string, lastDate?: Timestamp) => {
     try {
       setAllFetched(false);
       setLoading(true);
-      const res = await firestoreGalleryService.getGallery(sortType === 'oldest' ? 'asc' : 'desc', lastDate);
+      setFetchedImages([]);
+      const res = await firestoreGalleryService.getGallery(sortT === 'oldest' ? 'asc' : 'desc', lastDate);
       setLoading(false);
       if (res.length < 20) {
         setAllFetched(true);
@@ -62,12 +63,6 @@ export const GalleryBlock = ({ images }: Props) => {
       notify('Something went wrong');
     }
   };
-
-  useEffect(() => {
-    if (sortType !== 'search' && !isOffline) {
-      loadMoreGallery();
-    }
-  }, [sortType]);
 
   const searchHandler = async (val) => {
     try {
@@ -92,7 +87,12 @@ export const GalleryBlock = ({ images }: Props) => {
       <div className={styles.sortBar}>
         <ButtonGroup
           buttons={buttons.slice(0, 2)}
-          onClick={setSortType}
+          onClick={(sortT) => {
+            setSortType(sortT);
+            if (sortT !== 'search' && !isOffline) {
+              loadMoreGallery(sortT);
+            }
+          }}
           defaultChecked={sortType}
         />
         <SearchAnimatedInput
@@ -134,7 +134,9 @@ export const GalleryBlock = ({ images }: Props) => {
           : (
             <div
               className={styles.viewMoreBtn}
-              onClick={() => loadMoreGallery(fetchedImages[fetchedImages.length - 1].createdAt)}
+              onClick={() => {
+                loadMoreGallery(sortType, fetchedImages[fetchedImages.length - 1].createdAt);
+              }}
             >
               View more
             </div>
