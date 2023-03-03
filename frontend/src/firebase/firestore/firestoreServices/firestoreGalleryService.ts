@@ -27,7 +27,7 @@ export const firestoreGalleryService = {
       await Promise.all(picsPromises)
         .then((values) => values.forEach((value) => {
           const pic = value.data();
-          if (pic) {
+          if (pic?.url) {
             pics.push(pic.url);
           }
         }));

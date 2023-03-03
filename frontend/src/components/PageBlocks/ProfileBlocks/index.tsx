@@ -70,7 +70,7 @@ export const ProfileBlock = ({
       longestDive = `${data.longestDive.time} minutes in ${data.longestDive.longestDiveName}`;
     }
     if (data.deepestDive?.depth) {
-      deepestDive = `${data.deepestDive.depth} ${data.deepestDive.unitSystem?.toLowerCase() === 'metric' ? 'm' : 'ft'} in ${data.deepestDive?.deepestDiveName}`;
+      deepestDive = `${data.deepestDive.depth.toFixed(2)} ${data.deepestDive.unitSystem?.toLowerCase() === 'metric' ? 'm' : 'ft'} in ${data.deepestDive?.deepestDiveName}`;
     }
     const getMostDives = () => Array.from(countries)
       .sort((a, b) => countries
@@ -113,7 +113,7 @@ export const ProfileBlock = ({
         )}
         {!!dives?.length && (
         <DivesBlock
-          divesData={isItOwnProfile ? dives : dives.filter((dive) => !dive.draft && dive.publishingMode === 'PUBLIC')}
+          divesData={isItOwnProfile ? dives : dives.filter((dive) => dive && !dive.draft && dive.publishingMode === 'PUBLIC')}
           userId={logbookUser.uid}
           isItOwnProfile={isItOwnProfile}
           dives={isItOwnProfile ? data.dives : data.dives.filter((dive) => !dive.draft && dive.publishingMode === 'PUBLIC')}

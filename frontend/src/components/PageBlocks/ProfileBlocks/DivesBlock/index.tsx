@@ -141,23 +141,25 @@ export const DivesBlock = ({
       </div>
       {!isLoading ? (
         <div className={styles.cardWrapper}>
-          {!!diveForRender?.length && diveForRender.map((dive) => (
-            <DiveCard
-              // @ts-ignore
-              key={dive.id}
-              onClick={() => {
-                router.push(dive.draft && userId === userAuth.uid ? `/edit-dive/${dive.id}` : `/user/${userId}/dive/${dive.id}`);
-              }}
-              diveName={dive.aboutDive?.tripName}
-              imgSrc={dive.pictures[0]?.url || '/images/default-species.svg'}
-              tagsNumber={dive.aboutDive?.diveNumber?.toString()}
-              date={convertTimestampDate(dive.diveData.date)}
-              duration={dive.diveData?.duration}
-              deepness={dive.diveData?.maxDepth}
-              diversCount={dive.buddies?.length}
-              diveUnitSystem={dive.unitSystem}
-            />
-          ))}
+          {!!diveForRender?.length && diveForRender.map((dive) => {
+            if (!dive) return;
+            return (
+              <DiveCard
+                key={dive.id}
+                onClick={() => {
+                  router.push(dive.draft && userId === userAuth.uid ? `/edit-dive/${dive.id}` : `/user/${userId}/dive/${dive.id}`);
+                }}
+                diveName={dive.aboutDive?.tripName}
+                imgSrc={dive.pictures[0]?.url || '/images/default-species.svg'}
+                tagsNumber={dive.aboutDive?.diveNumber?.toString()}
+                date={convertTimestampDate(dive.diveData.date)}
+                duration={dive.diveData?.duration}
+                deepness={+dive.diveData.maxDepth.toFixed(2)}
+                diversCount={dive.buddies?.length}
+                diveUnitSystem={dive.unitSystem}
+              />
+            );
+          })}
         </div>
       ) : <Loader loading={isLoading} />}
 

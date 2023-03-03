@@ -19,6 +19,9 @@ type Props = {
       rmv: number;
     };
   };
+  maxDepth: number;
+  duration: number;
+  profileData: Array<{ seconds: number, depth: number }>
 };
 
 export const ChartBlock: FC<Props> = ({
@@ -27,6 +30,8 @@ export const ChartBlock: FC<Props> = ({
     tanks,
     // characteristics,
   },
+  duration,
+  profileData, maxDepth,
 }): JSX.Element => {
   // calculate avarage depth
   const avarageDepth = () => {
@@ -44,16 +49,20 @@ export const ChartBlock: FC<Props> = ({
     const material = tank?.material ? tank.material.charAt(0).toUpperCase() + tank.material.slice(1) : '';
     return `${tank?.volume || ''} ${tank?.volumeUnit || ''} ${material} ${tank?.pressureStart || ''} -> ${tank?.pressureEnd || ''} ${tank?.pressureMeasures || ''}`;
   };
+
   return (
     <div className={styles.chartWrapper}>
       <DivePageMobContainer>
         <DivePageTitle title="Dive Profile" />
       </DivePageMobContainer>
-      {!!points?.length && (
-        <div className={styles.depthChartMargin} id="no_border_radius">
-          <DepthChart points={points} />
-        </div>
-      )}
+      <div className={styles.depthChartMargin} id="no_border_radius">
+        <DepthChart
+          points={points}
+          maxDepth={maxDepth}
+          duration={duration}
+          profileData={profileData}
+        />
+      </div>
       {!!tanks?.length && (
       <DivePageMobContainer>
         <div className={styles.chartInfo}>

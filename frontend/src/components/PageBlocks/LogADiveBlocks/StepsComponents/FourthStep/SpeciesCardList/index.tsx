@@ -23,7 +23,6 @@ export const SpeciesCardList: FC<Props> = ({
   selectedSpeciesHandler,
   selectedSpeciesList,
 }) => {
-  // check if alredy in SELECTED then icon = done
   const isSelected = (speciesId: string) => {
     const selectedSpeciesIndex = selectedSpeciesList.findIndex(
       (itm) => itm.id === speciesId,

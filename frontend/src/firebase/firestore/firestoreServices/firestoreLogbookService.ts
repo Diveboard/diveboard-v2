@@ -82,6 +82,9 @@ export const firestoreLogbookService = {
         .then((values) => values
           .map((value, idx) => {
             const data = value.data();
+            if (!data) {
+              return null;
+            }
             if (Object.values(data.pictures).length) {
               const val = Object.keys(data.pictures)[0];
               picturesPromises.push(firestoreGalleryService.getPicById(val, idx));
@@ -116,8 +119,11 @@ export const firestoreLogbookService = {
         };
       }
       const {
-        dives, longestDive, deepestDive, pictures, species, buddies,
+        longestDive, deepestDive, species, buddies,
       } = data;
+
+      const dives = data.dives.sort((a, b) => b.diveNumber - a.diveNumber);
+      const pictures = data.pictures.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
       let longestDiveName = '';
       let deepestDiveName = '';
       let divesData = [];
@@ -131,7 +137,6 @@ export const firestoreLogbookService = {
           }
         }
       }
-
       if (pictures?.length) {
         for (let i = 0; i < 5; i++) {
           if (pictures[i]?.pictureRef.id) {
@@ -145,7 +150,8 @@ export const firestoreLogbookService = {
       }
       const picturesData = await Promise.all(picturesPromises)
         .then((values) => values
-          .map((value) => value.url));
+          .map((value) => value.url)
+          .filter((url) => url));
 
       const speciesData = await Promise.all(speciesPromises)
         .then((values) => values

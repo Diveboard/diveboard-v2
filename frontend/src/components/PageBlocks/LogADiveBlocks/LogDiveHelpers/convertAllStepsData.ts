@@ -135,7 +135,7 @@ export const convertAllStepsData = async (
     draft,
     pictures: await uploadFiles(),
     gears: stepsData.seventhStep.gears?.map((gear) => replaceUndefinedToNull(gear)) || [],
-    publishingMode: stepsData.ninthStep.publishingMode.toUpperCase(),
+    publishingMode: stepsData.ninthStep.publishingMode?.toUpperCase() || 'PUBLIC',
     species: stepsData.fourthStep.species?.length
       ? convertSpecies(stepsData.fourthStep.species)
       : {},
@@ -227,6 +227,7 @@ export const convertToStepsData = (
           : convertDistanceSystem(unitSystem, data.diveData?.maxDepth),
         duration: data.diveData?.duration,
         surfaceInterval: data.diveData?.surfaceInterval,
+        profileData: data.diveData?.profileData,
         safetyStops: unitSystem === data.unitSystem
           ? data.diveData?.safetyStops
           : data.diveData?.safetyStops.map((spot) => (

@@ -208,7 +208,7 @@ export const SpotDiveData: FC<Props> = ({
               <li>
                 Water:
                 {' '}
-                <span>{dive.diveData.waterType}</span>
+                <span>{dive.diveData.waterType.toLowerCase()}</span>
               </li>
               )}
               {!!dive.diveData?.surfaceTemp && (
@@ -244,7 +244,7 @@ export const SpotDiveData: FC<Props> = ({
               <li>
                 Visibility:
                 {' '}
-                <span>{dive.diveData?.waterVisibility}</span>
+                <span>{dive.diveData?.waterVisibility.toLowerCase()}</span>
               </li>
               )}
             </ul>

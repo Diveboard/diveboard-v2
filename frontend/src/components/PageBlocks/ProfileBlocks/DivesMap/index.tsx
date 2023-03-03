@@ -118,11 +118,14 @@ export const DivesMap: FC<Props> = ({
         >
           {clusters?.length && clusters.map((point) => (
             <DivePoint
-              key={point.id}
+              key={point.points[0].id}
               divesCount={point.numPoints}
               lat={point.wy}
               lng={point.wx}
               diveName=""
+              onClick={() => {
+                // point.points.length === 1 && router.push(`/spot/${point.points[0].id}`);
+              }}
             />
           ))}
         </GoogleMapReact>
