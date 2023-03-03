@@ -240,7 +240,11 @@ export const firestoreDivesService = {
           ...docSnap.data(),
         };
         if (properties.Buddies && copyFromDive.buddies?.length) {
-          newProperties.buddies = copyFromDive.buddies;
+          const buddies = copyFromDive.buddies.map((buddy) => ({
+            ...buddy,
+            userRef: doc(db, `${PathEnum.USERS}/${buddy.id}`),
+          }));
+          newProperties.buddies = buddies;
         }
         if (properties.Spot && copyFromDive.spotRef) {
           // @ts-ignore

@@ -103,7 +103,7 @@ export const LogDiveBlock = ({
           await firestoreDivesService.setDiveData(data, userAuth.uid);
         }
         await deleteCache();
-        router.push('/dive-manager');
+        await router.push('/dive-manager');
       } else {
         notify('Fill all require data');
       }
