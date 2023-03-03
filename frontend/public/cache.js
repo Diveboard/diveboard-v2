@@ -154,14 +154,13 @@ module.exports = [
       if (pathname.startsWith('/api/')) return false;
       return true;
     },
-    handler: 'NetworkFirst',
+    handler: 'StaleWhileRevalidate',
     options: {
       cacheName: 'others',
       expiration: {
         maxEntries: 32,
         maxAgeSeconds: 24 * 60 * 60, // 24 hours
       },
-      networkTimeoutSeconds: 10,
     },
   },
   {
