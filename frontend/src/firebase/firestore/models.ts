@@ -100,7 +100,9 @@ export type CommentType = {
 };
 
 export type MediaUrls = {
-  url: string,
+  pic?: [string, DocumentReference]
+  createdAt?: Timestamp;
+  url?: string,
   ref?: DocumentReference,
   id?: string
 };

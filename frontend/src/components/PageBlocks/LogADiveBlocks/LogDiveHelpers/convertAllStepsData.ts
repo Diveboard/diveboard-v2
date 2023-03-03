@@ -1,4 +1,4 @@
-import { doc, DocumentReference } from '@firebase/firestore';
+import { doc, DocumentReference, getDoc } from '@firebase/firestore';
 import { AllStepsDataType } from '../types/stepTypes';
 import {
   BuddiesType,
@@ -59,21 +59,28 @@ export const convertAllStepsData = async (
     if (mediaUrls.length) {
       for (let i = 0; i < mediaUrls.length; i++) {
         if (!mediaUrls[i].id) {
+          const createdAt = new Date();
+          const newPic = {
           // eslint-disable-next-line no-await-in-loop
-          const newPic = await firestoreGalleryService.addImgToGallery({
-            url: mediaUrls[i].url,
-            user: userId,
-            createdAt: new Date(),
-            media: 'IMAGE',
-            height: 0,
-            width: 0,
-            spot,
-            videoUrl: null,
-          });
+            pic: await firestoreGalleryService.addImgToGallery({
+              url: mediaUrls[i].url,
+              user: userId,
+              createdAt: new Date(),
+              media: 'IMAGE',
+              height: 0,
+              width: 0,
+              spot,
+              videoUrl: null,
+            }),
+            createdAt,
+          };
           result.push(newPic);
         } else {
           const ref = doc(db, `${PathEnum.PICTURES}/${mediaUrls[i].id}`);
-          result.push([mediaUrls[i].id, ref]);
+          // eslint-disable-next-line no-await-in-loop
+          const snap = await getDoc(ref);
+          const { createdAt } = snap.data();
+          result.push({ pic: [mediaUrls[i].id, ref], createdAt });
         }
       }
     }
@@ -86,23 +93,27 @@ export const convertAllStepsData = async (
         // eslint-disable-next-line no-await-in-loop
         const imageRef = await firestoreGalleryService.getGalleryFile(res.ref);
         if (imageRef) {
-        // eslint-disable-next-line no-await-in-loop
-          result.push(await firestoreGalleryService.addImgToGallery({
-            url: imageRef,
-            user: userId,
-            createdAt: new Date(),
-            media: 'IMAGE',
-            height: 0,
-            width: 0,
-            spot,
-            videoUrl: null,
-          }));
+          const createdAt = new Date();
+          result.push({
+          // eslint-disable-next-line no-await-in-loop
+            pic: await firestoreGalleryService.addImgToGallery({
+              url: imageRef,
+              user: userId,
+              createdAt,
+              media: 'IMAGE',
+              height: 0,
+              width: 0,
+              spot,
+              videoUrl: null,
+            }),
+            createdAt,
+          });
         } else {
           throw new Error('Error');
         }
       }
     }
-    return Object.fromEntries(result);
+    return result;
   };
   const convertDiveBuddies = (buddies: Array<BuddiesType>) => {
     if (!buddies?.length) {
