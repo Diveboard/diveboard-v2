@@ -7,12 +7,10 @@ import {
   getDoc,
   limit,
   DocumentReference,
-  DocumentSnapshot,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
-import { SpeciesType } from '../models';
 import { Coords } from '../../../types';
-import { firestorePaths, PathEnum } from '../firestorePaths';
+import { PathEnum } from '../firestorePaths';
 
 export const firestoreSpeciesServices = {
 
@@ -67,7 +65,7 @@ export const firestoreSpeciesServices = {
         .then((values) => values.forEach((value) => {
           const specie = value.data();
           if (specie) {
-            species.push({ id: specie.id, ref: specie.ref, ...specie });
+            species.push({ id: value.id, ref: value.ref, ...specie });
           }
         }));
 
@@ -80,12 +78,18 @@ export const firestoreSpeciesServices = {
   getSpeciesByIds: async (speciesIds: Array<string>) => {
     try {
       const species = [];
+      const speciesPromises = [];
       for (let i = 0; i < speciesIds.length; i++) {
-        const docRef = doc(db, firestorePaths.species.path, speciesIds[i]);
-        // eslint-disable-next-line no-await-in-loop
-        const docSnap = await getDoc(docRef);
-        species.push({ ref: docSnap.ref, id: speciesIds[i], ...docSnap.data() });
+        const docRef = doc(db, PathEnum.SPECIES, speciesIds[i]);
+        speciesPromises.push(getDoc(docRef));
       }
+      await Promise.all(speciesPromises)
+        .then((values) => values.forEach((value) => {
+          const specie = value.data();
+          if (specie) {
+            species.push({ ref: value.ref, id: value.id, ...specie });
+          }
+        }));
       return species.filter((fish) => fish);
     } catch (e) {
       throw new Error(e.message);
@@ -98,11 +102,17 @@ export const firestoreSpeciesServices = {
       const logbookSnap = await getDoc(logbookRef);
       const { species } = logbookSnap.data();
       const speciesData = [];
+      const speciesPromises = [];
       for (let i = 0; i < species.length; i++) {
-        // eslint-disable-next-line no-await-in-loop
-        const docSnap: DocumentSnapshot<SpeciesType> = await getDoc(species[i].specieRef);
-        speciesData.push({ id: docSnap.id, ...docSnap.data() });
+        speciesPromises.push(getDoc(species[i].specieRef));
       }
+      await Promise.all(speciesPromises)
+        .then((values) => values.forEach((value) => {
+          const specie = value.data();
+          if (specie) {
+            speciesData.push({ id: value.id, ref: value.ref, ...specie });
+          }
+        }));
       return speciesData;
     } catch (e) {
       throw new Error(e.message);
@@ -116,15 +126,11 @@ export const firestoreSpeciesServices = {
       const first = query(
         docRef,
         where('category', '==', category.toLowerCase()),
-        // orderBy('category', 'desc'),
-        // startAt(category.toLowerCase()),
         limit(500),
       );
       const next = after ? query(
         docRef,
         where('category', '==', category.toLowerCase()),
-        // startAfter(after),
-        // orderBy('category'),
         limit(100),
       ) : null;
 
@@ -141,17 +147,19 @@ export const firestoreSpeciesServices = {
   },
 
   getSpeciesByName: async (name: string) => {
-    const fishes = [];
     try {
-      const docRef = collection(db, PathEnum.SPECIES);
-      const q = query(docRef, where('sname', '>=', name), limit(100));
+      const docRef = collection(db, PathEnum.SPECIES_CNAMES);
+      const q = query(docRef, where('name', '>=', name), limit(100));
       const querySnapshot = await getDocs(q);
+      const speciesIds = new Set();
 
       querySnapshot.forEach((fishDoc) => {
         const fishesData = fishDoc.data();
-        fishes.push({ ref: fishDoc.ref, id: fishDoc.id, ...fishesData });
+        speciesIds.add(fishesData.specieRef.id);
       });
-      return fishes;
+      return await firestoreSpeciesServices.getSpeciesByIds(
+        Array.from(speciesIds) as Array<string>,
+      );
     } catch (e) {
       throw new Error(e.message);
     }

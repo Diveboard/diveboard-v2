@@ -47,6 +47,8 @@ export const firestoreDivesService = {
         await firestoreSpotsService.updateSpotById(diveData.spotRef.id, newSpot);
       }
       await firestoreLogbookService.addDiveToLogbook(userId, diveData, spotData, ref);
+      // @ts-ignore
+      diveData.pictures = Object.fromEntries(diveData.pictures.map((picture) => picture.pic));
       await setDoc(ref, { ...diveData }, { merge: true });
     } catch (e) {
       throw new Error(e.message);
@@ -95,6 +97,8 @@ export const firestoreDivesService = {
         }
       }
       await firestoreLogbookService.updateDiveInLogbook(userId, dive, spotData, docRef);
+      // @ts-ignore
+      dive.pictures = Object.fromEntries(dive.pictures.map((picture) => picture.pic));
       await setDoc(docRef, { ...dive }, { merge: false });
       return true;
     } catch (e) {
@@ -236,7 +240,11 @@ export const firestoreDivesService = {
           ...docSnap.data(),
         };
         if (properties.Buddies && copyFromDive.buddies?.length) {
-          newProperties.buddies = copyFromDive.buddies;
+          const buddies = copyFromDive.buddies.map((buddy) => ({
+            ...buddy,
+            userRef: doc(db, `${PathEnum.USERS}/${buddy.id}`),
+          }));
+          newProperties.buddies = buddies;
         }
         if (properties.Spot && copyFromDive.spotRef) {
           // @ts-ignore

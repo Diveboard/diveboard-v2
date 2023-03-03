@@ -67,8 +67,16 @@ export const SecondStep: FC<StepProps> = (
         <div className={styles.secondStep}>
           <h2>Profile</h2>
           {showChart
-              && data.parameters?.safetyStops
-              && <DepthChart points={data.parameters.safetyStops} />}
+              && ((data.parameters?.maxDepth && data.parameters?.duration)
+              || data.parameters?.profileData)
+              && (
+              <DepthChart
+                points={data.parameters.safetyStops}
+                maxDepth={data.parameters.maxDepth}
+                duration={data.parameters.duration}
+                profileData={data.parameters.profileData}
+              />
+              )}
           {!showChart && (
           <>
             <MarginWrapper top={10} />

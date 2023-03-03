@@ -5,7 +5,7 @@
   height: 100vh;
   top: 0;
   margin-left: -75px;
-  z-index: 5;
+  z-index: 6;
 }
 
 .img {
@@ -63,6 +63,7 @@
 
 .imgData {
   width: 100%;
+  cursor: pointer;
   position: absolute;
   bottom: 40px;
   display: flex;

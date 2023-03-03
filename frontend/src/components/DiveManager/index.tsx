@@ -10,7 +10,6 @@ import { Checkbox } from '../CheckBox';
 import { SetDropdown } from '../Dropdown/SetDropdown';
 import { Icon } from '../Icons/Icon';
 import { DiveItem } from './DiveItem';
-import { NoDive } from './NoData';
 import { Delete } from '../Icons/IconSVGComponents/Delete';
 import { EditDive } from '../Icons/IconSVGComponents/Editdive';
 import { Export } from '../Icons/IconSVGComponents/Export';
@@ -31,6 +30,7 @@ import { DiveType } from '../../types';
 import { notify } from '../../utils/notify';
 import { AuthStatusContext } from '../../layouts/AuthLayout';
 import { deleteCache } from '../../utils/refreshCache';
+import { LogDive } from '../Icons/IconSVGComponents';
 
 type Props = {
   userDives: Array<DiveType>
@@ -398,7 +398,10 @@ const DiveManager = ({ userDives }: Props) => {
       </Popup>
       )}
       {error ? (
-        <NoDive />
+        <div className={styles['add-new-dive-block']}>
+          <LogDive />
+          <h2 onClick={() => router.push('/log-dive')}>Log your first dive</h2>
+        </div>
       ) : (
         <>
           <div className={styles.wrapper__buttons}>

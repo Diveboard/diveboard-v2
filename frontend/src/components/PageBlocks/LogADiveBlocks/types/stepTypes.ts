@@ -55,6 +55,7 @@ export type SecondStepType = {
     duration: number;
     surfaceInterval: number;
     safetyStops: SafetySpot[];
+    profileData?: Array<{ seconds: number, depth: number }>;
   };
 
   advancedParameters: {

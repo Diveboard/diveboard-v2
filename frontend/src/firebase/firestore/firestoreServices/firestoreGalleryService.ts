@@ -27,7 +27,7 @@ export const firestoreGalleryService = {
       await Promise.all(picsPromises)
         .then((values) => values.forEach((value) => {
           const pic = value.data();
-          if (pic) {
+          if (pic?.url) {
             pics.push(pic.url);
           }
         }));
@@ -59,7 +59,9 @@ export const firestoreGalleryService = {
       return await Promise.all(picturesPromises)
         .then((values) => values.map((value) => {
           const data = value.data();
-          return { url: data.url, ref: value.ref, id: value.id };
+          return {
+            url: data.url, ref: value.ref, id: value.id, createdAt: data.createdAt,
+          };
         }));
     } catch (e) {
       throw new Error(e.message);

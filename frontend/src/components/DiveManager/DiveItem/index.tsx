@@ -129,11 +129,11 @@ export const DiveItem: FC<Props> = ({
               {' '}
               <span>{itm.aboutDive?.tripName}</span>
             </li>
-            <li>
-              Dive shop:
-              {' '}
-              <span>{itm.diveCenter?.id}</span>
-            </li>
+            {/* <li> */}
+            {/*  Dive shop: */}
+            {/*  {' '} */}
+            {/*  <span>{itm.diveCenter?.id}</span> */}
+            {/* </li> */}
             <li>
               Water:
               {' '}

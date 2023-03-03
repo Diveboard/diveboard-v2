@@ -71,8 +71,15 @@ export const DivePageBlock = ({
           <SpotDiveData user={user} dive={dive} spot={spot} />
           {!!picturesData?.length && renderPhotoBlock()}
           <div className={styles.subwrapper}>
-            {(!!dive.diveData?.safetyStops?.length || !!dive?.tanks.length) && (
-              <ChartBlock diveData={{ points: dive.diveData?.safetyStops, tanks: dive?.tanks }} />
+            {(!!dive.diveData?.profileData?.length
+                || !!dive?.tanks.length
+                || dive.diveData.maxDepth) && (
+                <ChartBlock
+                  diveData={{ points: dive.diveData?.safetyStops, tanks: dive?.tanks }}
+                  maxDepth={dive.diveData.maxDepth}
+                  duration={dive.diveData.duration}
+                  profileData={dive.diveData.profileData}
+                />
             )}
             {(!!speciesData.length || isGearsExist)
                 && (

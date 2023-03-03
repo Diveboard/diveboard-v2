@@ -7,7 +7,7 @@ import {
   getDocs,
   orderBy,
   startAt,
-  limit, DocumentReference,
+  limit, DocumentReference, where,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { PathEnum } from '../firestorePaths';
@@ -95,6 +95,10 @@ export const firestorePublicProfileService = {
       for (let i = 0; i < size; i++) {
         if (usersIds[i].userRef) {
           usersPromises.push(firestorePublicProfileService.getUserByRef(usersIds[i].userRef, i));
+          users.push({
+            ...usersIds[i],
+            id: usersIds[i].userRef.id,
+          });
         } else {
           users.push({
             ...usersIds[i],
@@ -108,17 +112,13 @@ export const firestorePublicProfileService = {
           .forEach((value) => {
             divesTotalPromises.push(firestoreDivesService
               .getDivesCountByUserId(usersIds[value.idx].userRef.id, value.idx));
-            users.push({
-              ...usersIds[value.idx],
-              photoUrl: value.photoUrl,
-              id: usersIds[value.idx].userRef.id,
-            });
+            users[value.idx].photoUrl = value.photoUrl;
           }));
 
       await Promise.all(divesTotalPromises)
         .then((values) => values
           .forEach((value) => {
-            users[value.idx].diveTotal = value.size || 0;
+            users[value.idx].diveTotal = value.size || 7;
           }));
       return users;
     } catch (e) {
@@ -133,9 +133,10 @@ export const firestorePublicProfileService = {
       const docRef = collection(db, PathEnum.USERS);
       const q = query(
         docRef,
-        orderBy('firstName'),
-        startAt(predictionName.trim()),
-        limit(20),
+        where('firstName', '>=', predictionName.trim()),
+        // orderBy('firstName'),
+        // startAt(predictionName.trim()),
+        limit(50),
       );
       const querySnapshot = await getDocs(q);
 
