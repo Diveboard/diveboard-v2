@@ -98,7 +98,7 @@ export const ProfileBlock = ({
 
       <PersonalProfileData
         imgSrc={logbookUser.photoUrl}
-        name={`${logbookUser.firstName || ''} ${logbookUser.lastName || ''}`}
+        name={logbookUser?.firstName || logbookUser?.lastName ? `${logbookUser?.firstName || ''} ${logbookUser?.lastName || ''}` : logbookUser.nickname || ''}
         country={name(logbookUser.country)}
         about={logbookUser.about}
         isItOwnProfile={isItOwnProfile}

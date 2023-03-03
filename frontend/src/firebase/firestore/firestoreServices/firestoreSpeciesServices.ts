@@ -65,7 +65,7 @@ export const firestoreSpeciesServices = {
         .then((values) => values.forEach((value) => {
           const specie = value.data();
           if (specie) {
-            species.push({ id: specie.id, ref: specie.ref, ...specie });
+            species.push({ id: value.id, ref: value.ref, ...specie });
           }
         }));
 
@@ -110,7 +110,7 @@ export const firestoreSpeciesServices = {
         .then((values) => values.forEach((value) => {
           const specie = value.data();
           if (specie) {
-            speciesData.push({ id: specie.id, ref: specie.ref, ...specie });
+            speciesData.push({ id: value.id, ref: value.ref, ...specie });
           }
         }));
       return speciesData;
