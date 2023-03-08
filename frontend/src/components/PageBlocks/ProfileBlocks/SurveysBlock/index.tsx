@@ -36,12 +36,15 @@ export const SurveysBlock: FC<Props> = ({ surveys }) => {
           />
         ))}
       </div>
-      <div
-        className={style.viewMore}
-        onClick={setMoreSurveys}
-      >
-        {`View ${viewMore ? 'More' : 'Less'}`}
-      </div>
+      {surveys.length > 4
+        && (
+        <div
+          className={style.viewMore}
+          onClick={setMoreSurveys}
+        >
+          {`View ${viewMore ? 'More' : 'Less'}`}
+        </div>
+        )}
     </>
   );
 };

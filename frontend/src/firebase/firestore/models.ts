@@ -134,6 +134,7 @@ export type DiveType = {
 & NinthStepType;
 
 export type SpotType = {
+  id?: string;
   oldId: number | null;
   name: string;
   description: string;

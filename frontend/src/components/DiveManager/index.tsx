@@ -221,16 +221,18 @@ const DiveManager = ({ userDives }: Props) => {
   const deleteButtonHandler = async () => {
     document.body.style.overflow = 'unset';
     const divesIds = dives.filter((i) => i.checked).map((item) => item.dive.id);
+    closePopup();
+    setLoading(true);
     try {
       if (divesIds.length >= 1) {
         await firestoreDivesService.deleteDives(userId, divesIds);
-        closePopup();
         await fetchDives();
         await deleteCache();
         notify('Successfully deleted');
       } else {
         notify('Choose at least one dive');
       }
+      setLoading(false);
     } catch (e) {
       setLoading(false);
       notify(e.message);

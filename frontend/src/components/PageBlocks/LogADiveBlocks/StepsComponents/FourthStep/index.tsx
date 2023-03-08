@@ -66,7 +66,7 @@ export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
       (async () => {
         try {
           setSpeciesMode('local');
-          if (spotId) {
+          if (spotId && step === 4) {
             setLoading(true);
             const spot = await firestoreSpotsService.getSpotById(
               spotId,

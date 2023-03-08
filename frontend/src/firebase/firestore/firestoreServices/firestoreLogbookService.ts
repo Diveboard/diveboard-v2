@@ -270,7 +270,7 @@ export const firestoreLogbookService = {
       buddies = [...buddies, ...diveBuddies];
 
       const diveRef = doc(db, `${PathEnum.LOGBOOK}/${userId}/${PathEnum.LOGBOOK_DIVES}/${ref.id}`);
-      await setDoc(diveRef, logbookDive);
+      const prs = [setDoc(diveRef, logbookDive)];
 
       const underwaterTime = logbookData.underwaterTime.map((d) => {
         if (d.diveRef.id === ref.id) {
@@ -278,19 +278,21 @@ export const firestoreLogbookService = {
         }
         return d;
       });
-      await setDoc(
-        logbookRef,
-        {
-          pictures,
-          species,
-          longestDive,
-          deepestDive,
-          underwaterTime,
-          buddies,
-          oldId: '4',
-        },
-        { merge: true },
+      prs.push(
+        setDoc(
+          logbookRef,
+          {
+            pictures,
+            species,
+            longestDive,
+            deepestDive,
+            underwaterTime,
+            buddies,
+          },
+          { merge: true },
+        ),
       );
+      return await Promise.all(prs);
     } catch (e) {
       throw new Error(e.message);
     }
@@ -363,11 +365,13 @@ export const firestoreLogbookService = {
         time: diveData.diveData.duration,
       });
       const diveRef = doc(db, `${PathEnum.LOGBOOK}/${userId}/${PathEnum.LOGBOOK_DIVES}/${ref.id}`);
-      await setDoc(diveRef, logbookDive, { merge: false });
-
-      await setDoc(logbookRef, {
-        species, pictures, longestDive, deepestDive, underwaterTime, buddies,
-      }, { merge: true });
+      const prs = [
+        setDoc(diveRef, logbookDive, { merge: false }),
+        setDoc(logbookRef, {
+          species, pictures, longestDive, deepestDive, underwaterTime, buddies,
+        }, { merge: true }),
+      ];
+      return await Promise.all(prs);
     } catch (e) {
       throw new Error(e.message);
     }

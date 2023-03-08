@@ -26,6 +26,7 @@ import { Popup } from '../../DiveManager/Popup';
 import KebabButton from '../../Buttons/KebabButton';
 import { MediaUrls, SpeciesType } from '../../../firebase/firestore/models';
 import { FirstStepType } from './types/stepTypes';
+import { NetworkStatusContext } from '../../../layouts/NetworkStatus';
 import { deleteCache } from '../../../utils/refreshCache';
 
 type Props = {
@@ -50,6 +51,8 @@ export const LogDiveBlock = ({
   const [, anchor] = router.asPath.split('#');
 
   const { overview: { diveNumber } } = getStepData(1) as FirstStepType;
+
+  const isOffline = useContext(NetworkStatusContext);
 
   useEffect(() => {
     if (+anchor !== step && +anchor >= 1 && +anchor < 10) {
@@ -95,6 +98,13 @@ export const LogDiveBlock = ({
           && data.diveData.maxDepth
           && data.diveData.duration
       ) {
+        if (isOffline) {
+          notify('Your dive will be published after your will be online');
+          setLoading(false);
+          setDraftPopupOpen(false);
+        } else {
+          deleteCache();
+        }
         if (diveId) {
           // @ts-ignore
           await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data);
@@ -102,7 +112,6 @@ export const LogDiveBlock = ({
           // @ts-ignore
           await firestoreDivesService.setDiveData(data, userAuth.uid);
         }
-        await deleteCache();
         await router.push('/dive-manager');
       } else {
         notify('Fill all require data');
