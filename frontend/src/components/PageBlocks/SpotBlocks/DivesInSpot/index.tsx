@@ -57,8 +57,8 @@ export const DivesInSpot = ({ dives, spotDivesIds }: Props) => {
             key={dive.id}
             diveRef={dive.ref}
             diverName={dive.aboutDive?.tripName}
-            imgSrc={dive.pictures[0]?.url}
-            date={convertTimestampDate(dive.diveData?.date)}
+            imgSrc={dive.pictures?.length && dive.pictures[0]?.url}
+            date={dive.diveData?.date ? convertTimestampDate(dive.diveData.date) : null}
             deepness={dive.diveData?.maxDepth}
             duration={dive.diveData?.duration}
             diversCount={dive.buddies?.length}

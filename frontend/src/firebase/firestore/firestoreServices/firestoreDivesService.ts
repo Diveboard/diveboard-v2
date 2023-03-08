@@ -10,7 +10,7 @@ import {
   setDoc,
   startAfter,
   Timestamp,
-  updateDoc, waitForPendingWrites,
+  updateDoc,
   where,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
@@ -110,10 +110,7 @@ export const firestoreDivesService = {
         spot.dives[ref.id] = ref;
         spotData = newSpot;
         diveData.locationName = newSpot.locationName;
-        await waitForPendingWrites(
-          // @ts-ignore
-          await firestoreSpotsService.updateSpotById(diveData.spotRef.id, newSpot),
-        );
+        await firestoreSpotsService.updateSpotById(diveData.spotRef.id, newSpot);
       }
       // @ts-ignore
       const pics = diveData.pictures.files || diveData.pictures.mediaUrl?.length
