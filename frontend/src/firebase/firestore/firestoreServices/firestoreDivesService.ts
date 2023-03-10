@@ -9,7 +9,8 @@ import {
   query,
   setDoc,
   startAfter,
-  Timestamp, updateDoc,
+  Timestamp,
+  updateDoc,
   where,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
@@ -21,11 +22,76 @@ import { firestoreSurveyService } from './firestoreSurveyService';
 import { PathEnum } from '../firestorePaths';
 import { firestoreGalleryService } from './firestoreGalleryService';
 import { firestoreLogbookService } from './firestoreLogbookService';
+import { deleteCache } from '../../../utils/refreshCache';
 
 export const firestoreDivesService = {
+  uploadFiles: async (data, userId, spotId) => {
+    const mediaUrls = data.mediaUrl;
+    const spot = spotId ? doc(db, `${PathEnum.SPOTS}/${spotId}`) : null;
+    const result = [];
+    if (mediaUrls?.length) {
+      for (let i = 0; i < mediaUrls.length; i++) {
+        if (!mediaUrls[i].id) {
+          const createdAt = new Date();
+          const newPic = {
+            // eslint-disable-next-line no-await-in-loop
+            pic: await firestoreGalleryService.addImgToGallery({
+              url: mediaUrls[i].url,
+              user: userId,
+              createdAt: new Date(),
+              media: 'IMAGE',
+              height: 0,
+              width: 0,
+              spot,
+              videoUrl: null,
+            }),
+            createdAt,
+          };
+          result.push(newPic);
+        } else {
+          const ref = doc(db, `${PathEnum.PICTURES}/${mediaUrls[i].id}`);
+          // eslint-disable-next-line no-await-in-loop
+          const snap = await getDoc(ref);
+          const { createdAt } = snap.data();
+          result.push({ pic: [mediaUrls[i].id, ref], createdAt });
+        }
+      }
+    }
+
+    const { files } = data;
+    if (files?.length) {
+      for (let i = 0; i < files.length; i++) {
+        // eslint-disable-next-line no-await-in-loop
+        const res = await firestoreGalleryService.uploadGalleryFile(userId, files[i].file);
+        // eslint-disable-next-line no-await-in-loop
+        const imageRef = await firestoreGalleryService.getGalleryFile(res.ref);
+        if (imageRef) {
+          const createdAt = new Date();
+          result.push({
+            // eslint-disable-next-line no-await-in-loop
+            pic: await firestoreGalleryService.addImgToGallery({
+              url: imageRef,
+              user: userId,
+              createdAt,
+              media: 'IMAGE',
+              height: 0,
+              width: 0,
+              spot,
+              videoUrl: null,
+            }),
+            createdAt,
+          });
+        } else {
+          throw new Error('Error');
+        }
+      }
+    }
+    return result;
+  },
+
   setDiveData: async (diveData: DiveType, userId: string, saveDan: boolean = false) => {
     try {
-      const ref = doc(collection(db, `${PathEnum.DIVES}/${userId}`, 'userDives'));
+      const ref = doc(collection(db, `${PathEnum.DIVES}/${userId}/${PathEnum.DIVE_DATA}`));
       let spotData = null;
       if (diveData.danSurvey) {
         diveData.surveyRef = await firestoreSurveyService.addSurvey(
@@ -46,10 +112,25 @@ export const firestoreDivesService = {
         diveData.locationName = newSpot.locationName;
         await firestoreSpotsService.updateSpotById(diveData.spotRef.id, newSpot);
       }
-      await firestoreLogbookService.addDiveToLogbook(userId, diveData, spotData, ref);
       // @ts-ignore
-      diveData.pictures = Object.fromEntries(diveData.pictures.map((picture) => picture.pic));
-      await setDoc(ref, { ...diveData }, { merge: true });
+      const pics = diveData.pictures.files || diveData.pictures.mediaUrl?.length
+        ? await firestoreDivesService
+          .uploadFiles(diveData.pictures, userId, diveData.spotRef?.id) : [];
+      const divePromise = setDoc(
+        ref,
+        {
+          ...diveData,
+          pictures: Object.fromEntries(pics.map((picture) => picture.pic)),
+        },
+        { merge: true },
+      );
+      const logbookPromise = firestoreLogbookService.addDiveToLogbook(
+        userId,
+        { ...diveData, pictures: pics },
+        spotData,
+        ref,
+      );
+      await Promise.all([divePromise, logbookPromise, deleteCache()]);
     } catch (e) {
       throw new Error(e.message);
     }
@@ -96,10 +177,23 @@ export const firestoreDivesService = {
           }
         }
       }
-      await firestoreLogbookService.updateDiveInLogbook(userId, dive, spotData, docRef);
       // @ts-ignore
-      dive.pictures = Object.fromEntries(dive.pictures.map((picture) => picture.pic));
-      await setDoc(docRef, { ...dive }, { merge: false });
+      const pics = dive.pictures.files || dive.pictures.mediaUrl?.length
+        ? await firestoreDivesService
+          .uploadFiles(dive.pictures, userId, dive.spotRef?.id) : [];
+      const divePromise = setDoc(
+        docRef,
+        { ...dive, pictures: Object.fromEntries(pics.map((picture) => picture.pic)) },
+        { merge: false },
+      );
+      const logbookPromise = firestoreLogbookService.updateDiveInLogbook(
+        userId,
+        { ...dive, pictures: pics },
+        spotData,
+        docRef,
+      );
+      await Promise.all([divePromise, logbookPromise, deleteCache()]);
+
       return true;
     } catch (e) {
       throw new Error(e.message);

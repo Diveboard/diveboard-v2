@@ -6,22 +6,31 @@ import pageRoutes from '../../src/routes/pagesRoutes.json';
 import { firestoreDivesService } from '../../src/firebase/firestore/firestoreServices/firestoreDivesService';
 import { firestoreGalleryService } from '../../src/firebase/firestore/firestoreServices/firestoreGalleryService';
 import { firestoreSpeciesServices } from '../../src/firebase/firestore/firestoreServices/firestoreSpeciesServices';
+import ErrorBlock from '../../src/components/ErrorBlock';
 
 const Dive: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   dive,
   diveId,
   mediaUrls,
   species,
-}) => (
-  <LogDiveProvider>
-    <LogDiveBlock
-      diveId={diveId}
-      dive={dive}
-      mediaUrls={mediaUrls}
-      species={species}
-    />
-  </LogDiveProvider>
-);
+  error,
+}) => {
+  if (error) {
+    return (
+      <ErrorBlock text={error} />
+    );
+  }
+  return (
+    <LogDiveProvider>
+      <LogDiveBlock
+        diveId={diveId}
+        dive={dive}
+        mediaUrls={mediaUrls}
+        species={species}
+      />
+    </LogDiveProvider>
+  );
+};
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
@@ -63,9 +72,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   } catch (e) {
     return {
-      redirect: {
-        destination: '/_error',
-        permanent: false,
+      props: {
+        error: e.message,
       },
     };
   }

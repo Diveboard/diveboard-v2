@@ -1,5 +1,5 @@
 import React, {
-  FC, useEffect, useRef, useState,
+  FC, useContext, useEffect, useRef, useState,
 } from 'react';
 import GoogleMapReact from 'google-map-react';
 import supercluster from 'points-cluster';
@@ -23,6 +23,7 @@ import { Bounds } from '../../../../../../types';
 import { notify } from '../../../../../../utils/notify';
 import { useDebounce } from '../../../../../../hooks/useDebounce';
 import { Loader } from '../../../../../Loader';
+import { LogDiveDataContext } from '../../../LogDiveData/logDiveContext';
 
 type Props = {
   location: { lat: number, lng: number };
@@ -57,7 +58,7 @@ export const LogADiveDiveMap: FC<Props> = ({
   const [isLoading, setLoading] = useState(false);
   const userLocation = useUserLocation();
   const bounds = useRef<Bounds>();
-
+  const { getCurrentStep } = useContext(LogDiveDataContext);
   const setVisible = useRef<(visible: boolean) => void>();
   const setNewPositionMarker = useRef<(coords: {
     lat: number,
@@ -234,7 +235,7 @@ export const LogADiveDiveMap: FC<Props> = ({
           maps,
         }) => handleApiLoaded(map, maps)}
         onChange={(e) => {
-          if (!newPoint) {
+          if (!newPoint && getCurrentStep() === 3) {
             setBoundsCoords(e);
           }
         }}

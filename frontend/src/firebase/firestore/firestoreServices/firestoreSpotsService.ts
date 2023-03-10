@@ -25,7 +25,7 @@ export const firestoreSpotsService = {
       if (!data) {
         return null;
       }
-      return { ...data, ref: docSnap.ref } as any;
+      return { ...data, ref: docSnap.ref, id: docSnap.id } as any;
     } catch (e) {
       throw new Error(e.message);
     }

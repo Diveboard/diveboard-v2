@@ -30,7 +30,7 @@ export const SmallDiveCard: FC<Props> = ({
   diveUnitSystem,
   diveRef,
 }) => {
-  const diveDate = `${month[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+  const diveDate = date ? `${month[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}` : '';
   const {
     userAuth,
   } = useContext(AuthStatusContext);

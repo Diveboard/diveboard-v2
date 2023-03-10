@@ -19,6 +19,7 @@ import { AuthStatusContext } from '../../../../../layouts/AuthLayout';
 import { Loader } from '../../../../Loader';
 import { StepsIndicator } from '../../StepsIndicator';
 import { notify } from '../../../../../utils/notify';
+import { NetworkStatusContext } from '../../../../../layouts/NetworkStatus';
 import { deleteCache } from '../../../../../utils/refreshCache';
 
 export const NinthStep: FC<StepProps & { diveId?: string }> = ({
@@ -63,6 +64,8 @@ export const NinthStep: FC<StepProps & { diveId?: string }> = ({
     }
   }, [step]);
 
+  const isOffline = useContext(NetworkStatusContext);
+
   if (step !== 9) {
     return null;
   }
@@ -85,6 +88,13 @@ export const NinthStep: FC<StepProps & { diveId?: string }> = ({
           && data.diveData.maxDepth
           && data.diveData.duration
       ) {
+        if (isOffline) {
+          notify('Your dive will be published after your will be online');
+          setLoading(false);
+          setStep(10);
+        } else {
+          deleteCache();
+        }
         if (diveId) {
           // @ts-ignore
           await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data, sendToDAN);
@@ -96,7 +106,6 @@ export const NinthStep: FC<StepProps & { diveId?: string }> = ({
       } else {
         notify('Fill all require data');
       }
-      await deleteCache();
       setLoading(false);
       setStep(10);
     } catch (e) {
