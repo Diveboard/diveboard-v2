@@ -61,6 +61,7 @@ export const LogDiveBlock = ({
   }, [anchor]);
 
   useEffect(() => {
+    window.scrollTo({ top: 0 });
     if (isNew) {
       setEmptyData();
       setStep(0);

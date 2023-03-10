@@ -51,7 +51,6 @@ export const GalleryBlock = ({ images }: Props) => {
     try {
       setAllFetched(false);
       setLoading(true);
-      setFetchedImages([]);
       const res = await firestoreGalleryService.getGallery(sortT === 'oldest' ? 'asc' : 'desc', lastDate);
       setLoading(false);
       if (res.length < 20) {
@@ -90,6 +89,7 @@ export const GalleryBlock = ({ images }: Props) => {
           onClick={(sortT) => {
             setSortType(sortT);
             if (sortT !== 'search' && !isOffline) {
+              setFetchedImages([]);
               loadMoreGallery(sortT);
             }
           }}
