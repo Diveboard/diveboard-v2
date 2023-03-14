@@ -26,22 +26,22 @@ import { Popup } from '../../DiveManager/Popup';
 import KebabButton from '../../Buttons/KebabButton';
 import { MediaUrls, SpeciesType } from '../../../firebase/firestore/models';
 import { FirstStepType } from './types/stepTypes';
+import { NetworkStatusContext } from '../../../layouts/NetworkStatus';
+import { deleteCache } from '../../../utils/refreshCache';
 
 type Props = {
   dive?: DiveType;
   diveId?: string;
-  userId: string;
   mediaUrls?: Array<MediaUrls>
   species?: Array<SpeciesType>
 };
 
 export const LogDiveBlock = ({
-  dive, diveId, userId, mediaUrls, species,
+  dive, diveId, mediaUrls, species,
 }: Props) => {
   const [step, setStep] = useState<StepType>(0);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isDraftPopupOpen, setDraftPopupOpen] = useState<boolean>(false);
-
   const {
     setCurrentStep, setData, getAllStepsData, setEmptyData, getStepData,
   } = useContext(LogDiveDataContext);
@@ -52,6 +52,8 @@ export const LogDiveBlock = ({
 
   const { overview: { diveNumber } } = getStepData(1) as FirstStepType;
 
+  const isOffline = useContext(NetworkStatusContext);
+
   useEffect(() => {
     if (+anchor !== step && +anchor >= 1 && +anchor < 10) {
       setStep(+anchor as StepType);
@@ -59,6 +61,7 @@ export const LogDiveBlock = ({
   }, [anchor]);
 
   useEffect(() => {
+    window.scrollTo({ top: 0 });
     if (isNew) {
       setEmptyData();
       setStep(0);
@@ -86,19 +89,36 @@ export const LogDiveBlock = ({
       setLoading(true);
       const data = await convertAllStepsData(
         allStepsData,
-        userId,
+        userAuth.uid,
         userAuth.settings.preferences.unitSystem,
         true,
       );
-      if (diveId) {
-        // @ts-ignore
-        await firestoreDivesService.updateDiveData(userId, diveId, data);
+      if (data.aboutDive.diveNumber
+          && data.aboutDive.tripName
+          && data.diveData.date
+          && data.diveData.maxDepth
+          && data.diveData.duration
+      ) {
+        if (isOffline) {
+          notify('Your dive will be published after your will be online');
+          setLoading(false);
+          setDraftPopupOpen(false);
+        } else {
+          deleteCache();
+        }
+        if (diveId) {
+          // @ts-ignore
+          await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data);
+        } else {
+          // @ts-ignore
+          await firestoreDivesService.setDiveData(data, userAuth.uid);
+        }
+        await router.push('/dive-manager');
       } else {
-        // @ts-ignore
-        await firestoreDivesService.setDiveData(data, userId);
+        notify('Fill all require data');
       }
       setDraftPopupOpen(false);
-      router.push('/dive-manager');
+      setLoading(false);
     } catch (e) {
       setLoading(false);
       notify(e.message);
@@ -130,12 +150,12 @@ export const LogDiveBlock = ({
         <FirstStep step={step} setStep={setStep} />
         <SecondStep step={step} setStep={setStep} />
         <ThirdStep step={step} setStep={setStep} />
-        <FourthStep step={step} setStep={setStep} userId={userId} />
+        <FourthStep step={step} setStep={setStep} />
         <FifthStep step={step} setStep={setStep} />
         <SixthStep step={step} setStep={setStep} />
         <SeventhStep step={step} setStep={setStep} />
         <EighthStep step={step} setStep={setStep} />
-        <NinthStep step={step} setStep={setStep} diveId={diveId} userId={userId} />
+        <NinthStep step={step} setStep={setStep} diveId={diveId} />
         {step === 10 && <CongratsStep />}
         {isDraftPopupOpen && <Backdrop />}
         {isDraftPopupOpen && (

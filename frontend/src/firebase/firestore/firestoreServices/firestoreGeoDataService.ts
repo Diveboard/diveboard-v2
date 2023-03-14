@@ -137,9 +137,9 @@ export const firestoreGeoDataService = {
         const data = document.data();
         if (
           data.minLat < coords.lat
-            && data.maxLat > coords.lat
-            && data.minLng < coords.lng
-            && data.maxLng > coords.lng
+            && data.maxLat >= coords.lat
+            && data.minLng <= coords.lng
+            && data.maxLng >= coords.lng
         ) {
           res = data;
         }

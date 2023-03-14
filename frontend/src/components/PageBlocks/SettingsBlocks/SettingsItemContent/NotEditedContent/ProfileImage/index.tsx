@@ -6,8 +6,9 @@ import { imageLoader } from '../../../../../Icons/Icon';
 type Props = {
   imgSrc: string;
   size?: number;
+  onClick?: () => void
 };
-export const ProfileImage:FC<Props> = ({ imgSrc, size = 80 }) => {
+export const ProfileImage:FC<Props> = ({ imgSrc, onClick, size = 80 }) => {
   const emptyPhotoPath = '/appIcons/no-photo.svg';
   const [src, setSrc] = useState(imgSrc || emptyPhotoPath);
 
@@ -16,7 +17,7 @@ export const ProfileImage:FC<Props> = ({ imgSrc, size = 80 }) => {
   }, [imgSrc]);
 
   return (
-    <div className={styles.profileImg}>
+    <div className={styles.profileImg} onClick={onClick}>
       <Image
         src={src}
         width={size}

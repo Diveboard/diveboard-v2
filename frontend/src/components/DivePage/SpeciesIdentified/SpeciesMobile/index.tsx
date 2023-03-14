@@ -49,7 +49,7 @@ export const SpeciesMobile:FC <Props> = ({ speciesList, species }) => {
         {speciesForRender.map((itm) => (
           <SpeciesCard
             key={itm.id}
-            imgSrc={itm?.imgSrc}
+            imgSrc={itm?.imageSrc}
             speciesName={itm?.sname}
             scientificName={itm?.category}
             className="smallCard"

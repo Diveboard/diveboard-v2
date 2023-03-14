@@ -4,7 +4,6 @@ import React, {
 
 import { Search } from './SearchBlock';
 import { SpeciesList } from './SpeciesList';
-import { Loader } from '../../../../Loader';
 import { StepsNavigation } from '../../StepsNavigation';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { firestoreSpeciesServices } from '../../../../../firebase/firestore/firestoreServices/firestoreSpeciesServices';
@@ -15,10 +14,11 @@ import styles from './styles.module.scss';
 import { StepsIndicator } from '../../StepsIndicator';
 import { notify } from '../../../../../utils/notify';
 import { firestoreSpotsService } from '../../../../../firebase/firestore/firestoreServices/firestoreSpotsService';
+import { AuthStatusContext } from '../../../../../layouts/AuthLayout';
 
-export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, userId }) => {
+export const FourthStep: FC<StepProps> = ({ step, setStep }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
-
+  const { userAuth } = useContext(AuthStatusContext);
   const [speciesMode, setSpeciesMode] = useState<'local' | 'all'>('all');
   const [currentSpeciesMode, setCurrentSpeciesMode] = useState('');
 
@@ -50,7 +50,7 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
     (async () => {
       const data = getStepData(4) as FourthStepType;
       try {
-        const mySpecs = await firestoreSpeciesServices.getMySpecies(userId);
+        const mySpecs = await firestoreSpeciesServices.getMySpecies(userAuth.uid);
         setMySpecies(mySpecs);
       } catch (ev) {
         notify(ev);
@@ -66,8 +66,8 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
       (async () => {
         try {
           setSpeciesMode('local');
-          setLoading(true);
-          if (spotId) {
+          if (spotId && step === 4) {
+            setLoading(true);
             const spot = await firestoreSpotsService.getSpotById(
               spotId,
             );
@@ -82,7 +82,7 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
         setLoading(false);
       })();
     }
-  }, [spotId]);
+  }, [spotId, step]);
 
   const fourthStepData: FourthStepType = {
     species: selectedSpecies,
@@ -142,19 +142,17 @@ export const FourthStep: FC<StepProps & { userId: string }> = ({ step, setStep, 
             <label htmlFor="all species">All</label>
           </div>
 
-          <Loader loading={loading} />
-          {!loading && (
-            <SpeciesList
-              currentSpeciesMode={currentSpeciesMode}
-              setCurrentSpeciesMode={setCurrentSpeciesMode}
-              mySpecies={mySpecies}
-              localSpecies={localSpecies}
-              speciesMode={speciesMode}
-              searchedSpecies={searchedSpecies}
-              selectedSpecies={selectedSpecies}
-              setSelectedSpecies={setSelectedSpecies}
-            />
-          )}
+          <SpeciesList
+            currentSpeciesMode={currentSpeciesMode}
+            setCurrentSpeciesMode={setCurrentSpeciesMode}
+            mySpecies={mySpecies}
+            localSpecies={localSpecies}
+            speciesMode={speciesMode}
+            searchedSpecies={searchedSpecies}
+            selectedSpecies={selectedSpecies}
+            setSelectedSpecies={setSelectedSpecies}
+            loading={loading}
+          />
 
           <div className={styles.sponsored}>
             Data provided through

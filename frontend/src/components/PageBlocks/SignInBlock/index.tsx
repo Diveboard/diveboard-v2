@@ -29,7 +29,6 @@ import { CheckBoxContent } from './Components/CheckBoxContent';
 import { Loader } from '../../Loader';
 import { setCookiesLogin } from '../../../utils/setCookiesLogin';
 import { statusUserRedirect } from '../../../utils/statusUserRedirect';
-import { precachePages } from '../../../utils/precachePages';
 
 export const SignInBlock: FC = () => {
   const router = useRouter();
@@ -87,8 +86,6 @@ export const SignInBlock: FC = () => {
         await firestorePublicProfileService.setEmail(user.email, user.uid);
         await firestorePreferencesService.setDefaultPreferences(user.uid);
         await firestoreNotificationService.setDefaultNotification(user.uid);
-
-        precachePages(['/logbook', '/settings', '/log-dive']);
 
         await statusUserRedirect(mode, router.push, setMode, userData.uid);
       }

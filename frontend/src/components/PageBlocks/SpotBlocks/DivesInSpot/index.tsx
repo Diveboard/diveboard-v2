@@ -31,7 +31,6 @@ export const DivesInSpot = ({ dives, spotDivesIds }: Props) => {
       setLoading(true);
       setMoreClicked(!isMoreClicked);
 
-      // convert custom ref to document ref
       const resIds = Object.fromEntries(Object.entries(spotDivesIds)
         .slice(fetchedDives.length, fetchedDives.length + 8)
         .map(([key, value]) => {
@@ -58,8 +57,8 @@ export const DivesInSpot = ({ dives, spotDivesIds }: Props) => {
             key={dive.id}
             diveRef={dive.ref}
             diverName={dive.aboutDive?.tripName}
-            imgSrc={dive.pictures[0]?.url}
-            date={convertTimestampDate(dive.diveData?.date)}
+            imgSrc={dive.pictures?.length && dive.pictures[0]?.url}
+            date={dive.diveData?.date ? convertTimestampDate(dive.diveData.date) : null}
             deepness={dive.diveData?.maxDepth}
             duration={dive.diveData?.duration}
             diversCount={dive.buddies?.length}
@@ -69,7 +68,7 @@ export const DivesInSpot = ({ dives, spotDivesIds }: Props) => {
       </div>
       {isLoading ? <Loader loading={isLoading} /> : (
         <div>
-          {dives?.length !== Object.entries(spotDivesIds).length && (
+          {fetchedDives?.length !== Object.entries(spotDivesIds).length && (
           <span className={viewMoreStyles.viewMore} onClick={fetchMoreDives}>
             {`View ${dives?.length < Object.entries(spotDivesIds).length ? 'More' : 'Less'} Dives`}
           </span>

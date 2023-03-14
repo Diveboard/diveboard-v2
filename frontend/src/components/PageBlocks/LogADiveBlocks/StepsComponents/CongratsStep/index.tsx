@@ -1,17 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 import styles from './styles.module.scss';
-import { ContentModeType, PlanType } from '../../../DonateBlocks/donateTypes';
 import { Icon } from '../../../../Icons/Icon';
 import { Button } from '../../../../Buttons/Button';
 
 export const CongratsStep = () => {
-  const [planMode, setPlanMode] = useState<PlanType>();
-  const [contentMode, setContentMode] = useState<ContentModeType>('main');
-
   const router = useRouter();
 
-  console.log(planMode, contentMode);
   return (
     <>
       <div className={styles.container}>
@@ -34,10 +29,7 @@ export const CongratsStep = () => {
             borderRadius={30}
             border="none"
             backgroundColor="#FDC90D"
-            onClick={() => {
-              setPlanMode('3/month');
-              setContentMode('plan');
-            }}
+            onClick={() => router.push('/donate')}
           >
             <span className={styles.btnText}> $3 per month for 12 months </span>
           </Button>
@@ -49,10 +41,7 @@ export const CongratsStep = () => {
             border="none"
             marginTop={12}
             backgroundColor="#FDC90D"
-            onClick={() => {
-              setPlanMode('5/month');
-              setContentMode('plan');
-            }}
+            onClick={() => router.push('/donate')}
           >
             <span className={styles.btnText}> $5 per month for 12 months </span>
           </Button>
@@ -64,10 +53,7 @@ export const CongratsStep = () => {
             border="none"
             marginTop={12}
             backgroundColor="#FDC90D"
-            onClick={() => {
-              setPlanMode('custom');
-              setContentMode('plan');
-            }}
+            onClick={() => router.push('/donate')}
           >
             <span className={styles.btnText}> Custom Donation</span>
           </Button>

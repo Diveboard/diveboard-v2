@@ -48,12 +48,11 @@ export const LatestSpecies = ({ speciesData, species }: Props) => {
     <div className={styles.latestSpeciesWrapper}>
       <Title title="Latest Species Identified" />
       <div className={styles.cardsWrapper}>
-        {speciesForRender.map((fish, idx) => (
+        {speciesForRender.map((fish) => (
           <SpeciesCard
-            // eslint-disable-next-line react/no-array-index-key
-            key={fish.id + idx}
+            key={fish.id}
             className={styles.speciesLogbookCard}
-            imgSrc={fish.imgSrc}
+            imgSrc={fish.imageSrc}
             speciesName={fish.sname}
             scientificName={fish.category}
           />

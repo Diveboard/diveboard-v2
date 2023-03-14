@@ -141,14 +141,18 @@ export const SpotDiveData: FC<Props> = ({
               {/* </KebabButton> */}
               {/* </div> */}
             </div>
-            <div className={styles.leftContentWrapper} onClick={() => router.push(`/logbook/${user.uid}`)}>
-              <ProfileImage imgSrc={user?.photoUrl} size={74} />
+            <div className={styles.leftContentWrapper}>
+              <ProfileImage
+                imgSrc={user?.photoUrl}
+                size={74}
+                onClick={() => router.push(`/logbook/${user.uid}`)}
+              />
               <div className={styles.spotTitleWrapper}>
                 <div className={styles.spotTitle}>
                   {user?.firstName || user?.nickname}
                   {spot?.name && ` in ${spot.name}`}
                 </div>
-                <div className={styles.spotCountryWrapper}>
+                <div className={styles.spotCountryWrapper} onClick={() => router.push(`/spot/${spot.id}`)}>
                   <div>{spot && flag(spot.countryName)}</div>
                   <div className={styles.spotLocation}>{spotName}</div>
                 </div>
@@ -208,7 +212,7 @@ export const SpotDiveData: FC<Props> = ({
               <li>
                 Water:
                 {' '}
-                <span>{dive.diveData.waterType}</span>
+                <span>{dive.diveData.waterType.toLowerCase()}</span>
               </li>
               )}
               {!!dive.diveData?.surfaceTemp && (
@@ -244,7 +248,7 @@ export const SpotDiveData: FC<Props> = ({
               <li>
                 Visibility:
                 {' '}
-                <span>{dive.diveData?.waterVisibility}</span>
+                <span>{dive.diveData?.waterVisibility.toLowerCase()}</span>
               </li>
               )}
             </ul>

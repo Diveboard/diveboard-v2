@@ -7,7 +7,7 @@ import {
   getDocs,
   orderBy,
   startAt,
-  limit, DocumentReference,
+  limit, DocumentReference, where,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
 import { PathEnum } from '../firestorePaths';
@@ -73,14 +73,14 @@ export const firestorePublicProfileService = {
     }
   },
 
-  getUserByRef: async (userRef: DocumentReference) => {
+  getUserByRef: async (userRef: DocumentReference, idx?: number) => {
     try {
       const docSnap = await getDoc(userRef);
       const data = docSnap.data();
       if (!data) {
         return null;
       }
-      return { ...data, uid: docSnap.id } as UserSettingsType | undefined;
+      return { ...data, uid: docSnap.id, idx } as unknown as UserSettingsType | undefined;
     } catch (e) {
       throw new Error(e.message);
     }
@@ -88,24 +88,17 @@ export const firestorePublicProfileService = {
 
   getBuddiesInfo: async (usersIds: Array<BuddiesType>, length?: number) => {
     try {
-      const users = [];
       const size = (!length || length > usersIds.length) ? usersIds.length : length;
+      const usersPromises = [];
+      const divesTotalPromises = [];
+      const users = [];
       for (let i = 0; i < size; i++) {
         if (usersIds[i].userRef) {
-          // eslint-disable-next-line no-await-in-loop
-          const docSnap = await getDoc(usersIds[i].userRef);
-          if (docSnap.data()) {
-            const { photoUrl } = docSnap.data();
-            // eslint-disable-next-line no-await-in-loop
-            const diveTotal = await firestoreDivesService
-              .getDivesCountByUserId(usersIds[i].userRef.id);
-            users.push({
-              ...usersIds[i],
-              photoUrl,
-              diveTotal,
-              id: usersIds[i].userRef.id,
-            });
-          }
+          usersPromises.push(firestorePublicProfileService.getUserByRef(usersIds[i].userRef, i));
+          users.push({
+            ...usersIds[i],
+            id: usersIds[i].userRef.id,
+          });
         } else {
           users.push({
             ...usersIds[i],
@@ -114,6 +107,19 @@ export const firestorePublicProfileService = {
           });
         }
       }
+      await Promise.all(usersPromises)
+        .then((values) => values
+          .forEach((value) => {
+            divesTotalPromises.push(firestoreDivesService
+              .getDivesCountByUserId(usersIds[value.idx].userRef.id, value.idx));
+            users[value.idx].photoUrl = value.photoUrl;
+          }));
+
+      await Promise.all(divesTotalPromises)
+        .then((values) => values
+          .forEach((value) => {
+            users[value.idx].diveTotal = value.size || 7;
+          }));
       return users;
     } catch (e) {
       throw new Error(e.message);
@@ -127,9 +133,10 @@ export const firestorePublicProfileService = {
       const docRef = collection(db, PathEnum.USERS);
       const q = query(
         docRef,
-        orderBy('firstName'),
-        startAt(predictionName.trim()),
-        limit(20),
+        where('firstName', '>=', predictionName.trim()),
+        // orderBy('firstName'),
+        // startAt(predictionName.trim()),
+        limit(50),
       );
       const querySnapshot = await getDocs(q);
 

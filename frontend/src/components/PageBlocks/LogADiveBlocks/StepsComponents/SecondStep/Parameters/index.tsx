@@ -66,6 +66,7 @@ export const Parameters: FC<Props> = ({
           value={parameters.maxDepth ? parameters.maxDepth.toString() : ''}
           setValue={(val) => params('maxDepth', +(val as string))}
           height={48}
+          min={0}
           width={isMobile ? 768 : 165}
           placeholder={userAuth.settings.preferences.unitSystem === 'METRIC' ? 'm' : 'ft'}
           error={errors.maxDepthError}

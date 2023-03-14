@@ -2,7 +2,6 @@ import React, { FC, useContext, useState } from 'react';
 import { ProfileImage } from '../../NotEditedContent/ProfileImage';
 import { SaveThisButton } from '../SaveThisButton';
 import { getAvatarUrl, uploadAvatar } from '../../../../../../firebase/storage/storageService';
-import { updateUserAvatar } from '../../../../../../firebase/user/userService';
 import { AuthStatusContext } from '../../../../../../layouts/AuthLayout';
 import { EditContext } from '../../../EditContextWrapper';
 import {
@@ -11,6 +10,7 @@ import {
 import styles from './styles.module.scss';
 import { UserSettingsType } from '../../../../../../firebase/firestore/models';
 import { notify } from '../../../../../../utils/notify';
+import { deleteCache } from '../../../../../../utils/refreshCache';
 
 type Props = {
   imgSrc: string;
@@ -37,11 +37,11 @@ export const EditedProfileImage: FC<Props> = ({ imgSrc, setUserInfo }) => {
         setLoading(true);
         const res = await uploadAvatar(userAuth.uid, avatarFile);
         const url = await getAvatarUrl(res.ref);
-        await updateUserAvatar(url);
         if (res) {
           setUserAuth({ ...userAuth, photoUrl: url });
           await firestorePublicProfileService.setPhotoURL(url, userAuth.uid);
           setUserInfo((prev) => ({ ...prev, photoUrl: url }));
+          await deleteCache();
           setLoading(false);
           setEditedSettings({ settingsBlock: '', settingsItem: '' });
         }

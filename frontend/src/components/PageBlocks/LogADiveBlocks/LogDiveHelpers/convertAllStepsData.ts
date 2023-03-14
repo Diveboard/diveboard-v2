@@ -10,7 +10,6 @@ import {
 } from './convertDiveActivities';
 import { convertTimestampDate } from '../../../../utils/convertTimestampDate';
 import { SafetySpot } from '../types/commonTypes';
-import { firestoreGalleryService } from '../../../../firebase/firestore/firestoreServices/firestoreGalleryService';
 import {
   convertCalToFar,
   convertFarToCal,
@@ -52,58 +51,6 @@ export const convertAllStepsData = async (
     return specs;
   };
 
-  const uploadFiles = async () => {
-    const mediaUrls = stepsData.sixthStep.mediaUrl;
-    const spot = stepsData.thirdStep.spotId ? doc(db, `${PathEnum.SPOTS}/${stepsData.thirdStep.spotId}`) : null;
-    const result = [];
-    if (mediaUrls.length) {
-      for (let i = 0; i < mediaUrls.length; i++) {
-        if (!mediaUrls[i].id) {
-          // eslint-disable-next-line no-await-in-loop
-          const newPic = await firestoreGalleryService.addImgToGallery({
-            url: mediaUrls[i].url,
-            user: userId,
-            createdAt: new Date(),
-            media: 'IMAGE',
-            height: 0,
-            width: 0,
-            spot,
-            videoUrl: null,
-          });
-          result.push(newPic);
-        } else {
-          const ref = doc(db, `${PathEnum.PICTURES}/${mediaUrls[i].id}`);
-          result.push([mediaUrls[i].id, ref]);
-        }
-      }
-    }
-
-    const { files } = stepsData.sixthStep;
-    if (files?.length) {
-      for (let i = 0; i < files.length; i++) {
-        // eslint-disable-next-line no-await-in-loop
-        const res = await firestoreGalleryService.uploadGalleryFile(userId, files[i].file);
-        // eslint-disable-next-line no-await-in-loop
-        const imageRef = await firestoreGalleryService.getGalleryFile(res.ref);
-        if (imageRef) {
-        // eslint-disable-next-line no-await-in-loop
-          result.push(await firestoreGalleryService.addImgToGallery({
-            url: imageRef,
-            user: userId,
-            createdAt: new Date(),
-            media: 'IMAGE',
-            height: 0,
-            width: 0,
-            spot,
-            videoUrl: null,
-          }));
-        } else {
-          throw new Error('Error');
-        }
-      }
-    }
-    return Object.fromEntries(result);
-  };
   const convertDiveBuddies = (buddies: Array<BuddiesType>) => {
     if (!buddies?.length) {
       return [];
@@ -133,9 +80,9 @@ export const convertAllStepsData = async (
       ...replaceUndefinedToNull(stepsData.firstStep.diveReviews),
     },
     draft,
-    pictures: await uploadFiles(),
+    pictures: stepsData.sixthStep,
     gears: stepsData.seventhStep.gears?.map((gear) => replaceUndefinedToNull(gear)) || [],
-    publishingMode: stepsData.ninthStep.publishingMode.toUpperCase(),
+    publishingMode: stepsData.ninthStep.publishingMode?.toUpperCase() || 'PUBLIC',
     species: stepsData.fourthStep.species?.length
       ? convertSpecies(stepsData.fourthStep.species)
       : {},
@@ -227,6 +174,7 @@ export const convertToStepsData = (
           : convertDistanceSystem(unitSystem, data.diveData?.maxDepth),
         duration: data.diveData?.duration,
         surfaceInterval: data.diveData?.surfaceInterval,
+        profileData: data.diveData?.profileData,
         safetyStops: unitSystem === data.unitSystem
           ? data.diveData?.safetyStops
           : data.diveData?.safetyStops.map((spot) => (

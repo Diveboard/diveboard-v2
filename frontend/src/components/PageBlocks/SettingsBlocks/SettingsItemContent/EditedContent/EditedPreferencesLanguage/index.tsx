@@ -8,6 +8,7 @@ import {
   firestorePreferencesService,
 } from '../../../../../../firebase/firestore/firestoreServices/firestorePreferencesService';
 import { notify } from '../../../../../../utils/notify';
+import { deleteCache } from '../../../../../../utils/refreshCache';
 
 type Props = {
   lang: string;
@@ -18,16 +19,20 @@ export const EditedPreferencesLanguage: FC<Props> = ({
   setLang,
 }) => {
   const [loading, setLoading] = useState(false);
-  const { userAuth } = useContext(AuthStatusContext);
+  const { userAuth, setUserAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
   const [language, setLanguage] = useState(lang);
-
-  const setLanguagePreferences = () => {
+  const setLanguagePreferences = async () => {
     try {
       setLoading(true);
-      firestorePreferencesService.setLanguage(language, userAuth.uid);
+      await firestorePreferencesService.setLanguage(language, userAuth.uid);
+      setUserAuth({
+        ...userAuth,
+        settings: { ...userAuth.settings, language: language.toLowerCase().slice(0, 2) },
+      });
       setLang(language);
       setLoading(false);
+      await deleteCache();
       setEditedSettings({
         settingsBlock: '',
         settingsItem: '',

@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useContext, useEffect, useRef, useState,
+} from 'react';
 
 import { useRouter } from 'next/router';
 import { Timestamp } from '@firebase/firestore';
@@ -8,7 +10,6 @@ import { Checkbox } from '../CheckBox';
 import { SetDropdown } from '../Dropdown/SetDropdown';
 import { Icon } from '../Icons/Icon';
 import { DiveItem } from './DiveItem';
-import { NoDive } from './NoData';
 import { Delete } from '../Icons/IconSVGComponents/Delete';
 import { EditDive } from '../Icons/IconSVGComponents/Editdive';
 import { Export } from '../Icons/IconSVGComponents/Export';
@@ -27,20 +28,26 @@ import { firestoreDivesService } from '../../firebase/firestore/firestoreService
 import { Loader } from '../Loader';
 import { DiveType } from '../../types';
 import { notify } from '../../utils/notify';
+import { AuthStatusContext } from '../../layouts/AuthLayout';
+import { deleteCache } from '../../utils/refreshCache';
+import { LogDive } from '../Icons/IconSVGComponents';
 
 type Props = {
-  userId: string;
   userDives: Array<DiveType>
 };
 
-const DiveManager = ({ userId, userDives }: Props) => {
+const DiveManager = ({ userDives }: Props) => {
   const [checkboxItem, setCheckboxItem] = useState(false);
   const [isChangeSelectAll, setChangeSelectAll] = useState(false);
   const [isShowSettings, setShowSettings] = useState(false);
   const [isShowPopupCopy, setShowPopupCopy] = useState(false);
   const [isShowPopupUnpublish, setShowPopupUnpublish] = useState(false);
   const [isShowPopupDelete, setShowPopupDelete] = useState(false);
+  const {
+    userAuth,
+  } = useContext(AuthStatusContext);
 
+  const userId = userAuth.uid;
   const [isBackdrop, setBackdrop] = useState(false);
 
   const [copiestData, setCopiestData] = useState(undefined);
@@ -143,10 +150,11 @@ const DiveManager = ({ userId, userDives }: Props) => {
             dives.filter((i) => i.checked).map((item) => item.dive.id),
             copiestData.values,
           );
-          notify('Successfully saved');
           await fetchDives();
+          await deleteCache();
+          notify('Successfully saved');
         } catch (e) {
-          notify('Something went wrong');
+          notify(e.message);
         }
       },
     },
@@ -213,15 +221,18 @@ const DiveManager = ({ userId, userDives }: Props) => {
   const deleteButtonHandler = async () => {
     document.body.style.overflow = 'unset';
     const divesIds = dives.filter((i) => i.checked).map((item) => item.dive.id);
+    closePopup();
+    setLoading(true);
     try {
       if (divesIds.length >= 1) {
         await firestoreDivesService.deleteDives(userId, divesIds);
-        closePopup();
-        notify('Successfully deleted');
         await fetchDives();
+        await deleteCache();
+        notify('Successfully deleted');
       } else {
         notify('Choose at least one dive');
       }
+      setLoading(false);
     } catch (e) {
       setLoading(false);
       notify(e.message);
@@ -389,7 +400,10 @@ const DiveManager = ({ userId, userDives }: Props) => {
       </Popup>
       )}
       {error ? (
-        <NoDive />
+        <div className={styles['add-new-dive-block']}>
+          <LogDive />
+          <h2 onClick={() => router.push('/log-dive')}>Log your first dive</h2>
+        </div>
       ) : (
         <>
           <div className={styles.wrapper__buttons}>

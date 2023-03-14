@@ -1,39 +1,34 @@
 import React from 'react';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { ToastContainer } from 'react-toastify';
-import { AuthLayout } from '../../src/layouts/AuthLayout';
 import { SpotBlocks } from '../../src/components/PageBlocks/SpotBlocks';
-import { MainLayout } from '../../src/layouts/MainLayout';
 import { firestoreSpotsService } from '../../src/firebase/firestore/firestoreServices/firestoreSpotsService';
 import { firestoreDivesService } from '../../src/firebase/firestore/firestoreServices/firestoreDivesService';
 import { firestoreSpeciesServices } from '../../src/firebase/firestore/firestoreServices/firestoreSpeciesServices';
-import {
-  firestorePublicProfileService,
-} from '../../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
 import { firestoreGalleryService } from '../../src/firebase/firestore/firestoreServices/firestoreGalleryService';
-import 'react-toastify/dist/ReactToastify.css';
+import ErrorBlock from '../../src/components/ErrorBlock';
 
 const Spot: InferGetServerSidePropsType<typeof getServerSideProps> = ({
-  user, spot, dives, speciesData, species, pictures, picturesData,
-}) => (
-  <AuthLayout user={user}>
-    <MainLayout>
-      <ToastContainer />
-      <SpotBlocks
-        spot={spot}
-        dives={dives}
-        species={species}
-        speciesData={speciesData}
-        pictures={pictures}
-        picturesData={picturesData}
-      />
-    </MainLayout>
-  </AuthLayout>
-);
+  spot, dives, speciesData, species, pictures, picturesData, error,
+}) => {
+  if (error) {
+    return (
+      <ErrorBlock text={error} />
+    );
+  }
+  return (
+    <SpotBlocks
+      spot={spot}
+      dives={dives}
+      species={species}
+      speciesData={speciesData}
+      pictures={pictures}
+      picturesData={picturesData}
+    />
+  );
+};
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    const uid = context.req.cookies.__session;
     const { spotId } = context.query;
     let spot = null;
     let dives = [];
@@ -41,7 +36,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     let species = [];
     let pictures = [];
     let picturesData = [];
-    let user = null;
 
     if (spotId) {
       const data = await firestoreSpotsService.getSpotById(spotId as string);
@@ -62,13 +56,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
 
-    if (uid) {
-      user = await firestorePublicProfileService.getUserById(uid);
-    }
-
     return {
       props: {
-        user,
         spot,
         picturesData: JSON.parse(JSON.stringify(picturesData)),
         dives: JSON.parse(JSON.stringify(dives)),
@@ -83,9 +72,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   } catch (e) {
     return {
-      redirect: {
-        destination: '/_error',
-        permanent: false,
+      props: {
+        error: e.message,
       },
     };
   }

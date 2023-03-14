@@ -6,6 +6,17 @@
   margin-bottom: 20px;
 }
 
+.viewMore {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  color: #0059DE;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 @media (max-width: 1440px) {
   .blockWrapper {
     justify-content: flex-start;

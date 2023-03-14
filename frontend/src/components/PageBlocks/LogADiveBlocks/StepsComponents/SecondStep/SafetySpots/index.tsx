@@ -81,6 +81,7 @@ export const SafetySpots: FC<Props> = ({
     <div className={styles.spot} key={spot.id}>
       <Input
         type="number"
+        min={0}
         value={getSpotData(spot.id, 'depth')}
         setValue={
           (value) => {
@@ -96,6 +97,7 @@ export const SafetySpots: FC<Props> = ({
 
       <Input
         type="number"
+        min={0}
         value={getSpotData(spot.id, 'period')}
         setValue={
           (value) => {

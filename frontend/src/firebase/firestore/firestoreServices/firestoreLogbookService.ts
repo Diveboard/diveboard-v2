@@ -1,5 +1,6 @@
 import {
-  doc, DocumentReference, DocumentSnapshot, getDoc, setDoc,
+  collection, deleteDoc,
+  doc, DocumentReference, DocumentSnapshot, getDoc, getDocs, orderBy, query, setDoc,
 } from '@firebase/firestore';
 import { firestoreDivesService } from './firestoreDivesService';
 import { firestoreSpeciesServices } from './firestoreSpeciesServices';
@@ -9,8 +10,7 @@ import { firestoreCommentsService } from './firestoreCommentsService';
 import { firestoreGalleryService } from './firestoreGalleryService';
 import { db } from '../firebaseFirestore';
 import { PathEnum } from '../firestorePaths';
-import { DiveType, SpeciesType, SpotType } from '../models';
-import { ImageInfo } from '../../../types';
+import { DiveType, SpotType } from '../models';
 
 export const firestoreLogbookService = {
   getDive: async (userId: string, diveId: string, withComments: boolean = false) => {
@@ -72,27 +72,32 @@ export const firestoreLogbookService = {
 
   loadDives: async (dives, size = 4) => {
     try {
-      const divesData = [];
+      const divesPromises = [];
+      const picturesPromises = [];
       for (let i = 0; i < size; i++) {
         if (dives[i]?.diveRef) {
-          // eslint-disable-next-line no-await-in-loop
-          const diveSnap: DocumentSnapshot<DiveType> = await getDoc(dives[i].diveRef);
-          const diveD = diveSnap.data();
-          if (diveD) {
-            if (diveD.pictures) {
-              const value: unknown = Object.values(diveD.pictures)[0];
-              if (value) {
-                // eslint-disable-next-line no-await-in-loop
-                const picSnap: DocumentSnapshot<ImageInfo> = await getDoc(
-                  value as DocumentReference<ImageInfo>,
-                );
-                diveD.pictures = [{ url: picSnap.data().url, id: picSnap.id, ref: picSnap.ref }];
-              }
-            }
-            divesData.push({ ...diveD, id: diveSnap.id });
-          }
+          divesPromises.push(getDoc(dives[i].diveRef));
         }
       }
+      const divesData = await Promise.all(divesPromises)
+        .then((values) => values
+          .map((value, idx) => {
+            const data = value.data();
+            if (!data) {
+              return null;
+            }
+            if (Object.values(data.pictures).length) {
+              const val = Object.keys(data.pictures)[0];
+              picturesPromises.push(firestoreGalleryService.getPicById(val, idx));
+            }
+            return { ...data, id: value.id };
+          }));
+      await Promise.all(picturesPromises)
+        .then((values) => values.forEach((value) => {
+          if (value.idx !== -1) {
+            divesData[value.idx].pictures = [{ url: value.url, id: value.id, ref: value.ref }];
+          }
+        }));
       return divesData;
     } catch (e) {
       throw new Error(e.message);
@@ -101,39 +106,54 @@ export const firestoreLogbookService = {
 
   getLogbookData: async (uid: string) => {
     try {
-      const logbookUser = await firestorePublicProfileService.getUserById(uid as string);
       const docRef = doc(db, `${PathEnum.LOGBOOK}/${uid}`);
       const docSnap = await getDoc(docRef);
       const data = docSnap.data();
 
-      if (!logbookUser) {
-        throw new Error('Logbook is not exist');
-      }
-
       if (!data) {
         return {
-          logbookUser: JSON.parse(JSON.stringify(logbookUser)),
           data: null,
           divesData: [],
           pictures: [],
           species: [],
+          buddies: [],
         };
       }
       const {
-        dives, longestDive, deepestDive, pictures, species, buddies,
+        longestDive, deepestDive, species, buddies,
       } = data;
+
+      const divesRef = collection(db, `${PathEnum.LOGBOOK}/${uid}/${PathEnum.LOGBOOK_DIVES}`);
+      const q = query(divesRef, orderBy('diveNumber', 'desc'));
+      const divesSnap = await getDocs(q);
+      const dives = [];
+
+      if (divesSnap?.size) {
+        divesSnap.forEach((dive) => (dives.push({ ...dive.data(), id: dive.id })));
+      }
+
+      data.dives = dives;
+
+      const divesData = await firestoreLogbookService.loadDives(dives, 4);
+
+      const pictures = data.pictures?.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
       let longestDiveName = '';
       let deepestDiveName = '';
-      let divesData = [];
-      const picturesData = [];
-      const speciesData = [];
+
+      const speciesPromises = [];
+      const picturesPromises = [];
       let buddiesData = [];
       if (species?.length) {
-        for (let i = 0; i < species.length; i++) {
-          if (i < 4) {
-            // eslint-disable-next-line no-await-in-loop
-            const specieSnap: DocumentSnapshot<SpeciesType> = await getDoc(species[i].specieRef);
-            speciesData.push({ ...specieSnap.data(), id: specieSnap.id });
+        for (let i = 0; i < 4; i++) {
+          if (species[i]?.specieRef.id) {
+            speciesPromises.push(getDoc(species[i].specieRef));
+          }
+        }
+      }
+      if (pictures?.length) {
+        for (let i = 0; i < 5; i++) {
+          if (pictures[i]?.pictureRef.id) {
+            picturesPromises.push(firestoreGalleryService.getPicById(pictures[i].pictureRef.id));
           }
         }
       }
@@ -141,24 +161,15 @@ export const firestoreLogbookService = {
       if (buddies?.length) {
         buddiesData = await firestorePublicProfileService.getBuddiesInfo(buddies, 2);
       }
+      const picturesData = await Promise.all(picturesPromises)
+        .then((values) => values
+          .map((value) => value.url)
+          .filter((url) => url));
 
-      if (pictures?.length) {
-        for (let i = 0; i < pictures.length; i++) {
-          if (i < 5) {
-            if (pictures[i].pictureRef.id) {
-              // eslint-disable-next-line no-await-in-loop
-              const pic = await firestoreGalleryService.getPicById(pictures[i].pictureRef.id);
-              if (pic) {
-                picturesData.push(pic.url);
-              }
-            }
-          }
-        }
-      }
+      const speciesData = await Promise.all(speciesPromises)
+        .then((values) => values
+          .map((value) => ({ ...value.data(), id: value.id })));
 
-      if (dives?.length) {
-        divesData = await firestoreLogbookService.loadDives(dives, 4);
-      }
       if (longestDive && longestDive?.spot) {
         const spotDoc: DocumentSnapshot<SpotType> = await getDoc(longestDive.spot);
         const spot = spotDoc.data();
@@ -176,7 +187,6 @@ export const firestoreLogbookService = {
         data.deepestDive.deepestDiveName = deepestDiveName;
       }
       return {
-        logbookUser: JSON.parse(JSON.stringify(logbookUser)),
         data: JSON.parse(JSON.stringify(data)),
         divesData: divesData.length ? JSON.parse(JSON.stringify(divesData)) : [],
         pictures: picturesData.length ? JSON.parse(JSON.stringify(picturesData)) : [],
@@ -199,6 +209,7 @@ export const firestoreLogbookService = {
         draft: dive.draft,
         publishingMode: dive.publishingMode,
         year: dive.diveData.date.getFullYear(),
+        diveNumber: dive.aboutDive.diveNumber,
       };
 
       let pictures = [];
@@ -228,9 +239,8 @@ export const firestoreLogbookService = {
           unitSystem: dive.unitSystem.toLowerCase(),
         };
       }
-
-      const divePictures = dive.pictures ? Object.values(dive.pictures)
-        .map((pic) => ({ diveRef: ref, pictureRef: pic })) : [];
+      const divePictures = dive.pictures?.length ? dive.pictures
+        .map((pic) => ({ diveRef: ref, pictureRef: pic.pic[1], createdAt: pic.createdAt })) : [];
 
       if (logbookData?.pictures?.length) {
         pictures = logbookData.pictures?.filter((pic) => pic.diveRef.id !== ref.id);
@@ -259,20 +269,19 @@ export const firestoreLogbookService = {
       species = [...species, ...diveSpecies];
       buddies = [...buddies, ...diveBuddies];
 
-      const dives = logbookData?.dives || [];
-      const diveForUpdate = dives.findIndex((d) => d.diveRef.id === ref.id);
+      const diveRef = doc(db, `${PathEnum.LOGBOOK}/${userId}/${PathEnum.LOGBOOK_DIVES}/${ref.id}`);
+      const prs = [setDoc(diveRef, logbookDive)];
+
       const underwaterTime = logbookData.underwaterTime.map((d) => {
         if (d.diveRef.id === ref.id) {
           d.time = dive.diveData.duration;
         }
         return d;
       });
-      if (diveForUpdate !== -1) {
-        dives[diveForUpdate] = logbookDive;
-        await setDoc(
+      prs.push(
+        setDoc(
           logbookRef,
           {
-            dives,
             pictures,
             species,
             longestDive,
@@ -281,8 +290,9 @@ export const firestoreLogbookService = {
             buddies,
           },
           { merge: true },
-        );
-      }
+        ),
+      );
+      return await Promise.all(prs);
     } catch (e) {
       throw new Error(e.message);
     }
@@ -301,11 +311,12 @@ export const firestoreLogbookService = {
         draft: diveData.draft,
         publishingMode: diveData.publishingMode,
         year: diveData.diveData.date.getFullYear(),
+        diveNumber: diveData.aboutDive.diveNumber,
       };
       const logbookSpecies = Object.values(diveData.species)
         .map((specie) => ({ diveRef: ref, specieRef: specie }));
-      const logbookPictures = Object.values(diveData.pictures)
-        .map((pic) => ({ diveRef: ref, pictureRef: pic }));
+      const logbookPictures = diveData.pictures
+        .map((pic) => ({ diveRef: ref, pictureRef: pic.pic[1], createdAt: pic.createdAt }));
       const logbookBuddies = Object.values(diveData.buddies)
         .map((bud) => ({
           diveRef: ref,
@@ -316,13 +327,13 @@ export const firestoreLogbookService = {
       const logbookRef = doc(db, `${PathEnum.LOGBOOK}/${userId}`);
       const logbookSnap = await getDoc(logbookRef);
       const logbookData = logbookSnap.data();
-      const dives = logbookData?.dives || [];
 
       const species = logbookData?.species ? [...logbookData.species, ...logbookSpecies] : [];
       const pictures = logbookData?.pictures ? [...logbookData.pictures, ...logbookPictures] : [];
       const buddies = logbookData?.buddies ? [...logbookData.buddies, ...logbookBuddies] : [];
 
-      let longestDive = logbookData?.longestDive;
+      let longestDive = logbookData?.longestDive || null;
+
       if (
         longestDive === null
           || longestDive === {}
@@ -335,7 +346,7 @@ export const firestoreLogbookService = {
         };
       }
 
-      let deepestDive = logbookData?.deepestDive;
+      let deepestDive = logbookData?.deepestDive || null;
       if (deepestDive === null
           || deepestDive === {}
           || deepestDive?.depth < diveData.diveData.maxDepth
@@ -353,11 +364,14 @@ export const firestoreLogbookService = {
         diveRef: ref,
         time: diveData.diveData.duration,
       });
-
-      dives.push(logbookDive);
-      await setDoc(logbookRef, {
-        dives, species, pictures, longestDive, deepestDive, underwaterTime, buddies,
-      }, { merge: true });
+      const diveRef = doc(db, `${PathEnum.LOGBOOK}/${userId}/${PathEnum.LOGBOOK_DIVES}/${ref.id}`);
+      const prs = [
+        setDoc(diveRef, logbookDive, { merge: false }),
+        setDoc(logbookRef, {
+          species, pictures, longestDive, deepestDive, underwaterTime, buddies,
+        }, { merge: true }),
+      ];
+      return await Promise.all(prs);
     } catch (e) {
       throw new Error(e.message);
     }
@@ -368,7 +382,6 @@ export const firestoreLogbookService = {
       const logbookRef = doc(db, `${PathEnum.LOGBOOK}/${userId}`);
       const logbookSnap = await getDoc(logbookRef);
       const logbookData = logbookSnap.data();
-      let dives = logbookData?.dives || [];
       let pictures = logbookData?.pictures || [];
       let species = logbookData?.species || [];
       let buddies = logbookData?.buddies || [];
@@ -386,7 +399,6 @@ export const firestoreLogbookService = {
         deepestDive = await firestoreDivesService.getDeepestDive(userId);
       }
 
-      dives = dives.filter((dive) => !diveIds.some((diveId) => dive.diveRef.id === diveId));
       buddies = buddies.filter((buddy) => !diveIds.some((diveId) => buddy.diveRef.id === diveId));
 
       underwaterTime = underwaterTime
@@ -402,10 +414,16 @@ export const firestoreLogbookService = {
       await setDoc(
         logbookRef,
         {
-          dives, pictures, species, underwaterTime, longestDive, deepestDive, buddies,
+          pictures, species, underwaterTime, longestDive, deepestDive, buddies,
         },
         { merge: true },
       );
+
+      for (let i = 0; i < diveIds.length; i++) {
+        const diveRef = doc(db, `${PathEnum.LOGBOOK}/${userId}/${PathEnum.LOGBOOK_DIVES}/${diveIds[i]}`);
+        // eslint-disable-next-line no-await-in-loop
+        await deleteDoc(diveRef);
+      }
     } catch (e) {
       throw new Error(e.message);
     }
@@ -413,19 +431,17 @@ export const firestoreLogbookService = {
 
   unpublishDivesToLogbook: async (userId: string, diveIds: Array<string>) => {
     try {
-      const logbookRef = doc(db, `${PathEnum.LOGBOOK}/${userId}`);
-      const logbookSnap = await getDoc(logbookRef);
-      const logbookData = logbookSnap.data();
-      let dives = logbookData?.dives || [];
-
-      dives = dives.map((dive) => {
-        if (diveIds.some((diveId) => dive.diveRef.id === diveId)) {
-          dive.draft = true;
+      for (let i = 0; i < diveIds.length; i++) {
+        const diveRef = doc(db, `${PathEnum.LOGBOOK}/${userId}/${PathEnum.LOGBOOK_DIVES}/${diveIds[i]}`);
+        // eslint-disable-next-line no-await-in-loop
+        const diveSnap = await getDoc(diveRef);
+        const data = diveSnap.data();
+        if (data) {
+          data.draft = true;
         }
-        return dive;
-      });
-
-      await setDoc(logbookRef, { dives }, { merge: true });
+        // eslint-disable-next-line no-await-in-loop
+        await setDoc(diveRef, data);
+      }
     } catch (e) {
       throw new Error(e.message);
     }

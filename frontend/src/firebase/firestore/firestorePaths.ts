@@ -30,11 +30,12 @@ export enum PathEnum {
   DIVE_COMMENTS = 'comments',
 
   SPECIES = 'species',
-  SPECIES_CNAMES = 'species',
+  SPECIES_CNAMES = 'species_cnames',
   SPECIES_COORDS = 'species_coords',
 
   PICTURES = 'pictures',
   LOGBOOK = 'logbook_data',
+  LOGBOOK_DIVES = 'logbookDives',
 
   SPOTS = 'spots',
   SURVEYS = 'surveys',

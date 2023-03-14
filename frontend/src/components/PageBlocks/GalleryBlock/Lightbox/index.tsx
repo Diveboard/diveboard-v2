@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useRef } from 'react';
 import { Timestamp } from '@firebase/firestore';
+import { useRouter } from 'next/router';
 import styles from './styles.module.scss';
 import { Icon } from '../../../Icons/Icon';
 import { useOutsideClick } from '../../../../hooks/useOutsideClick';
@@ -32,6 +33,7 @@ export const Lightbox: FC<Props> = ({
   user,
 }) => {
   const ref = useRef();
+  const router = useRouter();
 
   useOutsideClick(onClose, ref);
 
@@ -90,7 +92,10 @@ export const Lightbox: FC<Props> = ({
             alt="gallery"
           />
           <div className={styles.imgData}>
-            <div className={styles.avatar}>
+            <div
+              className={styles.avatar}
+              onClick={() => user.userId && router.push(`/logbook/${user.userId}`)}
+            >
               <ProfileImage
                 imgSrc={user?.photoUrl || '/appIcons/no-photo.svg'}
                 size={44}

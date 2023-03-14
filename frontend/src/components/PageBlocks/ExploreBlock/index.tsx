@@ -56,15 +56,24 @@ const options = {
   colors: ['#FDC90D80'],
 };
 
+const mapCoordsArr = [
+  { lat: 19.325, lng: 81.171, zoom: 11 },
+  { lat: -21.7, lng: 145.2, zoom: 5 },
+  { lat: 20.29, lng: -156.56, zoom: 8 },
+  { lat: 27.82, lng: -81.43, zoom: 6 },
+  { lat: 14.94, lng: -65.62, zoom: 6 },
+  { lat: 18.48, lng: -85.96, zoom: 7 },
+  { lat: 27.13, lng: 33.79, zoom: 7 },
+];
+
 const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [touchStartY, setTouchStartY] = useState(null);
   const [bounds, setBounds] = useState(null);
   const [clusters, setClusters] = useState([]);
-  // const [chosenSpot, setChosenSpot] = useState(null);
 
-  const [zoom, setZoom] = useState(7);
+  const [zoom, setZoom] = useState(11);
   const [inputRegion, setInputRegion] = useState(null);
   const [isFetch, setIsFetch] = useState(true);
   const [regions, setRegions] = useState([]);
@@ -72,17 +81,21 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const [spots, setSpots] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
-  const [mapCoords, setMapsCoords] = useState({
-    lat: 40.95,
-    lng: 30.33,
-  });
+  const [mapCoords, setMapsCoords] = useState<{ lat: number, lng: number }>(mapCoordsArr[0]);
+
+  useEffect(() => {
+    const { lat, lng, zoom: initZoom } = mapCoordsArr[
+      Math.floor(Math.random() * mapCoordsArr.length)
+    ];
+    setMapsCoords({ lat, lng });
+    setZoom(initZoom);
+  }, []);
 
   const router = useRouter();
 
   const { location, type } = router.query;
 
   const handleSidebar = (e): void => {
-    // setChosenSpot(null);
     const yTouch = e.changedTouches[0].screenY;
     const sidebar = document.getElementById('sidebar');
     const navbar = document.getElementById('navbar');
@@ -128,7 +141,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     const superClusters = supercluster(markersItems, {
       minZoom: 0,
       maxZoom: 16,
-      radius: 20,
+      radius: 50,
     });
     return superClusters({ bounds: props.bounds, zoom: props.zoom });
   };
@@ -136,10 +149,18 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
   const onMapChange = async (e) => {
     try {
       setLoading(true);
-      const markersItems = await firestoreSpotsService
-        .getAllSpotsInMapViewport(e.bounds);
-      setSpots(markersItems);
-      setClusters(getClusters(e, markersItems));
+      if (zoom < e.zoom) {
+        setClusters(getClusters(e, spots));
+      } else {
+        const markersItems = await firestoreSpotsService
+          .getAllSpotsInMapViewport(e.bounds, 1500);
+        const { lat, lng, location: { region: regionName } } = markersItems[0];
+        const area = await firestoreGeoDataService.getAreaByCoords({ lat, lng });
+        setRegion({ area, name: regionName });
+        setSpots(markersItems);
+        setClusters(getClusters(e, markersItems));
+      }
+      setZoom(e.zoom);
       setLoading(false);
     } catch (message) {
       setLoading(false);
@@ -170,7 +191,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
 
   const searchArea = async (geo, item) => {
     let area;
-
     if (item.name) {
       setRegion({ ...region, name: item.name });
     }
@@ -179,7 +199,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
         area = await firestoreGeoDataService.getAreaByRef(geo.areaRef);
         setRegion({ area, name: item.name });
       } catch (e) {
-        notify('Area is not found');
+        notify(e.message);
       }
     }
     if (geo?.coords) {
@@ -193,7 +213,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
         try {
           area = await firestoreGeoDataService.getAreaByCoords(geo.coords);
         } catch (e) {
-          notify('Area is not found');
+          notify(e.message);
         }
       }
     }
@@ -217,7 +237,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
           const res = await firestoreGeoDataService.getGeonameById(location as string);
           await searchArea(res, { name: res.name });
         } catch (e) {
-          notify('Location is not found');
+          notify(e.message);
         }
       }
     })();
@@ -425,7 +445,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
           onMapChange={setBounds}
           clusters={clusters}
           isLoading={isLoading}
-          setZoom={setZoom}
         />
       </div>
     </div>

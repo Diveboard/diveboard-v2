@@ -66,7 +66,7 @@ export const Info = ({
   return (
     <div className={styles.info}>
       {isMobile === false && <h2>Info</h2>}
-      <div className={styles.itemsWrapper}>
+      <div className={styles.itemsWrapper} style={{ justifyContent: species?.length ? 'space-between' : 'flex-start' }}>
         <div className={styles.item}>
           <div className={styles.header}>
             <Icon iconName="stats" size={24} />

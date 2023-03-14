@@ -15,22 +15,18 @@ export const SpeciesCard: FC<Props> = ({
 }) => (
   <div className={className ? `${styles.card} ${styles[className]}` : styles.card}>
     <div className={styles.imgWrapper}>
-      {imgSrc
-        ? <Image src={imgSrc} className={styles.img} layout="fill" loader={imageLoader} unoptimized />
-        : (
-          <Image
-            className={styles.img}
-            src={`/species/${scientificName}.svg`}
-            width={140}
-            height={140}
-            loader={imageLoader}
-          />
-        )}
+      <Image
+        className={styles.img}
+        src={imgSrc || '/images/default-species.svg'}
+        layout="fill"
+        loader={imageLoader}
+        unoptimized
+      />
     </div>
 
     <div className={styles.footer}>
-      <span className={styles.name}>{speciesName}</span>
-      {scientificName && <span className={styles.scientificName}>{scientificName}</span> }
+      {scientificName && <span className={styles.name}>{scientificName}</span> }
+      <span className={styles.scientificName}>{speciesName}</span>
     </div>
   </div>
 );

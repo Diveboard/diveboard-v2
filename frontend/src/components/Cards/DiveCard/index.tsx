@@ -99,7 +99,7 @@ export const DiveCard: FC<Props> = ({
             <span>
               {diversCount}
               {' '}
-              divers
+              {diversCount > 1 ? 'divers' : 'diver'}
             </span>
           </div>
           )}

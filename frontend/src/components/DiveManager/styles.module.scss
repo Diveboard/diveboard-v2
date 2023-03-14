@@ -10,6 +10,24 @@
   }
 }
 
+.add-new-dive-block {
+  padding: 20px 0;
+  color: #0059DE;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+
+  svg path {
+    fill: #0059de;
+  }
+
+  h2 {
+    font-weight: 500;
+    font-size: 20px;
+  }
+}
+
 .min-height-wrapper {
   min-height: calc(100vh - 238px);
 

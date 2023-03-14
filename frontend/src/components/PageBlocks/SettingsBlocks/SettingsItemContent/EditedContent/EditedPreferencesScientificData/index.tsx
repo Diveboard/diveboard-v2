@@ -11,6 +11,7 @@ import { EditContext } from '../../../EditContextWrapper';
 import { RadioButton } from '../../../../../RadioButton';
 import { Checkbox } from '../../../../../CheckBox';
 import { notify } from '../../../../../../utils/notify';
+import { deleteCache } from '../../../../../../utils/refreshCache';
 
 type Props = {
   preferences: PreferencesType;
@@ -37,7 +38,7 @@ export const EditedPreferencesScientificData: FC<Props> = ({ preferences, setPre
     preferences.scientificData.shareData || scientificDataOptions.share.name as ShareData,
   );
   const [shareNotes, setShareNotes] = useState(preferences.scientificData.shareNotes);
-  const { userAuth } = useContext(AuthStatusContext);
+  const { userAuth, setUserAuth } = useContext(AuthStatusContext);
   const { setEditedSettings } = useContext(EditContext);
   const [loading, setLoading] = useState(false);
 
@@ -47,6 +48,17 @@ export const EditedPreferencesScientificData: FC<Props> = ({ preferences, setPre
       await firestorePreferencesService
         .setScientificData({ shareData, shareNotes }, userAuth.uid);
       setPreferences({ ...preferences, scientificData: { shareData, shareNotes } });
+      setUserAuth({
+        ...userAuth,
+        settings: {
+          ...userAuth.settings,
+          preferences: {
+            ...userAuth.settings.preferences,
+            scientificData: { shareData, shareNotes },
+          },
+        },
+      });
+      await deleteCache();
       setLoading(false);
       setEditedSettings({ settingsBlock: '', settingsItem: '' });
     } catch (e) {

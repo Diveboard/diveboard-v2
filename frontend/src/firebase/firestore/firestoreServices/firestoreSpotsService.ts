@@ -25,7 +25,7 @@ export const firestoreSpotsService = {
       if (!data) {
         return null;
       }
-      return { ...data, ref: docSnap.ref } as any;
+      return { ...data, ref: docSnap.ref, id: docSnap.id } as any;
     } catch (e) {
       throw new Error(e.message);
     }
@@ -54,16 +54,16 @@ export const firestoreSpotsService = {
     }
   },
 
-  getAllSpotsInMapViewport: async (bounds: Bounds) => {
+  getAllSpotsInMapViewport: async (bounds: Bounds, limitNumber: number) => {
     try {
       const docRef = collection(db, PathEnum.SPOTS);
       const q = query(
         docRef,
-        where('lat', '<', bounds.ne.lat),
-        where('lat', '>', bounds.sw.lat),
-        // where('lng', '<', bounds.ne.lng),
-        // where('lng', '>', bounds.sw.lng),
-        limit(2500),
+        // where('lat', '<', bounds.ne.lat),
+        // where('lat', '>', bounds.sw.lat),
+        where('lng', '<', bounds.ne.lng),
+        where('lng', '>', bounds.sw.lng),
+        limit(limitNumber),
       );
       const querySnapshot = await getDocs(q);
       const spots = [];
@@ -81,7 +81,7 @@ export const firestoreSpotsService = {
           averageDepth,
         } = document.data();
         const { id } = document;
-        if (lng < bounds.ne.lng && lng > bounds.sw.lng && name) {
+        if (lat < bounds.ne.lat && lat > bounds.sw.lat && name) {
           spots.push({
             id,
             name,

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { RadioButton } from '../../../../RadioButton';
 import { Input } from '../../../../Input/CommonInput';
 import { MarginWrapper } from '../../../../MarginWrapper';
@@ -9,6 +9,9 @@ import {
 } from '../../../../../firebase/firestore/firestoreServices/firestorePublicProfileService';
 import styles from './style.module.scss';
 import { BuddiesType } from '../../../../../firebase/firestore/models';
+import { useDebounce } from '../../../../../hooks/useDebounce';
+import { notify } from '../../../../../utils/notify';
+import { Loader } from '../../../../Loader';
 
 type Props = {
   selectedBuddies: BuddiesType[];
@@ -29,6 +32,8 @@ export const SearchAndAddBuddies: FC<Props> = ({
 
   const [buddyNameError, setBuddyNameError] = useState('');
   const [buddyEmailError, setBuddyEmailError] = useState('');
+
+  const [isLoading, setLoading] = useState(false);
 
   const clickSearchedBuddyHandler = (clickedBuddy: BuddiesType) => {
     const newBuddies = [...selectedBuddies, clickedBuddy];
@@ -51,17 +56,24 @@ export const SearchAndAddBuddies: FC<Props> = ({
     }
   };
 
-  useEffect(() => {
+  const searchHandler = async () => {
     if (searchedBuddyName.length >= 3) {
-      (async () => {
+      try {
+        setLoading(true);
         const buddiesPredictions = await firestorePublicProfileService
           .getUserPredictionsByName(searchedBuddyName);
         setMyBuddies(buddiesPredictions
           .filter(({ id }) => !selectedBuddies
             .some((selectedBuddy) => selectedBuddy.id === id)));
-      })();
+        setLoading(false);
+      } catch (e) {
+        setLoading(false);
+        notify(e.message);
+      }
     }
-  }, [searchedBuddyName]);
+  };
+
+  useDebounce(searchedBuddyName, searchHandler, 1000);
 
   return (
     <>
@@ -155,6 +167,7 @@ export const SearchAndAddBuddies: FC<Props> = ({
             <h3>
               Searched:
             </h3>
+            <Loader loading={isLoading} />
             <ButtonGroupMultiple
               items={myBuddies}
               onClick={clickSearchedBuddyHandler}

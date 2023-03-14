@@ -1,5 +1,5 @@
 import React, {
-  FC, useEffect, useRef, useState,
+  FC, useContext, useEffect, useRef, useState,
 } from 'react';
 import GoogleMapReact from 'google-map-react';
 import supercluster from 'points-cluster';
@@ -23,6 +23,7 @@ import { Bounds } from '../../../../../../types';
 import { notify } from '../../../../../../utils/notify';
 import { useDebounce } from '../../../../../../hooks/useDebounce';
 import { Loader } from '../../../../../Loader';
+import { LogDiveDataContext } from '../../../LogDiveData/logDiveContext';
 
 type Props = {
   location: { lat: number, lng: number };
@@ -36,7 +37,6 @@ type Props = {
   createdNewSpotId: string;
   boundsCoors?: Bounds;
   newPointCoords?: { lat: number, lng: number };
-  spotId: string | null
 };
 
 export const LogADiveDiveMap: FC<Props> = ({
@@ -51,7 +51,6 @@ export const LogADiveDiveMap: FC<Props> = ({
   createdNewSpotId,
   boundsCoors,
   newPointCoords,
-  spotId,
 }) => {
   const [region, setRegion] = useState('');
   const [boundsCoords, setBoundsCoords] = useState(null);
@@ -59,7 +58,7 @@ export const LogADiveDiveMap: FC<Props> = ({
   const [isLoading, setLoading] = useState(false);
   const userLocation = useUserLocation();
   const bounds = useRef<Bounds>();
-
+  const { getCurrentStep } = useContext(LogDiveDataContext);
   const setVisible = useRef<(visible: boolean) => void>();
   const setNewPositionMarker = useRef<(coords: {
     lat: number,
@@ -95,7 +94,6 @@ export const LogADiveDiveMap: FC<Props> = ({
   };
 
   useEffect(() => {
-    // Handle add new spot
     if (boundsCoors) {
       bounds.current = boundsCoors;
       const lat = (boundsCoors.sw.lat + boundsCoors.ne.lat) / 2;
@@ -106,10 +104,6 @@ export const LogADiveDiveMap: FC<Props> = ({
       });
     }
   }, [boundsCoors]);
-
-  useEffect(() => {
-    if (userLocation && !spotId) setLocation(userLocation);
-  }, [userLocation, spotId]);
 
   useEffect(() => {
     if (setNewPositionMarker.current) {
@@ -125,9 +119,13 @@ export const LogADiveDiveMap: FC<Props> = ({
 
     if (!newPoint && bounds.current) {
       (async () => {
-        const markersItems = await firestoreSpotsService
-          .getAllSpotsInMapViewport(bounds.current);
-        setMarkers(markersItems);
+        try {
+          const markersItems = await firestoreSpotsService
+            .getAllSpotsInMapViewport(bounds.current, 1000);
+          setMarkers(markersItems);
+        } catch (e) {
+          notify(e.message);
+        }
       })();
     }
   }, [newPoint]);
@@ -160,7 +158,7 @@ export const LogADiveDiveMap: FC<Props> = ({
         .getAllSpotsInMapViewport({
           ne: e.bounds.ne,
           sw: e.bounds.sw,
-        });
+        }, 1000);
       setClusters(getClusters(e, markersItems));
       setMarkers(markersItems);
       setLoading(false);
@@ -237,7 +235,7 @@ export const LogADiveDiveMap: FC<Props> = ({
           maps,
         }) => handleApiLoaded(map, maps)}
         onChange={(e) => {
-          if (!newPoint) {
+          if (!newPoint && getCurrentStep() === 3) {
             setBoundsCoords(e);
           }
         }}

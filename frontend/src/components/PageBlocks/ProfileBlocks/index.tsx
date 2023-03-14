@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { name } from 'country-emoji';
 import { PersonalProfileData } from './PersonalProfileData';
 import { DivesMap } from './DivesMap';
@@ -15,24 +15,26 @@ import {
 } from '../../../firebase/firestore/models';
 import { SurveysBlock } from './SurveysBlock';
 import { convertMinutes } from '../../../utils/convertMinutes';
+import { AuthStatusContext } from '../../../layouts/AuthLayout';
 
 type Props = {
   dives: Array<DiveType & { spot: SpotType, date: string }>
   species: Array<SpeciesType>
   buddies: Array<BuddiesType>
   logbookUser: UserSettingsType
-  user: UserSettingsType
   data: any
   pictures: Array<string>
 };
 
 export const ProfileBlock = ({
-  dives, species, logbookUser, user, data, pictures, buddies,
+  dives, species, logbookUser, data, pictures, buddies,
 }: Props) => {
-  const [isItOwnProfile, setOwnProfile] = useState(user?.uid === logbookUser.uid);
+  const { userAuth } = useContext(AuthStatusContext);
+
+  const [isItOwnProfile, setOwnProfile] = useState(userAuth?.uid === logbookUser.uid);
 
   useEffect(() => {
-    setOwnProfile(user?.uid === logbookUser.uid);
+    setOwnProfile(userAuth?.uid === logbookUser.uid);
   }, [logbookUser.uid]);
 
   const getStats = () => {
@@ -68,7 +70,7 @@ export const ProfileBlock = ({
       longestDive = `${data.longestDive.time} minutes in ${data.longestDive.longestDiveName}`;
     }
     if (data.deepestDive?.depth) {
-      deepestDive = `${data.deepestDive.depth} ${data.deepestDive.unitSystem?.toLowerCase() === 'metric' ? 'm' : 'ft'} in ${data.deepestDive?.deepestDiveName}`;
+      deepestDive = `${data.deepestDive.depth.toFixed(2)} ${data.deepestDive.unitSystem?.toLowerCase() === 'metric' ? 'm' : 'ft'} in ${data.deepestDive?.deepestDiveName}`;
     }
     const getMostDives = () => Array.from(countries)
       .sort((a, b) => countries
@@ -87,7 +89,7 @@ export const ProfileBlock = ({
   };
   return (
     <div className={styles.profileBlockWrapper}>
-      {user?.uid && (
+      {userAuth?.uid && (
         <MobileAddButton
           iconName="new-dive-white"
           link={pagesRoutes.logDivePageRout}
@@ -96,32 +98,36 @@ export const ProfileBlock = ({
 
       <PersonalProfileData
         imgSrc={logbookUser.photoUrl}
-        name={`${logbookUser.firstName || ''} ${logbookUser.lastName || ''}`}
+        name={logbookUser?.firstName || logbookUser?.lastName ? `${logbookUser?.firstName || ''} ${logbookUser?.lastName || ''}` : logbookUser.nickname || ''}
         country={name(logbookUser.country)}
         about={logbookUser.about}
         isItOwnProfile={isItOwnProfile}
         stats={getStats()}
       />
-      {!!dives?.length && (
-      <DivesMap
-        userId={logbookUser.uid}
-      />
-      )}
-      {!!dives?.length && (
+      {data && (
+      <>
+        {!!dives?.length && (
+        <DivesMap
+          userId={logbookUser.uid}
+        />
+        )}
+        {!!dives?.length && (
         <DivesBlock
-          divesData={isItOwnProfile ? dives : dives.filter((dive) => !dive.draft && dive.publishingMode === 'PUBLIC')}
+          divesData={isItOwnProfile ? dives : dives.filter((dive) => dive && !dive.draft && dive.publishingMode === 'PUBLIC')}
           userId={logbookUser.uid}
           isItOwnProfile={isItOwnProfile}
           dives={isItOwnProfile ? data.dives : data.dives.filter((dive) => !dive.draft && dive.publishingMode === 'PUBLIC')}
         />
-      )}
+        )}
 
-      {!!pictures.length && <PicturesBlock picturesData={pictures} pictures={data.pictures} /> }
-      {!!species?.length && <LatestSpecies speciesData={species} species={data.species} /> }
-      {/* <CertificationBlock certifications={certifications} />* /}
+        {!!pictures.length && <PicturesBlock picturesData={pictures} pictures={data.pictures} /> }
+        {!!species?.length && <LatestSpecies speciesData={species} species={data.species} /> }
+        {/* <CertificationBlock certifications={certifications} />* /}
       {/* <CentersVisitedBlock /> */}
-      {!!buddies?.length && <DiveBuddies buddiesData={buddies} buddies={data.buddies} /> }
-      {!!data?.surveys?.length && <SurveysBlock surveys={data.surveys} />}
+        {!!buddies?.length && <DiveBuddies buddiesData={buddies} buddies={data.buddies} /> }
+        {!!data?.surveys?.length && <SurveysBlock surveys={data.surveys} />}
+      </>
+      )}
     </div>
   );
 };

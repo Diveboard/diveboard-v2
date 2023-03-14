@@ -5,6 +5,7 @@ import { SpeciesCategory } from '../SpeciesCategory';
 import { SpeciesType } from '../../../../../../firebase/firestore/models';
 import styles from './styles.module.scss';
 import { speciesCategories } from '../../../../../../utils/speciesCategories';
+import { Loader } from '../../../../../Loader';
 
 type Props = {
   currentSpeciesMode: string;
@@ -15,6 +16,7 @@ type Props = {
   setSelectedSpecies: React.Dispatch<React.SetStateAction<SpeciesType[]>>;
   localSpecies: Array<any>;
   speciesMode: 'all' | 'local';
+  loading: boolean;
 };
 
 export const SpeciesList: FC<Props> = ({
@@ -26,6 +28,7 @@ export const SpeciesList: FC<Props> = ({
   setSelectedSpecies,
   localSpecies,
   speciesMode,
+  loading,
 }) => {
   const allSpeciesBlock = Object.entries(speciesCategories).map(([key, value]) => (
     <SpeciesCategory
@@ -71,6 +74,7 @@ export const SpeciesList: FC<Props> = ({
         setSelectedSpeciesList={setSelectedSpecies}
       />
       )}
+      {!localSpecies?.length && <Loader loading={loading} /> }
       {!!searchedSpecies.length && (
       <SpeciesCategory
         title="search results"

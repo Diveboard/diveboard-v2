@@ -4,7 +4,6 @@ import React, {
 import { LogADiveDiveMap } from './NewDiveMap';
 import { StepsNavigation } from '../../StepsNavigation';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
-import { useUserLocation } from '../../../../../hooks/useUserLocation';
 import { MarkerType, StepProps } from '../../types/commonTypes';
 import { ThirdStepType } from '../../types/stepTypes';
 import { CreateNewSpot } from './CreateNewSpot';
@@ -20,7 +19,7 @@ export const ThirdStep: FC<StepProps> = ({
 }) => {
   const { setStepData, getStepData } = useContext(LogDiveDataContext);
   const [data, setData] = useState<ThirdStepType>(null);
-  const userLocation = useUserLocation();
+
   const [location, setLocation] = useState(null);
   const [newSpotName, setNewSpotName] = useState('');
   const [defaultSpot, setDefaultSpot] = useState(null);
@@ -34,9 +33,7 @@ export const ThirdStep: FC<StepProps> = ({
     lng: location?.lng,
   });
 
-  const [zoom, setZoom] = useState(5);
-
-  // const [clickedPoint, setClickedPoint] = useState('');
+  const [zoom, setZoom] = useState(9);
 
   const createdNewSpotId = useRef<string>();
 
@@ -45,12 +42,6 @@ export const ThirdStep: FC<StepProps> = ({
     text: item.name,
     id: item.id,
   })), [markers]);
-
-  useEffect(() => {
-    if (userLocation && !data?.spotId) {
-      setLocation(userLocation);
-    }
-  }, [userLocation, data]);
 
   useEffect(() => {
     if (!createSpotMode && newSpotName && markers.length) {
@@ -74,6 +65,11 @@ export const ThirdStep: FC<StepProps> = ({
           text: spot.name,
         });
         setLocation({ lat: spot.lat, lng: spot.lng });
+      } else {
+        setLocation({
+          lat: 34.984307835835764,
+          lng: 33.18749703019114,
+        });
       }
     })();
   }, [step]);
@@ -104,7 +100,6 @@ export const ThirdStep: FC<StepProps> = ({
           setNewPoint={setCreateSpotMode}
           setNewPointCoords={setNewPointCoords}
           createdNewSpotId={createdNewSpotId.current}
-          spotId={data.spotId}
         />
         {!createSpotMode && (
           <div className={styles.pointsBtnGroup}>

@@ -62,7 +62,7 @@ export type NotificationsType = {
 export type SpeciesType = {
   category: string;
   id: string
-  imgSrc: string
+  imageSrc: string
   oldId: string
   sname: string
   ref: DocumentReference;
@@ -100,7 +100,9 @@ export type CommentType = {
 };
 
 export type MediaUrls = {
-  url: string,
+  pic?: [string, DocumentReference]
+  createdAt?: Timestamp;
+  url?: string,
   ref?: DocumentReference,
   id?: string
 };
@@ -132,6 +134,7 @@ export type DiveType = {
 & NinthStepType;
 
 export type SpotType = {
+  id?: string;
   oldId: number | null;
   name: string;
   description: string;

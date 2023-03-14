@@ -19,12 +19,13 @@ import { AuthStatusContext } from '../../../../../layouts/AuthLayout';
 import { Loader } from '../../../../Loader';
 import { StepsIndicator } from '../../StepsIndicator';
 import { notify } from '../../../../../utils/notify';
+import { NetworkStatusContext } from '../../../../../layouts/NetworkStatus';
+import { deleteCache } from '../../../../../utils/refreshCache';
 
-export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
+export const NinthStep: FC<StepProps & { diveId?: string }> = ({
   step,
   setStep,
   diveId,
-  userId,
 }) => {
   const { userAuth } = useContext(AuthStatusContext);
   const { getStepData, setStepData, getAllStepsData } = useContext(LogDiveDataContext);
@@ -63,6 +64,8 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
     }
   }, [step]);
 
+  const isOffline = useContext(NetworkStatusContext);
+
   if (step !== 9) {
     return null;
   }
@@ -72,19 +75,36 @@ export const NinthStep: FC<StepProps & { diveId?: string, userId: string }> = ({
       setLoading(true);
       const data = await convertAllStepsData(
         allStepsData,
-        userId,
+        userAuth.uid,
         userAuth.settings.preferences.unitSystem,
       );
       const { sendToDAN, saveDAN } = getStepData(8) as EighthStepType;
       if (!saveDAN) {
         data.danSurvey = null;
       }
-      if (diveId) {
-        // @ts-ignore
-        await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data, sendToDAN);
+      if (data.aboutDive.diveNumber
+          && data.aboutDive.tripName
+          && data.diveData.date
+          && data.diveData.maxDepth
+          && data.diveData.duration
+      ) {
+        if (isOffline) {
+          notify('Your dive will be published after your will be online');
+          setLoading(false);
+          setStep(10);
+        } else {
+          deleteCache();
+        }
+        if (diveId) {
+          // @ts-ignore
+          await firestoreDivesService.updateDiveData(userAuth.uid, diveId, data, sendToDAN);
+        } else {
+          // @ts-ignore
+          await firestoreDivesService.setDiveData(data, userAuth.uid, sendToDAN);
+        }
+        setStep(10);
       } else {
-        // @ts-ignore
-        await firestoreDivesService.setDiveData(data, userAuth.uid, sendToDAN);
+        notify('Fill all require data');
       }
       setLoading(false);
       setStep(10);
