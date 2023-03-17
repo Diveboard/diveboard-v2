@@ -7,6 +7,8 @@ import { FooterMobile } from '../components/Footer/MobileFooter';
 import { AuthStatusContext } from './AuthLayout';
 import { LogDiveProvider } from '../components/PageBlocks/LogADiveBlocks/LogDiveData/LogDiveProvider';
 import { GuestHeader, UserHeader } from '../components/Header/DesktopHeader';
+import useLoading from '../hooks/useLoading';
+import { LineLoader } from '../components/LineLoader';
 
 type Props = {
   isHideMobileHeader?: boolean;
@@ -20,6 +22,8 @@ export const MainLayout: FC<Props> = ({
 }) => {
   const isMobile = useWindowWidth(500, 769);
   const { userAuth } = useContext(AuthStatusContext);
+
+  const isLoading = useLoading();
 
   const headerComponent = () => {
     if (userAuth) {
@@ -41,6 +45,7 @@ export const MainLayout: FC<Props> = ({
     <>
       <LogDiveProvider>
         {isMobile !== undefined && headerComponent()}
+        {isLoading && <LineLoader />}
       </LogDiveProvider>
       {children}
       {isMobile === false && <Footer /> }
