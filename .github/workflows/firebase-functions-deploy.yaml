@@ -27,7 +27,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Put service account value to file
-        run: echo "${{ env.GCP_SERVICE_ACCOUNT }}" >> ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
+        run: |
+          echo "${{ env.GCP_SERVICE_ACCOUNT }}" >> ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
+          cat ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
 
   build-deploy:
     name: Build and deploy functions
