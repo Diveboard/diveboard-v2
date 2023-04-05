@@ -5,8 +5,6 @@ import {
   collection,
   query,
   getDocs,
-  orderBy,
-  startAt,
   limit, DocumentReference, where,
 } from '@firebase/firestore';
 import { db } from '../firebaseFirestore';
@@ -113,6 +111,7 @@ export const firestorePublicProfileService = {
             divesTotalPromises.push(firestoreDivesService
               .getDivesCountByUserId(usersIds[value.idx].userRef.id, value.idx));
             users[value.idx].photoUrl = value.photoUrl;
+            users[value.idx].name = `${value?.firstName || value?.lastName ? `${value?.firstName || ''} ${value?.lastName || ''}` : value.nickname || ''}`;
           }));
 
       await Promise.all(divesTotalPromises)
