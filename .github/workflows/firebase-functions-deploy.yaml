@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Install dependencies and build a functions
         working_directory: backend/functions
-      - run: >
+        run: >
           ls -al
           npm install
           npm run build
