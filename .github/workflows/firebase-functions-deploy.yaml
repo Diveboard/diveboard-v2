@@ -60,4 +60,4 @@ jobs:
         working-directory: backend/
         run: |
           GOOGLE_APPLICATION_CREDENTIALS=${{ env.GOOGLE_APPLICATION_CREDENTIALS }} firebase use ${{ env.FIREBASE_PROJECT_ID }}
-          GOOGLE_APPLICATION_CREDENTIALS=${{ env.GOOGLE_APPLICATION_CREDENTIALS }} firebase deploy --only functions:authStart,functions:confirmResetEmail,functions:logIn,functions:oneTimeDonation,functions:resetEmail,functions:subDonation
+          GOOGLE_APPLICATION_CREDENTIALS=${{ env.GOOGLE_APPLICATION_CREDENTIALS }} firebase deploy --only functions
