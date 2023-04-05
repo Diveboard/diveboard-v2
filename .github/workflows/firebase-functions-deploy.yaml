@@ -41,7 +41,7 @@ jobs:
         working-directory: backend/functions
         run: >
           npm install \
-          npm run build \
+          npm run build
       - name: Install Firebase
         working-directory: backend/
         run: npm install
