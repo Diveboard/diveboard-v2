@@ -47,5 +47,5 @@ jobs:
         run: npm install
       - name: Deploy
         run: |
-          firebase use ${{ env.FIREBASE_PROJECT_ID }}
-          firebase deploy --only functions
+          npm run firebase use ${{ env.FIREBASE_PROJECT_ID }}
+          npm run firebase deploy --only functions

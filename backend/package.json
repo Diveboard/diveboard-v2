@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "firebase": "firebase"
+  },
   "dependencies": {
     "firebase": "^9.6.8"
   }
