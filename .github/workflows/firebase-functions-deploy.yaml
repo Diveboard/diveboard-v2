@@ -22,19 +22,14 @@ env:
     }}
 
 jobs:
-  create-service-account-file:
-    name: Create service account key file
-    runs-on: ubuntu-latest
-    steps:
-      - name: Put service account value to file
-        run: |
-          echo "${{ env.GCP_SERVICE_ACCOUNT }}" > ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
-
-  build-deploy:
+  deploy:
     name: Build and deploy functions
     runs-on: ubuntu-latest
-    needs: create-service-account-file
     steps:
+      - name: Create Service account key file
+        run: |
+          echo "${{ env.GCP_SERVICE_ACCOUNT }}" > ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}      
+
       - name: Checkout
         uses: actions/checkout@v3
 
