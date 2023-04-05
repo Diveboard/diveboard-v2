@@ -3,10 +3,10 @@ name: Deploy Functions to Firebase
 on:
   push:
     paths:
-      - backend/**
+      - 'backend/**'
     branches:
-      - main
-      - staging
+      - 'main'
+      - 'staging'
 
 env:
   GOOGLE_APPLICATION_CREDENTIALS: $HOME/gcloud.json
