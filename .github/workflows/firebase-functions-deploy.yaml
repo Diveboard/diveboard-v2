@@ -40,9 +40,8 @@ jobs:
       - name: Install dependencies and build a functions
         working-directory: backend/functions
         run: >
-          ls -al
-          npm install
-          npm run build
+          npm install \
+          npm run build \
       - name: Install Firebase
         working-directory: backend/
         run: npm install
