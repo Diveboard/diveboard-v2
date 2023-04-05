@@ -1,0 +1,47 @@
+name: Deploy Functions to Firebase
+
+on:
+  push:
+    paths:
+      - backend/**
+    branches:
+      - test-ci
+      - main
+      - staging
+
+env:
+  GOOGLE_APPLICATION_CREDENTIALS: $HOME/gcloud.json
+  GCP_SERVICE_ACCOUNT: >-
+    ${{
+      github.ref_name == 'main' && secrets.SERVICE_ACCOUNT_PRODUCTION ||
+      github.ref_name == 'staging' && secrets.SERVICE_ACCOUNT_STAGING ||
+      echo "Current branch is not supported"; exit 1
+    }}
+  FIREBASE_PROJECT_ID: >-
+    ${{
+      github.ref_name == 'main' && 'production' ||
+      github.ref_name == 'staging' && 'staging' ||
+      echo "Current branch is not supported"; exit 1
+    }}
+
+jobs:
+  create-service-account-file:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ${{ env.GCP_SERVICE_ACCOUNT }} >> ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
+  build:
+    runs-on: ubuntu-latest
+    needs: create-service-account-file
+    steps:
+      - run: cd backend/functions
+      - run: npm install
+      - run: npm run build
+      - run: cd ..
+      - run: npm install
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - run: cd backend/
+      - run: firebase use ${{ env.FIREBASE_PROJECT_ID }}
+      - run: firebase deploy --only functions

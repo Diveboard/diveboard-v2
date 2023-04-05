@@ -1,17 +1,82 @@
 rules_version = '2';
 service cloud.firestore {
     match /databases/{database}/documents {
-        match /user-preferences/{userId} {
-            allow read, write, update: if userId == request.auth.uid;
-        }
-
-        match /user-public-profile/{userId} {
-            allow read: if true;
-            allow write, update: if userId == request.auth.uid;
-        }
-
         match /user-stripe/{userId} {
-            allow read: if userId == request.auth.uid;
+           allow read: if userId == request.auth.uid;
+        }
+
+        match /spots/{spotId} {
+           allow read: if true
+        }
+
+        match /species/{specieId} {
+           allow read: if true
+        }
+
+        match /species_cnames/{specieId} {
+           allow read: if true
+        }
+
+        match /species_coords/{specieId} {
+           allow read: if true
+        }
+
+        match /surveys/{userId}/dan/{surveyId} {
+           allow read: if true;
+           allow delete, update, write:  if userId == request.auth.uid;
+        }
+
+        match /logbook_data/{userId}/logbookDives/{diveId} {
+        	 allow read: if true
+           allow delete, update, write: if userId == request.auth.uid;
+        }
+
+        match /logbook_data/{userId} {
+           allow read: if true;
+           allow delete, update, write:  if userId == request.auth.uid;
+        }
+
+        match /pictures/{pictureId} {
+           allow read, write, update, delete: if true
+        }
+
+        match /countries/{countryId} {
+           allow read: if true
+        }
+
+        match /regions/{regionId} {
+           allow read: if true
+        }
+
+        match /areas/{areaId} {
+           allow read: if true
+        }
+
+        match /geoname_alternatives/{geonameId} {
+           allow read: if true
+        }
+
+        match /geonames/{geonameId} {
+           allow read: if true
+        }
+
+        match /locations/{locationId} {
+           allow read: if true
+        }
+
+        match /dives/{userId}/userDives/{diveId}/comments/{commentId} {
+        	 allow read: if true;
+           allow write: if request.auth.uid != null;
+        }
+
+        match /dives/{userId}/userDives/{diveId} {
+        	 allow read: if true
+           allow delete, update, write:  if userId == request.auth.uid;
+        }
+
+        match /users/{userId} {
+        	allow read: if true
+          allow write, update, delete: if userId == request.auth.uid;
         }
     }
 }
