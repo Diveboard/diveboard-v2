@@ -1,64 +1,64 @@
-name: Deploy Webapp to Firebase
-
-on:
-  push:
-    paths:
-      - frontend/**
-    branches:
-      - test-ci
-      - main
-      - staging
-
-env:
-  FIREBASE_PROJECT_ID: >-
-    ${{
-      github.ref_name == 'main' && 'production' ||
-      github.ref_name == 'staging' && 'staging' ||
-      echo "Current branch is not supported"; exit 1
-    }}
-  FIREBASE_HOSTING_SITE: >-
-    ${{ 
-      github.ref_name == 'main' && 'diveboard-org' ||
-      github.ref_name == 'staging' && 'staging-diveboard-org' ||
-      echo "Current branch is not supported"; exit 1
-    }}
-  GCP_SERVICE_ACCOUNT: >-
-    ${{ 
-      github.ref_name == 'main' && secrets.SERVICE_ACCOUNT_PRODUCTION ||
-      github.ref_name == 'staging' && secrets.SERVICE_ACCOUNT_STAGING ||
-      echo "Current branch is not supported"; exit 1
-    }}
-  DOT_ENV_FRONTEND_CONTENT: >-
-    ${{
-      github.ref_name == 'main' && secrets.DOT_ENV_FRONTEND_PRODUCTION ||
-      github.ref_name == 'staging' && secrets.DOT_ENV_FRONTEND_STAGING ||
-      echo "Current branch is not supported"; exit 1
-    }}
-
-jobs:
-  make-env-file:
-    runs-on: ubuntu-latest
-    steps:
-      - run: cd frontend
-      - run: touch .env
-      - run: ${{ env.DOT_ENV_FRONTEND_CONTENT }} >> .env
-  build:
-    runs-on: ubuntu-latest
-    needs: make-env-file
-    steps:
-      - run: cd frontend
-      - run: npm install
-      - run: npm run build
-      - run: rm -rf .next/
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - run: cd frontend
-      - uses: actions/checkout@v2
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ env.GCP_SERVICE_ACCOUNT }}
-          projectId: ${{ env.FIREBASE_PROJECT_ID }}
-          target: ${{ env.FIREBASE_HOSTING_SITE }}
+#name: Deploy Webapp to Firebase
+#
+#on:
+#  push:
+#    paths:
+#      - frontend/**
+#    branches:
+#      - test-ci
+#      - main
+#      - staging
+#
+#env:
+#  FIREBASE_PROJECT_ID: >-
+#    ${{
+#      github.ref_name == 'main' && 'production' ||
+#      github.ref_name == 'staging' && 'staging' ||
+#      echo "Current branch is not supported"; exit 1
+#    }}
+#  FIREBASE_HOSTING_SITE: >-
+#    ${{
+#      github.ref_name == 'main' && 'diveboard-org' ||
+#      github.ref_name == 'staging' && 'staging-diveboard-org' ||
+#      echo "Current branch is not supported"; exit 1
+#    }}
+#  GCP_SERVICE_ACCOUNT: >-
+#    ${{
+#      github.ref_name == 'main' && secrets.SERVICE_ACCOUNT_PRODUCTION ||
+#      github.ref_name == 'staging' && secrets.SERVICE_ACCOUNT_STAGING ||
+#      echo "Current branch is not supported"; exit 1
+#    }}
+#  DOT_ENV_FRONTEND_CONTENT: >-
+#    ${{
+#      github.ref_name == 'main' && secrets.DOT_ENV_FRONTEND_PRODUCTION ||
+#      github.ref_name == 'staging' && secrets.DOT_ENV_FRONTEND_STAGING ||
+#      echo "Current branch is not supported"; exit 1
+#    }}
+#
+#jobs:
+#  make-env-file:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - run: cd frontend
+#      - run: touch .env
+#      - run: ${{ env.DOT_ENV_FRONTEND_CONTENT }} >> .env
+#  build:
+#    runs-on: ubuntu-latest
+#    needs: make-env-file
+#    steps:
+#      - run: cd frontend
+#      - run: npm install
+#      - run: npm run build
+#      - run: rm -rf .next/
+#  deploy:
+#    runs-on: ubuntu-latest
+#    needs: build
+#    steps:
+#      - run: cd frontend
+#      - uses: actions/checkout@v2
+#      - uses: FirebaseExtended/action-hosting-deploy@v0
+#        with:
+#          repoToken: ${{ secrets.GITHUB_TOKEN }}
+#          firebaseServiceAccount: ${{ env.GCP_SERVICE_ACCOUNT }}
+#          projectId: ${{ env.FIREBASE_PROJECT_ID }}
+#          target: ${{ env.FIREBASE_HOSTING_SITE }}
