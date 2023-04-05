@@ -2,8 +2,8 @@ name: Deploy Functions to Firebase
 
 on:
   push:
-    paths:
-      - backend/**
+#    paths:
+#      - backend/**
     branches:
       - main
       - staging
