@@ -5,7 +5,6 @@ on:
     paths:
       - backend/**
     branches:
-      - test-ci
       - main
       - staging
 
@@ -14,14 +13,12 @@ env:
   GCP_SERVICE_ACCOUNT: >-
     ${{
       github.ref_name == 'main' && secrets.SERVICE_ACCOUNT_PRODUCTION ||
-      github.ref_name == 'staging' && secrets.SERVICE_ACCOUNT_STAGING ||
-      echo "Current branch is not supported"; exit 1
+      github.ref_name == 'staging' && secrets.SERVICE_ACCOUNT_STAGING
     }}
   FIREBASE_PROJECT_ID: >-
     ${{
       github.ref_name == 'main' && 'production' ||
-      github.ref_name == 'staging' && 'staging' ||
-      echo "Current branch is not supported"; exit 1
+      github.ref_name == 'staging' && 'staging'
     }}
 
 jobs:
