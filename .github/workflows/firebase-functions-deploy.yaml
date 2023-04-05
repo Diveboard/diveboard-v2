@@ -31,13 +31,13 @@ jobs:
     needs: create-service-account-file
     steps:
       - name: Install dependencies and build a functions
-        working_directory: backend/functions
+        working-directory: backend/functions
         run: >
           ls -al
           npm install
           npm run build
       - name: Install Firebase
-        working_directory: backend/
+        working-directory: backend/
         run: npm install
   deploy:
     runs-on: ubuntu-latest
