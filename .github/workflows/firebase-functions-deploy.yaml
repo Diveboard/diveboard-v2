@@ -35,12 +35,12 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 16.13.x
+          node-version: 16.13.0
           cache: npm
       - name: Install dependencies and build a functions
         working-directory: backend/functions
-        run: >
-          npm install \
+        run: |
+          npm ci
           npm run build
       - name: Install Firebase
         working-directory: backend/
