@@ -1,6 +1,6 @@
 {
   "projects": {
-    "production": "diveboard-org"
+    "production": "diveboard-org",
     "staging": "staging-diveboard-org"
   }
 }
