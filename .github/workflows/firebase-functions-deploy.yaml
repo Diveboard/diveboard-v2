@@ -28,7 +28,7 @@ jobs:
     steps:
       - name: Put service account value to file
         run: |
-          echo "${{ env.GCP_SERVICE_ACCOUNT }}" >> ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
+          echo $GCP_SERVICE_ACCOUNT > $GOOGLE_APPLICATION_CREDENTIALS
 
   build-deploy:
     name: Build and deploy functions
@@ -55,8 +55,14 @@ jobs:
       - name: Install Firebase
         run: npm install -g firebase-tools
 
+      - name: Decode service account before usage
+        run: |
+          base64 -d $GOOGLE_APPLICATION_CREDENTIALS > $GOOGLE_APPLICATION_CREDENTIALS.tmp
+          cat $GOOGLE_APPLICATION_CREDENTIALS.tmp > $GOOGLE_APPLICATION_CREDENTIALS
+          rm $GOOGLE_APPLICATION_CREDENTIALS.tmp
+
       - name: Deploy
         working-directory: backend/
         run: |
-          GOOGLE_APPLICATION_CREDENTIALS=${{ env.GOOGLE_APPLICATION_CREDENTIALS }} firebase use ${{ env.FIREBASE_PROJECT_ID }}
-          GOOGLE_APPLICATION_CREDENTIALS=${{ env.GOOGLE_APPLICATION_CREDENTIALS }} firebase deploy --only functions
+          GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS firebase use ${{ env.FIREBASE_PROJECT_ID }}
+          GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS firebase deploy --only functions
