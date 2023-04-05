@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "${{ env.GCP_SERVICE_ACCOUNT }}" >> ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
     needs: create-service-account-file
     steps:
@@ -45,10 +45,7 @@ jobs:
       - name: Install Firebase
         working-directory: backend/
         run: npm install
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - run: cd backend/
-      - run: firebase use ${{ env.FIREBASE_PROJECT_ID }}
-      - run: firebase deploy --only functions
+      - name: Deploy
+        run: |
+          firebase use ${{ env.FIREBASE_PROJECT_ID }}
+          firebase deploy --only functions
