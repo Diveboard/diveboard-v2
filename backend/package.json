@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "firebase": "firebase"
+    "firebase:ci": "GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud.json firebase"
   },
   "dependencies": {
     "firebase": "^9.6.8",
