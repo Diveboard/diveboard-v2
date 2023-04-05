@@ -58,5 +58,5 @@ jobs:
       - name: Deploy
         working-directory: backend/
         run: |
-          npm run firebase use ${{ env.FIREBASE_PROJECT_ID }}
-          npm run firebase deploy --only functions
+          npm run firebase:ci use ${{ env.FIREBASE_PROJECT_ID }}
+          npm run firebase:ci deploy --only functions
