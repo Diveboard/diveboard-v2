@@ -24,6 +24,7 @@ env:
       github.ref_name == 'main' && secrets.SERVICE_ACCOUNT_PRODUCTION ||
       github.ref_name == 'staging' && secrets.SERVICE_ACCOUNT_STAGING
     }}
+  GOOGLE_APPLICATION_CREDENTIALS: $HOME/gcloud.json
   DOT_ENV_FRONTEND_CONTENT: >-
     ${{
       github.ref_name == 'main' && secrets.DOT_ENV_FRONTEND_PRODUCTION ||
