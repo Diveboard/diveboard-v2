@@ -2,8 +2,8 @@ name: Deploy Webapp to Firebase
 
 on:
   push:
-#    paths:
-#      - 'frontend/**'
+    paths:
+      - 'frontend/**'
     branches:
       - main
       - staging
@@ -70,9 +70,7 @@ jobs:
 
       - name: Build
         working-directory: frontend/
-        run: |
-          npm run build
-#          rm -rf .next/
+        run: npm run build
 
       - name: Deploy
         working-directory: frontend/
