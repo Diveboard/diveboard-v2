@@ -194,7 +194,7 @@ const subscriptions: {
     'fiveForTwelve': 'price_1Meg0FDVvZMVepMoOPhIOXrY',
     'threeForTwelve': 'price_1MefzzDVvZMVepMoAZ7dDG7F',
 };
-
+//
 export const subDonation = functions.https.onCall(async (request, context): Promise<any> => {
     const user = await userExpectedInRequest(context);
     const data = await validateRequest(request, SubscriptionDonationRequest);
