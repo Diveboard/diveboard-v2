@@ -72,7 +72,7 @@ jobs:
         working-directory: frontend/
         run: |
           npm run build
-          rm -rf .next/
+#          rm -rf .next/
 
       - name: Deploy
         working-directory: frontend/
