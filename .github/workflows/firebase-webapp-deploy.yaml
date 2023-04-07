@@ -49,10 +49,12 @@ jobs:
           node-version: 16.13.0
           cache: npm
 
+      - name: Install Firebase
+        run: npm install -g firebase-tools
+
       - name: Create dotenv file
         working-directory: frontend/
         run: echo "${{ env.DOT_ENV_FRONTEND_CONTENT }}" > .env
-
 
       - name: Decode service account before usage
         working-directory: frontend/
@@ -62,18 +64,18 @@ jobs:
           cat ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp > diveboard-org-firebase-adminsdk-zqzeb-4d4b96ce53.json
           rm ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp
 
+      - name: Install dependencies
+        working-directory: frontend/
+        run: npm install
+
       - name: Build
         working-directory: frontend/
         run: |
-          npm install
           npm run build
           rm -rf .next/
-
-      - name: Install Firebase
-        run: npm install -g firebase-tools
 
       - name: Deploy
         working-directory: frontend/
         run: |
           GOOGLE_APPLICATION_CREDENTIALS=${{ env.GOOGLE_APPLICATION_CREDENTIALS }} firebase use ${{ env.FIREBASE_PROJECT_ID }}
-          GOOGLE_APPLICATION_CREDENTIALS=${{ env.GOOGLE_APPLICATION_CREDENTIALS }} firebase deploy:nextServer,hosting:${{ env.FIREBASE_HOSTING_SITE }}
+          GOOGLE_APPLICATION_CREDENTIALS=${{ env.GOOGLE_APPLICATION_CREDENTIALS }} firebase deploy --only functions:nextServer,hosting:${{ env.FIREBASE_HOSTING_SITE }}
