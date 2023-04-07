@@ -55,6 +55,7 @@ jobs:
 
 
       - name: Decode service account before usage
+        working-directory: frontend/
         run: |
           base64 -d ${{ env.GOOGLE_APPLICATION_CREDENTIALS }} > ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp
           cat ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp > ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
