@@ -1,64 +1,75 @@
-#name: Deploy Webapp to Firebase
-#
-#on:
-#  push:
+name: Deploy Webapp to Firebase
+
+on:
+  push:
 #    paths:
-#      - frontend/**
-#    branches:
-#      - test-ci
-#      - main
-#      - staging
-#
-#env:
-#  FIREBASE_PROJECT_ID: >-
-#    ${{
-#      github.ref_name == 'main' && 'production' ||
-#      github.ref_name == 'staging' && 'staging' ||
-#      echo "Current branch is not supported"; exit 1
-#    }}
-#  FIREBASE_HOSTING_SITE: >-
-#    ${{
-#      github.ref_name == 'main' && 'diveboard-org' ||
-#      github.ref_name == 'staging' && 'staging-diveboard-org' ||
-#      echo "Current branch is not supported"; exit 1
-#    }}
-#  GCP_SERVICE_ACCOUNT: >-
-#    ${{
-#      github.ref_name == 'main' && secrets.SERVICE_ACCOUNT_PRODUCTION ||
-#      github.ref_name == 'staging' && secrets.SERVICE_ACCOUNT_STAGING ||
-#      echo "Current branch is not supported"; exit 1
-#    }}
-#  DOT_ENV_FRONTEND_CONTENT: >-
-#    ${{
-#      github.ref_name == 'main' && secrets.DOT_ENV_FRONTEND_PRODUCTION ||
-#      github.ref_name == 'staging' && secrets.DOT_ENV_FRONTEND_STAGING ||
-#      echo "Current branch is not supported"; exit 1
-#    }}
-#
-#jobs:
-#  make-env-file:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - run: cd frontend
-#      - run: touch .env
-#      - run: ${{ env.DOT_ENV_FRONTEND_CONTENT }} >> .env
-#  build:
-#    runs-on: ubuntu-latest
-#    needs: make-env-file
-#    steps:
-#      - run: cd frontend
-#      - run: npm install
-#      - run: npm run build
-#      - run: rm -rf .next/
-#  deploy:
-#    runs-on: ubuntu-latest
-#    needs: build
-#    steps:
-#      - run: cd frontend
-#      - uses: actions/checkout@v2
-#      - uses: FirebaseExtended/action-hosting-deploy@v0
-#        with:
-#          repoToken: ${{ secrets.GITHUB_TOKEN }}
-#          firebaseServiceAccount: ${{ env.GCP_SERVICE_ACCOUNT }}
-#          projectId: ${{ env.FIREBASE_PROJECT_ID }}
-#          target: ${{ env.FIREBASE_HOSTING_SITE }}
+#      - 'frontend/**'
+    branches:
+      - main
+      - staging
+
+env:
+  FIREBASE_PROJECT_ID: >-
+    ${{
+      github.ref_name == 'main' && 'production' ||
+      github.ref_name == 'staging' && 'staging'
+    }}
+  FIREBASE_HOSTING_SITE: >-
+    ${{
+      github.ref_name == 'main' && 'diveboard-org' ||
+      github.ref_name == 'staging' && 'staging-diveboard-org'
+    }}
+  GCP_SERVICE_ACCOUNT: >-
+    ${{
+      github.ref_name == 'main' && secrets.SERVICE_ACCOUNT_PRODUCTION ||
+      github.ref_name == 'staging' && secrets.SERVICE_ACCOUNT_STAGING
+    }}
+  DOT_ENV_FRONTEND_CONTENT: >-
+    ${{
+      github.ref_name == 'main' && secrets.DOT_ENV_FRONTEND_PRODUCTION ||
+      github.ref_name == 'staging' && secrets.DOT_ENV_FRONTEND_STAGING
+    }}
+
+jobs:
+  deploy:
+    name: Build and deploy web app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Service account key file
+        run: |
+          echo "${{ env.GCP_SERVICE_ACCOUNT }}" > ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.13.0
+          cache: npm
+
+      - name: Create dotenv file
+        working-directory: frontend/
+        run: echo "${{ env.DOT_ENV_FRONTEND_CONTENT }}" > .env
+
+      - name: Build
+        working-directory: frontend/
+        run: |
+          npm install
+          npm run build
+          rm -rf .next/
+
+      - name: Install Firebase
+        run: npm install -g firebase-tools
+
+      - name: Decode service account before usage
+        run: |
+          base64 -d ${{ env.GOOGLE_APPLICATION_CREDENTIALS }} > ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp
+          cat ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp > ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
+          rm ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp
+
+      - name: Deploy
+        working-directory: frontend/
+        run: |
+          GOOGLE_APPLICATION_CREDENTIALS=${{ env.GOOGLE_APPLICATION_CREDENTIALS }} firebase use ${{ env.FIREBASE_PROJECT_ID }}
+          GOOGLE_APPLICATION_CREDENTIALS=${{ env.GOOGLE_APPLICATION_CREDENTIALS }} firebase deploy:nextServer,hosting:${{ env.FIREBASE_HOSTING_SITE }}
