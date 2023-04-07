@@ -12,7 +12,7 @@ const server = next({
             domains: ['firebasestorage.googleapis.com'],
         }}
 })
-//
+
 const nextjsHandle = server.getRequestHandler();
 
 exports.nextServer = https.onRequest((req, res) => {
