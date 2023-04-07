@@ -53,6 +53,14 @@ jobs:
         working-directory: frontend/
         run: echo "${{ env.DOT_ENV_FRONTEND_CONTENT }}" > .env
 
+
+      - name: Decode service account before usage
+        run: |
+          base64 -d ${{ env.GOOGLE_APPLICATION_CREDENTIALS }} > ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp
+          cat ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp > ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
+          cat ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp > diveboard-org-firebase-adminsdk-zqzeb-4d4b96ce53.json
+          rm ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp
+
       - name: Build
         working-directory: frontend/
         run: |
@@ -62,12 +70,6 @@ jobs:
 
       - name: Install Firebase
         run: npm install -g firebase-tools
-
-      - name: Decode service account before usage
-        run: |
-          base64 -d ${{ env.GOOGLE_APPLICATION_CREDENTIALS }} > ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp
-          cat ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp > ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
-          rm ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp
 
       - name: Deploy
         working-directory: frontend/
