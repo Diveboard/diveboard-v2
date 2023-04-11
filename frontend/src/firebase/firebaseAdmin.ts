@@ -8,7 +8,7 @@ if (!firebaseAdmin.apps.length) {
       clientEmail: serviceAccount.client_email,
       projectId: serviceAccount.project_id,
     }),
-    databaseURL: 'https://diveboard-org-default-rtdb.firebaseio.com',
+    databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
   });
 }
 
