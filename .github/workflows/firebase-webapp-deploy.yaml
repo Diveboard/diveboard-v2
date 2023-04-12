@@ -2,8 +2,8 @@ name: Deploy Webapp to Firebase
 
 on:
   push:
-    paths:
-      - 'frontend/**'
+#    paths:
+#      - 'frontend/**'
     branches:
       - main
       - staging
