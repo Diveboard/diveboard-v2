@@ -5,7 +5,7 @@ import { firestoreLogbookService } from '../../../../src/firebase/firestore/fire
 import 'react-toastify/dist/ReactToastify.css';
 import ErrorBlock from '../../../../src/components/ErrorBlock';
 
-const DiveManager: InferGetServerSidePropsType<typeof getServerSideProps> = ({
+const Dive: InferGetServerSidePropsType<typeof getServerSideProps> = ({
   dive,
   spot,
   species,
@@ -63,4 +63,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 };
 
-export default DiveManager;
+export default Dive;
