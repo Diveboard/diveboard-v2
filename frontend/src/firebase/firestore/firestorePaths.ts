@@ -39,7 +39,6 @@ export enum PathEnum {
 
   SPOTS = 'spots',
   SURVEYS = 'surveys',
-  SHOPS = 'shops',
 }
 
 export const firestorePaths = {
