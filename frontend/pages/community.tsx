@@ -9,7 +9,7 @@ const Community = () => (
     <p>
       Join our world’s biggest divers community to log your dives and find your next dive spot
     </p>
-    <a href="https://discord.gg/rmqJajR7" target="_blank" rel="noreferrer">
+    <a href="https://discord.gg/QKtRxppgMT" target="_blank" rel="noreferrer">
       <div className="community-btn">
         Join on Discord
       </div>

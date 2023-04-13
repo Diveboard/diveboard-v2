@@ -10,7 +10,7 @@ export const SupportBlock = () => (
         <Image src="/appIcons/contact-discord.svg" alt="discord" width={114} height={114} />
         <p>Contact our Customer Support team on our dedicated Discord</p>
         <button className={styles.discordBth}>
-          <a href="https://discord.gg/rmqJajR7" target="_blank" rel="noreferrer">
+          <a href="https://discord.gg/QKtRxppgMT" target="_blank" rel="noreferrer">
             <Image src="/appIcons/contact-discord-logo.svg" alt="email" width={106} height={20} />
           </a>
         </button>

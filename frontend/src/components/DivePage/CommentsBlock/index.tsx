@@ -17,6 +17,8 @@ import { parseDate } from '../../../utils/parseDate';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
 import { notify } from '../../../utils/notify';
 import { firestoreCommentsService } from '../../../firebase/firestore/firestoreServices/firestoreCommentsService';
+import { deleteCache } from '../../../utils/refreshCache';
+import { Loader } from '../../Loader';
 
 type Props = {
   comments: Array<CommentType>
@@ -24,6 +26,7 @@ type Props = {
 
 export const CommentsBlock: FC<Props> = ({ comments }) => {
   const [isShow, setShow] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [fetchedComments, setFetchedComments] = useState(comments);
   const [replyTo, setReplyTo] = useState<UserCommentType>(null);
@@ -64,6 +67,7 @@ export const CommentsBlock: FC<Props> = ({ comments }) => {
   const addCommentButtonHandler = async () => {
     try {
       setShow(false);
+      setLoading(true);
       const diveComment = {
         author: userAuth.uid,
         replyTo: replyTo?.userId || null,
@@ -71,6 +75,7 @@ export const CommentsBlock: FC<Props> = ({ comments }) => {
         createdAt: Timestamp.fromDate(new Date()),
       };
       await firestoreCommentsService.addComment(userId as string, diveId as string, diveComment);
+      await deleteCache();
       setFetchedComments([{
         ...diveComment,
         replyTo,
@@ -83,14 +88,20 @@ export const CommentsBlock: FC<Props> = ({ comments }) => {
       }, ...fetchedComments]);
       setNewComment('');
       setReplyTo(null);
+      setLoading(false);
     } catch (e) {
+      setLoading(false);
       notify(e);
     }
   };
 
   const replyButtonHandler = (replyUser: UserCommentType) => {
-    setShow(true);
-    setReplyTo(replyUser);
+    if (!userAuth?.uid) {
+      notify('Login before write comment');
+    } else {
+      setShow(true);
+      setReplyTo(replyUser);
+    }
   };
 
   return (
@@ -109,6 +120,7 @@ export const CommentsBlock: FC<Props> = ({ comments }) => {
             />
           ))}
         </div>
+        {isLoading && <Loader loading={isLoading} /> }
         {isShow ? (
           <form className={styles.form}>
             {replyTo && (
