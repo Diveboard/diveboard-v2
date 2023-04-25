@@ -153,10 +153,10 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
         setClusters(getClusters(e, spots));
       } else {
         const markersItems = await firestoreSpotsService
-          .getAllSpotsInMapViewport(e.bounds, 1500);
-        const { lat, lng, location: { region: regionName } } = markersItems[0];
+          .getAllSpotsInMapViewport(e.bounds, 3500);
+        const { lat, lng } = e.center;
         const area = await firestoreGeoDataService.getAreaByCoords({ lat, lng });
-        setRegion({ area, name: regionName });
+        setRegion({ area, name: area.regionName });
         setSpots(markersItems);
         setClusters(getClusters(e, markersItems));
       }
@@ -251,7 +251,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
       }}
       withBackArrow
       onClick={() => {
-        setIsFetch(true);
+        setIsFetch(false);
         fetchRegions();
       }}
       onBackClick={() => router.back()}
@@ -335,7 +335,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
                   region={spot.location?.region}
                   name={spot.name}
                   depth={spot.averageDepth?.depth || ''}
-                  imgSrc={spot.bestPictures?.length ? spot.bestPictures[0] : '/images/fish.jpg'}
+                  imgSrc={Object.keys(spot.bestPictures)[0] || null}
                   country={spot.location?.country}
                 />
               </span>
