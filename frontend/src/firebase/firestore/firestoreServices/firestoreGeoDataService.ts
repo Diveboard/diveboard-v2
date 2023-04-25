@@ -77,7 +77,9 @@ export const firestoreGeoDataService = {
           name: value,
         });
       });
-      return locations;
+      return locations.filter(
+        (obj, index) => locations.findIndex((item) => item.name === obj.name) === index,
+      );
     } catch (e) {
       throw new Error(e.message);
     }
@@ -130,21 +132,27 @@ export const firestoreGeoDataService = {
 
   getAreaByCoords: async (coords: Coords) => {
     try {
+      const BORDERS_COORDS = 3;
       const docRef = collection(db, PathEnum.AREAS);
       const querySnapshot = await getDocs(docRef);
       let res;
+      let regionName = '';
       querySnapshot.forEach((document) => {
         const data = document.data();
         if (
-          data.minLat < coords.lat
-            && data.maxLat >= coords.lat
-            && data.minLng <= coords.lng
-            && data.maxLng >= coords.lng
+          data.minLat <= coords.lat + BORDERS_COORDS
+            && data.maxLat >= coords.lat - BORDERS_COORDS
+            && data.minLng <= coords.lng + BORDERS_COORDS
+            && data.maxLng >= coords.lng - BORDERS_COORDS
         ) {
           res = data;
         }
       });
-      return res;
+      if (res?.geonameRef) {
+        const geonameDoc = await getDoc(res.geonameRef) as any;
+        regionName = geonameDoc.data().asciName;
+      }
+      return regionName ? { ...res, regionName } : res;
     } catch (e) {
       throw new Error(e.message);
     }

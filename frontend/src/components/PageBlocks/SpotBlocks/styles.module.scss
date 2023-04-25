@@ -1,5 +1,6 @@
 .spotBlock {
   padding: 128px 75px 50px 75px;
+  min-height: calc(100vh - 238px);
 
   .header {
     display: flex;

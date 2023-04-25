@@ -79,6 +79,7 @@ export const firestoreSpotsService = {
           countryName,
           zoom,
           averageDepth,
+          bestPictures,
         } = document.data();
         const { id } = document;
         if (lat < bounds.ne.lat && lat > bounds.sw.lat && name) {
@@ -92,6 +93,7 @@ export const firestoreSpotsService = {
               country: countryName,
               location: locationName,
             },
+            bestPictures,
             averageDepth,
             zoom,
             lat,
