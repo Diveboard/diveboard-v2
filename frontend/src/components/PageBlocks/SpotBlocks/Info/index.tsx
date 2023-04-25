@@ -63,19 +63,27 @@ export const Info = ({
     return `${value.toFixed(2)} m`;
   };
 
+  const isStatsDisplay = () => !!(stats.averageDepth?.depth || stats.visibility
+      || stats.averageCurrent
+      || stats.averageTemperatureOnSurface?.temperature
+      || stats.averageTemperatureOnBottom?.temperature
+      || stats.divers || divesCount);
+
   return (
     <div className={styles.info}>
       {isMobile === false && <h2>Info</h2>}
       <div className={styles.itemsWrapper} style={{ justifyContent: species?.length ? 'space-between' : 'flex-start' }}>
+        {isStatsDisplay() && (
         <div className={styles.item}>
           <div className={styles.header}>
             <Icon iconName="stats" size={24} />
             <span>Stats</span>
           </div>
 
-          {stats.averageDepth?.depth && <InfoItem name="Average depth:" value={convertDepth(stats.averageDepth.depth)} /> }
-          {stats.visibility && <InfoItem name="Visibility:" value={stats.visibility.toLowerCase()} /> }
-          {stats.averageCurrent && <InfoItem name="Average current:" value={stats.averageCurrent.toLowerCase()} /> }
+          {stats.averageDepth?.depth
+              && <InfoItem name="Average depth:" value={convertDepth(stats.averageDepth.depth)} />}
+          {stats.visibility && <InfoItem name="Visibility:" value={stats.visibility.toLowerCase()} />}
+          {stats.averageCurrent && <InfoItem name="Average current:" value={stats.averageCurrent.toLowerCase()} />}
           {stats.averageTemperatureOnSurface?.temperature && (
           <InfoItem
             name="Average temperature on surface:"
@@ -89,9 +97,9 @@ export const Info = ({
           />
           )}
           {!!stats.divers && <InfoItem name="Dives Logged:" value={stats.divers} />}
-          {!!divesCount && <InfoItem name="Divers:" value={divesCount.toString()} /> }
-
+          {!!divesCount && <InfoItem name="Divers:" value={divesCount.toString()} />}
         </div>
+        )}
 
         <div className={styles.item}>
           <div className={styles.header}>

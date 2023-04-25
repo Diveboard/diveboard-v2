@@ -37,7 +37,7 @@ export const firestoreGalleryService = {
     }
   },
 
-  getPicById: async (id: string, idx: number = -1) => {
+  getPicById: async (id: string, idx: number = -1): Promise<any> => {
     try {
       const docRef = doc(db, `${PathEnum.PICTURES}/${id}`);
       const docSnap = await getDoc(docRef);
