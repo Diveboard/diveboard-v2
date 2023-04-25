@@ -57,7 +57,6 @@ const options = {
 };
 
 const mapCoordsArr = [
-  { lat: 19.325, lng: 81.171, zoom: 11 },
   { lat: -21.7, lng: 145.2, zoom: 5 },
   { lat: 20.29, lng: -156.56, zoom: 8 },
   { lat: 27.82, lng: -81.43, zoom: 6 },
@@ -153,11 +152,11 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
         setClusters(getClusters(e, spots));
       } else {
         const markersItems = await firestoreSpotsService
-          .getAllSpotsInMapViewport(e.bounds, 3500);
+          .getAllSpotsInMapViewport(e.bounds, 3000);
         const { lat, lng } = e.center;
         const area = await firestoreGeoDataService.getAreaByCoords({ lat, lng });
-        setRegion({ area, name: area.regionName });
-        setSpots(markersItems);
+        setRegion(() => ({ area, name: area?.regionName }));
+        setSpots(() => markersItems);
         setClusters(getClusters(e, markersItems));
       }
       setZoom(e.zoom);
@@ -189,19 +188,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     }
   }, [inputRegion]);
 
-  const searchArea = async (geo, item) => {
-    let area;
-    if (item.name) {
-      setRegion({ ...region, name: item.name });
-    }
-    if (geo.areaRef) {
-      try {
-        area = await firestoreGeoDataService.getAreaByRef(geo.areaRef);
-        setRegion({ area, name: item.name });
-      } catch (e) {
-        notify(e.message);
-      }
-    }
+  const searchArea = async (geo) => {
     if (geo?.coords) {
       const { lat } = geo.coords;
       const { lng } = geo.coords;
@@ -209,15 +196,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
         lat,
         lng,
       });
-      if (!area) {
-        try {
-          area = await firestoreGeoDataService.getAreaByCoords(geo.coords);
-        } catch (e) {
-          notify(e.message);
-        }
-      }
     }
-    setRegion({ area, name: item.name });
     setIsFetch(false);
   };
 
@@ -235,7 +214,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
         setActiveTab(tab.charAt(0).toUpperCase() + tab.slice(1));
         try {
           const res = await firestoreGeoDataService.getGeonameById(location as string);
-          await searchArea(res, { name: res.name });
+          await searchArea(res);
         } catch (e) {
           notify(e.message);
         }
@@ -251,7 +230,7 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
       }}
       withBackArrow
       onClick={() => {
-        setIsFetch(false);
+        setIsFetch(true);
         fetchRegions();
       }}
       onBackClick={() => router.back()}

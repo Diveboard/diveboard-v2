@@ -152,7 +152,7 @@ export const firestoreGeoDataService = {
         const geonameDoc = await getDoc(res.geonameRef) as any;
         regionName = geonameDoc.data().asciName;
       }
-      return { ...res, regionName };
+      return regionName ? { ...res, regionName } : res;
     } catch (e) {
       throw new Error(e.message);
     }
