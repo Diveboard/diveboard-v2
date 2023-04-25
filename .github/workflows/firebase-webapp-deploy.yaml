@@ -1,0 +1,79 @@
+name: Deploy Webapp to Firebase
+
+on:
+  push:
+    paths:
+      - 'frontend/**'
+    branches:
+      - main
+      - staging
+
+env:
+  FIREBASE_PROJECT_ID: >-
+    ${{
+      github.ref_name == 'main' && 'production' ||
+      github.ref_name == 'staging' && 'staging'
+    }}
+  FIREBASE_HOSTING_SITE: >-
+    ${{
+      github.ref_name == 'main' && 'diveboard-org' ||
+      github.ref_name == 'staging' && 'staging-diveboard-org'
+    }}
+  GCP_SERVICE_ACCOUNT: >-
+    ${{
+      github.ref_name == 'main' && secrets.SERVICE_ACCOUNT_PRODUCTION ||
+      github.ref_name == 'staging' && secrets.SERVICE_ACCOUNT_STAGING
+    }}
+  GOOGLE_APPLICATION_CREDENTIALS: $HOME/gcloud.json
+  DOT_ENV_FRONTEND_CONTENT: >-
+    ${{
+      github.ref_name == 'main' && secrets.DOT_ENV_FRONTEND_PRODUCTION ||
+      github.ref_name == 'staging' && secrets.DOT_ENV_FRONTEND_STAGING
+    }}
+
+jobs:
+  deploy:
+    name: Build and deploy web app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Service account key file
+        run: |
+          echo "${{ env.GCP_SERVICE_ACCOUNT }}" > ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.13.0
+          cache: npm
+
+      - name: Install Firebase
+        run: npm install -g firebase-tools
+
+      - name: Create dotenv file
+        working-directory: frontend/
+        run: echo "${{ env.DOT_ENV_FRONTEND_CONTENT }}" > .env
+
+      - name: Decode service account before usage
+        working-directory: frontend/
+        run: |
+          base64 -d ${{ env.GOOGLE_APPLICATION_CREDENTIALS }} > ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp
+          cat ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp > ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
+          cat ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp > diveboard-org-firebase-adminsdk-zqzeb-4d4b96ce53.json
+          rm ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}.tmp
+
+      - name: Install dependencies
+        working-directory: frontend/
+        run: npm install
+
+      - name: Build
+        working-directory: frontend/
+        run: npm run build
+
+      - name: Deploy
+        working-directory: frontend/
+        run: |
+          GOOGLE_APPLICATION_CREDENTIALS=${{ env.GOOGLE_APPLICATION_CREDENTIALS }} firebase use ${{ env.FIREBASE_PROJECT_ID }}
+          GOOGLE_APPLICATION_CREDENTIALS=${{ env.GOOGLE_APPLICATION_CREDENTIALS }} firebase deploy --only functions:nextServer,hosting:${{ env.FIREBASE_HOSTING_SITE }}
