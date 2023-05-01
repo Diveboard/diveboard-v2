@@ -96,10 +96,14 @@ export const convertAllStepsData = async (
 
 const convertDistanceSystem = (
   userUnitSystem: UnitSystem,
+  diveUnitSystem: UnitSystem,
   value: number,
 ): number => {
   if (!value) {
     return 0;
+  }
+  if (userUnitSystem === diveUnitSystem.toUpperCase()) {
+    return value;
   }
   if (userUnitSystem === 'METRIC') {
     return convertFeetToMeters(value);
@@ -109,10 +113,14 @@ const convertDistanceSystem = (
 
 const convertTempSystem = (
   userUnitSystem: UnitSystem,
+  diveUnitSystem: UnitSystem,
   value: number,
 ): number => {
   if (!value) {
     return 0;
+  }
+  if (userUnitSystem === diveUnitSystem.toUpperCase()) {
+    return value;
   }
   if (userUnitSystem === 'METRIC') {
     return convertFarToCal(value);
@@ -122,15 +130,19 @@ const convertTempSystem = (
 
 const convertWeightSystem = (
   userUnitSystem: UnitSystem,
+  diveUnitSystem: UnitSystem,
   value: number,
 ): number => {
   if (!value) {
     return 0;
   }
-  if (userUnitSystem === 'METRIC') {
-    return convertLbsToKg(value);
+  if (userUnitSystem === diveUnitSystem.toUpperCase()) {
+    return +value.toFixed(2);
   }
-  return convertKgToLbs(value);
+  if (userUnitSystem === 'METRIC') {
+    return +convertLbsToKg(value).toFixed(2);
+  }
+  return +convertKgToLbs(value).toFixed(2);
 };
 
 const findSpotIdByRef = (spotRef: DocumentReference) => {
@@ -171,32 +183,32 @@ export const convertToStepsData = (
           : null,
         maxDepth: unitSystem === data.unitSystem
           ? data.diveData?.maxDepth
-          : convertDistanceSystem(unitSystem, data.diveData?.maxDepth),
+          : convertDistanceSystem(unitSystem, data.unitSystem, data.diveData?.maxDepth),
         duration: data.diveData?.duration,
         surfaceInterval: data.diveData?.surfaceInterval,
         profileData: data.diveData?.profileData,
         safetyStops: unitSystem === data.unitSystem
           ? data.diveData?.safetyStops
           : data.diveData?.safetyStops.map((spot) => (
-            { ...spot, depth: convertDistanceSystem(unitSystem, spot.depth) }
+            { ...spot, depth: convertDistanceSystem(unitSystem, data.unitSystem, spot.depth) }
           ))
         ,
       },
       advancedParameters: {
         surfaceTemp: unitSystem === data.unitSystem
           ? data.diveData?.surfaceTemp
-          : convertTempSystem(unitSystem, data.diveData?.surfaceTemp),
+          : convertTempSystem(unitSystem, data.unitSystem, data.diveData?.surfaceTemp),
         bottomTemp: unitSystem === data.unitSystem
           ? data.diveData?.bottomTemp
-          : convertTempSystem(unitSystem, data.diveData?.bottomTemp),
+          : convertTempSystem(unitSystem, data.unitSystem, data.diveData?.bottomTemp),
         weights: unitSystem === data.unitSystem
           ? data.diveData?.weights
-          : convertWeightSystem(unitSystem, data.diveData?.weights),
+          : convertWeightSystem(unitSystem, data.unitSystem, data.diveData?.weights),
         waterVisibility: data.diveData?.waterVisibility,
         current: data.diveData?.current,
         altitude: unitSystem === data.unitSystem
           ? data.diveData?.altitude
-          : convertDistanceSystem(unitSystem, data.diveData?.altitude),
+          : convertDistanceSystem(unitSystem, data.unitSystem, data.diveData?.altitude),
         waterType: data.diveData?.waterType,
       },
       tanks: data.tanks,

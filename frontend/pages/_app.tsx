@@ -10,6 +10,7 @@ import { AuthLayout } from '../src/layouts/AuthLayout';
 import { firestorePublicProfileService } from '../src/firebase/firestore/firestoreServices/firestorePublicProfileService';
 import { MainLayout } from '../src/layouts/MainLayout';
 import 'react-toastify/dist/ReactToastify.css';
+import { SpotsLayout } from '../src/layouts/SpotsLayout';
 
 function MyApp({
   Component,
@@ -39,8 +40,10 @@ function MyApp({
             isFilled={pathname === '/'}
             isHideMobileHeader={pathname === '/explore'}
           >
-            <ToastContainer />
-            <Component {...pageProps} />
+            <SpotsLayout>
+              <ToastContainer />
+              <Component {...pageProps} />
+            </SpotsLayout>
           </MainLayout>
         </AuthLayout>
         )}

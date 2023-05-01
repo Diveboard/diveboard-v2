@@ -75,7 +75,11 @@ export const DivePageBlock = ({
                 || !!dive?.tanks.length
                 || dive.diveData.maxDepth) && (
                 <ChartBlock
-                  diveData={{ points: dive.diveData?.safetyStops, tanks: dive?.tanks }}
+                  diveData={{
+                    points: dive.diveData?.profileData
+                        || dive.diveData.safetyStops,
+                    tanks: dive?.tanks,
+                  }}
                   maxDepth={dive.diveData.maxDepth}
                   duration={dive.diveData.duration}
                   profileData={dive.diveData.profileData}

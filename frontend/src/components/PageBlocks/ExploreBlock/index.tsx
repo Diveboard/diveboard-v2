@@ -15,7 +15,10 @@ import { useDebounce } from '../../../hooks/useDebounce';
 import { SearchDropdownPanel } from '../../Dropdown/SearchedItems/SearchDropdownPanel';
 import { useOutsideClick } from '../../../hooks/useOutsideClick';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
-import { convertCalToFar, convertMetersToFeet } from '../../../utils/unitSystemConverter';
+import {
+  convertExploreDepthSystem,
+  convertExploreTempSystem,
+} from '../../../utils/unitSystemConverter';
 import { notify } from '../../../utils/notify';
 import { firestoreSpotsService } from '../../../firebase/firestore/firestoreServices/firestoreSpotsService';
 
@@ -253,28 +256,6 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
     userAuth,
   } = useContext(AuthStatusContext);
 
-  const convertTempSystem = (value: number): string => {
-    if (!userAuth) {
-      return `${value ? value?.toFixed(2) : 0} ºC`;
-    }
-    const userUnitSystem = userAuth.settings.preferences.unitSystem;
-    if (userUnitSystem === 'IMPERIAL') {
-      return `${value ? convertCalToFar(value)?.toFixed(2) : 0} ºF`;
-    }
-    return `${value ? value?.toFixed(2) : 0} ºC`;
-  };
-
-  const convertDepth = (value): string => {
-    if (!userAuth) {
-      return `${value ? value?.toFixed(2) : 0} m`;
-    }
-    const userUnitSystem = userAuth.settings.preferences.unitSystem;
-    if (userUnitSystem === 'IMPERIAL') {
-      return `${value ? convertMetersToFeet(value)?.toFixed(2) : 0} ft`;
-    }
-    return `${value ? value?.toFixed(2) : 0} m`;
-  };
-
   return (
     <div className={`${styles.wrapper} ${styles['min-height-wrapper']}`}>
       <div className={styles.sidebar} id="sidebar" onTouchEnd={handleSidebar}>
@@ -350,17 +331,17 @@ const ExploreBlock: FC<{ isMobile: boolean }> = ({ isMobile }) => {
               <span>
                 Average depth:
                 {' '}
-                <b>{convertDepth(region.area.averageDepth)}</b>
+                <b>{convertExploreDepthSystem(userAuth, region.area.averageDepth)}</b>
               </span>
               <span>
                 Average temperature on bottom:
                 {' '}
-                <b>{convertTempSystem(region.area.averageTemperatureOnBottom)}</b>
+                <b>{convertExploreTempSystem(userAuth, region.area.averageTemperatureOnBottom)}</b>
               </span>
               <span>
                 Average temperature on surface:
                 {' '}
-                <b>{convertTempSystem(region.area.averageTemperatureOnSurface)}</b>
+                <b>{convertExploreTempSystem(userAuth, region.area.averageTemperatureOnSurface)}</b>
               </span>
             </div>
             )}

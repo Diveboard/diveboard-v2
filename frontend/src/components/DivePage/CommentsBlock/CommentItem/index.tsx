@@ -24,7 +24,7 @@ export const CommentItem: FC <Props> = ({
 
   return (
     <div className={styles.itemWrapper}>
-      <div className={styles.user} onClick={() => router.push(`/logbook/${author.userId}`)}>
+      <div className={styles.user} onClick={() => author?.userId && router.push(`/logbook/${author.userId}`)}>
         <ProfileImage imgSrc={author?.photoUrl} size={44} />
         <div className={styles.userWrapper}>
           <div className={styles.nameAuthor}>

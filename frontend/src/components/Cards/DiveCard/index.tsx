@@ -5,7 +5,7 @@ import { Icon, imageLoader } from '../../Icons/Icon';
 import { month } from '../../../utils/date';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
 import { UnitSystem } from '../../../firebase/firestore/models';
-import { convertFeetToMeters, convertMetersToFeet } from '../../../utils/unitSystemConverter';
+import { convertDepth } from '../../../utils/unitSystemConverter';
 
 type Props = {
   imgSrc: string;
@@ -34,20 +34,6 @@ export const DiveCard: FC<Props> = ({
   const {
     userAuth,
   } = useContext(AuthStatusContext);
-
-  const displayDeepness = (): string => {
-    if (!userAuth) {
-      return `${deepness} m`;
-    }
-    const userUnitSystem = userAuth.settings.preferences.unitSystem;
-    if (diveUnitSystem === userUnitSystem) {
-      return `${deepness} ${userUnitSystem === 'METRIC' ? 'm' : 'ft'}`;
-    }
-    if (userUnitSystem === 'METRIC') {
-      return `${convertFeetToMeters(deepness)} m`;
-    }
-    return `${convertMetersToFeet(deepness)} ft`;
-  };
 
   return (
     <div className={styles.diveCard} onClick={onClick}>
@@ -89,7 +75,7 @@ export const DiveCard: FC<Props> = ({
           <div className={styles.dataItem}>
             <Icon iconName="depth" size={16} />
             <span>
-              {displayDeepness()}
+              {convertDepth(userAuth, diveUnitSystem, deepness)}
             </span>
           </div>
           )}

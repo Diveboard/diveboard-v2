@@ -1,5 +1,5 @@
 import React, {
-  FC, useEffect, useState,
+  FC, useContext, useEffect, useState,
 } from 'react';
 import GoogleMapReact from 'google-map-react';
 import supercluster from 'points-cluster';
@@ -10,6 +10,8 @@ import styles from './styles.module.scss';
 import { firestoreDivesService } from '../../../../firebase/firestore/firestoreServices/firestoreDivesService';
 import { notify } from '../../../../utils/notify';
 import { Loader } from '../../../Loader';
+import { SpotsContext } from '../../../../layouts/SpotsLayout';
+import { AuthStatusContext } from '../../../../layouts/AuthLayout';
 
 type Props = {
   userId: string;
@@ -21,6 +23,8 @@ export const DivesMap: FC<Props> = ({
   const [navigate, setNavigate] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [isLoading, setLoading] = useState(true);
+  const { spotsData, setSpotsData } = useContext(SpotsContext);
+  const { userAuth } = useContext(AuthStatusContext);
   const [bounds, setBounds] = useState({
     zoom: 3,
     bounds: {
@@ -65,7 +69,16 @@ export const DivesMap: FC<Props> = ({
     (async () => {
       try {
         setLoading(true);
-        const res = await firestoreDivesService.getSpotsCoordsByUserDives(userId);
+        let res = [];
+        const isOwnProfile = userId === userAuth?.uid;
+        if (spotsData?.length && isOwnProfile) {
+          res = spotsData;
+        } else {
+          res = await firestoreDivesService.getSpotsCoordsByUserDives(userId);
+          if (isOwnProfile) {
+            setSpotsData(res);
+          }
+        }
         setMarkers(res);
         if (res.length) {
           const clusrs = getClusters(bounds, res);
@@ -79,7 +92,11 @@ export const DivesMap: FC<Props> = ({
         notify(e.message);
       }
     })();
-  }, [userId]);
+    return () => {
+      setClusters([]);
+      setMarkers([]);
+    };
+  }, [userId, spotsData]);
 
   return (
     <div className={styles.mapWrapper}>
