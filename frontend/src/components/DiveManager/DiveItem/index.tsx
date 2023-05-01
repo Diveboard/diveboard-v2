@@ -7,7 +7,7 @@ import { DiveType, UnitSystem } from '../../../firebase/firestore/models';
 import DiveInfo from '../DiveInfo';
 import { Checkbox } from '../../CheckBox';
 import styles from './styles.module.scss';
-import { convertFeetToMeters, convertMetersToFeet } from '../../../utils/unitSystemConverter';
+import { convertDepth, convertFeetToMeters, convertMetersToFeet } from '../../../utils/unitSystemConverter';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
 
 type Props = {
@@ -52,17 +52,6 @@ export const DiveItem: FC<Props> = ({
     setShow(() => !isShow);
   };
 
-  const convertDepth = (dive): string => {
-    const userUnitSystem = userAuth.settings.preferences.unitSystem;
-    if (dive.unitSystem === userUnitSystem) {
-      return `${dive.diveData?.maxDepth || 0} ${userUnitSystem === 'METRIC' ? 'm' : 'ft'}`;
-    }
-    if (userUnitSystem === 'METRIC') {
-      return `${dive.diveData?.maxDepth ? convertFeetToMeters(dive.diveData?.maxDepth) : 0} m`;
-    }
-    return `${dive.diveData?.maxDepth ? convertMetersToFeet(dive.diveData?.maxDepth) : 0} ft`;
-  };
-
   const convertAltitude = (diveUnitSystem: UnitSystem, value: number): number => {
     const userUnitSystem = userAuth.settings.preferences.unitSystem;
     if (diveUnitSystem === userUnitSystem) {
@@ -101,7 +90,7 @@ export const DiveItem: FC<Props> = ({
       <div className={styles.infowrapper}>
         <DiveInfo
           diveTime={itm.diveData?.duration || 0}
-          deepness={convertDepth(itm)}
+          deepness={convertDepth(userAuth, itm.unitSystem, itm.diveData?.maxDepth)}
           diversCount={itm.buddies?.length}
         />
 

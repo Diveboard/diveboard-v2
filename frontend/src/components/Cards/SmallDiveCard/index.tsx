@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { Icon, imageLoader } from '../../Icons/Icon';
 import { month } from '../../../utils/date';
 import styles from './style.module.scss';
-import { convertFeetToMeters, convertMetersToFeet } from '../../../utils/unitSystemConverter';
+import { convertDepth } from '../../../utils/unitSystemConverter';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
 import { UnitSystem } from '../../../firebase/firestore/models';
 
@@ -36,20 +36,6 @@ export const SmallDiveCard: FC<Props> = ({
   } = useContext(AuthStatusContext);
 
   const router = useRouter();
-
-  const displayDeepness = (): string => {
-    if (!userAuth) {
-      return `${deepness || 0} m`;
-    }
-    const userUnitSystem = userAuth.settings.preferences.unitSystem;
-    if (diveUnitSystem === userUnitSystem) {
-      return `${deepness || 0} ${userUnitSystem === 'METRIC' ? 'm' : 'ft'}`;
-    }
-    if (userUnitSystem === 'METRIC') {
-      return `${deepness ? convertFeetToMeters(deepness) : 0} m`;
-    }
-    return `${deepness ? convertMetersToFeet(deepness) : 0} ft`;
-  };
 
   return (
     <div
@@ -90,7 +76,7 @@ export const SmallDiveCard: FC<Props> = ({
           <div className={styles.dataItem}>
             <Icon iconName="depth" size={16} />
             <span>
-              {displayDeepness()}
+              {convertDepth(userAuth, diveUnitSystem, deepness)}
             </span>
           </div>
           <div className={styles.dataItem}>

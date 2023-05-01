@@ -6,7 +6,7 @@ import { DivePageTitle } from '../DivePageTitle';
 import styles from './styles.module.scss';
 import { SeventhStepType } from '../../PageBlocks/LogADiveBlocks/types/stepTypes';
 import { UnitSystem } from '../../../firebase/firestore/models';
-import { convertKgToLbs, convertLbsToKg } from '../../../utils/unitSystemConverter';
+import { convertWeight } from '../../../utils/unitSystemConverter';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
 
 type Props = {
@@ -24,22 +24,6 @@ export const GearUsed: FC<Props> = ({
     userAuth,
   } = useContext(AuthStatusContext);
 
-  const convertWeights = () => {
-    if (!userAuth) {
-      return `${weight} kg`;
-    }
-    const userUnitSystem = userAuth.settings.preferences.unitSystem;
-
-    if (diveUnitSystem === userUnitSystem) {
-      return `${weight} ${userUnitSystem === 'METRIC' ? 'kg' : 'lbs'}`;
-    }
-
-    if (userUnitSystem === 'METRIC') {
-      return `${convertLbsToKg(weight)} kg`;
-    }
-
-    return `${convertKgToLbs(weight)} lbs`;
-  };
   return (
     <div className={styles.wrapper}>
       <DivePageMobContainer>
@@ -61,7 +45,7 @@ export const GearUsed: FC<Props> = ({
             Weights:
             {' '}
             <span>
-              {convertWeights()}
+              {convertWeight(userAuth, diveUnitSystem, weight)}
             </span>
           </li>
           )}
