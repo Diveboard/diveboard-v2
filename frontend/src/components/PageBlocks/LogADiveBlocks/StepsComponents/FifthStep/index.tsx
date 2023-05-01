@@ -14,7 +14,6 @@ import { SearchPredictions } from '../../../../Dropdown/SarchPredictions';
 import { Button } from '../../../../Buttons/Button';
 import { useWindowWidth } from '../../../../../hooks/useWindowWidth';
 import { SearchBlock } from './SearchBlock';
-import { useGetShops } from './hooks/useGetShops';
 import { LogDiveDataContext } from '../../LogDiveData/logDiveContext';
 import { StepProps } from '../../types/commonTypes';
 import { FifthStepType } from '../../types/stepTypes';
@@ -53,7 +52,7 @@ export const FifthStep: FC<StepProps> = ({
   const [url, setUrl] = useState('');
   const [centerEmail, setCenterEmail] = useState('');
 
-  const { shops, guides } = useGetShops();
+  // const { shops, guides } = useGetShops();
 
   const fifthStepData: FifthStepType = {
     buddies: selectedBuddies,
@@ -115,7 +114,7 @@ export const FifthStep: FC<StepProps> = ({
             title="Dive Center"
             inputValue={diveCenter}
             setInputValue={setDiveCenter}
-            recommendedItems={shops}
+            recommendedItems={[]}
             disabled
             // @ts-ignore
             // onSearchHandler={firestoreShopsService.getShopsByName}
@@ -135,7 +134,7 @@ export const FifthStep: FC<StepProps> = ({
             title="Guide name"
             inputValue={guideName}
             setInputValue={setGuideName}
-            recommendedItems={guides}
+            recommendedItems={[]}
             disabled
             // @ts-ignore
             // onSearchHandler={firestoreGuidesService.getGuidesByGuideName}

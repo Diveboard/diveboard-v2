@@ -16,6 +16,7 @@ import {
 import { SurveysBlock } from './SurveysBlock';
 import { convertMinutes } from '../../../utils/convertMinutes';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
+import { convertDepth } from '../../../utils/unitSystemConverter';
 
 type Props = {
   dives: Array<DiveType & { spot: SpotType, date: string }>
@@ -70,7 +71,8 @@ export const ProfileBlock = ({
       longestDive = `${data.longestDive.time} minutes in ${data.longestDive.longestDiveName}`;
     }
     if (data.deepestDive?.depth) {
-      deepestDive = `${data.deepestDive.depth.toFixed(2)} ${data.deepestDive.unitSystem?.toLowerCase() === 'metric' ? 'm' : 'ft'} in ${data.deepestDive?.deepestDiveName}`;
+      const depth = convertDepth(userAuth, data.deepestDive.unitSystem, data.deepestDive.depth);
+      deepestDive = `${depth} in ${data.deepestDive?.deepestDiveName}`;
     }
     const getMostDives = () => Array.from(countries)
       .sort((a, b) => countries

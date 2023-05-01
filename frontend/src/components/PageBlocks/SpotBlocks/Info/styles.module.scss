@@ -46,12 +46,17 @@
 }
 
 
-@media (max-width: 955px) {
+@media (max-width: 1240px) {
   .info {
-
     .itemsWrapper {
       flex-direction: column;
+    }
+  }
+}
 
+@media (max-width: 955px) {
+  .info {
+    .itemsWrapper {
       .item {
         max-width: 100%;
         margin-bottom: 30px;

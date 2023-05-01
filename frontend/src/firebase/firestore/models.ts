@@ -6,7 +6,7 @@ import {
   FirstStepType, NinthStepType,
   SecondStepType, SeventhStepType,
 } from '../../components/PageBlocks/LogADiveBlocks/types/stepTypes';
-import { ScoreType } from '../../components/PageBlocks/LogADiveBlocks/types/commonTypes';
+import { SafetySpot, ScoreType } from '../../components/PageBlocks/LogADiveBlocks/types/commonTypes';
 
 export type PersonalInfoType = {
   email: null | string;
@@ -113,7 +113,7 @@ export type DiveType = {
   draft: boolean;
   surveyId?: string;
   diveActivities: DiveActivities;
-  diveData: SecondStepType['parameters'] & SecondStepType['advancedParameters'];
+  diveData: SecondStepType['parameters'] & SecondStepType['advancedParameters'] & { profileData?: Array<SafetySpot> };
   tanks: SecondStepType['tanks'];
   species: SpeciesType[];
   diveCenter: { id: string; guide: string };

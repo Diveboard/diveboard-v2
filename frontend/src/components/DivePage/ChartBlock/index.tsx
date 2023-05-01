@@ -33,16 +33,12 @@ export const ChartBlock: FC<Props> = ({
   duration,
   profileData, maxDepth,
 }): JSX.Element => {
-  // calculate avarage depth
-  const avarageDepth = () => {
-    let summAllDepth = 0;
+  const calculateAverageDepth = () => {
     if (!points?.length) {
-      return summAllDepth;
+      return 0;
     }
-    points.forEach((itm) => {
-      summAllDepth += itm.depth;
-    });
-    return (summAllDepth / points.length).toFixed(2);
+    const sumAllDepth = points.reduce((acc, itm) => acc + itm.depth, 0);
+    return (sumAllDepth / points.length).toFixed(2);
   };
 
   const convertTankName = (tank: Tank) => {
@@ -75,10 +71,10 @@ export const ChartBlock: FC<Props> = ({
                     {convertTankName(tank)}
                   </li>
                   <li>
-                    Avarage depth:
+                    Average depth:
                     {' '}
                     <span>
-                      {avarageDepth()}
+                      {calculateAverageDepth()}
                       {' '}
                       m
                     </span>

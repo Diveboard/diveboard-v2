@@ -68,7 +68,7 @@ export const AdvancedParameters: FC<Props> = ({
 
         <InputLabelWrapper label="Water visibility:" mode={isMobile ? 'half' : 'common'}>
           <Dropdown
-            item={advancedParameters.waterVisibility || ''}
+            item={advancedParameters.waterVisibility?.toLowerCase() || ''}
             setItem={(val) => params(
               'waterVisibility',
               val as typeof advancedParameters.waterVisibility,
@@ -108,7 +108,7 @@ export const AdvancedParameters: FC<Props> = ({
 
         <InputLabelWrapper label="Water type" mode={isMobile ? 'half' : 'common'}>
           <Dropdown
-            item={advancedParameters.waterType || ''}
+            item={advancedParameters.waterType?.toLowerCase() || ''}
             setItem={
               (val) => params(
                 'waterType',

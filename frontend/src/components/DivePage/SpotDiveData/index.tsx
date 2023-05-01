@@ -12,10 +12,8 @@ import { DiveType, SpotType, UserSettingsType } from '../../../firebase/firestor
 import { convertTimestampDate } from '../../../utils/convertTimestampDate';
 import { parseDate } from '../../../utils/parseDate';
 import {
-  convertCalToFar,
-  convertFarToCal,
-  convertFeetToMeters,
-  convertMetersToFeet,
+  convertDepth,
+  convertTempSystem,
 } from '../../../utils/unitSystemConverter';
 import { AuthStatusContext } from '../../../layouts/AuthLayout';
 
@@ -81,34 +79,6 @@ export const SpotDiveData: FC<Props> = ({
   const {
     userAuth,
   } = useContext(AuthStatusContext);
-
-  const convertTempSystem = (value: number): string => {
-    if (!userAuth) {
-      return `${value} m`;
-    }
-    const userUnitSystem = userAuth.settings.preferences.unitSystem;
-    if (dive.unitSystem.toLowerCase() === userUnitSystem.toLowerCase()) {
-      return `${value} ${userUnitSystem === 'METRIC' ? 'ºC' : 'ºF'}`;
-    }
-    if (userUnitSystem === 'METRIC') {
-      return `${convertFarToCal(value)} ºC`;
-    }
-    return `${convertCalToFar(value)} ºF`;
-  };
-
-  const convertDepth = (): string => {
-    if (!userAuth) {
-      return `${dive.diveData?.maxDepth} m`;
-    }
-    const userUnitSystem = userAuth.settings.preferences.unitSystem;
-    if (dive.unitSystem.toLowerCase() === userUnitSystem) {
-      return `${dive.diveData?.maxDepth} ${userUnitSystem === 'METRIC' ? 'm' : 'ft'}`;
-    }
-    if (userUnitSystem === 'METRIC') {
-      return `${convertFeetToMeters(dive.diveData?.maxDepth)} m`;
-    }
-    return `${convertMetersToFeet(dive.diveData?.maxDepth)} ft`;
-  };
 
   const isNoteAvailable = () => {
     if (!dive.aboutDive?.notes) {
@@ -193,7 +163,7 @@ export const SpotDiveData: FC<Props> = ({
                 Max depth:
                 {' '}
                 <span>
-                  {convertDepth()}
+                  {convertDepth(userAuth, dive.unitSystem, dive.diveData.maxDepth)}
                 </span>
               </li>
               )}
@@ -220,7 +190,7 @@ export const SpotDiveData: FC<Props> = ({
                 Temperature on surface:
                 {' '}
                 <span>
-                  {convertTempSystem(dive.diveData.surfaceTemp)}
+                  {convertTempSystem(userAuth, dive.unitSystem, dive.diveData.surfaceTemp)}
                   {/* <sup>o</sup> */}
                   {/* C */}
                 </span>
@@ -231,7 +201,7 @@ export const SpotDiveData: FC<Props> = ({
                 Temperature on bottom:
                 {' '}
                 <span>
-                  {convertTempSystem(dive.diveData.bottomTemp)}
+                  {convertTempSystem(userAuth, dive.unitSystem, dive.diveData.bottomTemp)}
                   {/* <sup>o</sup> */}
                   {/* C */}
                 </span>
